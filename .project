@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<projectDescription>
+  <name>is.idega.idegaweb.marathon</name>
+  <comment>
+  </comment>
+  <projects>
+    <project>com.idega.core</project>
+    <project>com.idega.user</project>
+    <project>com.idega.block.importer</project>
+    <project>com.idega.block.text</project>
+  </projects>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+      <arguments>
+      </arguments>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+  </natures>
+</projectDescription>

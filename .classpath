@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<classpath>
+  <classpathentry excluding="" kind="src" path="src/java">
+  </classpathentry>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/myfaces/jars/jsf-api-1.0.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/ejb/jars/ejb-2.0.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/jta/jars/jta-spec1_0_1.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/javamail/jars/javamail-1.3.jar">
+  </classpathentry>
+  <classpathentry kind="src" path="/com.idega.core">
+  </classpathentry>
+  <classpathentry kind="src" path="/com.idega.user">
+  </classpathentry>
+  <classpathentry kind="src" path="/com.idega.block.importer">
+  </classpathentry>
+  <classpathentry kind="src" path="/com.idega.block.text">
+  </classpathentry>
+  <classpathentry kind="output" path="target/classes">
+  </classpathentry>
+</classpath>
