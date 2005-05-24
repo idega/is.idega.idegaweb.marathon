@@ -44,6 +44,32 @@
             </value>
             <type>map</type>
           </key>
+          <key>
+            <name>is.idega.idegaweb.marathon.data.Run</name>
+            <value>
+              <map>
+                <key>
+                  <name>component_property_file</name>
+                  <type>java.lang.String</type>
+                  <value>is.idega.idegaweb.marathon.data.Run.pxml</value>
+                </key>
+              </map>
+            </value>
+            <type>map</type>
+          </key>
+          <key>
+            <name>is.idega.idegaweb.marathon.business.RunPluginBusinessBean</name>
+            <value>
+              <map>
+                <key>
+                  <name>component_property_file</name>
+                  <type>java.lang.String</type>
+                  <value>is.idega.idegaweb.marathon.business.RunPluginBusinessBean.pxml</value>
+                </key>
+              </map>
+            </value>
+            <type>map</type>
+          </key>
         </map>
       </value>
       <type>map</type>
@@ -52,6 +78,256 @@
       <name>iw_bundle_identifier</name>
       <type>java.lang.String</type>
       <value>is.idega.idegaweb.marathon</value>
+    </key>
+    <key>
+      <name>messagebox_smtp_mailserver</name>
+      <type>java.lang.String</type>
+      <value>mail.idega.is</value>
+    </key>
+    <key>
+      <name>messagebox_from_mailaddress</name>
+      <type>java.lang.String</type>
+      <value>marathon@marathon.is</value>
+    </key>
+    <key>
+      <name>messagebox_cc_address</name>
+      <type>java.lang.String</type>
+      <value>marathon@marathon.is</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_3_km_2004_is_IS</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=741&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>run_selected</name>
+      <type>java.lang.String</type>
+      <value>4</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_21_km_2004_is_IS</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=739&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_7_km_2004_is_IS</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=741&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_10_km_2004_is_IS</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=740&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_42_km_2004_is_IS</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=738&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_10_km_2004_en</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=744&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_21_km_2004_en</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=743&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_3_km_2004_en</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=745&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_7_km_2004_en</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=745&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_42_km_2004_en</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=742&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Roller Skate_10_km_2004_is_IS</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=746&amp;IWCalendar_day=28&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Roller Skate_5_km_2004_is_IS</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=747&amp;IWCalendar_day=28&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>3_km_id</name>
+      <type>java.lang.String</type>
+      <value>126</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_42_km_2004_is_IS_rent</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=748&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_42_km_2004_is_IS_buy</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=752&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_42_km_2004_en_rent</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=756&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_42_km_2004_en_buy</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=760&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_21_km_2004_is_IS_rent</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=749&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_21_km_2004_is_IS_buy</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=753&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_21_km_2004_en_rent</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=757&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_21_km_2004_en_buy</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=761&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_10_km_2004_is_IS_rent</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=750&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_10_km_2004_is_IS_buy</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=754&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_10_km_2004_en_rent</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=758&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_10_km_2004_en_buy</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=762&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_3_km_2004_is_IS_rent</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=751&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_3_km_2004_is_IS_buy</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=755&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_3_km_2004_en_rent</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=759&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_3_km_2004_en_buy</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=763&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_7_km_2004_is_IS_rent</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=751&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_7_km_2004_is_IS_buy</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=755&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_7_km_2004_en_rent</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=759&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_7_km_2004_en_buy</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=763&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_7_km_2004_is_IS_12</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=764&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_7_km_2004_is_IS_rent_12</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=765&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_7_km_2004_is_IS_buy_12</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=766&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>7_km_id</name>
+      <type>java.lang.String</type>
+      <value>113</value>
+    </key>
+    <key>
+      <name>travelURL_Roller Skate_10_km_2004_is_IS_rent</name>
+      <type>java.lang.String</type>
+      <value>#</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_3_km_2004_is_IS_12</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=764&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_3_km_2004_is_IS_buy_12</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=766&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_3_km_2004_is_IS_rent_12</name>
+      <type>java.lang.String</type>
+      <value>https://travel.idega.is/servlet/ObjectInstanciator?idegaweb_instance_class=7469&amp;linkGeneratorProductId=765&amp;IWCalendar_day=21&amp;IWCalendar_month=8&amp;IWCalendar_year=2004</value>
+    </key>
+    <key>
+      <name>travelURL_Roller Skate_5_km_2004_is_IS_rent</name>
+      <type>java.lang.String</type>
+      <value>#</value>
+    </key>
+    <key>
+      <name>send_emails</name>
+      <type>java.lang.String</type>
+      <value>no</value>
+    </key>
+    <key>
+      <name>parameter_refererence_number</name>
+      <type>java.lang.String</type>
+      <value>rNum</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_21_km_2005_is_IS_rent</name>
+      <type>java.lang.String</type>
+      <value>#</value>
+    </key>
+    <key>
+      <name>travelURL_Rvk Marathon_10_km_2005_is_IS_rent</name>
+      <type>java.lang.String</type>
+      <value>#</value>
     </key>
   </map>
 </pxml>
