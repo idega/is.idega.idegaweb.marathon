@@ -5,13 +5,15 @@
   </classpathentry>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
   </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/myfaces/jars/jsf-api-1.0.jar">
+  <classpathentry kind="var" path="MAVEN_REPO/myfaces/jars/myfaces-tomahawk-1.1.0.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/myfaces/jars/myfaces-jsf-api-1.1.0.jar">
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/ejb/jars/ejb-2.0.jar">
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/jta/jars/jta-spec1_0_1.jar">
   </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/javamail/jars/javamail-1.3.jar">
+  <classpathentry kind="var" path="MAVEN_REPO/javamail/jars/javamail-1.3.2.jar">
   </classpathentry>
   <classpathentry kind="src" path="/com.idega.core">
   </classpathentry>
@@ -19,7 +21,13 @@
   </classpathentry>
   <classpathentry kind="src" path="/com.idega.block.importer">
   </classpathentry>
+  <classpathentry kind="src" path="/com.idega.block.trade">
+  </classpathentry>
   <classpathentry kind="src" path="/com.idega.block.text">
+  </classpathentry>
+  <classpathentry kind="src" path="/com.idega.block.creditcard">
+  </classpathentry>
+  <classpathentry kind="src" path="/is.idega.block.family">
   </classpathentry>
   <classpathentry kind="output" path="target/classes">
   </classpathentry>

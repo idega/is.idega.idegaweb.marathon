@@ -44,11 +44,20 @@
   <dependencies>
     <dependency>
       <groupId>myfaces</groupId>
-      <artifactId>jsf-api</artifactId>
-      <version>1.0</version>
+      <artifactId>myfaces-tomahawk</artifactId>
+      <version>1.1.0</version>
+      <type>jar</type>
+      <url>http://www.myfaces.org/</url>
+    </dependency>
+    <dependency>
+      <groupId>myfaces</groupId>
+      <artifactId>myfaces-jsf-api</artifactId>
+      <version>1.1.0</version>
       <type>jar</type>
       <url>http://java.sun.com/j2ee/javaserverfaces/</url>
-      <properties/>
+      <properties>
+        <idegaweb.bundle.include>true</idegaweb.bundle.include>
+      </properties>
     </dependency>
     <dependency>
       <groupId>ejb</groupId>
@@ -69,7 +78,7 @@
     <dependency>
       <groupId>javamail</groupId>
       <artifactId>javamail</artifactId>
-      <version>1.3</version>
+      <version>1.3.2</version>
       <type>jar</type>
       <url>http://java.sun.com/products/javamail/</url>
       <properties />
@@ -110,6 +119,17 @@
     </dependency>
     <dependency>
       <groupId>bundles</groupId>
+      <artifactId>com.idega.block.trade</artifactId>
+      <!--<version>1.0</version>-->
+      <version>SNAPSHOT</version>
+      <type>jar</type>
+      <url>http://www.idega.com/</url>
+      <properties>
+        <eclipse.dependency>true</eclipse.dependency>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>bundles</groupId>
       <artifactId>com.idega.block.text</artifactId>
       <!--<version>1.0</version>-->
       <version>SNAPSHOT</version>
@@ -119,6 +139,29 @@
         <eclipse.dependency>true</eclipse.dependency>
       </properties>
     </dependency>
+    <dependency>
+      <groupId>bundles</groupId>
+      <artifactId>com.idega.block.creditcard</artifactId>
+      <!--<version>1.0</version>-->
+      <version>SNAPSHOT</version>
+      <type>jar</type>
+      <url>http://www.idega.com/</url>
+      <properties>
+        <eclipse.dependency>true</eclipse.dependency>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>bundles</groupId>
+      <artifactId>is.idega.block.family</artifactId>
+      <!--<version>1.0</version>-->
+      <version>SNAPSHOT</version>
+      <type>jar</type>
+      <url>http://www.idega.com/</url>
+      <properties>
+        <eclipse.dependency>true</eclipse.dependency>
+      </properties>
+    </dependency>
+
    </dependencies>
   <build>
     <sourceDirectory>src/java</sourceDirectory>
