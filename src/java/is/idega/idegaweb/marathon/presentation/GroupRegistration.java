@@ -1,5 +1,5 @@
 /*
- * $Id: GroupRegistration.java,v 1.1 2005/05/31 19:04:35 laddi Exp $
+ * $Id: GroupRegistration.java,v 1.2 2006/04/12 14:43:32 laddi Exp $
  * Created on May 30, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -35,10 +35,10 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2005/05/31 19:04:35 $ by $Author: laddi $
+ * Last modified: $Date: 2006/04/12 14:43:32 $ by $Author: laddi $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class GroupRegistration extends RunBlock {
 
@@ -115,15 +115,15 @@ public class GroupRegistration extends RunBlock {
 				runDropdown.addMenuElement(run.getPrimaryKey().toString(), localize(run.getName(), run.getName()));
 			}
 		}
-		if (run != null) {
-			runDropdown.setSelectedElement(run.getPrimaryKey().toString());
+		if (this.run != null) {
+			runDropdown.setSelectedElement(this.run.getPrimaryKey().toString());
 		}
 
 		DropdownMenu distanceDropdown = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_DISTANCE));
 		distanceDropdown.addMenuElement("", localize("run_year_ddd.select_distance","Select distance..."));
 		distanceDropdown.setAsNotEmpty(localize("run_reg.must_select_distance", "You have to select a distance"), "");
-		if(run != null) {
-			Collection distances = getRunBusiness(iwc).getDistancesMap(run, yearString);
+		if(this.run != null) {
+			Collection distances = getRunBusiness(iwc).getDistancesMap(this.run, yearString);
 			if(distances != null) {
 				Iterator iter = distances.iterator();
 				while (iter.hasNext()) {
@@ -131,8 +131,8 @@ public class GroupRegistration extends RunBlock {
 					distanceDropdown.addMenuElement(element.getPrimaryKey().toString(), localize(element.getName(), element.getName()));
 				}
 			}
-			if (distance != null) {
-				distanceDropdown.setSelectedElement(distance.getPrimaryKey().toString());
+			if (this.distance != null) {
+				distanceDropdown.setSelectedElement(this.distance.getPrimaryKey().toString());
 			}
 		}
 
@@ -211,20 +211,20 @@ public class GroupRegistration extends RunBlock {
 			TextInput participant = (TextInput) getStyledInterface(new TextInput(PARAMETER_PARTICIPANT_NUMBER));
 			participant.setWidth(Table.HUNDRED_PERCENT);
 			participant.setAsIntegers(localize("run_reg.invalid_participant_number", "Invalid participant number"));
-			if (participants != null && participants.length >= a) {
-				participant.setContent(participants[a - 1]);
+			if (this.participants != null && this.participants.length >= a) {
+				participant.setContent(this.participants[a - 1]);
 			}
 			
 			TextInput bestTime = (TextInput) getStyledInterface(new TextInput(PARAMETER_BEST_TIME));
 			bestTime.setWidth(Table.HUNDRED_PERCENT);
-			if (bestTimes != null && bestTimes.length >= a) {
-				bestTime.setContent(bestTimes[a - 1]);
+			if (this.bestTimes != null && this.bestTimes.length >= a) {
+				bestTime.setContent(this.bestTimes[a - 1]);
 			}
 			
 			TextInput estimatedTime = (TextInput) getStyledInterface(new TextInput(PARAMETER_ESTIMATED_TIME));
 			estimatedTime.setWidth(Table.HUNDRED_PERCENT);
-			if (estimatedTimes != null && estimatedTimes.length >= a) {
-				estimatedTime.setContent(estimatedTimes[a - 1]);
+			if (this.estimatedTimes != null && this.estimatedTimes.length >= a) {
+				estimatedTime.setContent(this.estimatedTimes[a - 1]);
 			}
 			
 			choiceTable.add(getHeader(localize("run_reg.partipant_nr", "Participant nr.") + " " + String.valueOf(a)), 1, iRow);
@@ -275,7 +275,7 @@ public class GroupRegistration extends RunBlock {
 		table.setCellpaddingLeft(1, row, 3);
 		table.add(getHeader(localize("run_reg.group_name", "Group name") + ":"), 1, row);
 		table.add(Text.getNonBrakingSpace(), 1, row);
-		table.add(getText(groupName), 1, row++);
+		table.add(getText(this.groupName), 1, row++);
 		table.setHeight(row++, 12);
 		
 		Table runnerTable = new Table();
@@ -287,19 +287,19 @@ public class GroupRegistration extends RunBlock {
 		table.add(runnerTable, 1, row++);
 		int runRow = 2;
 		
-		for (int a = 0; a < participants.length; a++) {
-			String runner = participants[a];
+		for (int a = 0; a < this.participants.length; a++) {
+			String runner = this.participants[a];
 			if (runner.length() > 0) {
-				Participant participant = (Participant) participantMap.get(runner);
+				Participant participant = (Participant) this.participantMap.get(runner);
 				
 				if (participant != null) {
 					runnerTable.add(new HiddenInput(PARAMETER_PARTICIPANT_NUMBER, runner), 1, runRow);
-					runnerTable.add(new HiddenInput(PARAMETER_BEST_TIME, bestTimes[a]), 1, runRow);
-					runnerTable.add(new HiddenInput(PARAMETER_ESTIMATED_TIME, estimatedTimes[a]), 1, runRow);
+					runnerTable.add(new HiddenInput(PARAMETER_BEST_TIME, this.bestTimes[a]), 1, runRow);
+					runnerTable.add(new HiddenInput(PARAMETER_ESTIMATED_TIME, this.estimatedTimes[a]), 1, runRow);
 					runnerTable.add(new HiddenInput(PARAMETER_PARTICIPANT, participant.getPrimaryKey().toString()), 1, runRow);
 					runnerTable.add(getText(participant.getUser().getName()), 1, runRow);
-					runnerTable.add(getText(localize(run.getName(), run.getName())), 2, runRow);
-					runnerTable.add(getText(localize(distance.getName(), distance.getName())), 3, runRow++);
+					runnerTable.add(getText(localize(this.run.getName(), this.run.getName())), 2, runRow);
+					runnerTable.add(getText(localize(this.distance.getName(), this.distance.getName())), 3, runRow++);
 				}
 			}
 		}
@@ -326,7 +326,7 @@ public class GroupRegistration extends RunBlock {
 		
 		try {
 			String[] runners = iwc.getParameterValues(PARAMETER_PARTICIPANT);
-			getRunBusiness(iwc).addParticipantsToGroup(runners, bestTimes, estimatedTimes, groupName);
+			getRunBusiness(iwc).addParticipantsToGroup(runners, this.bestTimes, this.estimatedTimes, this.groupName);
 		}
 		catch (RemoteException re) {
 			throw new IBORuntimeException(re);
@@ -339,22 +339,22 @@ public class GroupRegistration extends RunBlock {
 		table.setHeight(row++, 18);
 		
 		table.add(getText(localize("run_reg.group_registered_for", "You have registered for the team competition in the ")), 1, row);
-		table.add(getHeader(localize(run.getName(), run.getName())), 1, row++);
+		table.add(getHeader(localize(this.run.getName(), this.run.getName())), 1, row++);
 		table.setHeight(row++, 16);
 
 		table.add(getText(localize("run_reg.group_registered_name", "Your team is registered under the name ")), 1, row);
-		table.add(getHeader(groupName), 1, row++);
+		table.add(getHeader(this.groupName), 1, row++);
 		table.setHeight(row++, 16);
 
 		table.add(getText(localize("run_reg.group_registered_distance", "Each team member has chosen to run ")), 1, row);
-		table.add(getHeader(localize(distance.getName(), distance.getName())), 1, row++);
+		table.add(getHeader(localize(this.distance.getName(), this.distance.getName())), 1, row++);
 		table.setHeight(row++, 16);
 
 		table.add(getText(localize("run_reg.group_registered_runners", "The runners in your team are") + ":"), 1, row++);
-		for (int a = 0; a < participants.length; a++) {
-			String runner = participants[a];
+		for (int a = 0; a < this.participants.length; a++) {
+			String runner = this.participants[a];
 			if (runner.length() > 0) {
-				Participant participant = (Participant) participantMap.get(runner);
+				Participant participant = (Participant) this.participantMap.get(runner);
 				
 				if (participant != null) {
 					table.add(getHeader(participant.getParticipantNumber() + " - " + participant.getUser().getName()), 1, row++);
@@ -374,7 +374,7 @@ public class GroupRegistration extends RunBlock {
 		
 		if (iwc.isParameterSet(PARAMETER_RUN)) {
 			try {
-				run = ConverterUtility.getInstance().convertGroupToRun(new Integer(iwc.getParameter(PARAMETER_RUN)));
+				this.run = ConverterUtility.getInstance().convertGroupToRun(new Integer(iwc.getParameter(PARAMETER_RUN)));
 			}
 			catch (FinderException fe) {
 				fe.printStackTrace();
@@ -382,33 +382,33 @@ public class GroupRegistration extends RunBlock {
 		}
 		if (iwc.isParameterSet(PARAMETER_DISTANCE)) {
 			try {
-				distance = ConverterUtility.getInstance().convertGroupToDistance(new Integer(iwc.getParameter(PARAMETER_DISTANCE)));
+				this.distance = ConverterUtility.getInstance().convertGroupToDistance(new Integer(iwc.getParameter(PARAMETER_DISTANCE)));
 			}
 			catch (FinderException fe) {
 				fe.printStackTrace();
 			}
 		}
 		if (iwc.isParameterSet(PARAMETER_GROUP_NAME)) {
-			groupName = iwc.getParameter(PARAMETER_GROUP_NAME);
+			this.groupName = iwc.getParameter(PARAMETER_GROUP_NAME);
 		}
-		participants = iwc.getParameterValues(PARAMETER_PARTICIPANT_NUMBER);
-		bestTimes = iwc.getParameterValues(PARAMETER_BEST_TIME);
-		estimatedTimes = iwc.getParameterValues(PARAMETER_ESTIMATED_TIME);
+		this.participants = iwc.getParameterValues(PARAMETER_PARTICIPANT_NUMBER);
+		this.bestTimes = iwc.getParameterValues(PARAMETER_BEST_TIME);
+		this.estimatedTimes = iwc.getParameterValues(PARAMETER_ESTIMATED_TIME);
 		
 		int numberOfParticipants = 0;
 		if (action == ACTION_STEP_THREE || action == ACTION_SAVE) {
-			participantMap = new HashMap();
-			for (int i = 0; i < participants.length; i++) {
-				String participant = participants[i];
+			this.participantMap = new HashMap();
+			for (int i = 0; i < this.participants.length; i++) {
+				String participant = this.participants[i];
 				if (participant.length() > 0) {
 					try {
-						Participant runner = getRunBusiness(iwc).getParticipantByDistanceAndParticipantNumber(distance.getPrimaryKey(), Integer.parseInt(participant));
+						Participant runner = getRunBusiness(iwc).getParticipantByDistanceAndParticipantNumber(this.distance.getPrimaryKey(), Integer.parseInt(participant));
 						if (runner.getRunGroupName() != null) {
 							action = ACTION_STEP_TWO;
 							getParentPage().setAlertOnLoad(localize("run_reg.participant_already_in_a_group", "Participant is already in another group: ") + participant);
 							return action;
 						}
-						participantMap.put(participant, runner);
+						this.participantMap.put(participant, runner);
 						numberOfParticipants++;
 					}
 					catch (RemoteException re) {

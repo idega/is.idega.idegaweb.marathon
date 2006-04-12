@@ -50,16 +50,16 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 	}
 	
 	public boolean handleRecords() throws RemoteException {
-		business = getBusiness(getIWApplicationContext());
-		genderBusiness = getGenderBusiness(getIWApplicationContext());
-		countries = business.getCountries();
-		runs = business.getRuns();
-		englishLocale = LocaleUtil.getLocale(LocaleSwitcher.englishParameterString);
-		icelandicLocale = LocaleUtil.getLocale(LocaleSwitcher.icelandicParameterString);
+		this.business = getBusiness(getIWApplicationContext());
+		this.genderBusiness = getGenderBusiness(getIWApplicationContext());
+		this.countries = this.business.getCountries();
+		this.runs = this.business.getRuns();
+		this.englishLocale = LocaleUtil.getLocale(LocaleSwitcher.englishParameterString);
+		this.icelandicLocale = LocaleUtil.getLocale(LocaleSwitcher.icelandicParameterString);
 		
 		Vector errors = new Vector();
-		if (file != null) {
-			String line = (String) file.getNextRecord();
+		if (this.file != null) {
+			String line = (String) this.file.getNextRecord();
 			int counter = 1;
 			while (line != null && !"".equals(line)) {
 				++counter;
@@ -67,7 +67,7 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 				if (!handleLine(line)) {
 					errors.add(line);
 				}
-				line = (String) file.getNextRecord();
+				line = (String) this.file.getNextRecord();
 			}
 			System.out.println(counter);
 			
@@ -84,7 +84,7 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 	}
 	
 	private boolean handleLine(String line) {
-		ArrayList values = file.getValuesFromRecordString(line);
+		ArrayList values = this.file.getValuesFromRecordString(line);
 		int size = values.size();
 		boolean validLine = true;
 		
@@ -99,12 +99,12 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 		String run = (String) values.get(8);
 		String distance = (String) values.get(9);
 		String year = (String) values.get(10);
-		String group = (String) values.get(11);
+		//String group = (String) values.get(11);
 		String chipNumber = ((String) values.get(12)).trim();
-		String result = (String) values.get(13);
-		String resultInGroup = (String) values.get(14);
+		//String result = (String) values.get(13);
+		//String resultInGroup = (String) values.get(14);
 		String runGroupName = (String) values.get(15);
-		String runGroupTime = size >= 17 ? (String) values.get(16) : null;
+		//String runGroupTime = size >= 17 ? (String) values.get(16) : null;
 		String split1 = size >= 18 ? (String) values.get(17) : null;
 		String split2 = size >= 19 ? (String) values.get(18) : null;
 		
@@ -117,9 +117,8 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 		}
 		
 		if (validLine) {
-			String countryPK = null;
 			
-			Iterator iter = countries.iterator();
+			Iterator iter = this.countries.iterator();
 			Country country = null;
 			boolean found = false;
 			while (iter.hasNext() && !found) {
@@ -133,7 +132,7 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 
 			try {
 				Group runGroup = null;
-				Iterator iterator = runs.iterator();
+				Iterator iterator = this.runs.iterator();
 				while (iterator.hasNext()) {
 					Group element = (Group) iterator.next();
 					if (element.getName().equals(run)) {
@@ -153,7 +152,7 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 				}
 				
 				Group distanceGroup = null;
-				Collection distances = business.getDistancesMap(runGroup, year);
+				Collection distances = this.business.getDistancesMap(runGroup, year);
 				iterator = distances.iterator();
 				while (iterator.hasNext()) {
 					Group element = (Group) iterator.next();
@@ -167,10 +166,10 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 					User user = null;
 					try {
 						if (personalID.length() > 0) {
-							user = business.getUserBiz().getUser(personalID);
+							user = this.business.getUserBiz().getUser(personalID);
 						}
 						else {
-							user = business.getUserBiz().getUserHome().findByDateOfBirthAndName(birth.getDate(), name);
+							user = this.business.getUserBiz().getUserHome().findByDateOfBirthAndName(birth.getDate(), name);
 						}
 					}
 					catch (FinderException fe) {
@@ -178,9 +177,9 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 					}
 					if (user == null) {
 						try {
-							Gender theGender = genderBusiness.getGender(new Integer(gender));
+							Gender theGender = this.genderBusiness.getGender(new Integer(gender));
 							Name fullName = new Name(name);
-							user = business.getUserBiz().createUser(fullName.getFirstName(), fullName.getMiddleName(), fullName.getLastName(), personalID, theGender, birth);
+							user = this.business.getUserBiz().createUser(fullName.getFirstName(), fullName.getMiddleName(), fullName.getLastName(), personalID, theGender, birth);
 						}
 						catch (FinderException fe) {
 							System.err.println("Gender not found");
@@ -194,11 +193,11 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 					
 					Participant participant = null;
 					try {
-						participant = business.getParticipantByRunAndYear(user, runGroup, yearGroup);
+						participant = this.business.getParticipantByRunAndYear(user, runGroup, yearGroup);
 					}
 					catch (FinderException fe) {
 						try {
-							participant = business.importParticipant(user, runGroup, yearGroup, distanceGroup, country);
+							participant = this.business.importParticipant(user, runGroup, yearGroup, distanceGroup, country);
 						}
 						catch (CreateException ce) {
 							ce.printStackTrace();
@@ -210,7 +209,7 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 					if (runGroupName != null && runGroupName.trim().length() > 0) {
 						participant.setRunGroupName(runGroupName);
 					}
-					business.updateRunForParticipant(participant, number, runTime, chipTime, split1, split2);
+					this.business.updateRunForParticipant(participant, number, runTime, chipTime, split1, split2);
 					return true;
 				}
 			}

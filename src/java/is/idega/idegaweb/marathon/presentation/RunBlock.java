@@ -1,5 +1,5 @@
 /*
- * $Id: RunBlock.java,v 1.2 2005/05/31 19:04:35 laddi Exp $
+ * $Id: RunBlock.java,v 1.3 2006/04/12 14:43:32 laddi Exp $
  * Created on May 17, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -33,10 +33,10 @@ import com.idega.user.business.UserBusiness;
 
 
 /**
- * Last modified: $Date: 2005/05/31 19:04:35 $ by $Author: laddi $
+ * Last modified: $Date: 2006/04/12 14:43:32 $ by $Author: laddi $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class RunBlock extends Block {
 
@@ -70,10 +70,10 @@ public class RunBlock extends Block {
 	}
 
 	public String localize(String textKey, String defaultText) {
-		if (iwrb == null) {
+		if (this.iwrb == null) {
 			return defaultText;
 		}
-		return iwrb.getLocalizedString(textKey, defaultText);
+		return this.iwrb.getLocalizedString(textKey, defaultText);
 	}
 	
 	public Text getHeader(String s) {
@@ -110,7 +110,7 @@ public class RunBlock extends Block {
 	}
 
 	protected IWBundle getBundle() {
-		return iwb;
+		return this.iwb;
 	}
 
 	protected void setBundle(IWBundle bundle) {
@@ -118,7 +118,7 @@ public class RunBlock extends Block {
 	}
 
 	protected IWResourceBundle getResourceBundle() {
-		return iwrb;
+		return this.iwrb;
 	}
 
 	protected void setResourceBundle(IWResourceBundle resourceBundle) {

@@ -1,5 +1,5 @@
 /*
- * $Id: Runner.java,v 1.2 2005/05/31 19:04:35 laddi Exp $ Created on May 16, 2005
+ * $Id: Runner.java,v 1.3 2006/04/12 14:43:32 laddi Exp $ Created on May 16, 2005
  * 
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
  * 
@@ -19,10 +19,10 @@ import com.idega.user.data.User;
  * A holder class for information about runners and their selection when
  * registering.
  * 
- * Last modified: $Date: 2005/05/31 19:04:35 $ by $Author: laddi $
+ * Last modified: $Date: 2006/04/12 14:43:32 $ by $Author: laddi $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class Runner {
 
@@ -52,7 +52,7 @@ public class Runner {
 	private float amount;
 
 	public User getUser() {
-		return user;
+		return this.user;
 	}
 
 	public void setUser(User user) {
@@ -60,7 +60,7 @@ public class Runner {
 	}
 
 	public Run getRun() {
-		return run;
+		return this.run;
 	}
 
 	public void setRun(Run run) {
@@ -68,7 +68,7 @@ public class Runner {
 	}
 
 	public Distance getDistance() {
-		return distance;
+		return this.distance;
 	}
 
 	public void setDistance(Distance distance) {
@@ -76,7 +76,7 @@ public class Runner {
 	}
 
 	public boolean isRentChip() {
-		return rentChip;
+		return this.rentChip;
 	}
 
 	public void setRentChip(boolean rentChip) {
@@ -88,7 +88,7 @@ public class Runner {
 	}
 
 	public boolean isOwnChip() {
-		return ownChip;
+		return this.ownChip;
 	}
 
 	public void setOwnChip(boolean ownChip) {
@@ -100,7 +100,7 @@ public class Runner {
 	}
 
 	public boolean isBuyChip() {
-		return buyChip;
+		return this.buyChip;
 	}
 
 	public void setBuyChip(boolean buyChip) {
@@ -112,7 +112,7 @@ public class Runner {
 	}
 
 	public String getChipNumber() {
-		return chipNumber;
+		return this.chipNumber;
 	}
 
 	public void setChipNumber(String chipNumber) {
@@ -120,7 +120,7 @@ public class Runner {
 	}
 
 	public String getShirtSize() {
-		return shirtSize;
+		return this.shirtSize;
 	}
 
 	public void setShirtSize(String shirtSize) {
@@ -128,7 +128,7 @@ public class Runner {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -136,7 +136,7 @@ public class Runner {
 	}
 
 	public Date getDateOfBirth() {
-		return dateOfBirth;
+		return this.dateOfBirth;
 	}
 
 	public void setDateOfBirth(Date dateOfBirth) {
@@ -144,7 +144,7 @@ public class Runner {
 	}
 
 	public String getAddress() {
-		return address;
+		return this.address;
 	}
 
 	public void setAddress(String address) {
@@ -152,7 +152,7 @@ public class Runner {
 	}
 
 	public String getCity() {
-		return city;
+		return this.city;
 	}
 
 	public void setCity(String city) {
@@ -160,7 +160,7 @@ public class Runner {
 	}
 
 	public Country getCountry() {
-		return country;
+		return this.country;
 	}
 
 	public void setCountry(Country country) {
@@ -168,7 +168,7 @@ public class Runner {
 	}
 
 	public String getEmail() {
-		return email;
+		return this.email;
 	}
 
 	public void setEmail(String email) {
@@ -176,7 +176,7 @@ public class Runner {
 	}
 
 	public String getHomePhone() {
-		return homePhone;
+		return this.homePhone;
 	}
 
 	public void setHomePhone(String homePhone) {
@@ -184,7 +184,7 @@ public class Runner {
 	}
 
 	public String getMobilePhone() {
-		return mobilePhone;
+		return this.mobilePhone;
 	}
 
 	public void setMobilePhone(String mobilePhone) {
@@ -192,7 +192,7 @@ public class Runner {
 	}
 
 	public Country getNationality() {
-		return nationality;
+		return this.nationality;
 	}
 
 	public void setNationality(Country nationality) {
@@ -200,7 +200,7 @@ public class Runner {
 	}
 
 	public String getPostalCode() {
-		return postalCode;
+		return this.postalCode;
 	}
 
 	public void setPostalCode(String postalCode) {
@@ -208,7 +208,7 @@ public class Runner {
 	}
 
 	public String getPersonalID() {
-		return personalID;
+		return this.personalID;
 	}
 
 	public void setPersonalID(String personalID) {
@@ -216,7 +216,7 @@ public class Runner {
 	}
 	
 	public Gender getGender() {
-		return gender;
+		return this.gender;
 	}
 	
 	public void setGender(Gender gender) {
@@ -225,7 +225,7 @@ public class Runner {
 
 	
 	public boolean isAgree() {
-		return agree;
+		return this.agree;
 	}
 
 	
@@ -235,7 +235,7 @@ public class Runner {
 
 	
 	public float getAmount() {
-		return amount;
+		return this.amount;
 	}
 
 	

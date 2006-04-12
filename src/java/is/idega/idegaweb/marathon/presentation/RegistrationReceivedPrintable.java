@@ -8,20 +8,18 @@ package is.idega.idegaweb.marathon.presentation;
 
 import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
+
 import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
-import com.idega.business.IBOLookup;
-import com.idega.business.IBOLookupException;
-import com.idega.business.IBORuntimeException;
+
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Table;
 import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.PrintButton;
 import com.idega.presentation.ui.Window;
-import com.idega.user.business.GroupBusiness;
 import com.idega.user.data.Group;
 import com.idega.util.IWTimestamp;
 import com.idega.util.LocaleUtil;
@@ -134,15 +132,6 @@ public class RegistrationReceivedPrintable extends Window {
 	
 	private Text getText(String s) {
 		return new Text(s);
-	}
-	
-	private GroupBusiness getGroupBusiness(IWContext iwc) {
-		try {
-			return (GroupBusiness) IBOLookup.getServiceInstance(iwc, GroupBusiness.class);
-		}
-		catch (IBOLookupException e) {
-			throw new IBORuntimeException(e);
-		}
 	}
 	
 	public String getBundleIdentifier() {

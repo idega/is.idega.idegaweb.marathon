@@ -1,5 +1,5 @@
 /*
- * $Id: RunInputCollectionHandler.java,v 1.4 2005/08/16 14:09:36 laddi Exp $
+ * $Id: RunInputCollectionHandler.java,v 1.5 2006/04/12 14:43:32 laddi Exp $
  * Created on Feb 14, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -30,10 +30,10 @@ import com.idega.util.IWTimestamp;
 
 /**
  * 
- *  Last modified: $Date: 2005/08/16 14:09:36 $ by $Author: laddi $
+ *  Last modified: $Date: 2006/04/12 14:43:32 $ by $Author: laddi $
  * 
  * @author <a href="mailto:birna@idega.com">birna</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class RunInputCollectionHandler extends PresentationObject implements RemoteScriptCollection {
 
@@ -62,14 +62,13 @@ public class RunInputCollectionHandler extends PresentationObject implements Rem
 		    String nextYearString = String.valueOf(stamp.getYear());
 		 
 				try {
-					Group run = (Group) runBiz.getRunGroupByGroupId(runId);
+					Group run = runBiz.getRunGroupByGroupId(runId);
 
 					String runnerYearString = yearString;
 					boolean finished = false;
 					Map yearMap = runBiz.getYearsMap(run);
 					Year year = (Year) yearMap.get(yearString);
 					if (year != null && year.getLastRegistrationDate() != null) {
-						IWTimestamp runDate = new IWTimestamp(year.getLastRegistrationDate());
 						if (ts.isLaterThanOrEquals(stamp)) {
 							finished = true;
 						}

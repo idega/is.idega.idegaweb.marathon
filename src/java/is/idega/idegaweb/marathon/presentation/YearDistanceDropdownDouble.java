@@ -3,21 +3,14 @@
  */
 package is.idega.idegaweb.marathon.presentation;
 
-import is.idega.idegaweb.marathon.business.RunBusiness;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.idega.business.IBOLookup;
-import com.idega.business.IBOLookupException;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.ui.SelectDropdownDouble;
-import com.idega.user.business.GroupBusiness;
-import com.idega.user.data.Group;
 
 /**
  * Description: This class displays a double dropdown menu. The first menu displays <br>
@@ -34,18 +27,12 @@ public class YearDistanceDropdownDouble extends SelectDropdownDouble{
     }
     public void main(IWContext iwc) throws Exception {
         IWResourceBundle iwrb = getResourceBundle(iwc);
-        RunBusiness runBiz = getRunBiz(iwc);
-        GroupBusiness groupBiz = getGroupBiz(iwc);
         
         String runGroupID = iwc.getParameter(IWMarathonConstants.GROUP_TYPE_RUN);
         if(runGroupID!=null && !runGroupID.equals("")) {
             addEmptyElement(iwrb.getLocalizedString("year_dis_ddd.select_year","Select year..."),
                     iwrb.getLocalizedString("year_dis_ddd.select_distance","Select distance..."));
 
-            int runID = Integer.parseInt(runGroupID);
-            Group runGroup = groupBiz.getGroupByGroupID(runID);
-            Collection years = runBiz.getYears(runGroup);
-            Iterator yearIter = years.iterator();
 
             Map dis = new LinkedHashMap();
             dis.put("-1",iwrb.getLocalizedString("run_year_ddd.select_distance","Select distance..."));
@@ -93,15 +80,4 @@ public class YearDistanceDropdownDouble extends SelectDropdownDouble{
   		public String getBundleIdentifier() {
   			return IWMarathonConstants.IW_BUNDLE_IDENTIFIER;
   		}
-  		
-  	   private RunBusiness getRunBiz(IWContext iwc) throws IBOLookupException {
-  	       RunBusiness business = (RunBusiness) IBOLookup.getServiceInstance(iwc,RunBusiness.class);
-  	       return business;
-  	   }
-  	   private GroupBusiness getGroupBiz(IWContext iwc) throws IBOLookupException {
-  	        GroupBusiness business = (GroupBusiness) IBOLookup.getServiceInstance(iwc,GroupBusiness.class);
-  	        return business;
-  	    }
-
-
-}
+  	}

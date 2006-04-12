@@ -19,61 +19,65 @@ import com.idega.business.IBOServiceBean;
 import com.idega.data.IDOLookup;
 import com.idega.user.data.Group;
 
-
 /**
  * @author laddi
  */
-public class RunChipNumberImportBean extends IBOServiceBean  implements RunChipNumberImport{
+public class RunChipNumberImportBean extends IBOServiceBean implements RunChipNumberImport {
 
 	private UserTransaction transaction;
 	private ImportFile file;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.idega.block.importer.business.ImportFileHandler#getFailedRecords()
 	 */
 	public List getFailedRecords() throws RemoteException {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.idega.block.importer.business.ImportFileHandler#handleRecords()
 	 */
 	public boolean handleRecords() throws RemoteException {
-		transaction = getSessionContext().getUserTransaction();
+		this.transaction = getSessionContext().getUserTransaction();
 		try {
-			transaction.begin();
-			
+			this.transaction.begin();
+
 			String item;
 			int count = 1;
-			String chipBunchNumber = file.getFile().getName();
+			String chipBunchNumber = this.file.getFile().getName();
 			chipBunchNumber = chipBunchNumber.substring(chipBunchNumber.indexOf("_") + 1);
-			
+
 			ParticipantHome runHome = (ParticipantHome) IDOLookup.getHome(Participant.class);
 			Collection runners = runHome.findAllWithoutChipNumber(126);
 			if (!runners.isEmpty()) {
 				int runnersCount = runners.size();
 				Iterator iterator = runners.iterator();
-				while ( !(item=(String)file.getNextRecord()).equals("") && iterator.hasNext() ) {
+				while (!(item = (String) this.file.getNextRecord()).equals("") && iterator.hasNext()) {
 					Participant runner = (Participant) iterator.next();
-					String chipNumber = file.getValueAtIndexFromRecordString(1, item);
-					
+					String chipNumber = this.file.getValueAtIndexFromRecordString(1, item);
+
 					runner.setChipNumber(chipNumber);
 					runner.setChipBunchNumber(chipBunchNumber);
 					runner.store();
-					
-					System.out.println("Processed record number: "+ (count++) + " of total runners: " + runnersCount);
+
+					System.out.println("Processed record number: " + (count++) + " of total runners: " + runnersCount);
 				}
 			}
 			else {
 				System.out.println("No runners without chip number...");
 			}
-			transaction.commit();
+			this.transaction.commit();
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
 
 			try {
-				transaction.rollback();
+				this.transaction.rollback();
 			}
 			catch (SystemException e) {
 				e.printStackTrace();
@@ -82,22 +86,27 @@ public class RunChipNumberImportBean extends IBOServiceBean  implements RunChipN
 		}
 		return true;
 	}
-	
-	public void log(String msg){
-		super.log("[Missing Names Import Handler] "+msg);
+
+	public void log(String msg) {
+		super.log("[Missing Names Import Handler] " + msg);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.idega.block.importer.business.ImportFileHandler#setImportFile(com.idega.block.importer.data.ImportFile)
 	 */
 	public void setImportFile(ImportFile file) throws RemoteException {
 		this.file = file;
 
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.idega.block.importer.business.ImportFileHandler#setRootGroup(com.idega.user.data.Group)
 	 */
 	public void setRootGroup(Group rootGroup) throws RemoteException {
-		
+
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: GroupRunInputCollectionHandler.java,v 1.1 2005/05/31 19:04:34 laddi Exp $
+ * $Id: GroupRunInputCollectionHandler.java,v 1.2 2006/04/12 14:43:32 laddi Exp $
  * Created on Feb 14, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -30,10 +30,10 @@ import com.idega.util.IWTimestamp;
 
 /**
  * 
- *  Last modified: $Date: 2005/05/31 19:04:34 $ by $Author: laddi $
+ *  Last modified: $Date: 2006/04/12 14:43:32 $ by $Author: laddi $
  * 
  * @author <a href="mailto:birna@idega.com">birna</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class GroupRunInputCollectionHandler extends PresentationObject implements RemoteScriptCollection {
 
@@ -59,7 +59,7 @@ public class GroupRunInputCollectionHandler extends PresentationObject implement
 		    String yearString = y.toString();
 		 
 				try {
-					Group run = (Group) runBiz.getRunGroupByGroupId(runId);
+					Group run = runBiz.getRunGroupByGroupId(runId);
 					Collection distances = runBiz.getDistancesMap(run,yearString);
 		
 			    Vector ids = new Vector();

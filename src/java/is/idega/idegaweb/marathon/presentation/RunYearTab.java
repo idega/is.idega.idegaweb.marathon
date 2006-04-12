@@ -49,10 +49,10 @@ public class RunYearTab extends UserGroupTab{
 			String lastRegistrationDate = iwc.getParameter(PARAMETER_LAST_REGISTRATION_DATE);
 			
 			if (runDate != null) {
-				fieldValues.put(PARAMETER_RUN_DATE, new IWTimestamp(runDate).getTimestamp());
+				this.fieldValues.put(PARAMETER_RUN_DATE, new IWTimestamp(runDate).getTimestamp());
 			}
 			if (lastRegistrationDate != null) {
-				fieldValues.put(PARAMETER_LAST_REGISTRATION_DATE, new IWTimestamp(lastRegistrationDate).getTimestamp());
+				this.fieldValues.put(PARAMETER_LAST_REGISTRATION_DATE, new IWTimestamp(lastRegistrationDate).getTimestamp());
 			}
 			
 			updateFieldsDisplayStatus();
@@ -69,10 +69,10 @@ public class RunYearTab extends UserGroupTab{
 			Year year = ConverterUtility.getInstance().convertGroupToYear(new Integer(getGroupId()));
 			
 			if (year.getRunDate() != null) {
-				fieldValues.put(PARAMETER_RUN_DATE, year.getRunDate());
+				this.fieldValues.put(PARAMETER_RUN_DATE, year.getRunDate());
 			}
 			if (year.getLastRegistrationDate() != null) {
-				fieldValues.put(PARAMETER_LAST_REGISTRATION_DATE, year.getLastRegistrationDate());
+				this.fieldValues.put(PARAMETER_LAST_REGISTRATION_DATE, year.getLastRegistrationDate());
 			}
 
 			updateFieldsDisplayStatus();
@@ -92,16 +92,16 @@ public class RunYearTab extends UserGroupTab{
 	 * @see com.idega.user.presentation.UserTab#initializeFields()
 	 */
 	public void initializeFields() {
-		runDate = new TimestampInput(PARAMETER_RUN_DATE);
-		lastRegistrationDate = new TimestampInput(PARAMETER_LAST_REGISTRATION_DATE);
+		this.runDate = new TimestampInput(PARAMETER_RUN_DATE);
+		this.lastRegistrationDate = new TimestampInput(PARAMETER_LAST_REGISTRATION_DATE);
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.idega.user.presentation.UserTab#initializeFieldValues()
 	 */
 	public void initializeFieldValues() {
-		fieldValues.put(PARAMETER_RUN_DATE, new IWTimestamp().getTimestamp());
-		fieldValues.put(PARAMETER_LAST_REGISTRATION_DATE, new IWTimestamp().getTimestamp());
+		this.fieldValues.put(PARAMETER_RUN_DATE, new IWTimestamp().getTimestamp());
+		this.fieldValues.put(PARAMETER_LAST_REGISTRATION_DATE, new IWTimestamp().getTimestamp());
 		
 		updateFieldsDisplayStatus();
 	}
@@ -113,11 +113,11 @@ public class RunYearTab extends UserGroupTab{
 		IWContext iwc = IWContext.getInstance();
 		IWResourceBundle iwrb = getResourceBundle(iwc);
 		
-		runDateText = new Text(iwrb.getLocalizedString("run_tab.run_date", "Run date"));
-		runDateText.setBold();
+		this.runDateText = new Text(iwrb.getLocalizedString("run_tab.run_date", "Run date"));
+		this.runDateText.setBold();
 		
-		lastRegistrationDateText = new Text(iwrb.getLocalizedString("run_tab.last_registration_date", "Last registration date"));
-		lastRegistrationDateText.setBold();
+		this.lastRegistrationDateText = new Text(iwrb.getLocalizedString("run_tab.last_registration_date", "Last registration date"));
+		this.lastRegistrationDateText.setBold();
 	}
 	
 	/* (non-Javadoc)
@@ -134,11 +134,11 @@ public class RunYearTab extends UserGroupTab{
 		table.setWidth(Table.HUNDRED_PERCENT);
 		table.setColumnAlignment(1, Table.HORIZONTAL_ALIGN_RIGHT);
 
-		table.add(runDateText, 1, 1);
-		table.add(runDate, 2, 1);
+		table.add(this.runDateText, 1, 1);
+		table.add(this.runDate, 2, 1);
 		
-		table.add(lastRegistrationDateText, 1, 2);
-		table.add(lastRegistrationDate, 2, 2);
+		table.add(this.lastRegistrationDateText, 1, 2);
+		table.add(this.lastRegistrationDate, 2, 2);
 		
 		add(table, 1, 1);
 	}
@@ -151,8 +151,8 @@ public class RunYearTab extends UserGroupTab{
 			if (getGroupId() > -1) {
 				Year year = ConverterUtility.getInstance().convertGroupToYear(new Integer(getGroupId()));
 				
-				year.setRunDate((Timestamp) fieldValues.get(PARAMETER_RUN_DATE));
-				year.setLastRegistrationDate((Timestamp) fieldValues.get(PARAMETER_LAST_REGISTRATION_DATE));
+				year.setRunDate((Timestamp) this.fieldValues.get(PARAMETER_RUN_DATE));
+				year.setLastRegistrationDate((Timestamp) this.fieldValues.get(PARAMETER_LAST_REGISTRATION_DATE));
 
 				year.store();
 			}
@@ -169,8 +169,8 @@ public class RunYearTab extends UserGroupTab{
 	 * @see com.idega.user.presentation.UserTab#updateFieldsDisplayStatus()
 	 */
 	public void updateFieldsDisplayStatus() {
-		runDate.setTimestamp((Timestamp) fieldValues.get(PARAMETER_RUN_DATE));
-		lastRegistrationDate.setTimestamp((Timestamp) fieldValues.get(PARAMETER_LAST_REGISTRATION_DATE));
+		this.runDate.setTimestamp((Timestamp) this.fieldValues.get(PARAMETER_RUN_DATE));
+		this.lastRegistrationDate.setTimestamp((Timestamp) this.fieldValues.get(PARAMETER_LAST_REGISTRATION_DATE));
 	}
 	
 	public String getBundleIdentifier() {

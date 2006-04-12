@@ -43,7 +43,7 @@ public class RunGroupComparator implements Comparator {
 		if (counter2 == null) {
 			counter2 = new Counter();
 			int index = 0;
-			Iterator iter = map.getCollection(r1).iterator();
+			Iterator iter = this.map.getCollection(r1).iterator();
 			while (iter.hasNext()) {
 				Participant element = (Participant) iter.next();
 				if (index < 3) {

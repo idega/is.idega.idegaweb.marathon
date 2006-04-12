@@ -29,7 +29,6 @@ import com.idega.user.presentation.UserTab;
  */
 public class UserRunTab extends UserTab{
 	
-	private Text yearText;
 	private Text runText;
 	
 	private Collection runs = null;
@@ -78,8 +77,7 @@ public class UserRunTab extends UserTab{
 	public void initializeTexts() {
 		IWContext iwc = IWContext.getInstance();
 		IWResourceBundle iwrb = getResourceBundle(iwc);
-		yearText = new Text(iwrb.getLocalizedString("run_tab.year", "Year"));
-		runText = new Text(iwrb.getLocalizedString("run_tab.run", "Run"));
+		this.runText = new Text(iwrb.getLocalizedString("run_tab.run", "Run"));
 	}
 	/* (non-Javadoc)
 	 * @see com.idega.user.presentation.UserTab#lineUpFields()
@@ -104,7 +102,7 @@ public class UserRunTab extends UserTab{
 		}
 		
 		try {
-			runs = runBiz.getRunsForUser(user);
+			this.runs = runBiz.getRunsForUser(user);
 		}
 		catch (RemoteException e) {
 			e.printStackTrace();
@@ -115,9 +113,9 @@ public class UserRunTab extends UserTab{
 		int row = 1;
 		t.setCellpadding(0);
 		t.setCellspacing(0);
-		t.add(runText,1,row++);
-		if(runs != null) {
-			Iterator i = runs.iterator();
+		t.add(this.runText,1,row++);
+		if(this.runs != null) {
+			Iterator i = this.runs.iterator();
 			while(i.hasNext()) {
 				Group run = (Group) i.next();
 				Link l = new Link(iwrb.getLocalizedString(run.getName(), run.getName()));

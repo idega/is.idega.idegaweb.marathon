@@ -15,14 +15,14 @@ public class RunGroup {
 	private Counter counter;
 	
 	public RunGroup(String name) {
-		groupName = name;
+		this.groupName = name;
 	}
 	
 	/**
 	 * @return Returns the counter.
 	 */
 	public Counter getCounter() {
-		return counter;
+		return this.counter;
 	}
 	
 	/**
@@ -36,6 +36,6 @@ public class RunGroup {
 	 * @return Returns the groupName.
 	 */
 	public String getGroupName() {
-		return groupName;
+		return this.groupName;
 	}
 }
