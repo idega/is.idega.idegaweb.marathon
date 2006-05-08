@@ -82,7 +82,7 @@ public class RunDistanceDropdownDouble extends SelectDropdownDouble {
 			return str;
 		}
 		else {
-			IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
+			IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWMarathonConstants.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
 			return iwrb.getLocalizedString("run_year_ddd.select_distance", "Select distance...");
 		}
 	}
