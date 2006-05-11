@@ -8,7 +8,10 @@
     <project>com.idega.core</project>
     <project>com.idega.user</project>
     <project>com.idega.block.importer</project>
+    <project>com.idega.block.trade</project>
     <project>com.idega.block.text</project>
+    <project>com.idega.block.creditcard</project>
+    <project>is.idega.block.family</project>
   </projects>
   <buildSpec>
     <buildCommand>
