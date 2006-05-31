@@ -1,5 +1,5 @@
 /*
- * $Id: IWBundleStarter.java,v 1.1 2005/05/24 12:06:29 laddi Exp $
+ * $Id: IWBundleStarter.java,v 1.2 2006/05/31 22:49:06 gimmi Exp $
  * Created on May 23, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -9,22 +9,31 @@
  */
 package is.idega.idegaweb.marathon;
 
+import java.io.IOException;
+import java.rmi.RemoteException;
+
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
+
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
+
 import com.idega.block.creditcard.data.KortathjonustanMerchant;
 import com.idega.block.creditcard.data.KortathjonustanMerchantHome;
+import com.idega.business.IBOLookup;
+import com.idega.core.business.ICApplicationBindingBusiness;
 import com.idega.data.IDOLookup;
 import com.idega.data.IDOLookupException;
+import com.idega.idegaweb.IWApplicationContext;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWBundleStartable;
+import com.idega.idegaweb.IWMainApplication;
 
 
 /**
- * Last modified: $Date: 2005/05/24 12:06:29 $ by $Author: laddi $
+ * Last modified: $Date: 2006/05/31 22:49:06 $ by $Author: gimmi $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class IWBundleStarter implements IWBundleStartable {
 	
@@ -32,30 +41,47 @@ public class IWBundleStarter implements IWBundleStartable {
 	 * @see com.idega.idegaweb.IWBundleStartable#start(com.idega.idegaweb.IWBundle)
 	 */
 	public void start(IWBundle starterBundle) {
-		String merchantPK = starterBundle.getProperty(IWMarathonConstants.PROPERTY_MERCHANT_PK);
-		
+		IWApplicationContext iwac = IWMainApplication.getDefaultIWApplicationContext();
+		String merchantPK = null;
+		ICApplicationBindingBusiness abb = null;
 		try {
-			KortathjonustanMerchant merchant = null;
+			abb= (ICApplicationBindingBusiness) IBOLookup.getServiceInstance(iwac, ICApplicationBindingBusiness.class);
+			merchantPK = abb.get(IWMarathonConstants.PROPERTY_MERCHANT_PK);
+		
 			if (merchantPK == null) {
-				merchant = ((KortathjonustanMerchantHome) IDOLookup.getHome(KortathjonustanMerchant.class)).create();
-			}
-			else {
-				merchant = ((KortathjonustanMerchantHome) IDOLookup.getHome(KortathjonustanMerchant.class)).findByPrimaryKey(new Integer(merchantPK));
+				merchantPK = starterBundle.getProperty(IWMarathonConstants.PROPERTY_MERCHANT_PK);
 			}
 			
-			merchant.setName("Marathon.is");
-			merchant.store();
-			starterBundle.setProperty(IWMarathonConstants.PROPERTY_MERCHANT_PK, merchant.getPrimaryKey().toString());
+			try {
+				KortathjonustanMerchant merchant = null;
+				if (merchantPK == null) {
+					merchant = ((KortathjonustanMerchantHome) IDOLookup.getHome(KortathjonustanMerchant.class)).create();
+				}
+				else {
+					merchant = ((KortathjonustanMerchantHome) IDOLookup.getHome(KortathjonustanMerchant.class)).findByPrimaryKey(new Integer(merchantPK));
+				}
+				
+				merchant.setName("Marathon.is");
+				merchant.store();
+				starterBundle.setProperty(IWMarathonConstants.PROPERTY_MERCHANT_PK, merchant.getPrimaryKey().toString());
+
+				abb.put(IWMarathonConstants.PROPERTY_MERCHANT_PK, merchant.getPrimaryKey().toString());
+			}
+			catch (IDOLookupException ile) {
+				ile.printStackTrace();
+			}
+			catch (FinderException fe) {
+				fe.printStackTrace();
+			}
+			catch (CreateException ce) {
+				ce.printStackTrace();
+			}	
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		catch (IDOLookupException ile) {
-			ile.printStackTrace();
-		}
-		catch (FinderException fe) {
-			fe.printStackTrace();
-		}
-		catch (CreateException ce) {
-			ce.printStackTrace();
-		}
+
 	}
 
 	/* (non-Javadoc)

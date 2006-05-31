@@ -10,6 +10,8 @@ import is.idega.idegaweb.marathon.data.ParticipantHome;
 import is.idega.idegaweb.marathon.data.Run;
 import is.idega.idegaweb.marathon.data.Year;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
+
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.sql.Date;
 import java.text.MessageFormat;
@@ -35,6 +37,7 @@ import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
 import com.idega.business.IBORuntimeException;
 import com.idega.business.IBOServiceBean;
+import com.idega.core.business.ICApplicationBindingBusiness;
 import com.idega.core.contact.data.Email;
 import com.idega.core.location.data.Address;
 import com.idega.core.location.data.AddressHome;
@@ -704,8 +707,20 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		return new ArrayList();
 	}
 
+	private String getMerchantPK() {
+		try {
+			ICApplicationBindingBusiness abb = (ICApplicationBindingBusiness) IBOLookup.getServiceInstance(getIWApplicationContext(), ICApplicationBindingBusiness.class);
+			return abb.get(IWMarathonConstants.PROPERTY_MERCHANT_PK);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	private CreditCardMerchant getCreditCardMerchant() throws FinderException {
-		String merchantPK = getIWApplicationContext().getIWMainApplication().getBundle(IWMarathonConstants.IW_BUNDLE_IDENTIFIER).getProperty(IWMarathonConstants.PROPERTY_MERCHANT_PK);
+		String merchantPK = getMerchantPK();
 		if (merchantPK != null) {
 			try {
 				return ((KortathjonustanMerchantHome) IDOLookup.getHome(KortathjonustanMerchant.class)).findByPrimaryKey(new Integer(merchantPK));
