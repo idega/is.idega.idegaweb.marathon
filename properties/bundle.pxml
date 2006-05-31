@@ -45,6 +45,19 @@
             <type>map</type>
           </key>
           <key>
+            <name>is.idega.idegaweb.marathon.presentation.Registration</name>
+            <value>
+              <map>
+                <key>
+                  <name>component_property_file</name>
+                  <type>java.lang.String</type>
+                  <value>is.idega.idegaweb.marathon.presentation.Registration.pxml</value>
+                </key>
+              </map>
+            </value>
+            <type>map</type>
+          </key>
+          <key>
             <name>is.idega.idegaweb.marathon.data.Run</name>
             <value>
               <map>
