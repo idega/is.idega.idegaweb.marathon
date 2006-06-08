@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.29 2006/06/02 09:05:08 sigtryggur Exp $
+ * $Id: Registration.java,v 1.30 2006/06/08 11:05:08 laddi Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -57,10 +57,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2006/06/02 09:05:08 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2006/06/08 11:05:08 $ by $Author: laddi $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  */
 public class Registration extends RunBlock {
 	
@@ -397,11 +397,15 @@ public class Registration extends RunBlock {
 				ssnISField.setContent(this.runner.getUser().getPersonalID());
 			}
 		}
+		
+		IWTimestamp stampNow = new IWTimestamp();
+		stampNow.addYears(-3);
 
 		IWTimestamp birthStamp = new IWTimestamp();
 		DateInput ssnField = (DateInput) getStyledInterface(new DateInput(PARAMETER_PERSONAL_ID));
 		ssnField.setAsNotEmpty("Date of birth can not be empty");
 		ssnField.setYearRange(birthStamp.getYear(), birthStamp.getYear() - 100);
+		ssnField.setLatestPossibleDate(stampNow.getDate(), "Invalid date of birth.  Check if you have entered the correct date.");
 		if (this.runner.getDateOfBirth() != null) {
 			ssnField.setDate(this.runner.getDateOfBirth());
 		}
