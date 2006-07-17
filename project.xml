@@ -9,6 +9,11 @@
   <inceptionYear>2000</inceptionYear>
   <shortDescription>Marathon</shortDescription>
   <versions>
+    <version>
+      <id>3.1.0</id>
+      <name>3.1.0</name>
+      <tag>MARATHON_3_1_0</tag>
+    </version>
   </versions>
   <branches/>
   <developers>
@@ -42,7 +47,6 @@
     </developer>
   </developers>
   <dependencies>
-
     <dependency>
       <groupId>bundles</groupId>
       <artifactId>com.idega.core</artifactId>
@@ -52,7 +56,7 @@
       <properties>
         <eclipse.dependency>true</eclipse.dependency>
       </properties>
-	</dependency> 
+    </dependency>
     <dependency>
       <groupId>bundles</groupId>
       <artifactId>com.idega.user</artifactId>
@@ -113,8 +117,7 @@
         <eclipse.dependency>true</eclipse.dependency>
       </properties>
     </dependency>
-
-   </dependencies>
+  </dependencies>
   <build>
     <sourceDirectory>src/java</sourceDirectory>
     <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
