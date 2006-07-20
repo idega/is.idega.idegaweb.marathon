@@ -59,16 +59,17 @@ public class RunResultViewer extends Block {
 	private static final String DEFAULT_GROUP_ROW_STYLE = "font-family:Arial,Helvetica,sans-serif;font-size:10px;font-weight:bold;padding:4px;background-color:#ACACAC;color:#FFFFFF";
 	private static final String DEFAULT_HEADER_ROW_STYLE = "font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:bold;padding:2px;";
 	private static final String DEFAULT_LIST_ROW_STYLE = "font-family:Arial,Helvetica,sans-serif;font-size:10px;padding:2px;";
-
+	
 	private static final String DARK_COLOR = "#E9E9E9";
 	private static final String LIGHT_COLOR = "#FFFFFF";
 
 	private int COLUMN_COUNT = 13;
 
+
 	private Distance distance;
 	private Year year;
 
-	Collator _collator;
+	private Collator _collator;
 	private IWContext _iwc;
 	private IWResourceBundle iwrb;
 
@@ -84,10 +85,10 @@ public class RunResultViewer extends Block {
 	private HashMap countryMap = new HashMap();
 
 	public void main(IWContext iwc) throws Exception {
-		this._iwc = iwc;
-		this.iwrb = getResourceBundle(iwc);
+		_iwc = iwc;
+		iwrb = getResourceBundle(iwc);
 		this._collator = Collator.getInstance(iwc.getCurrentLocale());
-		this.util = new SelectorUtility();
+		util = new SelectorUtility();
 
 		if (this.runPK != null) {
 			this.run = ConverterUtility.getInstance().convertGroupToRun(new Integer(this.runPK));
@@ -101,7 +102,7 @@ public class RunResultViewer extends Block {
 		if (iwc.isParameterSet(IWMarathonConstants.PARAMETER_SORT_BY)) {
 			this.sortBy = Integer.parseInt(iwc.getParameter(IWMarathonConstants.PARAMETER_SORT_BY));
 		}
-
+		
 		if (iwc.isParameterSet(IWMarathonConstants.GROUP_TYPE_RUN_YEAR)) {
 			try {
 				this.year = ConverterUtility.getInstance().convertGroupToYear(new Integer(iwc.getParameter(IWMarathonConstants.GROUP_TYPE_RUN_YEAR)));
@@ -121,11 +122,8 @@ public class RunResultViewer extends Block {
 			}
 		}
 
-		Form form = null;// (Form) iwc.getApplicationAttribute("run_result_cache_"
-											// + runPK + "_" + (year != null ? year.getPrimaryKey() +
-											// "_" : "") + (distance != null ?
-											// distance.getPrimaryKey() + "_" : "") + sortBy);
-
+		Form form = null;//(Form) iwc.getApplicationAttribute("run_result_cache_" + runPK + "_" + (year != null ? year.getPrimaryKey() + "_" : "") + (distance != null ? distance.getPrimaryKey() + "_" : "") + sortBy);
+		
 		if (form == null) {
 			form = new Form();
 			Table table = new Table();
@@ -134,46 +132,44 @@ public class RunResultViewer extends Block {
 			table.setColumns(this.COLUMN_COUNT);
 			table.setWidth(Table.HUNDRED_PERCENT);
 			int row = 1;
-
+			
 			table.setCellpaddingLeft(1, row, 16);
 			table.mergeCells(1, row, table.getColumns(), row);
-
+			
 			table.add(getYearsDropdown(this.run), 1, row);
 			table.add(Text.getNonBrakingSpace(), 1, row);
 			table.add(getDistanceDropdown(), 1, row);
 			table.add(Text.getNonBrakingSpace(), 1, row);
 			table.add(getSortDropdown(), 1, row++);
 			table.setHeight(row++, 12);
-
+	
 			if (this.distance != null) {
-				row = insertHeadersIntoTable(table, row);
-
-				switch (this.sortBy) {
-					case IWMarathonConstants.RYSDD_TOTAL:
-						getTotalResults(table, row);
-						break;
-					case IWMarathonConstants.RYSDD_GROUPS:
-						getGroupResults(table, row);
-						break;
-					case IWMarathonConstants.RYSDD_GROUPS_COMP:
-						getGroupCompetitionResults(table, row);
-						break;
-				}
+					row = insertHeadersIntoTable(table, row);
+				
+					switch (this.sortBy) {
+						case IWMarathonConstants.RYSDD_TOTAL:
+							getTotalResults(table, row);
+							break;
+						case IWMarathonConstants.RYSDD_GROUPS:
+							getGroupResults(table, row);
+							break;
+						case IWMarathonConstants.RYSDD_GROUPS_COMP:
+							getGroupCompetitionResults(table, row);
+							break;
+					}
 			}
-
+			
 			for (int a = 2; a < this.COLUMN_COUNT; a = a + 2) {
 				table.setWidth(a, 2);
 				table.setColumnColor(a, "#FFFFFF");
 			}
-
+			
 			form.add(table);
-			// iwc.setApplicationAttribute("run_result_cache_" + runPK + "_" + (year
-			// != null ? year.getPrimaryKey() + "_" : "") + (distance != null ?
-			// distance.getPrimaryKey() + "_" : "") + sortBy, form);
+			//iwc.setApplicationAttribute("run_result_cache_" + runPK + "_" + (year != null ? year.getPrimaryKey() + "_" : "") + (distance != null ? distance.getPrimaryKey() + "_" : "") + sortBy, form);
 		}
 		add(form);
 	}
-
+	
 	private void getTotalResults(Table table, int row) {
 		try {
 			Collection runs = getRunBiz().getRunnersByDistance(this.distance, null);
@@ -199,10 +195,10 @@ public class RunResultViewer extends Block {
 			List runGroups = new ArrayList(getGroupBiz().getChildGroups(this.distance));
 			sortRunnerGroups(runGroups);
 			Iterator runGroupIter = runGroups.iterator();
-
+			
 			while (runGroupIter.hasNext()) {
 				Group runGroup = (Group) runGroupIter.next();
-
+	
 				Collection runners = getRunBiz().getRunnersByDistance(this.distance, runGroup);
 				if (runners.size() > 0) {
 					row = insertRunGroupIntoTable(table, row, "group_" + runGroup.getName());
@@ -214,7 +210,7 @@ public class RunResultViewer extends Block {
 							row = insertRunIntoTable(table, row, run, num, num);
 							num++;
 						}
-
+						
 						if (!runIter.hasNext()) {
 							table.setHeight(row++, 2);
 						}
@@ -230,10 +226,10 @@ public class RunResultViewer extends Block {
 	private void getGroupCompetitionResults(Table table, int row) {
 		try {
 			List runs = new ArrayList(getRunBiz().getRunnersByDistance(this.distance, null));
-
+			
 			Map runGroups = new HashMap();
 			RunGroupMap map = new RunGroupMap();
-
+			
 			Participant runner;
 			RunGroup runnerGroup;
 			Iterator iterator = runs.iterator();
@@ -245,7 +241,7 @@ public class RunResultViewer extends Block {
 						runnerGroup = new RunGroup(runner.getRunGroupName());
 						runGroups.put(runner.getRunGroupName(), runnerGroup);
 					}
-
+					
 					map.put(runnerGroup, runner);
 				}
 			}
@@ -265,14 +261,14 @@ public class RunResultViewer extends Block {
 				runnersInRunGroup = map.getCollection(runGroup);
 				if (runnersInRunGroup.size() >= 3) {
 					row = insertRunGroupIntoTable(table, row, runGroup.getGroupName() + " - " + runGroup.getCounter().toString());
-
+	
 					runIter = runnersInRunGroup.iterator();
 					num = 1;
 					count = 0;
 					while (runIter.hasNext()) {
 						run = (Participant) runIter.next();
 						num = runs.indexOf(run);
-						row = insertRunIntoTable(table, row, run, num, count + 1);
+						row = insertRunIntoTable(table, row, run, num, count+1);
 						count++;
 					}
 				}
@@ -284,7 +280,7 @@ public class RunResultViewer extends Block {
 	}
 
 	private DropdownMenu getYearsDropdown(Group run) throws RemoteException {
-		DropdownMenu years = (DropdownMenu) this.util.getSelectorFromIDOEntities(new DropdownMenu(IWMarathonConstants.GROUP_TYPE_RUN_YEAR), run.getChildren(), "getName", this.iwrb);
+		DropdownMenu years = (DropdownMenu) util.getSelectorFromIDOEntities(new DropdownMenu(IWMarathonConstants.GROUP_TYPE_RUN_YEAR), run.getChildren(), "getName", iwrb);
 		years.addMenuElementFirst("", "");
 		years.setToSubmit();
 		years.keepStatusOnAction();
@@ -297,20 +293,16 @@ public class RunResultViewer extends Block {
 		distanceMenu.keepStatusOnAction();
 		distanceMenu.addMenuElementFirst("", "");
 
-		Integer threeKM = new Integer(this.iwrb.getIWBundleParent().getProperty("3_km_id", "126"));
-		// Integer sevenKM = new
-		// Integer(iwrb.getIWBundleParent().getProperty("7_km_id", "113"));
+		Integer threeKM = new Integer(iwrb.getIWBundleParent().getProperty("3_km_id", "126"));
+		//Integer sevenKM = new Integer(iwrb.getIWBundleParent().getProperty("7_km_id", "113"));
 
 		if (this.year != null) {
 			List distances = getRunBiz().getDistancesMap(this.run, this.year.getName());
 			Iterator iter = distances.iterator();
 			while (iter.hasNext()) {
 				Group distance = (Group) iter.next();
-				if (!distance.getPrimaryKey().equals(threeKM)/*
-																											 * &&
-																											 * !distance.getPrimaryKey().equals(sevenKM)
-																											 */) {
-					distanceMenu.addMenuElement(distance.getPrimaryKey().toString(), this.iwrb.getLocalizedString(distance.getName(), distance.getName()));
+				if (!distance.getPrimaryKey().equals(threeKM)/* && !distance.getPrimaryKey().equals(sevenKM)*/) {
+					distanceMenu.addMenuElement(distance.getPrimaryKey().toString(), iwrb.getLocalizedString(distance.getName(), distance.getName()));
 				}
 			}
 		}
@@ -320,9 +312,9 @@ public class RunResultViewer extends Block {
 
 	private DropdownMenu getSortDropdown() throws RemoteException {
 		DropdownMenu sort = new DropdownMenu(IWMarathonConstants.PARAMETER_SORT_BY);
-		sort.addMenuElement(IWMarathonConstants.RYSDD_TOTAL, this.iwrb.getLocalizedString(IWMarathonConstants.PARAMETER_TOTAL, "Total result list"));
-		sort.addMenuElement(IWMarathonConstants.RYSDD_GROUPS, this.iwrb.getLocalizedString(IWMarathonConstants.PARAMETER_GROUPS, "Groups"));
-		sort.addMenuElement(IWMarathonConstants.RYSDD_GROUPS_COMP, this.iwrb.getLocalizedString(IWMarathonConstants.PARAMETER_GROUPS_COMPETITION, "Group competition"));
+		sort.addMenuElement(IWMarathonConstants.RYSDD_TOTAL, iwrb.getLocalizedString(IWMarathonConstants.PARAMETER_TOTAL, "Total result list"));
+		sort.addMenuElement(IWMarathonConstants.RYSDD_GROUPS, iwrb.getLocalizedString(IWMarathonConstants.PARAMETER_GROUPS, "Groups"));
+		sort.addMenuElement(IWMarathonConstants.RYSDD_GROUPS_COMP, iwrb.getLocalizedString(IWMarathonConstants.PARAMETER_GROUPS_COMPETITION, "Group competition"));
 		sort.setToSubmit();
 		sort.keepStatusOnAction();
 
@@ -333,7 +325,7 @@ public class RunResultViewer extends Block {
 	 * Sorts groups based on their names
 	 * 
 	 * @param groups
-	 *          The list of groups to sort
+	 *            The list of groups to sort
 	 */
 	private void sortRunnerGroups(List groups) {
 		Collections.sort(groups, new Comparator() {
@@ -348,25 +340,27 @@ public class RunResultViewer extends Block {
 
 	private int insertRunIntoTable(Table table, int row, Participant run, int num, int participantRow) {
 		int column = 1;
-
+		
 		table.add(getRunnerRowText(Integer.toString(num)), column, row);
 		table.setStyleClass(column, row, getStyleName(STYLENAME_LIST_ROW));
 		table.setAlignment(column++, row, Table.HORIZONTAL_ALIGN_CENTER);
 
 		column++;
-
+		
 		String runTime = getTimeStringFromRunTime(run.getRunTime());
 		table.add(getRunnerRowText(runTime), column, row);
 		table.setStyleClass(column, row, getStyleName(STYLENAME_LIST_ROW));
 		table.setAlignment(column++, row, Table.HORIZONTAL_ALIGN_CENTER);
 
 		column++;
-
+		
 		String chipTime = run.getChipTime() != -1 ? getTimeStringFromRunTime(run.getChipTime()) : "-";
 		table.add(getRunnerRowText(chipTime), column, row);
 		table.setStyleClass(column, row, getStyleName(STYLENAME_LIST_ROW));
 		table.setAlignment(column++, row, Table.HORIZONTAL_ALIGN_CENTER);
 
+		column++;
+		
 		if (this.distance != null && this.distance.getNumberOfSplits() >= 1) {
 			String splitTime = run.getSplitTime1() != -1 ? getTimeStringFromRunTime(run.getSplitTime1()) : "-";
 			table.add(getRunnerRowText(splitTime), column, row);
@@ -374,7 +368,7 @@ public class RunResultViewer extends Block {
 			table.setAlignment(column++, row, Table.HORIZONTAL_ALIGN_CENTER);
 
 			column++;
-
+			
 			if (this.distance.getNumberOfSplits() == 2) {
 				splitTime = run.getSplitTime2() != -1 ? getTimeStringFromRunTime(run.getSplitTime2()) : "-";
 				table.add(getRunnerRowText(splitTime), column, row);
@@ -384,35 +378,34 @@ public class RunResultViewer extends Block {
 				column++;
 			}
 		}
-
+		
 		try {
 			User user = getUserBiz().getUser(run.getUserID());
 			table.add(getRunnerRowText(user.getName()), column, row);
 			table.setStyleClass(column++, row, getStyleName(STYLENAME_LIST_ROW));
-
+	
 			column++;
-
+			
 			IWTimestamp birthDate = new IWTimestamp(user.getDateOfBirth());
 			table.add(getRunnerRowText(Integer.toString(birthDate.getYear())), column, row);
 			table.setStyleClass(column, row, getStyleName(STYLENAME_LIST_ROW));
 			table.setAlignment(column++, row, Table.HORIZONTAL_ALIGN_CENTER);
-
+			
 			column++;
 		}
 		catch (RemoteException re) {
 			log(re);
 		}
-
+		
 		Country country = null;
 		try {
-			String userNationality = run.getUserNationality();
-			if (this.countryMap.containsKey(userNationality)) {
-				country = (Country) this.countryMap.get(userNationality);
-			}
-			else {
+		    String userNationality = run.getUserNationality();
+		    if (this.countryMap.containsKey(userNationality)) {
+		        country = (Country)this.countryMap.get(userNationality);
+		    } else {
 				country = getRunBiz().getCountryByNationality(userNationality);
-				this.countryMap.put(userNationality, country);
-			}
+		        this.countryMap.put(userNationality, country);
+		    }
 		}
 		catch (RemoteException re) {
 			log(re);
@@ -427,70 +420,70 @@ public class RunResultViewer extends Block {
 		table.setAlignment(column++, row, Table.HORIZONTAL_ALIGN_CENTER);
 
 		column++;
-
+		
 		table.add(getRunnerRowText(run.getRunGroupName() != null ? run.getRunGroupName() : ""), column, row);
 		table.setStyleClass(column, row, getStyleName(STYLENAME_LIST_ROW));
-
+		
 		if (participantRow % 2 == 0) {
 			table.setRowColor(row, LIGHT_COLOR);
 		}
 		else {
 			table.setRowColor(row, DARK_COLOR);
 		}
-
+		
 		return ++row;
 	}
 
 	private int insertHeadersIntoTable(Table table, int row) {
 		int column = 1;
-
-		table.add(getRunnerRowText(this.iwrb.getLocalizedString("results.number", "Nr.")), column, row);
+		
+		table.add(getRunnerRowText(iwrb.getLocalizedString("results.number", "Nr.")), column, row);
+		table.setStyleClass(column, row, getStyleName(STYLENAME_HEADER_ROW));
+		table.setAlignment(column++, row, Table.HORIZONTAL_ALIGN_CENTER);
+		column++;
+		
+		table.add(getRunnerRowText(iwrb.getLocalizedString("results.run_time", "Run time")), column, row);
 		table.setStyleClass(column, row, getStyleName(STYLENAME_HEADER_ROW));
 		table.setAlignment(column++, row, Table.HORIZONTAL_ALIGN_CENTER);
 		column++;
 
-		table.add(getRunnerRowText(this.iwrb.getLocalizedString("results.run_time", "Run time")), column, row);
-		table.setStyleClass(column, row, getStyleName(STYLENAME_HEADER_ROW));
-		table.setAlignment(column++, row, Table.HORIZONTAL_ALIGN_CENTER);
-		column++;
-
-		table.add(getRunnerRowText(this.iwrb.getLocalizedString("results.chip_time", "Chip time")), column, row);
+		table.add(getRunnerRowText(iwrb.getLocalizedString("results.chip_time", "Chip time")), column, row);
 		table.setStyleClass(column, row, getStyleName(STYLENAME_HEADER_ROW));
 		table.setAlignment(column++, row, Table.HORIZONTAL_ALIGN_CENTER);
 		column++;
 
 		if (this.distance != null && this.distance.getNumberOfSplits() >= 1) {
-			table.add(getRunnerRowText(this.iwrb.getLocalizedString("results.split_time_1", "Split time 1")), column, row);
+			table.add(getRunnerRowText(iwrb.getLocalizedString("results.split_time_1", "Split time 1")), column, row);
 			table.setStyleClass(column, row, getStyleName(STYLENAME_HEADER_ROW));
 			table.setAlignment(column++, row, Table.HORIZONTAL_ALIGN_CENTER);
 			column++;
 
 			if (this.distance.getNumberOfSplits() == 2) {
-				table.add(getRunnerRowText(this.iwrb.getLocalizedString("results.split_time_2", "Split time 2")), column, row);
+				table.add(getRunnerRowText(iwrb.getLocalizedString("results.split_time_2", "Split time 2")), column, row);
 				table.setStyleClass(column, row, getStyleName(STYLENAME_HEADER_ROW));
 				table.setAlignment(column++, row, Table.HORIZONTAL_ALIGN_CENTER);
 				column++;
 			}
 		}
 
-		table.add(getRunnerRowText(this.iwrb.getLocalizedString("results.name", "Name")), column, row);
+		table.add(getRunnerRowText(iwrb.getLocalizedString("results.name", "Name")), column, row);
 		table.setStyleClass(column++, row, getStyleName(STYLENAME_HEADER_ROW));
 		column++;
 
-		table.add(getRunnerRowText(this.iwrb.getLocalizedString("results.birth_year", "Year")), column, row);
+		table.add(getRunnerRowText(iwrb.getLocalizedString("results.birth_year", "Year")), column, row);
 		table.setStyleClass(column, row, getStyleName(STYLENAME_HEADER_ROW));
 		table.setAlignment(column++, row, Table.HORIZONTAL_ALIGN_CENTER);
 		column++;
 
-		table.add(getRunnerRowText(this.iwrb.getLocalizedString("results.country", "Country")), column, row);
+		table.add(getRunnerRowText(iwrb.getLocalizedString("results.country", "Country")), column, row);
 		table.setStyleClass(column, row, getStyleName(STYLENAME_HEADER_ROW));
 		table.setAlignment(column++, row, Table.HORIZONTAL_ALIGN_CENTER);
 		column++;
 
-		table.add(getRunnerRowText(this.iwrb.getLocalizedString("results.group", "Group")), column, row);
+		table.add(getRunnerRowText(iwrb.getLocalizedString("results.group", "Group")), column, row);
 		table.setStyleClass(column, row, getStyleName(STYLENAME_HEADER_ROW));
 		table.setHeight(++row, 2);
-
+		
 		return ++row;
 	}
 
@@ -508,7 +501,7 @@ public class RunResultViewer extends Block {
 	private int insertRunGroupIntoTable(Table table, int row, String groupName) {
 		table.mergeCells(1, row, this.COLUMN_COUNT, row);
 		table.setStyleClass(1, row, getStyleName(STYLENAME_GROUP_ROW));
-		table.add(getRunnerRowText(this.iwrb.getLocalizedString(groupName, groupName)), 1, row++);
+		table.add(getRunnerRowText(groupName), 1, row++);
 		table.setHeight(row, 2);
 		return ++row;
 	}
@@ -516,7 +509,7 @@ public class RunResultViewer extends Block {
 	private RunBusiness getRunBiz() {
 		if (this._runBiz == null) {
 			try {
-				this._runBiz = (RunBusiness) IBOLookup.getServiceInstance(this._iwc, RunBusiness.class);
+				this._runBiz = (RunBusiness) IBOLookup.getServiceInstance(_iwc, RunBusiness.class);
 			}
 			catch (IBOLookupException e) {
 				e.printStackTrace();
@@ -526,27 +519,27 @@ public class RunResultViewer extends Block {
 	}
 
 	private GroupBusiness getGroupBiz() {
-		if (this._groupBiz == null) {
+		if (_groupBiz == null) {
 			try {
-				this._groupBiz = (GroupBusiness) IBOLookup.getServiceInstance(this._iwc, GroupBusiness.class);
+				_groupBiz = (GroupBusiness) IBOLookup.getServiceInstance(_iwc, GroupBusiness.class);
 			}
 			catch (IBOLookupException e) {
 				e.printStackTrace();
 			}
 		}
-		return this._groupBiz;
+		return _groupBiz;
 	}
 
 	private UserBusiness getUserBiz() {
-		if (this._userBiz == null) {
+		if (_userBiz == null) {
 			try {
-				this._userBiz = (UserBusiness) IBOLookup.getServiceInstance(this._iwc, UserBusiness.class);
+				_userBiz = (UserBusiness) IBOLookup.getServiceInstance(_iwc, UserBusiness.class);
 			}
 			catch (IBOLookupException e) {
 				e.printStackTrace();
 			}
 		}
-		return this._userBiz;
+		return _userBiz;
 	}
 
 	public String getBundleIdentifier() {
@@ -555,15 +548,13 @@ public class RunResultViewer extends Block {
 
 	/**
 	 * @param run
-	 *          The run to set.
+	 *            The run to set.
 	 */
 	public void setRun(String runPK) {
 		this.runPK = runPK;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
+	
+	/* (non-Javadoc)
 	 * @see com.idega.presentation.Block#getStyleNames()
 	 */
 	public Map getStyleNames() {
@@ -572,7 +563,7 @@ public class RunResultViewer extends Block {
 		map.put(STYLENAME_HEADER_ROW, DEFAULT_HEADER_ROW_STYLE);
 		map.put(STYLENAME_INTERFACE, DEFAULT_INTERFACE_STYLE);
 		map.put(STYLENAME_LIST_ROW, DEFAULT_LIST_ROW_STYLE);
-
+		
 		return map;
 	}
 }

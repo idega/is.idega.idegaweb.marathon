@@ -14,7 +14,7 @@ public class IWMarathonConstants {
   
   public final static String IW_BUNDLE_IDENTIFIER = "is.idega.idegaweb.marathon";
 	public static final String PROPERTY_MERCHANT_PK = "merchant_pk";
-
+	public static final String PROPERTY_STAFF_GROUP_ID = "staff_group_id";
   
   public static final String GROUP_TYPE_RUN = "iwma_run";
 /*  public static final String GROUP_TYPE_RUN_MARATHON = "iwma_run_marathon";
@@ -141,20 +141,20 @@ public class IWMarathonConstants {
   
   public static final int MAX_NUMBER_DISTANCE_55 = 499;
   public static final int MIN_NUMBER_DISTANCE_55 = 1;
-  public static final int MAX_NUMBER_DISTANCE_42 = 599;
+  public static final int MAX_NUMBER_DISTANCE_42 = 799;
   public static final int MIN_NUMBER_DISTANCE_42 = 21;
-  public static final int MAX_NUMBER_DISTANCE_21 = 1599;
-  public static final int MIN_NUMBER_DISTANCE_21 = 1000;
-  public static final int MAX_NUMBER_DISTANCE_CHARITY_42 = 999;
-  public static final int MIN_NUMBER_DISTANCE_CHARITY_42 = 600;
-  public static final int MAX_NUMBER_DISTANCE_CHARITY_21 = 1999;
-  public static final int MIN_NUMBER_DISTANCE_CHARITY_21 = 1600;
-  public static final int MAX_NUMBER_DISTANCE_10 = 2999;
-  public static final int MIN_NUMBER_DISTANCE_10 = 2000;
+  public static final int MAX_NUMBER_DISTANCE_21 = 1999;
+  public static final int MIN_NUMBER_DISTANCE_21 = 800;
+  public static final int MAX_NUMBER_DISTANCE_CHARITY_42 = 2499;
+  public static final int MIN_NUMBER_DISTANCE_CHARITY_42 = 2000;
+  public static final int MAX_NUMBER_DISTANCE_CHARITY_21 = 2999;
+  public static final int MIN_NUMBER_DISTANCE_CHARITY_21 = 2500;
+  public static final int MAX_NUMBER_DISTANCE_10 = 4999;
+  public static final int MIN_NUMBER_DISTANCE_10 = 3000;
   public static final int MAX_NUMBER_DISTANCE_5 = 1999;
   public static final int MIN_NUMBER_DISTANCE_5 = 1;
-  public static final int MAX_NUMBER_DISTANCE_3 = 7000;
-  public static final int MIN_NUMBER_DISTANCE_3 = 3000;
+  public static final int MAX_NUMBER_DISTANCE_3 = 7999;
+  public static final int MIN_NUMBER_DISTANCE_3 = 5000;
   public static final int MAX_NUMBER_DISTANCE_MIDNIGHT_10 = 1000;
   public static final int MIN_NUMBER_DISTANCE_MIDNIGHT_10 = 500;
   public static final int MAX_NUMBER_DISTANCE_MIDNIGHT_5 = 499;

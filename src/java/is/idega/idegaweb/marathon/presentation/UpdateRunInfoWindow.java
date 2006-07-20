@@ -218,10 +218,12 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 			Group dis = null;
 			Group gr = null;
 			try {
-				if (disID != -1)
+				if (disID != -1) {
 					dis = getGroupBiz().getGroupByGroupID(disID);
-				if (grID != -1)
+				}
+				if (grID != -1) {
 					gr = getGroupBiz().getGroupByGroupID(grID);
+				}
 			}
 			catch (IBOLookupException e) {
 				e.printStackTrace();
