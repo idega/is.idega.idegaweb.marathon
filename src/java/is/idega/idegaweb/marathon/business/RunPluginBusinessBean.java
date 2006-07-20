@@ -27,6 +27,10 @@ import com.idega.user.data.User;
  */
 public class RunPluginBusinessBean extends IBOServiceBean implements RunPluginBusiness, UserGroupPlugInBusiness {
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 3171562807916616945L;
 	/* (non-Javadoc)
 	 * @see com.idega.user.business.UserGroupPlugInBusiness#afterGroupCreate(com.idega.user.data.Group)
 	 */

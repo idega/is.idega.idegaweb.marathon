@@ -5,6 +5,12 @@
 	</properties>
 	<body>
 
+	<release version="3.1.1" date="2006-07-20">
+		<action dev="laddi" type="update">
+			Merged changes from PLATFORM_2
+		</action>     
+	</release>
+
 	<release version="3.1.0" date="2006-07-17">
 		<action dev="gimmi" type="update">
 			Released module built on ePlatform 3.1

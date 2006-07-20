@@ -8,6 +8,11 @@ import com.idega.business.IBOHomeImpl;
  */
 public class MarathonFileImportHandlerHomeImpl extends IBOHomeImpl implements MarathonFileImportHandlerHome {
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = -7824000910464645878L;
+
 	protected Class getBeanInterfaceClass() {
 		return MarathonFileImportHandler.class;
 	}

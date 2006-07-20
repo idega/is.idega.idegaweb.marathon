@@ -71,6 +71,11 @@ import com.idega.util.text.Name;
  */
 public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 3105168986587179336L;
+
 	private final static String IW_BUNDLE_IDENTIFIER = IWMarathonConstants.IW_BUNDLE_IDENTIFIER;
 
 	private static String DEFAULT_SMTP_MAILSERVER = "mail.agurait.com";
@@ -169,7 +174,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				return false;
 			}
 			
-			Participant participant = ((ParticipantHome) IDOLookup.getHome(Participant.class)).findByUserAndRun(user, run, runYear);
+			((ParticipantHome) IDOLookup.getHome(Participant.class)).findByUserAndRun(user, run, runYear);
 			return true;
 		}
 		catch (FinderException fe) {

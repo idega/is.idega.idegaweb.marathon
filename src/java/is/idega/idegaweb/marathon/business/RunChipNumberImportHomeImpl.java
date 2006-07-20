@@ -11,6 +11,11 @@ import com.idega.business.IBOHomeImpl;
  */
 public class RunChipNumberImportHomeImpl extends IBOHomeImpl implements RunChipNumberImportHome {
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = -6270998361854797653L;
+
 	protected Class getBeanInterfaceClass() {
 		return RunChipNumberImport.class;
 	}

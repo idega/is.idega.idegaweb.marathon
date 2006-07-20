@@ -32,6 +32,10 @@ import com.idega.util.text.Name;
  */
 public class MarathonFileImportHandlerBean extends IBOServiceBean  implements MarathonFileImportHandler{
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = -5952074105644545210L;
 	ImportFile file;
 	Collection countries;
 	RunBusiness business;

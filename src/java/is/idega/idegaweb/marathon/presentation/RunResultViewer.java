@@ -69,7 +69,7 @@ public class RunResultViewer extends Block {
 	private Distance distance;
 	private Year year;
 
-	private Collator _collator;
+	Collator _collator;
 	private IWContext _iwc;
 	private IWResourceBundle iwrb;
 
@@ -85,10 +85,10 @@ public class RunResultViewer extends Block {
 	private HashMap countryMap = new HashMap();
 
 	public void main(IWContext iwc) throws Exception {
-		_iwc = iwc;
-		iwrb = getResourceBundle(iwc);
+		this._iwc = iwc;
+		this.iwrb = getResourceBundle(iwc);
 		this._collator = Collator.getInstance(iwc.getCurrentLocale());
-		util = new SelectorUtility();
+		this.util = new SelectorUtility();
 
 		if (this.runPK != null) {
 			this.run = ConverterUtility.getInstance().convertGroupToRun(new Integer(this.runPK));
@@ -280,7 +280,7 @@ public class RunResultViewer extends Block {
 	}
 
 	private DropdownMenu getYearsDropdown(Group run) throws RemoteException {
-		DropdownMenu years = (DropdownMenu) util.getSelectorFromIDOEntities(new DropdownMenu(IWMarathonConstants.GROUP_TYPE_RUN_YEAR), run.getChildren(), "getName", iwrb);
+		DropdownMenu years = (DropdownMenu) this.util.getSelectorFromIDOEntities(new DropdownMenu(IWMarathonConstants.GROUP_TYPE_RUN_YEAR), run.getChildren(), "getName", this.iwrb);
 		years.addMenuElementFirst("", "");
 		years.setToSubmit();
 		years.keepStatusOnAction();
@@ -293,7 +293,7 @@ public class RunResultViewer extends Block {
 		distanceMenu.keepStatusOnAction();
 		distanceMenu.addMenuElementFirst("", "");
 
-		Integer threeKM = new Integer(iwrb.getIWBundleParent().getProperty("3_km_id", "126"));
+		Integer threeKM = new Integer(this.iwrb.getIWBundleParent().getProperty("3_km_id", "126"));
 		//Integer sevenKM = new Integer(iwrb.getIWBundleParent().getProperty("7_km_id", "113"));
 
 		if (this.year != null) {
@@ -302,7 +302,7 @@ public class RunResultViewer extends Block {
 			while (iter.hasNext()) {
 				Group distance = (Group) iter.next();
 				if (!distance.getPrimaryKey().equals(threeKM)/* && !distance.getPrimaryKey().equals(sevenKM)*/) {
-					distanceMenu.addMenuElement(distance.getPrimaryKey().toString(), iwrb.getLocalizedString(distance.getName(), distance.getName()));
+					distanceMenu.addMenuElement(distance.getPrimaryKey().toString(), this.iwrb.getLocalizedString(distance.getName(), distance.getName()));
 				}
 			}
 		}
@@ -312,9 +312,9 @@ public class RunResultViewer extends Block {
 
 	private DropdownMenu getSortDropdown() throws RemoteException {
 		DropdownMenu sort = new DropdownMenu(IWMarathonConstants.PARAMETER_SORT_BY);
-		sort.addMenuElement(IWMarathonConstants.RYSDD_TOTAL, iwrb.getLocalizedString(IWMarathonConstants.PARAMETER_TOTAL, "Total result list"));
-		sort.addMenuElement(IWMarathonConstants.RYSDD_GROUPS, iwrb.getLocalizedString(IWMarathonConstants.PARAMETER_GROUPS, "Groups"));
-		sort.addMenuElement(IWMarathonConstants.RYSDD_GROUPS_COMP, iwrb.getLocalizedString(IWMarathonConstants.PARAMETER_GROUPS_COMPETITION, "Group competition"));
+		sort.addMenuElement(IWMarathonConstants.RYSDD_TOTAL, this.iwrb.getLocalizedString(IWMarathonConstants.PARAMETER_TOTAL, "Total result list"));
+		sort.addMenuElement(IWMarathonConstants.RYSDD_GROUPS, this.iwrb.getLocalizedString(IWMarathonConstants.PARAMETER_GROUPS, "Groups"));
+		sort.addMenuElement(IWMarathonConstants.RYSDD_GROUPS_COMP, this.iwrb.getLocalizedString(IWMarathonConstants.PARAMETER_GROUPS_COMPETITION, "Group competition"));
 		sort.setToSubmit();
 		sort.keepStatusOnAction();
 
@@ -437,50 +437,50 @@ public class RunResultViewer extends Block {
 	private int insertHeadersIntoTable(Table table, int row) {
 		int column = 1;
 		
-		table.add(getRunnerRowText(iwrb.getLocalizedString("results.number", "Nr.")), column, row);
+		table.add(getRunnerRowText(this.iwrb.getLocalizedString("results.number", "Nr.")), column, row);
 		table.setStyleClass(column, row, getStyleName(STYLENAME_HEADER_ROW));
 		table.setAlignment(column++, row, Table.HORIZONTAL_ALIGN_CENTER);
 		column++;
 		
-		table.add(getRunnerRowText(iwrb.getLocalizedString("results.run_time", "Run time")), column, row);
+		table.add(getRunnerRowText(this.iwrb.getLocalizedString("results.run_time", "Run time")), column, row);
 		table.setStyleClass(column, row, getStyleName(STYLENAME_HEADER_ROW));
 		table.setAlignment(column++, row, Table.HORIZONTAL_ALIGN_CENTER);
 		column++;
 
-		table.add(getRunnerRowText(iwrb.getLocalizedString("results.chip_time", "Chip time")), column, row);
+		table.add(getRunnerRowText(this.iwrb.getLocalizedString("results.chip_time", "Chip time")), column, row);
 		table.setStyleClass(column, row, getStyleName(STYLENAME_HEADER_ROW));
 		table.setAlignment(column++, row, Table.HORIZONTAL_ALIGN_CENTER);
 		column++;
 
 		if (this.distance != null && this.distance.getNumberOfSplits() >= 1) {
-			table.add(getRunnerRowText(iwrb.getLocalizedString("results.split_time_1", "Split time 1")), column, row);
+			table.add(getRunnerRowText(this.iwrb.getLocalizedString("results.split_time_1", "Split time 1")), column, row);
 			table.setStyleClass(column, row, getStyleName(STYLENAME_HEADER_ROW));
 			table.setAlignment(column++, row, Table.HORIZONTAL_ALIGN_CENTER);
 			column++;
 
 			if (this.distance.getNumberOfSplits() == 2) {
-				table.add(getRunnerRowText(iwrb.getLocalizedString("results.split_time_2", "Split time 2")), column, row);
+				table.add(getRunnerRowText(this.iwrb.getLocalizedString("results.split_time_2", "Split time 2")), column, row);
 				table.setStyleClass(column, row, getStyleName(STYLENAME_HEADER_ROW));
 				table.setAlignment(column++, row, Table.HORIZONTAL_ALIGN_CENTER);
 				column++;
 			}
 		}
 
-		table.add(getRunnerRowText(iwrb.getLocalizedString("results.name", "Name")), column, row);
+		table.add(getRunnerRowText(this.iwrb.getLocalizedString("results.name", "Name")), column, row);
 		table.setStyleClass(column++, row, getStyleName(STYLENAME_HEADER_ROW));
 		column++;
 
-		table.add(getRunnerRowText(iwrb.getLocalizedString("results.birth_year", "Year")), column, row);
+		table.add(getRunnerRowText(this.iwrb.getLocalizedString("results.birth_year", "Year")), column, row);
 		table.setStyleClass(column, row, getStyleName(STYLENAME_HEADER_ROW));
 		table.setAlignment(column++, row, Table.HORIZONTAL_ALIGN_CENTER);
 		column++;
 
-		table.add(getRunnerRowText(iwrb.getLocalizedString("results.country", "Country")), column, row);
+		table.add(getRunnerRowText(this.iwrb.getLocalizedString("results.country", "Country")), column, row);
 		table.setStyleClass(column, row, getStyleName(STYLENAME_HEADER_ROW));
 		table.setAlignment(column++, row, Table.HORIZONTAL_ALIGN_CENTER);
 		column++;
 
-		table.add(getRunnerRowText(iwrb.getLocalizedString("results.group", "Group")), column, row);
+		table.add(getRunnerRowText(this.iwrb.getLocalizedString("results.group", "Group")), column, row);
 		table.setStyleClass(column, row, getStyleName(STYLENAME_HEADER_ROW));
 		table.setHeight(++row, 2);
 		
@@ -509,7 +509,7 @@ public class RunResultViewer extends Block {
 	private RunBusiness getRunBiz() {
 		if (this._runBiz == null) {
 			try {
-				this._runBiz = (RunBusiness) IBOLookup.getServiceInstance(_iwc, RunBusiness.class);
+				this._runBiz = (RunBusiness) IBOLookup.getServiceInstance(this._iwc, RunBusiness.class);
 			}
 			catch (IBOLookupException e) {
 				e.printStackTrace();
@@ -519,27 +519,27 @@ public class RunResultViewer extends Block {
 	}
 
 	private GroupBusiness getGroupBiz() {
-		if (_groupBiz == null) {
+		if (this._groupBiz == null) {
 			try {
-				_groupBiz = (GroupBusiness) IBOLookup.getServiceInstance(_iwc, GroupBusiness.class);
+				this._groupBiz = (GroupBusiness) IBOLookup.getServiceInstance(this._iwc, GroupBusiness.class);
 			}
 			catch (IBOLookupException e) {
 				e.printStackTrace();
 			}
 		}
-		return _groupBiz;
+		return this._groupBiz;
 	}
 
 	private UserBusiness getUserBiz() {
-		if (_userBiz == null) {
+		if (this._userBiz == null) {
 			try {
-				_userBiz = (UserBusiness) IBOLookup.getServiceInstance(_iwc, UserBusiness.class);
+				this._userBiz = (UserBusiness) IBOLookup.getServiceInstance(this._iwc, UserBusiness.class);
 			}
 			catch (IBOLookupException e) {
 				e.printStackTrace();
 			}
 		}
-		return _userBiz;
+		return this._userBiz;
 	}
 
 	public String getBundleIdentifier() {

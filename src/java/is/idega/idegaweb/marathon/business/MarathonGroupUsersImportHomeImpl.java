@@ -6,6 +6,11 @@ import com.idega.business.IBOHomeImpl;
 
 public class MarathonGroupUsersImportHomeImpl extends IBOHomeImpl implements MarathonGroupUsersImportHome {
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = -7133326740062359600L;
+
 	public Class getBeanInterfaceClass() {
 		return MarathonGroupUsersImport.class;
 	}

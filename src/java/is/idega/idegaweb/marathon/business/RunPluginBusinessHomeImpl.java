@@ -1,5 +1,5 @@
 /*
- * $Id: RunPluginBusinessHomeImpl.java,v 1.2 2004/12/07 15:58:30 eiki Exp $
+ * $Id: RunPluginBusinessHomeImpl.java,v 1.3 2006/07/20 16:21:01 laddi Exp $
  * Created on Dec 7, 2004
  *
  * Copyright (C) 2004 Idega Software hf. All Rights Reserved.
@@ -14,12 +14,17 @@ import com.idega.business.IBOHomeImpl;
 
 /**
  * 
- *  Last modified: $Date: 2004/12/07 15:58:30 $ by $Author: eiki $
+ *  Last modified: $Date: 2006/07/20 16:21:01 $ by $Author: laddi $
  * 
  * @author <a href="mailto:eiki@idega.com">eiki</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class RunPluginBusinessHomeImpl extends IBOHomeImpl implements RunPluginBusinessHome {
+
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = -1746756879795834752L;
 
 	protected Class getBeanInterfaceClass() {
 		return RunPluginBusiness.class;

@@ -32,6 +32,10 @@ import com.idega.util.text.Name;
  */
 public class MarathonGroupUsersImportBean extends IBOServiceBean implements MarathonGroupUsersImport {
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = -7831000010990786731L;
 	ImportFile file;
 	UserBusiness userBusiness;
 	GroupBusiness groupBusiness;
@@ -40,19 +44,19 @@ public class MarathonGroupUsersImportBean extends IBOServiceBean implements Mara
 	public boolean handleRecords() throws RemoteException {
 		int groupID = Integer.parseInt(getIWMainApplication().getBundle(IWMarathonConstants.IW_BUNDLE_IDENTIFIER).getProperty(IWMarathonConstants.PROPERTY_STAFF_GROUP_ID, "-1"));
 		
-		userBusiness = getUserBusiness(getIWApplicationContext());
-		groupBusiness = getGroupBusiness(getIWApplicationContext());
+		this.userBusiness = getUserBusiness(getIWApplicationContext());
+		this.groupBusiness = getGroupBusiness(getIWApplicationContext());
 		try {
-			group = groupBusiness.getGroupByGroupID(groupID);
+			this.group = this.groupBusiness.getGroupByGroupID(groupID);
 		}
 		catch (FinderException fe) {
 			fe.printStackTrace();
 		}
 		
 		Vector errors = new Vector();
-		if (group != null) {
-			if (file != null) {
-				String line = (String) file.getNextRecord();
+		if (this.group != null) {
+			if (this.file != null) {
+				String line = (String) this.file.getNextRecord();
 				int counter = 1;
 				while (line != null && !"".equals(line)) {
 					++counter;
@@ -60,7 +64,7 @@ public class MarathonGroupUsersImportBean extends IBOServiceBean implements Mara
 					if (!handleLine(line, groupID)) {
 						errors.add(line);
 					}
-					line = (String) file.getNextRecord();
+					line = (String) this.file.getNextRecord();
 				}
 				System.out.println(counter);
 			}
@@ -81,16 +85,13 @@ public class MarathonGroupUsersImportBean extends IBOServiceBean implements Mara
 	}
 	
 	private boolean handleLine(String line, int groupID) throws RemoteException {
-		ArrayList values = file.getValuesFromRecordString(line);
-		int size = values.size();
-		boolean validLine = true;
-		
+		ArrayList values = this.file.getValuesFromRecordString(line);
 		String personalID = (String) values.get(0);
 		String name = (String) values.get(1);
 		
 		User user = null;
 		try {
-			user = userBusiness.getUser(personalID);
+			user = this.userBusiness.getUser(personalID);
 		}
 		catch (FinderException fe) {
 			System.out.println("User not found, creating...");
@@ -99,7 +100,7 @@ public class MarathonGroupUsersImportBean extends IBOServiceBean implements Mara
 		if (user == null) {
 			Name fullName = new Name(name);
 			try {
-				user = userBusiness.createUser(fullName.getFirstName(), fullName.getMiddleName(), fullName.getLastName(), personalID);
+				user = this.userBusiness.createUser(fullName.getFirstName(), fullName.getMiddleName(), fullName.getLastName(), personalID);
 			}
 			catch (CreateException ce) {
 				ce.printStackTrace();
@@ -107,7 +108,7 @@ public class MarathonGroupUsersImportBean extends IBOServiceBean implements Mara
 			}
 		}
 		
-		groupBusiness.addUser(groupID, user);
+		this.groupBusiness.addUser(groupID, user);
 
 		return true;
 	}

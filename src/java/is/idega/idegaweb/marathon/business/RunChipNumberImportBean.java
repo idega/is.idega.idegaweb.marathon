@@ -24,6 +24,10 @@ import com.idega.user.data.Group;
  */
 public class RunChipNumberImportBean extends IBOServiceBean implements RunChipNumberImport {
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = -3891664108682263479L;
 	private UserTransaction transaction;
 	private ImportFile file;
 

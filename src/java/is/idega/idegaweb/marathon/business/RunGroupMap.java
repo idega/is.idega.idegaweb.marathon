@@ -14,6 +14,11 @@ import com.idega.util.datastructures.MultivaluedHashMap;
  */
 public class RunGroupMap extends MultivaluedHashMap {
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 4762273404504621982L;
+
 	/* (non-Javadoc)
 	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
 	 */

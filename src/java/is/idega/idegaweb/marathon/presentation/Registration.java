@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.32 2006/07/20 16:11:45 laddi Exp $
+ * $Id: Registration.java,v 1.33 2006/07/20 16:21:01 laddi Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -57,10 +57,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2006/07/20 16:11:45 $ by $Author: laddi $
+ * Last modified: $Date: 2006/07/20 16:21:01 $ by $Author: laddi $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  */
 public class Registration extends RunBlock {
 	
@@ -103,7 +103,6 @@ public class Registration extends RunBlock {
 	private static final String PARAMETER_EXPIRES_YEAR = "prm_expires_year";
 	private static final String PARAMETER_CCV = "prm_ccv";
 	private static final String PARAMETER_AMOUNT = "prm_amount";
-	private static final String PARAMETER_CURRENCY = "prm_currency";
 	private static final String PARAMETER_CARD_HOLDER_EMAIL = "prm_card_holder_email";
 	private static final String PARAMETER_REFERENCE_NUMBER = "prm_reference_number";
 
@@ -301,7 +300,6 @@ public class Registration extends RunBlock {
 			Map yearMap = getRunBusiness(iwc).getYearsMap(this.runner.getRun());
 			Year year = (Year) yearMap.get(yearString);
 			if (year != null && year.getLastRegistrationDate() != null) {
-				IWTimestamp runDate = new IWTimestamp(year.getLastRegistrationDate());
 				if (ts.isLaterThanOrEquals(stamp)) {
 					finished = true;
 				}
