@@ -5,6 +5,15 @@
 	</properties>
 	<body>
 
+	<release version="3.1.3" date="2006-07-27">
+		<action dev="laddi" type="update">
+			Fixed print window.
+		</action>     
+		<action dev="laddi" type="update">
+			Added trigger for run table when moving/creating users in User application.
+		</action>     
+	</release>
+
 	<release version="3.1.2" date="2006-07-24">
 		<action dev="laddi" type="update">
 			Changed localized names of run distances.

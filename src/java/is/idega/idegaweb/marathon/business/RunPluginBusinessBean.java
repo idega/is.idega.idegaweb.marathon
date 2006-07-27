@@ -1,29 +1,36 @@
 /*
  * Created on Aug 17, 2004
- *
+ * 
  */
 package is.idega.idegaweb.marathon.business;
 
+import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.presentation.CreateYearWindowPlugin;
 import is.idega.idegaweb.marathon.presentation.RunDistanceTab;
 import is.idega.idegaweb.marathon.presentation.RunYearTab;
 import is.idega.idegaweb.marathon.presentation.UserRunTab;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
+
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.ejb.CreateException;
+import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
+
+import com.idega.business.IBOLookup;
+import com.idega.business.IBOLookupException;
 import com.idega.business.IBOServiceBean;
+import com.idega.presentation.IWContext;
 import com.idega.presentation.PresentationObject;
 import com.idega.user.business.UserGroupPlugInBusiness;
 import com.idega.user.data.Group;
 import com.idega.user.data.User;
 
-
 /**
  * @author birna
- *
+ * 
  */
 public class RunPluginBusinessBean extends IBOServiceBean implements RunPluginBusiness, UserGroupPlugInBusiness {
 
@@ -31,27 +38,81 @@ public class RunPluginBusinessBean extends IBOServiceBean implements RunPluginBu
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long serialVersionUID = 3171562807916616945L;
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.idega.user.business.UserGroupPlugInBusiness#afterGroupCreate(com.idega.user.data.Group)
 	 */
-	public void afterGroupCreateOrUpdate(Group group,Group parentGroup) throws CreateException, RemoteException {
+	public void afterGroupCreateOrUpdate(Group group, Group parentGroup) throws CreateException, RemoteException {
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.idega.user.business.UserGroupPlugInBusiness#afterUserCreate(com.idega.user.data.User)
 	 */
-	public void afterUserCreateOrUpdate(User user,Group parentGroup) throws CreateException, RemoteException {
+	public void afterUserCreateOrUpdate(User user, Group parentGroup) throws CreateException, RemoteException {
+		IWContext iwc = IWContext.getInstance();
+		RunBusiness runBiz = getRunBiz(iwc);
+		
+		Group run = null;
+		try {
+			run = runBiz.getRunGroupOfTypeForGroup(parentGroup, IWMarathonConstants.GROUP_TYPE_RUN);
+		}
+		catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		
+		Group year = null;
+		try {
+			year = runBiz.getRunGroupOfTypeForGroup(parentGroup, IWMarathonConstants.GROUP_TYPE_RUN_YEAR);
+		}
+		catch (RemoteException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			Participant runEntry = getRunBiz(iwc).getParticipantByRunAndYear(user, run, year);
+			runEntry.setRunGroupGroup(parentGroup);
+			runEntry.setRunDistanceGroup((Group) parentGroup.getParentNode());
+			runEntry.store();
+		}
+		catch (FinderException e) {
+			e.printStackTrace();
+		}
 	}
-	/* (non-Javadoc)
+
+	private RunBusiness getRunBiz(IWContext iwc) {
+		RunBusiness business = null;
+		try {
+			business = (RunBusiness) IBOLookup.getServiceInstance(iwc, RunBusiness.class);
+		}
+		catch (IBOLookupException e) {
+			business = null;
+		}
+		return business;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.idega.user.business.UserGroupPlugInBusiness#beforeGroupRemove(com.idega.user.data.Group)
 	 */
-	public void beforeGroupRemove(Group group,Group parentGroup) throws RemoveException, RemoteException {
+	public void beforeGroupRemove(Group group, Group parentGroup) throws RemoveException, RemoteException {
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.idega.user.business.UserGroupPlugInBusiness#beforeUserRemove(com.idega.user.data.User)
 	 */
-	public void beforeUserRemove(User user,Group parentGroup) throws RemoveException, RemoteException {
+	public void beforeUserRemove(User user, Group parentGroup) throws RemoveException, RemoteException {
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.idega.user.business.UserGroupPlugInBusiness#getGroupPropertiesTabs(com.idega.user.data.Group)
 	 */
 	public List getGroupPropertiesTabs(Group group) throws RemoteException {
@@ -67,7 +128,10 @@ public class RunPluginBusinessBean extends IBOServiceBean implements RunPluginBu
 		}
 		return null;
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.idega.user.business.UserGroupPlugInBusiness#getUserPropertiesTabs(com.idega.user.data.User)
 	 */
 	public List getUserPropertiesTabs(User user) throws RemoteException {
@@ -75,37 +139,57 @@ public class RunPluginBusinessBean extends IBOServiceBean implements RunPluginBu
 		list.add(new UserRunTab());
 		return list;
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.idega.user.business.UserGroupPlugInBusiness#instanciateEditor(com.idega.user.data.Group)
 	 */
 	public PresentationObject instanciateEditor(Group group) throws RemoteException {
 		return null;
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.idega.user.business.UserGroupPlugInBusiness#instanciateViewer(com.idega.user.data.Group)
 	 */
 	public PresentationObject instanciateViewer(Group group) throws RemoteException {
 		return null;
 	}
-	/* (non-Javadoc)
-	 * @see com.idega.user.business.UserGroupPlugInBusiness#isUserAssignableFromGroupToGroup(com.idega.user.data.User, com.idega.user.data.Group, com.idega.user.data.Group)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.idega.user.business.UserGroupPlugInBusiness#isUserAssignableFromGroupToGroup(com.idega.user.data.User,
+	 *      com.idega.user.data.Group, com.idega.user.data.Group)
 	 */
 	public String isUserAssignableFromGroupToGroup(User user, Group sourceGroup, Group targetGroup) {
 		return null;
 	}
-	/* (non-Javadoc)
-	 * @see com.idega.user.business.UserGroupPlugInBusiness#isUserSuitedForGroup(com.idega.user.data.User, com.idega.user.data.Group)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.idega.user.business.UserGroupPlugInBusiness#isUserSuitedForGroup(com.idega.user.data.User,
+	 *      com.idega.user.data.Group)
 	 */
 	public String isUserSuitedForGroup(User user, Group targetGroup) {
 		return null;
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.idega.user.business.UserGroupPlugInBusiness#getMainToolbarElements()
 	 */
 	public List getMainToolbarElements() throws RemoteException {
 		return null;
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.idega.user.business.UserGroupPlugInBusiness#getGroupToolbarElements(com.idega.user.data.Group)
 	 */
 	public List getGroupToolbarElements(Group group) throws RemoteException {
@@ -116,7 +200,10 @@ public class RunPluginBusinessBean extends IBOServiceBean implements RunPluginBu
 		}
 		return null;
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.idega.user.business.UserGroupPlugInBusiness#canCreateSubGroup(com.idega.user.data.Group,java.lang.String)
 	 */
 	public String canCreateSubGroup(Group group, String groupTypeOfSubGroup) throws RemoteException {

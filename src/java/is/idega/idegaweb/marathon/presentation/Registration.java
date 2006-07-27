@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.33 2006/07/20 16:21:01 laddi Exp $
+ * $Id: Registration.java,v 1.34 2006/07/27 11:58:47 laddi Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -14,6 +14,7 @@ import is.idega.idegaweb.marathon.business.Runner;
 import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.data.Year;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
+
 import java.rmi.RemoteException;
 import java.text.NumberFormat;
 import java.util.Collection;
@@ -21,7 +22,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+
 import javax.ejb.FinderException;
+
 import com.idega.block.creditcard.business.CreditCardAuthorizationException;
 import com.idega.core.contact.data.Email;
 import com.idega.core.contact.data.Phone;
@@ -34,12 +37,12 @@ import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;
 import com.idega.presentation.Table;
 import com.idega.presentation.remotescripting.RemoteScriptHandler;
+import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.CheckBox;
 import com.idega.presentation.ui.DateInput;
 import com.idega.presentation.ui.DropdownMenu;
 import com.idega.presentation.ui.Form;
-import com.idega.presentation.ui.GenericButton;
 import com.idega.presentation.ui.HiddenInput;
 import com.idega.presentation.ui.RadioButton;
 import com.idega.presentation.ui.SelectOption;
@@ -57,10 +60,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2006/07/20 16:21:01 $ by $Author: laddi $
+ * Last modified: $Date: 2006/07/27 11:58:47 $ by $Author: laddi $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  */
 public class Registration extends RunBlock {
 	
@@ -1157,8 +1160,8 @@ public class Registration extends RunBlock {
 		
 		table.setHeight(row++, 16);
 		
-		GenericButton print = getButton(new GenericButton(localize("print", "Print")));
-		print.setWindowToOpen(RegistrationReceivedPrintable.class);
+		Link print = new Link(localize("print", "Print"));
+		print.setPublicWindowToOpen(RegistrationReceivedPrintable.class);
 		table.add(print, 1, row);
 		
 		add(table);
