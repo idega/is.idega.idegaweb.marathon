@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.34 2006/07/27 11:58:47 laddi Exp $
+ * $Id: Registration.java,v 1.35 2006/07/31 16:56:02 gimmi Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -60,10 +60,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2006/07/27 11:58:47 $ by $Author: laddi $
+ * Last modified: $Date: 2006/07/31 16:56:02 $ by $Author: gimmi $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  */
 public class Registration extends RunBlock {
 	
@@ -267,7 +267,10 @@ public class Registration extends RunBlock {
 					runnerYearString = nextYearString;
 					show = true;
 				}
+				// this.runner.getUser() != null 
+				// adda parameter member_ID
 				
+
 				if (show) {
 					if (this.runner.getUser() != null) {
 						if (!getRunBusiness(iwc).isRegisteredInRun(runnerYearString, run, this.runner.getUser())) {
@@ -334,6 +337,9 @@ public class Registration extends RunBlock {
 		RemoteScriptHandler rsh = new RemoteScriptHandler(runDropdown, distanceDropdown);
 		try {
 			rsh.setRemoteScriptCollectionClass(RunInputCollectionHandler.class);
+			if (this.runner.getUser() != null) {
+				rsh.addParameter(RunInputCollectionHandler.PARAMETER_USER_ID, this.runner.getUser().getPrimaryKey().toString());
+			}
 		}
 		catch (InstantiationException e) {
 			e.printStackTrace();

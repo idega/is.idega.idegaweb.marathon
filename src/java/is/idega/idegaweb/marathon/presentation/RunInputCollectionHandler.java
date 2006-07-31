@@ -1,5 +1,5 @@
 /*
- * $Id: RunInputCollectionHandler.java,v 1.5 2006/04/12 14:43:32 laddi Exp $
+ * $Id: RunInputCollectionHandler.java,v 1.6 2006/07/31 16:56:02 gimmi Exp $
  * Created on Feb 14, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -12,10 +12,12 @@ package is.idega.idegaweb.marathon.presentation;
 import is.idega.idegaweb.marathon.business.RunBusiness;
 import is.idega.idegaweb.marathon.data.Year;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
+
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
 import com.idega.idegaweb.IWResourceBundle;
@@ -25,18 +27,22 @@ import com.idega.presentation.remotescripting.RemoteScriptCollection;
 import com.idega.presentation.remotescripting.RemoteScriptHandler;
 import com.idega.presentation.remotescripting.RemoteScriptingResults;
 import com.idega.user.data.Group;
+import com.idega.user.data.User;
 import com.idega.util.IWTimestamp;
 
 
 /**
  * 
- *  Last modified: $Date: 2006/04/12 14:43:32 $ by $Author: laddi $
+ *  Last modified: $Date: 2006/07/31 16:56:02 $ by $Author: gimmi $
  * 
  * @author <a href="mailto:birna@idega.com">birna</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class RunInputCollectionHandler extends PresentationObject implements RemoteScriptCollection {
 
+	//TODO parameter check member ID
+	public static final String PARAMETER_USER_ID = "rich_uid";
+	
 	public String getBundleIdentifier() {
 		return IWMarathonConstants.IW_BUNDLE_IDENTIFIER;
 	}
@@ -82,6 +88,10 @@ public class RunInputCollectionHandler extends PresentationObject implements Rem
 			    Vector ids = new Vector();
 			    Vector names = new Vector();
 			    
+			    User user = null;
+			    if (iwc.isParameterSet(PARAMETER_USER_ID)) {
+			    	user = getRunBiz(iwc).getUserBiz().getUser(new Integer(iwc.getParameter(PARAMETER_USER_ID)));
+			    }
 			    if (distances != null) {
 				    Iterator disIter = distances.iterator();
 				    if (disIter.hasNext()) {
@@ -90,9 +100,18 @@ public class RunInputCollectionHandler extends PresentationObject implements Rem
 				    }
 				    while (disIter.hasNext()) {
 				    		Group distance = (Group) disIter.next();
-				    		String s = iwrb.getLocalizedString(distance.getName(),distance.getName());
-				    		ids.add(distance.getPrimaryKey().toString());
-				    		names.add(s);
+				    		boolean add = true;
+				    		if (user != null && distance.getName().equals(IWMarathonConstants.DISTANCE_1_5)) {
+				    			int age = getRunBiz(iwc).getAgeFromPersonalID(user.getPersonalID());
+				    			if (age > 11) {
+				    				add = false;
+				    			}
+				    		}
+				    		if (add) {
+	 				    		String s = iwrb.getLocalizedString(distance.getName(),distance.getName());
+					    		ids.add(distance.getPrimaryKey().toString());
+					    		names.add(s);
+				    		}
 				    }
 				    if (distances.isEmpty()) {
 				    		ids.add("");

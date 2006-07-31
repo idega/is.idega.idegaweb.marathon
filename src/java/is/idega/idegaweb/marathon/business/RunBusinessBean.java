@@ -309,7 +309,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				Iterator groupsIter = groups.iterator();
 				while (groupsIter.hasNext()) {
 					Group group = (Group) groupsIter.next();
-					if (group.getName().equals(getGroupName(age, groupRun, user.getGenderID()))) {
+					if (group.getName().equals(getGroupName(age, groupRun, user.getGenderID(), disGroup))) {
 						ageGenderGroupID = Integer.parseInt(group.getPrimaryKey().toString());
 						group.addGroup(user);
 						group.store();
@@ -570,7 +570,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			Iterator groupsIter = groups.iterator();
 			while (groupsIter.hasNext()) {
 				Group group = (Group) groupsIter.next();
-				if (group.getName().equals(getGroupName(age.getYears(runDate.getDate()), run, user.getGenderID()))) {
+				if (group.getName().equals(getGroupName(age.getYears(runDate.getDate()), run, user.getGenderID(), distance))) {
 					return group;
 				}
 			}
@@ -1087,56 +1087,64 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 	 * @param nameOfGroup
 	 * @return
 	 */
-	private String getGroupName(int age, Group group, int genderID) {
+	private String getGroupName(int age, Group group, int genderID, Group distance) {
 		String runName = group.getName();
 		String nameOfGroup = "";
 		if (runName.equals("Rvk Marathon") || runName.equals("Roller Skate")) {
-			if (age <= 14) {
+			if (distance.getName().equals(IWMarathonConstants.DISTANCE_1_5)) {
 				if (genderID == 2) {
-					nameOfGroup = IWMarathonConstants.FEMALE_14;
+					nameOfGroup = IWMarathonConstants.FEMALE_11;
+				} else {
+					nameOfGroup = IWMarathonConstants.MALE_11;
 				}
-				else {
-					nameOfGroup = IWMarathonConstants.MALE_14;
+			} else {
+				if (age <= 14) {
+					if (genderID == 2) {
+						nameOfGroup = IWMarathonConstants.FEMALE_14;
+					}
+					else {
+						nameOfGroup = IWMarathonConstants.MALE_14;
+					}
 				}
-			}
-			else if (age > 14 && age <= 17) {
-				if (genderID == 2) {
-					nameOfGroup = IWMarathonConstants.FEMALE_15_17;
+				else if (age > 14 && age <= 17) {
+					if (genderID == 2) {
+						nameOfGroup = IWMarathonConstants.FEMALE_15_17;
+					}
+					else {
+						nameOfGroup = IWMarathonConstants.MALE_15_17;
+					}
 				}
-				else {
-					nameOfGroup = IWMarathonConstants.MALE_15_17;
+				else if (age > 17 && age <= 39) {
+					if (genderID == 2) {
+						nameOfGroup = IWMarathonConstants.FEMALE_18_39;
+					}
+					else {
+						nameOfGroup = IWMarathonConstants.MALE_18_39;
+					}
 				}
-			}
-			else if (age > 17 && age <= 39) {
-				if (genderID == 2) {
-					nameOfGroup = IWMarathonConstants.FEMALE_18_39;
+				else if (age > 39 && age <= 49) {
+					if (genderID == 2) {
+						nameOfGroup = IWMarathonConstants.FEMALE_40_49;
+					}
+					else {
+						nameOfGroup = IWMarathonConstants.MALE_40_49;
+					}
 				}
-				else {
-					nameOfGroup = IWMarathonConstants.MALE_18_39;
+				else if (age > 49 && age <= 59) {
+					if (genderID == 2) {
+						nameOfGroup = IWMarathonConstants.FEMALE_50_59;
+					}
+					else {
+						nameOfGroup = IWMarathonConstants.MALE_50_59;
+					}
 				}
-			}
-			else if (age > 39 && age <= 49) {
-				if (genderID == 2) {
-					nameOfGroup = IWMarathonConstants.FEMALE_40_49;
-				}
-				else {
-					nameOfGroup = IWMarathonConstants.MALE_40_49;
-				}
-			}
-			else if (age > 49 && age <= 59) {
-				if (genderID == 2) {
-					nameOfGroup = IWMarathonConstants.FEMALE_50_59;
-				}
-				else {
-					nameOfGroup = IWMarathonConstants.MALE_50_59;
-				}
-			}
-			else if (age > 59) {
-				if (genderID == 2) {
-					nameOfGroup = IWMarathonConstants.FEMALE_60;
-				}
-				else {
-					nameOfGroup = IWMarathonConstants.MALE_60;
+				else if (age > 59) {
+					if (genderID == 2) {
+						nameOfGroup = IWMarathonConstants.FEMALE_60;
+					}
+					else {
+						nameOfGroup = IWMarathonConstants.MALE_60;
+					}
 				}
 			}
 		}
