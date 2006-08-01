@@ -1,5 +1,5 @@
 /*
- * $Id: RunInputCollectionHandler.java,v 1.6 2006/07/31 16:56:02 gimmi Exp $
+ * $Id: RunInputCollectionHandler.java,v 1.7 2006/08/01 15:11:02 gimmi Exp $
  * Created on Feb 14, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -33,10 +33,10 @@ import com.idega.util.IWTimestamp;
 
 /**
  * 
- *  Last modified: $Date: 2006/07/31 16:56:02 $ by $Author: gimmi $
+ *  Last modified: $Date: 2006/08/01 15:11:02 $ by $Author: gimmi $
  * 
  * @author <a href="mailto:birna@idega.com">birna</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class RunInputCollectionHandler extends PresentationObject implements RemoteScriptCollection {
 
@@ -101,10 +101,13 @@ public class RunInputCollectionHandler extends PresentationObject implements Rem
 				    while (disIter.hasNext()) {
 				    		Group distance = (Group) disIter.next();
 				    		boolean add = true;
-				    		if (user != null && distance.getName().equals(IWMarathonConstants.DISTANCE_1_5)) {
-				    			int age = getRunBiz(iwc).getAgeFromPersonalID(user.getPersonalID());
-				    			if (age > 11) {
-				    				add = false;
+				    		if (distance.getName().equals(IWMarathonConstants.DISTANCE_1_5)) {
+				    			add = false;
+				    			if (user != null) {
+					    			int age = getRunBiz(iwc).getAgeFromPersonalID(user.getPersonalID());
+					    			if (age < 12) {
+					    				add = true;
+					    			}
 				    			}
 				    		}
 				    		if (add) {
