@@ -7,7 +7,10 @@
 
 	<release version="3.1.5" date="2006-08-01">
 		<action dev="gimmi" type="update">
-			Fix for 1.5 km run
+			Localization updates
+		</action>     
+		<action dev="gimmi" type="update">
+			updated to core 3.1.7
 		</action>     
 	</release>
 
