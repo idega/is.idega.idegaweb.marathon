@@ -4,6 +4,7 @@
 package is.idega.idegaweb.marathon.business;
 
 import is.idega.block.family.business.FamilyLogic;
+import is.idega.block.family.business.NoSiblingFound;
 import is.idega.idegaweb.marathon.data.Distance;
 import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.data.ParticipantHome;
@@ -639,6 +640,49 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			}
 		}
 		return runnerPrice;
+	}
+	
+	public int getNumberOfSiblings(Collection children) throws RemoteException {
+		int numberOfSiblings = 0;
+		
+		Collection[] sibs = new ArrayList[children.size()];
+
+		Iterator iter = children.iterator();
+		int counter = 0;
+		// Making sure I check all the children, since not all may be siblings
+		while (iter.hasNext()) {
+			Runner child = (Runner) iter.next();
+			try {
+				User user = child.getUser();
+				if (user != null) {
+					Collection siblings = getFamilyLogic().getSiblingsFor(user);
+					if (!siblings.contains(user)) {
+						siblings.add(user);
+					}
+					sibs[counter] = siblings;
+				}
+			} catch (NoSiblingFound e) {
+				e.printStackTrace();
+			}
+			++counter;
+		}
+		
+		for (int i = 0; i < sibs.length; i++) {
+			iter = children.iterator();
+			int noSibs = 0;
+			while (iter.hasNext()) {
+				Runner child = (Runner) iter.next();
+				User user = child.getUser();
+				if (user != null && sibs[i] != null && sibs[i].contains(user)) {
+					++noSibs;
+				}
+			}
+			if (noSibs > numberOfSiblings) {
+				numberOfSiblings = noSibs;
+			}
+		}
+		
+		return numberOfSiblings;
 	}
 	
 	public int getNumberOfChildren(Collection runners) {

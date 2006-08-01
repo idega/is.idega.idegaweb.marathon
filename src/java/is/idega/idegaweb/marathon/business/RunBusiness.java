@@ -1,5 +1,5 @@
 /*
- * $Id: RunBusiness.java,v 1.27 2006/07/20 16:11:45 laddi Exp $
+ * $Id: RunBusiness.java,v 1.28 2006/08/01 20:45:07 gimmi Exp $
  * Created on Aug 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -10,6 +10,8 @@
 package is.idega.idegaweb.marathon.business;
 
 import is.idega.idegaweb.marathon.data.Participant;
+
+import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -29,10 +31,10 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2006/07/20 16:11:45 $ by $Author: laddi $
+ * Last modified: $Date: 2006/08/01 20:45:07 $ by $Author: gimmi $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  */
 public interface RunBusiness extends IBOService {
 
@@ -108,6 +110,7 @@ public interface RunBusiness extends IBOService {
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getNumberOfChildren
 	 */
 	public int getNumberOfChildren(Collection runners) throws java.rmi.RemoteException;
+	public int getNumberOfSiblings(Collection children) throws RemoteException;
 
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getCreditCardImages

@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.35 2006/07/31 16:56:02 gimmi Exp $
+ * $Id: Registration.java,v 1.36 2006/08/01 20:45:07 gimmi Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -60,10 +60,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2006/07/31 16:56:02 $ by $Author: gimmi $
+ * Last modified: $Date: 2006/08/01 20:45:07 $ by $Author: gimmi $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  */
 public class Registration extends RunBlock {
 	
@@ -839,6 +839,8 @@ public class Registration extends RunBlock {
 		int runRow = 2;
 		
 		int numberOfChildren = this.isIcelandic ? getRunBusiness(iwc).getNumberOfChildren(runners.values()) : 0;
+		int numberOfSiblings = this.isIcelandic ? getRunBusiness(iwc).getNumberOfSiblings(runners.values()) : 0;
+		boolean useSiblingDiscount = false;
 		int childNumber = 0;
 		float totalAmount = 0;
 		int chipsToBuy = 0;
@@ -863,6 +865,13 @@ public class Registration extends RunBlock {
 			if (numberOfChildren > 1 && childNumber > 1 && runPrice > 0) {
 				runPrice -= this.childDiscount;
 			}
+			if (runner.getDistance().getName().equals(IWMarathonConstants.DISTANCE_1_5)) {
+				useSiblingDiscount = true;
+				if (numberOfSiblings > 2 && childNumber > 2 && runPrice > 0) {
+					runPrice -= this.childDiscount;
+				}
+			}
+			
 			if (runner.isBuyChip()) {
 				chipsToBuy++;
 			}
@@ -884,6 +893,14 @@ public class Registration extends RunBlock {
 		if (this.isIcelandic) {
 			if (numberOfChildren > 1) {
 				float childrenDiscount = -((numberOfChildren - 1) * this.childDiscount);
+				totalAmount += childrenDiscount;
+				
+				runnerTable.setHeight(runRow++, 12);
+				runnerTable.add(getText(localize("run_reg.family_discount", "Family discount")), 1, runRow);
+				runnerTable.add(getText(formatAmount(iwc.getCurrentLocale(), childrenDiscount)), 4, runRow++);
+			}
+			if (useSiblingDiscount && numberOfSiblings > 2) {
+				float childrenDiscount = -((numberOfSiblings - 2) * this.childDiscount);
 				totalAmount += childrenDiscount;
 				
 				runnerTable.setHeight(runRow++, 12);
