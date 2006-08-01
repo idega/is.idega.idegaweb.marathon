@@ -100,7 +100,7 @@ run_reg.consent=Sam\u00FEykki
 run_reg.continue_without_email=Viltu halda \u00E1fram me\u00F0 skr\u00E1ninguna \u00E1n \u00FEess a\u00F0 gefa upp netfang?
 run_reg.country=Land
 run_reg.credit_card_information=Kreditkorta uppl\u00FDsingar
-run_reg.delivery_of_race_material_body=\u00DE\u00E1tttakendur geta s\u00F3tt keppnisn\u00FAmer og boli hinga\u00F0.
+run_reg.delivery_of_race_material_body=<p>\r\n\u00DE\u00E1tttakendur \u00ED Reykjav\u00EDkurmara\u00FEoni Glitnis 2006 s\u00E6ki keppnisg\u00F6gn \u00ED Laugardalsh\u00F6llina f\u00F6studaginn 18.\u00E1g\u00FAst milli kl. 12 og 21. \r\n</p>\r\n<p>\r\nN\u00E1nari uppl\u00FDsingar um hlaup \u00E1 vegum Reykjav\u00EDkurmara\u00FEons <br/>\r\n<a href\="http\://marathon.is/pages/home/reykjavikurmarathonglitnis/umhlaupid/" >Reykjav\u00EDkurmara\u00FEon Glitnis</a> <br/>\r\n<a href\="http\://marathon.is/pages/home/laugavegurinn/">Laugavegurinn - Ultra Marathon</a><br/>\r\n<a href\="http\://marathon.is/pages/home/midnxogolympiuhlaup/">Mi\u00F0n\u00E6tur- og \u00D3lymp\u00EDufj\u00F6lskylduhlaupi\u00F0</a><br/>\r\n</p>\r\n
 run_reg.delivery_of_race_material_headline=Afhending keppnisgagna og bolur/peysa hlaupsins
 run_reg.disagree=Nei, \u00E9g sam\u00FEykki ekki 
 run_reg.distance=Vegalengd
