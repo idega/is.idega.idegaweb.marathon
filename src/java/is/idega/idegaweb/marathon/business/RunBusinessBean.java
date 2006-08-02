@@ -4,28 +4,32 @@
 package is.idega.idegaweb.marathon.business;
 
 import is.idega.block.family.business.FamilyLogic;
-import is.idega.block.family.business.NoSiblingFound;
+import is.idega.block.family.business.NoParentFound;
 import is.idega.idegaweb.marathon.data.Distance;
 import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.data.ParticipantHome;
 import is.idega.idegaweb.marathon.data.Run;
 import is.idega.idegaweb.marathon.data.Year;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
+
 import java.rmi.RemoteException;
 import java.sql.Date;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 import javax.ejb.FinderException;
 import javax.transaction.UserTransaction;
+
 import com.idega.block.creditcard.business.CreditCardAuthorizationException;
 import com.idega.block.creditcard.business.CreditCardBusiness;
 import com.idega.block.creditcard.business.CreditCardClient;
@@ -645,9 +649,8 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 	public int getNumberOfSiblings(Collection children) throws RemoteException {
 		int numberOfSiblings = 0;
 		
-		Collection[] sibs = new ArrayList[children.size()];
-
 		Iterator iter = children.iterator();
+		HashMap childCounter = new HashMap();
 		int counter = 0;
 		// Making sure I check all the children, since not all may be siblings
 		while (iter.hasNext()) {
@@ -655,30 +658,30 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			try {
 				User user = child.getUser();
 				if (user != null) {
-					Collection siblings = getFamilyLogic().getSiblingsFor(user);
-					if (!siblings.contains(user)) {
-						siblings.add(user);
+					Collection uPats = getFamilyLogic().getParentsFor(user);
+					Iterator piter = uPats.iterator();
+					while (piter.hasNext()) {
+						User pat = (User) piter.next();
+						if (!childCounter.containsKey(pat)) {
+							childCounter.put(pat, new Integer(1));
+						} else {
+							childCounter.put(pat, new Integer(((Integer) childCounter.get(pat)).intValue()+1));
+						}
 					}
-					sibs[counter] = siblings;
 				}
-			} catch (NoSiblingFound e) {
-				e.printStackTrace();
+			} catch (NoParentFound e) {
 			}
 			++counter;
 		}
 		
-		for (int i = 0; i < sibs.length; i++) {
-			iter = children.iterator();
-			int noSibs = 0;
-			while (iter.hasNext()) {
-				Runner child = (Runner) iter.next();
-				User user = child.getUser();
-				if (user != null && sibs[i] != null && sibs[i].contains(user)) {
-					++noSibs;
-				}
-			}
-			if (noSibs > numberOfSiblings) {
-				numberOfSiblings = noSibs;
+		Collection values = childCounter.values();
+		if (values != null && !values.isEmpty()) {
+			Iterator viter = values.iterator();
+			Integer val = (Integer) viter.next();
+			numberOfSiblings = val.intValue();
+			while (viter.hasNext()) {
+				val = (Integer) viter.next();
+				numberOfSiblings = Math.max(numberOfSiblings, val.intValue());
 			}
 		}
 		
@@ -1716,6 +1719,9 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		else if (distanceType.equals(IWMarathonConstants.DISTANCE_3)) {
 			return IWMarathonConstants.MAX_NUMBER_DISTANCE_3;
 		}
+		else if (distanceType.equals(IWMarathonConstants.DISTANCE_1_5)) {
+			return IWMarathonConstants.MAX_NUMBER_DISTANCE_1_5;
+		}
 		return 0;
 	}
 
@@ -1753,6 +1759,9 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		}
 		else if (distanceType.equals(IWMarathonConstants.DISTANCE_3)) {
 			return IWMarathonConstants.MIN_NUMBER_DISTANCE_3;
+		}
+		else if (distanceType.equals(IWMarathonConstants.DISTANCE_1_5)) {
+			return IWMarathonConstants.MIN_NUMBER_DISTANCE_1_5;
 		}
 		return 0;
 	}

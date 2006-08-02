@@ -5,6 +5,15 @@
 	</properties>
 	<body>
 
+	<release version="3.1.7" date="2006-08-02">
+		<action dev="gimmi" type="fix">
+			Sibling discount fixed 1.5km run
+		</action>     
+		<action dev="gimmi" type="add">
+			Numbers added to 1.5km run
+		</action>     
+	</release>
+
 	<release version="3.1.6" date="2006-08-01">
 		<action dev="gimmi" type="update">
 			Sibling discount added to 1.5km run
