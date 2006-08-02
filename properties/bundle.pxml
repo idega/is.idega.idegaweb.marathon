@@ -108,7 +108,7 @@
     <key>
       <name>messagebox_smtp_mailserver</name>
       <type>java.lang.String</type>
-      <value>mail.idega.is</value>
+      <value>mail.simnet.is</value>
     </key>
     <key>
       <name>messagebox_from_mailaddress</name>
