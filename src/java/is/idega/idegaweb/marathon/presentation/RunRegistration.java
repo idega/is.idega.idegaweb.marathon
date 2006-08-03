@@ -4,6 +4,7 @@
 package is.idega.idegaweb.marathon.presentation;
 
 import is.idega.idegaweb.marathon.business.RunBusiness;
+import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
 import java.rmi.RemoteException;
@@ -37,6 +38,7 @@ import com.idega.presentation.ui.TextInput;
 import com.idega.presentation.ui.util.SelectorUtility;
 import com.idega.user.business.GroupBusiness;
 import com.idega.user.data.Group;
+import com.idega.user.data.User;
 import com.idega.util.IWTimestamp;
 import com.idega.util.LocaleUtil;
 
@@ -729,11 +731,23 @@ public class RunRegistration extends Block {
 		
 				message = this.iwrb.getLocalizedString("registration_received", "Your registration has been received.");
 				Group runGroup = null;
+				Group yearGroup = null;
 				Group distanceGroup = null;
 				try {
 					runGroup = getGroupBusiness(iwc).getGroupByGroupID(Integer.parseInt(run));
+					yearGroup = getGroupBusiness(iwc).getGroupByGroupID(Integer.parseInt(year));
 					distanceGroup = getGroupBusiness(iwc).getGroupByGroupID(Integer.parseInt(distance));
-					Object[] args = { name, this.iwrb.getLocalizedString(runGroup.getName(),runGroup.getName()), this.iwrb.getLocalizedString(distanceGroup.getName(),distanceGroup.getName()), this.iwrb.getLocalizedString(tshirt, tshirt) };
+					String participantNumber = null;
+					
+					try {
+						User user = getGroupBusiness(iwc).getUserByID(userID);
+						Participant participant = runBiz.getParticipantByRunAndYear(user, runGroup, yearGroup);
+						participantNumber = String.valueOf(participant.getParticipantNumber());
+					}
+					catch (FinderException e) {
+						log (e);
+					}
+					Object[] args = { name, this.iwrb.getLocalizedString(runGroup.getName(),runGroup.getName()), this.iwrb.getLocalizedString(distanceGroup.getName(),distanceGroup.getName()), this.iwrb.getLocalizedString(tshirt, tshirt), participantNumber };
 					message = MessageFormat.format(this.iwrb.getLocalizedString("registration_received", "Your registration has been received."), args);
 				}
 				catch (RemoteException re) {
