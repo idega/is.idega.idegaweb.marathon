@@ -146,17 +146,17 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 			catch (FinderException e) {
 				e.printStackTrace();
 			}
-			this.runField = new Text(iwrb.getLocalizedString(runGroup.getName(), runGroup.getName()));
+			this.runField = new Text(iwrb.getLocalizedString(runGroup.getName(),runGroup.getName()));
 		}
 		Participant run = null;
 		if (userID != null && selectedGroupID != null) {
 			try {
 				run = getRunBiz(iwc).getRunObjByUserAndGroup(Integer.parseInt(userID), Integer.parseInt(selectedGroupID));
-				Group dis = getRunBiz(iwc).getDistanceByUserID(Integer.parseInt(userID));
-				this.f.addParameter(IWMarathonConstants.GROUP_TYPE_RUN_DISTANCE, dis.getPrimaryKey().toString());
-				if (userID != null && runGroupID != null) {
-					run = getRunBiz(iwc).getRunObjByUserIDandDistanceID(Integer.parseInt(userID), Integer.parseInt(dis.getPrimaryKey().toString()));
-				}
+//				Group dis = getRunBiz(iwc).getDistanceByUserID(Integer.parseInt(userID));
+//				f.addParameter(IWMarathonConstants.GROUP_TYPE_RUN_DISTANCE,dis.getPrimaryKey().toString());
+//				if(userID != null && runGroupID != null) {
+//					run = getRunBiz(iwc).getRunObjByUserIDandDistanceID(Integer.parseInt(userID),Integer.parseInt(dis.getPrimaryKey().toString()));
+//				}
 			}
 			catch (Exception re) {
 				log(re);
