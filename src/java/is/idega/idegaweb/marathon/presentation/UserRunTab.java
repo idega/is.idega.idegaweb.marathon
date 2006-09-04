@@ -87,7 +87,7 @@ public class UserRunTab extends UserTab{
 		IWResourceBundle iwrb = getResourceBundle(iwc);
 		RunBusiness runBiz = getRunBiz(iwc);
 		String userID = iwc.getParameter("ic_user_id");
-		String selectedGroupID = iwc.getParameter("selected_ic_group_id");
+		//String selectedGroupID = iwc.getParameter("selected_ic_group_id");
 		User user = null;
 		if(userID != null) {
 			try {
