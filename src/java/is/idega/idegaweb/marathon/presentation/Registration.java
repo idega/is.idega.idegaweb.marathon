@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.36 2006/08/01 20:45:07 gimmi Exp $
+ * $Id: Registration.java,v 1.37 2007/01/17 13:59:06 idegaweb Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -60,10 +60,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2006/08/01 20:45:07 $ by $Author: gimmi $
+ * Last modified: $Date: 2007/01/17 13:59:06 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.36 $
+ * @version $Revision: 1.37 $
  */
 public class Registration extends RunBlock {
 	
@@ -1313,7 +1313,7 @@ public class Registration extends RunBlock {
 			}
 		}
 		if (action == ACTION_STEP_FOUR) {
-			if (this.runner != null && this.runner.isOwnChip() && (this.runner.getChipNumber() == null || this.runner.getChipNumber().length() != 7)) {
+			if (this.runner != null && this.runner.isOwnChip() && (this.runner.getChipNumber() == null || !checkChipNumber(this.runner.getChipNumber()).equals(""))) {
 				getParentPage().setAlertOnLoad(localize("run_reg.must_fill_in_chip_number", "You have to fill in a valid chip number (seven characters)."));
 				action = ACTION_STEP_THREE;
 			}
@@ -1346,5 +1346,76 @@ public class Registration extends RunBlock {
 		}
 		runnerMap.remove(key);
 		iwc.setSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP, runnerMap);
+	}
+	
+	private static String checkChipNumber(String chipNumber) {
+		if (chipNumber == null) {
+			return "null value";
+		}
+		chipNumber = chipNumber.trim().toUpperCase();
+		if (chipNumber.length() != 7) {
+			return "invalid length (" + chipNumber.length() + ")";
+		}
+		if ("ABC".contains(chipNumber.substring(0, 1))) {
+			return checkOldBlock(chipNumber);
+		} else {
+			return checkBigBlock(chipNumber);
+		}
+	}
+
+	private static String checkOldBlock(String chipNumber) {
+		if (chipNumber == null) {
+			return "null value";
+		}
+		chipNumber = chipNumber.trim().toUpperCase();
+		if (chipNumber.length() != 7) {
+			return "invalid length";
+		}
+		String[] pos = new String[8];
+		pos[1] = "ABC";
+		pos[2] = "ABCDEFGH";
+		pos[3] = "0123456789";
+		pos[4] = "0123456789";
+		pos[5] = "0123456789";
+		pos[6] = "0123456789";
+		pos[7] = "0123456789";
+		for (int i = 1; i < 8; i++) {
+			if (!pos[i].contains(chipNumber.substring((i - 1), i))) {
+				return "invalid character on position: " + i;
+			}
+		}
+		return "";
+	}
+
+	private static String checkBigBlock(String chipNumber) {
+		if (chipNumber == null) {
+			return "null value";
+		}
+		chipNumber = chipNumber.trim().toUpperCase();
+		if (chipNumber.length() != 7) {
+			return "invalid length";
+		}
+		String[] pos = new String[7];
+		pos[1] = "DEFGHKMNPRSTVWYZ";
+		pos[2] = "ABCDEFGHKMNPRSTVWXYZ";
+		pos[3] = "0123456789";
+		pos[4] = "0123456789ABCDEFGHKMNPRSTVWXYZ";
+		pos[5] = "0123456789ABCDEFGHKMNPRSTVWXYZ";
+		pos[6] = "0123456789ABCDEFGHKMNPRSTVWXYZ";
+		String poscnt = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		String poschk = "Z97BN4XSVE56AWYM1TPK8H2GDCF3R";
+		int checksum = 0;
+		for (int i = 1; i < 7; i++) {
+			if (!pos[i].contains(chipNumber.substring((i - 1), i))) {
+				return "invalid character on position: " + i;
+			}
+			checksum = checksum + poscnt.indexOf(chipNumber.substring(i - 1, i));
+		}
+		checksum = checksum % 29;
+		if (checksum == poschk.indexOf(chipNumber.substring(6, 7))) {
+			return "";
+		} else {
+			return "invalid chipcode.";
+		}
 	}
 }
