@@ -1,5 +1,5 @@
 /*
- * $Id: RunInputCollectionHandler.java,v 1.8 2006/08/01 16:18:28 gimmi Exp $
+ * $Id: RunInputCollectionHandler.java,v 1.9 2007/01/17 12:53:37 idegaweb Exp $
  * Created on Feb 14, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -33,10 +33,10 @@ import com.idega.util.IWTimestamp;
 
 /**
  * 
- *  Last modified: $Date: 2006/08/01 16:18:28 $ by $Author: gimmi $
+ *  Last modified: $Date: 2007/01/17 12:53:37 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:birna@idega.com">birna</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class RunInputCollectionHandler extends PresentationObject implements RemoteScriptCollection {
 
@@ -115,12 +115,12 @@ public class RunInputCollectionHandler extends PresentationObject implements Rem
 				    }
 				    if (distances.isEmpty()) {
 				    		ids.add("");
-				    		names.add("Unavailable");
+				    		names.add(iwrb.getLocalizedString("unavailable","Unavailable"));
 				    } 
 			    }
 			    else {
 			    		ids.add("");
-			    		names.add("Unavailable");
+			    		names.add(iwrb.getLocalizedString("unavailable","Unavailable"));
 			    }
 			    
 			    RemoteScriptingResults rsr = new RemoteScriptingResults(RemoteScriptHandler.getLayerName(sourceName, "id"), ids);
