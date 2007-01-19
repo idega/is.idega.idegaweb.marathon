@@ -1,6 +1,14 @@
 package is.idega.idegaweb.marathon.data;
 
+import java.util.Collection;
+
+import javax.ejb.FinderException;
+
 import com.idega.data.GenericEntity;
+import com.idega.data.query.MatchCriteria;
+import com.idega.data.query.SelectQuery;
+import com.idega.data.query.Table;
+import com.idega.data.query.WildCardColumn;
 
 public class ShirtSizeBMPBean extends GenericEntity implements ShirtSize {
 
@@ -14,15 +22,11 @@ public class ShirtSizeBMPBean extends GenericEntity implements ShirtSize {
 	}
 
 	public void initializeAttributes() {
-		this.addAttribute(getIDColumnName(), "Size", String.class, 30);
-
-		this.setAsPrimaryKey(getIDColumnName(), true);
-		this.addAttribute(COLUMN_NAME, "Name", String.class, 1000);
+		addAttribute(getIDColumnName());
+		this.addAttribute(COLUMN_NAME, "Name", String.class, 100);
 		this.addAttribute(COLUMN_DESCRIPTION, "Description", String.class, 1000);
-		this.addAttribute(COLUMN_PARENT_CATEGORY_ID, "Parent Category ID", true, true, Integer.class, "many-to-one", this.getClass());
-		this.addManyToOneRelationship(COLUMN_PARENT_CATEGORY_ID, ShirtSize.class);
-		this.setNullable(COLUMN_PARENT_CATEGORY_ID, true);
-		
+		this.addAttribute(COLUMN_PARENT_CATEGORY_ID, "Parent Category ID", Integer.class);
+
 		//cache this table
 		getEntityDefinition().setBeanCachingActiveByDefault(true);
 	}
@@ -49,6 +53,14 @@ public class ShirtSizeBMPBean extends GenericEntity implements ShirtSize {
 
 	public void setParentCategorYID(int parent_id) {
 		setColumn(COLUMN_PARENT_CATEGORY_ID, parent_id);
+	}
+	
+	public Collection ejbFindAll() throws FinderException {
+		Table table = new Table(this);
+		SelectQuery query = new SelectQuery(table);
+		query.addColumn(new WildCardColumn());
+		query.addCriteria(new MatchCriteria(table, COLUMN_PARENT_CATEGORY_ID, MatchCriteria.NOTEQUALS, -1));
+		return idoFindPKsBySQL(query.toString());
 	}
 
 }
