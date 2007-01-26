@@ -1,5 +1,5 @@
-1_5_km=1_5_km
 10_km=10_km
+1_5_km=1_5_km
 2003=2003
 2004=2004
 2005=2005
@@ -274,6 +274,7 @@ run_tab.run=Run
 run_tab.run_date=Run date
 run_tab.run_time=Run time
 run_tab.save=Save
+run_tab.shirt_sizes=Shirt sizes
 run_tab.team_name=Team name
 run_tab.tshirt=Tshirt size
 run_tab.use_chip=Uses chips
