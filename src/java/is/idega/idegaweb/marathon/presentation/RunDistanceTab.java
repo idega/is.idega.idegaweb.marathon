@@ -7,6 +7,8 @@ package is.idega.idegaweb.marathon.presentation;
 import is.idega.idegaweb.marathon.business.ConverterUtility;
 import is.idega.idegaweb.marathon.data.Distance;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
+
+import java.util.List;
 import java.util.Locale;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
@@ -16,7 +18,9 @@ import com.idega.presentation.ui.CheckBox;
 import com.idega.presentation.ui.DropdownMenu;
 import com.idega.presentation.ui.TextInput;
 import com.idega.user.presentation.UserGroupTab;
+import com.idega.util.ListUtil;
 import com.idega.util.LocaleUtil;
+import com.idega.util.MiscUtil;
 
 
 /**
@@ -35,6 +39,7 @@ public class RunDistanceTab extends UserGroupTab{
 	private static final String PARAMETER_CHILDREN_PRICE_EUR = "children_price_eur";
 	
 	private static final String PARAMETER_NUMBER_OF_SPLITS = "number_of_splits";
+	private static final String PARAMETER_SHIRT_SIZES_PER_RUN = "shirt_sizes_per_run";
 
 	private TextInput priceISK;
 	private TextInput priceEUR;
@@ -46,6 +51,7 @@ public class RunDistanceTab extends UserGroupTab{
 	private CheckBox allowsGroups;
 	
 	private DropdownMenu numberOfSplits;
+	private ShirtSizeSelectionBox shirtSizeSelectionBox;
 	
 	private Text priceISKText;
 	private Text priceEURText;
@@ -55,6 +61,7 @@ public class RunDistanceTab extends UserGroupTab{
 	private Text familyDiscountText;
 	private Text allowsGroupsText;
 	private Text numberOfSplitsText;
+	private Text shirtSizeSelectionBoxText;
 	
 	public RunDistanceTab() {
 		super();
@@ -79,6 +86,7 @@ public class RunDistanceTab extends UserGroupTab{
 			String childPriceEUR = iwc.getParameter(PARAMETER_CHILDREN_PRICE_EUR);
 			
 			String numberOfSplits = iwc.getParameter(PARAMETER_NUMBER_OF_SPLITS);
+			String[] shirtSizesPerRun = iwc.getParameterValues(PARAMETER_SHIRT_SIZES_PER_RUN);
 			
 			this.fieldValues.put(PARAMETER_USE_CHIP, useChip);
 			this.fieldValues.put(PARAMETER_FAMILY_DISCOUNT, familyDiscount);
@@ -99,7 +107,9 @@ public class RunDistanceTab extends UserGroupTab{
 			if(numberOfSplits != null){
 				this.fieldValues.put(PARAMETER_NUMBER_OF_SPLITS, new Integer(numberOfSplits));
 			}
-			
+			if(shirtSizesPerRun != null){
+				this.fieldValues.put(PARAMETER_SHIRT_SIZES_PER_RUN, shirtSizesPerRun);
+			}
 			updateFieldsDisplayStatus();
 			return true;
 		}
@@ -121,6 +131,11 @@ public class RunDistanceTab extends UserGroupTab{
 			this.fieldValues.put(PARAMETER_CHILDREN_PRICE_ISK, new Float(distance.getChildrenPrice(LocaleUtil.getIcelandicLocale())));
 			this.fieldValues.put(PARAMETER_CHILDREN_PRICE_EUR, new Float(distance.getChildrenPrice(Locale.ENGLISH)));
 			this.fieldValues.put(PARAMETER_NUMBER_OF_SPLITS, new Integer(distance.getNumberOfSplits()));
+			String shirtSizeMetadata = distance.getMetaData(PARAMETER_SHIRT_SIZES_PER_RUN);
+			if (shirtSizeMetadata != null) {
+				String[] shirtSizeMetadataArray = MiscUtil.str2array(shirtSizeMetadata,",");
+				this.fieldValues.put(PARAMETER_SHIRT_SIZES_PER_RUN, shirtSizeMetadataArray);
+			}
 
 			updateFieldsDisplayStatus();
 		}
@@ -159,6 +174,9 @@ public class RunDistanceTab extends UserGroupTab{
 		this.numberOfSplits.addMenuElement(0, "0");
 		this.numberOfSplits.addMenuElement(1, "1");
 		this.numberOfSplits.addMenuElement(2, "2");
+
+		this.shirtSizeSelectionBox = new ShirtSizeSelectionBox(PARAMETER_SHIRT_SIZES_PER_RUN);
+		this.shirtSizeSelectionBox.initialize(IWContext.getInstance());
 	}
 	
 	/* (non-Javadoc)
@@ -173,8 +191,7 @@ public class RunDistanceTab extends UserGroupTab{
 		this.fieldValues.put(PARAMETER_CHILDREN_PRICE_ISK, new Float(0));
 		this.fieldValues.put(PARAMETER_CHILDREN_PRICE_EUR, new Float(0));
 		this.fieldValues.put(PARAMETER_NUMBER_OF_SPLITS, new Integer(0));
-		
-		updateFieldsDisplayStatus();
+		this.fieldValues.put(PARAMETER_SHIRT_SIZES_PER_RUN, new String[0]);
 	}
 	
 	/* (non-Javadoc)
@@ -207,6 +224,9 @@ public class RunDistanceTab extends UserGroupTab{
 
 		this.numberOfSplitsText = new Text(iwrb.getLocalizedString("run_tab.number_of_splits", "Number of splits"));
 		this.numberOfSplitsText.setBold();
+
+		this.shirtSizeSelectionBoxText = new Text(iwrb.getLocalizedString("run_tab.shirt_sizes", "Shirt sizes"));
+		this.shirtSizeSelectionBoxText.setBold();
 	}
 	
 	/* (non-Javadoc)
@@ -261,6 +281,10 @@ public class RunDistanceTab extends UserGroupTab{
 		table.add(this.allowsGroups, 1, 4);
 		table.add(Text.getNonBrakingSpace(), 1, 4);
 		table.add(this.allowsGroupsText, 1, 4);
+		table.add(Text.getBreak(), 1, 4);
+		table.add(this.shirtSizeSelectionBoxText, 1, 4);
+		table.add(Text.getNonBrakingSpace(), 1, 4);
+		table.add(this.shirtSizeSelectionBox,1,4);
 		
 		add(table, 1, 1);
 	}
@@ -283,6 +307,17 @@ public class RunDistanceTab extends UserGroupTab{
 				distance.setChildrenPriceInEUR(((Float) this.fieldValues.get(PARAMETER_CHILDREN_PRICE_EUR)).floatValue());
 
 				distance.setNumberOfSplits(((Integer) this.fieldValues.get(PARAMETER_NUMBER_OF_SPLITS)).intValue());
+				String[] shirtSizesPerRun = (String[]) this.fieldValues.get(PARAMETER_SHIRT_SIZES_PER_RUN);
+				if(shirtSizesPerRun!=null){
+					List abbrList = ListUtil.convertStringArrayToList(shirtSizesPerRun);
+					if(abbrList.isEmpty()){
+						distance.setMetaData(PARAMETER_SHIRT_SIZES_PER_RUN, "");
+					}
+					else{
+						String commaSeparated = ListUtil.convertListOfStringsToCommaseparatedString(abbrList);
+						distance.setMetaData(PARAMETER_SHIRT_SIZES_PER_RUN, commaSeparated);
+					}
+				}
 
 				distance.store();
 			}
@@ -309,6 +344,7 @@ public class RunDistanceTab extends UserGroupTab{
 		this.childrenPriceEUR.setContent(((Float) this.fieldValues.get(PARAMETER_CHILDREN_PRICE_EUR)).toString());
 
 		this.numberOfSplits.setSelectedElement(((Integer) this.fieldValues.get(PARAMETER_NUMBER_OF_SPLITS)).intValue());
+		this.shirtSizeSelectionBox.setSelectedElements((String[]) this.fieldValues.get(PARAMETER_SHIRT_SIZES_PER_RUN));
 	}
 	
 	public String getBundleIdentifier() {
