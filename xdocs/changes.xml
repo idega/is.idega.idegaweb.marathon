@@ -5,6 +5,12 @@
 	</properties>
 	<body>
 
+	<release version="3.1.8" date="2007-01-26">
+		<action dev="sigtryggur" type="update">
+			Added numbercheck for the chip numbers and option to save different shirt sizes for each distance
+		</action>     
+	</release>
+	
 	<release version="3.1.7" date="2006-08-02">
 		<action dev="gimmi" type="fix">
 			Sibling discount fixed 1.5km run
