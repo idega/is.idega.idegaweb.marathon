@@ -4,10 +4,8 @@ import is.idega.idegaweb.marathon.data.ShirtSize;
 import is.idega.idegaweb.marathon.data.ShirtSizeHome;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import javax.ejb.FinderException;
 
@@ -28,11 +26,10 @@ public class ShirtSizeSelectionBox extends SelectionBox {
 	}
 	
 	public void main(IWContext iwc) {
-        initialize(iwc);
         super.main(iwc);
 	}
 	
-	private void initialize(IWContext iwc) {
+	public void initialize(IWContext iwc) {
 		try {
 			IWResourceBundle iwrb = this.getResourceBundle(iwc);
 			ShirtSizeHome shirtSizeHome = (ShirtSizeHome) IDOLookup.getHome(ShirtSize.class);
