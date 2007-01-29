@@ -10,6 +10,7 @@ import com.idega.data.IDOLookup;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.ui.DropdownMenu;
+import com.idega.presentation.ui.SelectOption;
 
 public class ShirtSizeDropdownMenu extends DropdownMenu {
 	
@@ -32,16 +33,17 @@ public class ShirtSizeDropdownMenu extends DropdownMenu {
 		Collection shirtSizes = shirtSizeHome.findAll();
 		
 		if (shirtSizes != null) {
-			setAsNotEmpty(iwrb.getLocalizedString("run_reg.must_select_shirt_size", "You must select tee-shirt size"), "-1");
+			addOption(new SelectOption(iwrb.getLocalizedString("run_reg.select_tee_shirt_size", "Select tee-shirt size"), "-1"));
 			Iterator iter = shirtSizes.iterator();
 			while (iter.hasNext()) {
 				ShirtSize shirtSize = (ShirtSize) iter.next();
 				String name = shirtSize.getName();
 				if(name!=null) {
-					addMenuElement(name, iwrb.getLocalizedString(name,name));
+					addOption(new SelectOption(iwrb.getLocalizedString(name,name),name));
 				}
 			}
 		}
+		setAsNotEmpty(iwrb.getLocalizedString("run_reg.must_select_shirt_size", "You must select tee-shirt size"), "-1");
 	}
 	
 		public String getBundleIdentifier() {
