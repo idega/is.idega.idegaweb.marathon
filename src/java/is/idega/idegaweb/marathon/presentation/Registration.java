@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.37 2007/01/17 13:59:06 idegaweb Exp $
+ * $Id: Registration.java,v 1.38 2007/01/29 02:48:42 idegaweb Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -60,10 +60,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/01/17 13:59:06 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/01/29 02:48:42 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  */
 public class Registration extends RunBlock {
 	
@@ -591,20 +591,7 @@ public class Registration extends RunBlock {
 		choiceTable.add(mobileField, 3, iRow++);
 		choiceTable.setHeight(iRow++, 3);
 
-		DropdownMenu tShirtField = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_SHIRT_SIZE));
-		tShirtField.addOption(new SelectOption(localize("run_reg.select_tee_shirt_size", "Select tee-shirt size"), "-1"));
-		tShirtField.addOption(new SelectOption(localize("run_reg.adult_sized", "Adult sizes"), "-1"));
-		tShirtField.addOption(new SelectOption("- " + localize("run_reg.small", "Small"), IWMarathonConstants.PARAMETER_TSHIRT_S));
-		tShirtField.addOption(new SelectOption("- " + localize("run_reg.medium", "Medium"), IWMarathonConstants.PARAMETER_TSHIRT_M));
-		tShirtField.addOption(new SelectOption("- " + localize("run_reg.large", "Large"), IWMarathonConstants.PARAMETER_TSHIRT_L));
-		tShirtField.addOption(new SelectOption("- " + localize("run_reg.xlarge", "Larger"), IWMarathonConstants.PARAMETER_TSHIRT_XL));
-		tShirtField.addOption(new SelectOption("- " + localize("run_reg.xxlarge", "Largest"), IWMarathonConstants.PARAMETER_TSHIRT_XXL));
-		tShirtField.addOption(new SelectOption(localize("run_reg.kids_sized", "Kids sizes"), "-1"));
-		tShirtField.addOption(new SelectOption("- " + localize("run_reg.small_kids", "Small"), IWMarathonConstants.PARAMETER_TSHIRT_S + "_kids"));
-		tShirtField.addOption(new SelectOption("- " + localize("run_reg.medium_kids", "Medium"), IWMarathonConstants.PARAMETER_TSHIRT_M + "_kids"));
-		tShirtField.addOption(new SelectOption("- " + localize("run_reg.large_kids", "Large"), IWMarathonConstants.PARAMETER_TSHIRT_L + "_kids"));
-		tShirtField.addOption(new SelectOption("- " + localize("run_reg.xlarge_kids", "Larger"), IWMarathonConstants.PARAMETER_TSHIRT_XL + "_kids"));
-		tShirtField.setAsNotEmpty(localize("run_reg.must_select_shirt_size", "You must select tee-shirt size"), "-1");
+		DropdownMenu tShirtField = new ShirtSizeDropdownMenu(PARAMETER_SHIRT_SIZE);
 		if (this.runner.getShirtSize() != null) {
 			tShirtField.setSelectedElement(this.runner.getShirtSize());
 		}
