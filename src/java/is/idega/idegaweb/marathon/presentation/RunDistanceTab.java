@@ -282,8 +282,9 @@ public class RunDistanceTab extends UserGroupTab{
 		table.add(Text.getNonBrakingSpace(), 1, 4);
 		table.add(this.allowsGroupsText, 1, 4);
 		table.add(Text.getBreak(), 1, 4);
+		table.add(Text.getBreak(), 1, 4);
 		table.add(this.shirtSizeSelectionBoxText, 1, 4);
-		table.add(Text.getNonBrakingSpace(), 1, 4);
+		table.add(Text.getBreak(), 1, 4);
 		table.add(this.shirtSizeSelectionBox,1,4);
 		
 		add(table, 1, 1);
