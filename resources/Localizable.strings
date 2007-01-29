@@ -250,6 +250,7 @@ run_reg.xxlarge_kids=Largest
 run_tab.allows_groups=Allows groups
 run_tab.best_time=Best time
 run_tab.cash=Cash
+run_tab.children_price_EUR=Children price (EUR)
 run_tab.children_price_ISK=Children price (ISK)
 run_tab.chip_nr=Chip number
 run_tab.chip_time=Chip time
