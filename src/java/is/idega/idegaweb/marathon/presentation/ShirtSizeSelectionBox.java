@@ -27,6 +27,7 @@ public class ShirtSizeSelectionBox extends SelectionBox {
 	
 	public void main(IWContext iwc) {
         super.main(iwc);
+        this.setSize(20);
 	}
 	
 	public void initialize(IWContext iwc) {
