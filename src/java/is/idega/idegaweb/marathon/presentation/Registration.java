@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.38 2007/01/29 02:48:42 idegaweb Exp $
+ * $Id: Registration.java,v 1.39 2007/01/29 04:28:01 idegaweb Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -60,10 +60,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/01/29 02:48:42 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/01/29 04:28:01 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  */
 public class Registration extends RunBlock {
 	
@@ -591,7 +591,7 @@ public class Registration extends RunBlock {
 		choiceTable.add(mobileField, 3, iRow++);
 		choiceTable.setHeight(iRow++, 3);
 
-		DropdownMenu tShirtField = new ShirtSizeDropdownMenu(PARAMETER_SHIRT_SIZE);
+		DropdownMenu tShirtField = (DropdownMenu) getStyledInterface(new ShirtSizeDropdownMenu(PARAMETER_SHIRT_SIZE));
 		if (this.runner.getShirtSize() != null) {
 			tShirtField.setSelectedElement(this.runner.getShirtSize());
 		}
