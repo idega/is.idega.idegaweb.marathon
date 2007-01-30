@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.39 2007/01/29 04:28:01 idegaweb Exp $
+ * $Id: Registration.java,v 1.40 2007/01/30 03:19:37 idegaweb Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -60,10 +60,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/01/29 04:28:01 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/01/30 03:19:37 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.39 $
+ * @version $Revision: 1.40 $
  */
 public class Registration extends RunBlock {
 	
@@ -251,15 +251,15 @@ public class Registration extends RunBlock {
 				Group run = (Group) iter.next();
 				String runnerYearString = yearString;
 				
-				boolean show = true;
-				boolean finished = false;
+				boolean show = false;
+				boolean finished = true;
 				Map yearMap = getRunBusiness(iwc).getYearsMap(run);
 				Year year = (Year) yearMap.get(yearString);
 				if (year != null && year.getLastRegistrationDate() != null) {
 					IWTimestamp runDate = new IWTimestamp(year.getLastRegistrationDate());
-					if (ts.isLaterThanOrEquals(runDate)) {
-						finished = true;
-						show = false;
+					if (ts.isEarlierThan(runDate)) {
+						finished = false;
+						show = true;
 					}
 				}
 				Year nextYear = (Year) yearMap.get(nextYearString);
