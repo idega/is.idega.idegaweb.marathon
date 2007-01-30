@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.40 2007/01/30 03:19:37 idegaweb Exp $
+ * $Id: Registration.java,v 1.41 2007/01/30 12:00:09 idegaweb Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -60,10 +60,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/01/30 03:19:37 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/01/30 12:00:09 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.40 $
+ * @version $Revision: 1.41 $
  */
 public class Registration extends RunBlock {
 	
@@ -1343,7 +1343,7 @@ public class Registration extends RunBlock {
 		if (chipNumber.length() != 7) {
 			return "invalid length (" + chipNumber.length() + ")";
 		}
-		if ("ABC".contains(chipNumber.substring(0, 1))) {
+		if ("ABC".indexOf(chipNumber.substring(0, 1))!= -1) {
 			return checkOldBlock(chipNumber);
 		} else {
 			return checkBigBlock(chipNumber);
