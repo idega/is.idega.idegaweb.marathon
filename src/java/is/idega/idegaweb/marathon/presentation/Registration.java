@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.41 2007/01/30 12:00:09 idegaweb Exp $
+ * $Id: Registration.java,v 1.42 2007/01/30 23:10:54 idegaweb Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -60,10 +60,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/01/30 12:00:09 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/01/30 23:10:54 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.41 $
+ * @version $Revision: 1.42 $
  */
 public class Registration extends RunBlock {
 	
@@ -591,10 +591,24 @@ public class Registration extends RunBlock {
 		choiceTable.add(mobileField, 3, iRow++);
 		choiceTable.setHeight(iRow++, 3);
 
-		DropdownMenu tShirtField = (DropdownMenu) getStyledInterface(new ShirtSizeDropdownMenu(PARAMETER_SHIRT_SIZE));
+		DropdownMenu tShirtField = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_SHIRT_SIZE));
+		tShirtField.addOption(new SelectOption(localize("run_reg.select_tee_shirt_size", "Select tee-shirt size"), "-1"));
 		if (this.runner.getShirtSize() != null) {
 			tShirtField.setSelectedElement(this.runner.getShirtSize());
 		}
+		tShirtField.setAsNotEmpty(localize("run_reg.must_select_shirt_size", "You must select tee-shirt size"), "-1");
+
+		RemoteScriptHandler rshShirts = new RemoteScriptHandler(distanceDropdown, tShirtField);
+		try {
+			rshShirts.setRemoteScriptCollectionClass(DistanceMenuShirtSizeMenuInputCollectionHandler.class);
+		}
+		catch (InstantiationException e) {
+			e.printStackTrace();
+		}
+		catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		add(rshShirts);
 
 		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_COUNTRY, "Country")), 1, iRow);
 		choiceTable.add(redStar, 1, iRow);
@@ -1367,7 +1381,7 @@ public class Registration extends RunBlock {
 		pos[6] = "0123456789";
 		pos[7] = "0123456789";
 		for (int i = 1; i < 8; i++) {
-			if (!pos[i].contains(chipNumber.substring((i - 1), i))) {
+			if (pos[i].indexOf(chipNumber.substring((i - 1), i)) == -1) {
 				return "invalid character on position: " + i;
 			}
 		}
@@ -1393,7 +1407,7 @@ public class Registration extends RunBlock {
 		String poschk = "Z97BN4XSVE56AWYM1TPK8H2GDCF3R";
 		int checksum = 0;
 		for (int i = 1; i < 7; i++) {
-			if (!pos[i].contains(chipNumber.substring((i - 1), i))) {
+			if (pos[i].indexOf(chipNumber.substring((i - 1), i)) == -1) {
 				return "invalid character on position: " + i;
 			}
 			checksum = checksum + poscnt.indexOf(chipNumber.substring(i - 1, i));
