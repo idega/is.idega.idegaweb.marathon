@@ -1,5 +1,5 @@
 /*
- * $Id: YearBMPBean.java,v 1.2 2005/08/16 14:09:36 laddi Exp $
+ * $Id: YearBMPBean.java,v 1.3 2007/01/30 01:59:36 idegaweb Exp $
  * Created on May 22, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -15,10 +15,10 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2005/08/16 14:09:36 $ by $Author: laddi $
+ * Last modified: $Date: 2007/01/30 01:59:36 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class YearBMPBean extends GroupBMPBean  implements Year{
 
@@ -45,11 +45,11 @@ public class YearBMPBean extends GroupBMPBean  implements Year{
 
 	public void setRunDate(Timestamp date) {
 		IWTimestamp stamp = new IWTimestamp(date);
-		setMetaData(METADATA_RUN_DATE, stamp.toSQLDateString(), "java.sql.Timestamp");
+		setMetaData(METADATA_RUN_DATE, stamp.toSQLString(), "java.sql.Timestamp");
 	}
 
 	public void setLastRegistrationDate(Timestamp date) {
 		IWTimestamp stamp = new IWTimestamp(date);
-		setMetaData(METADATA_LAST_REGISTRATION_DATE, stamp.toSQLDateString(), "java.sql.Timestamp");
+		setMetaData(METADATA_LAST_REGISTRATION_DATE, stamp.toSQLString(), "java.sql.Timestamp");
 	}
 }
