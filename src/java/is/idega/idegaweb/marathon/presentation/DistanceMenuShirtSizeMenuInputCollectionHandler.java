@@ -59,7 +59,7 @@ public class DistanceMenuShirtSizeMenuInputCollectionHandler extends Presentatio
 				    	//ShirtSize shirtSize = shirtSizeHome.findByPrimaryKey(shirtSizeKey);
 					    //String s = iwrb.getLocalizedString(shirtSize.getName(),shirtSize.getName());
 					    ids.add(shirtSizeKey);
-					    names.add(iwrb.getLocalizedString(shirtSizeKey,shirtSizeKey));
+					    names.add(iwrb.getLocalizedString("shirt_size."+shirtSizeKey,shirtSizeKey));
 				    }
 				    if (shirtSizes.isEmpty()) {
 				    	ids.add("");

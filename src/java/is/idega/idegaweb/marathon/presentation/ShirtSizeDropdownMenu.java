@@ -38,8 +38,9 @@ public class ShirtSizeDropdownMenu extends DropdownMenu {
 			while (iter.hasNext()) {
 				ShirtSize shirtSize = (ShirtSize) iter.next();
 				String name = shirtSize.getName();
+				String description = shirtSize.getDescription();
 				if(name!=null) {
-					addOption(new SelectOption(iwrb.getLocalizedString(name,name),name));
+					addOption(new SelectOption(iwrb.getLocalizedString("shirt_size."+name,name),description));
 				}
 			}
 		}

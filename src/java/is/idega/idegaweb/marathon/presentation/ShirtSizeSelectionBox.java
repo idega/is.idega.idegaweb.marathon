@@ -42,8 +42,11 @@ public class ShirtSizeSelectionBox extends SelectionBox {
 				while (iter.hasNext()) {
 					ShirtSize shirtSize = (ShirtSize) iter.next();
 					String name = shirtSize.getName();
+					String description = shirtSize.getDescription();
 					if(name!=null) {
-						addMenuElement(name, iwrb.getLocalizedString(name,name));
+						//MenuElement menuElement = new MenuElement(name, iwrb.getLocalizedString("shirt_size."+name, description));
+						//addMenuElement(menuElement);
+						addMenuElement(name, iwrb.getLocalizedString("shirt_size."+name, description));
 					}
 				}
 			}
