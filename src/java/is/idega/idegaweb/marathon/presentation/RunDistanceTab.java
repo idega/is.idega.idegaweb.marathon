@@ -309,7 +309,7 @@ public class RunDistanceTab extends UserGroupTab{
 
 				distance.setNumberOfSplits(((Integer) this.fieldValues.get(PARAMETER_NUMBER_OF_SPLITS)).intValue());
 				String[] shirtSizesPerRun = (String[]) this.fieldValues.get(PARAMETER_SHIRT_SIZES_PER_RUN);
-				if(shirtSizesPerRun!=null){
+				if(shirtSizesPerRun!=null && shirtSizesPerRun.length != 0){
 					List abbrList = ListUtil.convertStringArrayToList(shirtSizesPerRun);
 					if(abbrList.isEmpty()){
 						distance.setMetaData(PARAMETER_SHIRT_SIZES_PER_RUN, "");
