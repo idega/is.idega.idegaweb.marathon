@@ -165,35 +165,7 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 
 		this.participantNumberField = new TextInput(IWMarathonConstants.PARAMETER_PARTICIPANT_NUMBER);
 		this.chipNumberField = new TextInput(IWMarathonConstants.PARAMETER_CHIP_NUMBER);
-		this.tShirtField = new DropdownMenu(IWMarathonConstants.PARAMETER_TSHIRT);
-		SelectOption empty = new SelectOption(iwrb.getLocalizedString("run_reg.select_tee_shirt_size", "Select tee-shirt size"), "-1");
-		SelectOption selectAdult = new SelectOption(iwrb.getLocalizedString("run_reg.adult_sized", "Adult sizes"), "-1");
-		this.small = new SelectOption("- " + iwrb.getLocalizedString("run_reg.small", "Small"), IWMarathonConstants.PARAMETER_TSHIRT_S);
-		this.medium = new SelectOption("- " + iwrb.getLocalizedString("run_reg.medium", "Medium"), IWMarathonConstants.PARAMETER_TSHIRT_M);
-		this.large = new SelectOption("- " + iwrb.getLocalizedString("run_reg.large", "Large"), IWMarathonConstants.PARAMETER_TSHIRT_L);
-		this.xlarge = new SelectOption("- " + iwrb.getLocalizedString("run_reg.xlarge", "Larger"), IWMarathonConstants.PARAMETER_TSHIRT_XL);
-		this.xxlarge = new SelectOption("- " + iwrb.getLocalizedString("run_reg.xxlarge", "Largest"), IWMarathonConstants.PARAMETER_TSHIRT_XXL);
-
-		this.tShirtField.addOption(empty);
-		this.tShirtField.addOption(selectAdult);
-		this.tShirtField.addOption(this.small);
-		this.tShirtField.addOption(this.medium);
-		this.tShirtField.addOption(this.large);
-		this.tShirtField.addOption(this.xlarge);
-		this.tShirtField.addOption(this.xxlarge);
-
-		this.selectKids = new SelectOption(iwrb.getLocalizedString("run_reg.kids_sized", "Kids sizes"), "-1");
-		this.smallKids = new SelectOption("- " + iwrb.getLocalizedString("run_reg.small_kids", "Small"), IWMarathonConstants.PARAMETER_TSHIRT_S + "_kids");
-		this.mediumKids = new SelectOption("- " + iwrb.getLocalizedString("run_reg.medium_kids", "Medium"), IWMarathonConstants.PARAMETER_TSHIRT_M + "_kids");
-		this.largeKids = new SelectOption("- " + iwrb.getLocalizedString("run_reg.large_kids", "Large"), IWMarathonConstants.PARAMETER_TSHIRT_L + "_kids");
-		this.xlargeKids = new SelectOption("- " + iwrb.getLocalizedString("run_reg.xlarge_kids", "Larger"), IWMarathonConstants.PARAMETER_TSHIRT_XL + "_kids");
-
-		this.tShirtField.addOption(this.selectKids);
-		this.tShirtField.addOption(this.smallKids);
-		this.tShirtField.addOption(this.mediumKids);
-		this.tShirtField.addOption(this.largeKids);
-		this.tShirtField.addOption(this.xlargeKids);
-
+		this.tShirtField = new ShirtSizeDropdownMenu(IWMarathonConstants.PARAMETER_TSHIRT);
 		this.payMethodField = new DropdownMenu(IWMarathonConstants.PARAMETER_PAY_METHOD);
 		this.notPayed = new SelectOption(iwrb.getLocalizedString("run_tab.not_payed", "Not payed"), "not_payed");
 		this.credit = new SelectOption(iwrb.getLocalizedString("run_tab.credit", "Credit"), "credit");
@@ -265,6 +237,7 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 		String participantNr = iwc.getParameter(IWMarathonConstants.PARAMETER_PARTICIPANT_NUMBER);
 		String chipNr = iwc.getParameter(IWMarathonConstants.PARAMETER_CHIP_NUMBER);
 		String teamName = iwc.getParameter(IWMarathonConstants.PARAMETER_GROUP_NAME);
+		String shirtSize = iwc.getParameter(IWMarathonConstants.PARAMETER_TSHIRT);
 		String runTime = iwc.getParameter(IWMarathonConstants.PARAMETER_RUN_TIME);
 		String chipTime = iwc.getParameter(IWMarathonConstants.PARAMETER_CHIP_TIME);
 		String userIDString = iwc.getParameter("ic_user_id");
@@ -294,6 +267,7 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 			getRunBiz(iwc).savePaymentByUserID(userID, payMethod, payedAmount);
 			getRunBiz(iwc).updateParticipantAndChip(userID, participantNr, chipNr);
 			getRunBiz(iwc).updateTeamName(userID, groupID, teamName);
+			getRunBiz(iwc).updateShirtSize(userID, groupID, shirtSize);
 			getRunBiz(iwc).updateRunAndChipTimes(userID, groupID, runTime, chipTime);
 
 		}
