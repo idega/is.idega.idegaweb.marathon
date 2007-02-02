@@ -40,7 +40,7 @@ public class ShirtSizeDropdownMenu extends DropdownMenu {
 				String name = shirtSize.getName();
 				String description = shirtSize.getDescription();
 				if(name!=null) {
-					addOption(new SelectOption(iwrb.getLocalizedString("shirt_size."+name,name),description));
+					addOption(new SelectOption(iwrb.getLocalizedString("shirt_size."+name,description),name));
 				}
 			}
 		}
