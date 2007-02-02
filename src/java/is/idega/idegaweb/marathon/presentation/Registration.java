@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.42 2007/01/30 23:10:54 idegaweb Exp $
+ * $Id: Registration.java,v 1.43 2007/02/02 01:58:01 idegaweb Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -60,10 +60,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/01/30 23:10:54 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/02/02 01:58:01 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.42 $
+ * @version $Revision: 1.43 $
  */
 public class Registration extends RunBlock {
 	
@@ -1154,7 +1154,7 @@ public class Registration extends RunBlock {
 			runnerTable.add(getText(localize(run.getName(), run.getName())), 2, runRow);
 			runnerTable.add(getText(localize(distance.getName(), distance.getName())), 3, runRow);
 			runnerTable.add(getText(String.valueOf(participant.getParticipantNumber())), 4, runRow);
-			runnerTable.add(getText(localize("shirt_size." + participant.getTShirtSize(), participant.getTShirtSize())), 5, runRow++);
+			runnerTable.add(getText(localize("shirt_size." + participant.getShirtSize(), participant.getShirtSize())), 5, runRow++);
 		}
 		
 		if (doPayment) {

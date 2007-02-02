@@ -330,7 +330,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			if(ageGenderGroupID != -1) {
 				r.setRunGroupGroupID(ageGenderGroupID);
 			}
-			r.setTShirtSize(tshirt);
+			r.setShirtSize(tshirt);
 			r.setChipOwnershipStatus(chipOwnershipStatus);
 			r.setChipNumber(chipNumber);
 			r.setRunGroupName(groupName);
@@ -429,7 +429,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 						participant.setPayedAmount(String.valueOf(runner.getAmount()));
 					}
 					
-					participant.setTShirtSize(runner.getShirtSize());
+					participant.setShirtSize(runner.getShirtSize());
 					if (runner.isOwnChip()) {
 						participant.setChipOwnershipStatus(IWMarathonConstants.CHIP_OWN);
 					}

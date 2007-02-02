@@ -235,7 +235,7 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		return getStringColumnValue(getColumnNameUserNationality());
 	}
 
-	public String getTShirtSize() {
+	public String getShirtSize() {
 		return getStringColumnValue(getColumnNameTShirtSize());
 	}
 
@@ -336,7 +336,7 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		setColumn(getColumnNameUserNationality(), nationality);
 	}
 
-	public void setTShirtSize(String tShirtSize) {
+	public void setShirtSize(String tShirtSize) {
 		setColumn(getColumnNameTShirtSize(), tShirtSize);
 	}
 

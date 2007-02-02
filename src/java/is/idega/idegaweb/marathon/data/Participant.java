@@ -1,5 +1,5 @@
 /*
- * $Id: Participant.java,v 1.6 2005/08/16 14:09:36 laddi Exp $
+ * $Id: Participant.java,v 1.7 2007/02/02 01:58:01 idegaweb Exp $
  * Created on Aug 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -15,10 +15,10 @@ import com.idega.user.data.User;
 
 
 /**
- * Last modified: $Date: 2005/08/16 14:09:36 $ by $Author: laddi $
+ * Last modified: $Date: 2007/02/02 01:58:01 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public interface Participant extends IDOEntity {
 
@@ -118,9 +118,9 @@ public interface Participant extends IDOEntity {
 	public String getUserNationality();
 
 	/**
-	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getTShirtSize
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getShirtSize
 	 */
-	public String getTShirtSize();
+	public String getShirtSize();
 
 	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getRunGroupName
@@ -243,9 +243,9 @@ public interface Participant extends IDOEntity {
 	public void setUserNationality(String nationality);
 
 	/**
-	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setTShirtSize
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setShirtSize
 	 */
-	public void setTShirtSize(String tShirtSize);
+	public void setShirtSize(String tShirtSize);
 
 	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setRunGroupName

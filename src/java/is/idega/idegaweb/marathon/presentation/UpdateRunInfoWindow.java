@@ -243,7 +243,7 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 
 			this.participantNumberField.setContent(String.valueOf(run.getParticipantNumber()));
 			this.chipNumberField.setContent(String.valueOf(run.getChipNumber()));
-			this.tShirtField.setSelectedElement(run.getTShirtSize());
+			this.tShirtField.setSelectedElement(run.getShirtSize());
 			this.payMethodField.setSelectedElement(run.getPayMethod());
 			this.payedAmountField.setContent(run.getPayedAmount());
 			if (run.getPayedAmount() != null && run.getPayMethod() == null) {

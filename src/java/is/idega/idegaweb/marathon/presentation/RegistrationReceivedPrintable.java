@@ -84,7 +84,7 @@ public class RegistrationReceivedPrintable extends Window {
 			runnerTable.add(getText(iwrb.getLocalizedString(run.getName(), run.getName())), 2, runRow);
 			runnerTable.add(getText(iwrb.getLocalizedString(distance.getName(), distance.getName())), 3, runRow);
 			runnerTable.add(getText(String.valueOf(participant.getParticipantNumber())), 4, runRow);
-			runnerTable.add(getText(iwrb.getLocalizedString("shirt_size." + participant.getTShirtSize(), participant.getTShirtSize())), 5, runRow++);
+			runnerTable.add(getText(iwrb.getLocalizedString("shirt_size." + participant.getShirtSize(), participant.getShirtSize())), 5, runRow++);
 		}
 		
 		Table creditCardTable = new Table(2, 3);
