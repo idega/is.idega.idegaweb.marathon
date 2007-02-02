@@ -1,5 +1,5 @@
 /*
- * $Id: RunBusiness.java,v 1.28 2006/08/01 20:45:07 gimmi Exp $
+ * $Id: RunBusiness.java,v 1.29 2007/02/02 11:14:52 idegaweb Exp $
  * Created on Aug 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -31,10 +31,10 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2006/08/01 20:45:07 $ by $Author: gimmi $
+ * Last modified: $Date: 2007/02/02 11:14:52 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */
 public interface RunBusiness extends IBOService {
 
@@ -136,6 +136,11 @@ public interface RunBusiness extends IBOService {
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#updateTeamName
 	 */
 	public void updateTeamName(int userID, int groupID, String teamName) throws java.rmi.RemoteException;
+
+	/**
+	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#updateShritSize
+	 */
+	public void updateShirtSize(int userID, int groupID, String shirtSize) throws java.rmi.RemoteException;
 
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#updateRunAndChipTimes

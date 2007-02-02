@@ -870,6 +870,18 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			}
 		}
 	}
+	public void updateShirtSize(int userID, int groupID, String shirtSize) {
+		Participant run = null;
+		if(groupID != -1) {
+			run = getRunObjByUserAndGroup(userID, groupID);
+		}
+		if(run != null) {
+			if(shirtSize != null && !shirtSize.equals("")) {
+				run.setShirtSize(shirtSize);
+				run.store();
+			}
+		}
+	}
 	public void updateRunAndChipTimes(int userID, int groupID, String runTime, String chipTime) {
 		Participant run = null;
 		if(groupID != -1) {
