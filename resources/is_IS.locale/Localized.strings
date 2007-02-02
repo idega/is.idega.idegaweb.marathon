@@ -117,7 +117,7 @@ run_reg.continue_without_email=Viltu halda \u00E1fram me\u00F0 skr\u00E1ninguna 
 run_reg.country=Land
 run_reg.credit_card_information=Kreditkorta uppl\u00FDsingar
 run_reg.delivery_of_race_material_body=<a href\="http\://marathon.is/pages/home/reykjavikurmarathonglitnis/umhlaupid/" >Reykjav\u00EDkurmara\u00FEon Glitnis</a> <br/>\r\n<a href\="http\://marathon.is/pages/home/laugavegurinn/">Laugavegurinn - Ultra Marathon</a><br/>\r\n<a href\="http\://marathon.is/pages/home/midnxogolympiuhlaup/">Mi\u00F0n\u00E6tur- og \u00D3lymp\u00EDufj\u00F6lskylduhlaupi\u00F0</a><br/>\r\n</p>
-run_reg.delivery_of_race_material_headline=N\u00E1nari uppl\u00FDsingar um hlaup \u00E1 vegum Reykjav\u00EDkurmara\u00FEons og afhending keppnisgagna\:
+run_reg.delivery_of_race_material_headline=N\u00E1nari uppl\u00FDsingar um hlaup \u00E1 vegum Reykjav\u00EDkurmara\u00FEons og afhendingu keppnisgagna\:
 run_reg.disagree=Nei, \u00E9g sam\u00FEykki ekki 
 run_reg.distance=Vegalengd
 run_reg.email=Netfang

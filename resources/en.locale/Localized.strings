@@ -1,6 +1,6 @@
-1_5_km=Lazy Town run (1,5 km)
 10_km=10 km
-21_km=21 km (under 3 hours)
+1_5_km=Lazy Town run (1,5 km)
+21_km=21 km
 21_km_charity=21 km (over 3 hours)
 3_km=3 km funrun
 42_km=42.2 km (under 5 hours)
@@ -33,7 +33,7 @@ run_reg.agreement=I, by sending this registration form, waive and release any ri
 run_reg.amount=Amount
 run_reg.card_number=Card number
 run_reg.continue_without_email=Are you sure you want to continue without entering an e-mail?
-run_reg.delivery_of_race_material_body=Information about delivery of race materials are available on www.marathon.is on the information page for each event.<br><a href="http://marathon.is/pages/english4/glitnirreykjavikmarathon/expoxbarillapasta/">Glitnir Reykjavik Marathon</a><br/><a href="http://marathon.is/pages/english4/laugavegurultramarathon/">Laugavegur - Ultra Marathon</a> <br/><a href="http://marathon.is/pages/english4/midnightrun/">Midnight Run</a>
+run_reg.delivery_of_race_material_body=Information about delivery of race materials are available on www.marathon.is on the information page for each event.<br><a href\="http\://marathon.is/pages/english4/glitnirreykjavikmarathon/expoxbarillapasta/">Glitnir Reykjavik Marathon</a><br/><a href\="http\://marathon.is/pages/english4/laugavegurultramarathon/">Laugavegur - Ultra Marathon</a> <br/><a href\="http\://marathon.is/pages/english4/midnightrun/">Midnight Run</a>
 run_reg.group_competition_info=Info about group competition
 run_reg.group_information_text_step_1=We offer the possibility of a team race in the marathon, half-marathon, 10 km in the Reykjavik Marathon as well as the Midnigh Run and also in the Ultra Marathon (Laugavegur).  Each team can have 3-5 members.<br><br>\r\n \r\nTeam rules\:<br>\r\n<ol>\r\n<li>You can register 3, 4 or 5 members to each team but only the first three will be counted for points and win prices.</li>\r\n<li>Anyone can form a team, both men and women together.</li>\r\n<li>Participants must first register for a run and pay the fee before they can be registered to a team.<br>\r\nTo register for a team is free of charge.</li>\r\n<li>Every member of the team must run the same distance.</li>\r\n<li>Any changes to a team must be in writing and must be delivered to run employees the day before the start of the race at the latest.</li>
 run_reg.group_information_text_step_2=<b>Team members</b><br>\r\nPlease note that to be able to register as a team each team member must register for the run and pay the fee.  After that you can register the team by supplying the participant numbers below.  The team can have a minimum of three and a maximum of 5 members.
