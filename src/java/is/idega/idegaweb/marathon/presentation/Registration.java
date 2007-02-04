@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.43 2007/02/02 01:58:01 idegaweb Exp $
+ * $Id: Registration.java,v 1.44 2007/02/04 19:10:39 idegaweb Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -31,6 +31,7 @@ import com.idega.core.contact.data.Phone;
 import com.idega.core.location.data.Address;
 import com.idega.core.location.data.PostalCode;
 import com.idega.data.IDOCreateException;
+import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.help.presentation.Help;
 import com.idega.presentation.IWContext;
@@ -60,10 +61,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/02/02 01:58:01 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/02/04 19:10:39 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.43 $
+ * @version $Revision: 1.44 $
  */
 public class Registration extends RunBlock {
 	
@@ -1073,6 +1074,12 @@ public class Registration extends RunBlock {
 			String referenceNumber = null;
 			double amount = 0;
 			IWTimestamp paymentStamp = new IWTimestamp();
+
+			IWBundle iwb = getBundle(iwc);
+			boolean disablePaymentProcess = "true".equalsIgnoreCase(iwb.getProperty("disable_payment_authorization_process","false"));
+			if (doPayment && disablePaymentProcess) {
+				doPayment = false;
+			}
 
 			if (doPayment) {
 				nameOnCard = iwc.getParameter(PARAMETER_NAME_ON_CARD);
