@@ -165,6 +165,16 @@
       <type>java.lang.String</type>
       <value>126</value>
     </key>
+    <key>
+      <name>staff_group_id</name>
+      <type>java.lang.String</type>
+      <value>-1</value>
+    </key>
+    <key>
+      <name>disable_payment_authorization_process</name>
+      <type>java.lang.String</type>
+      <value>false</value>
+    </key>
   </map>
 </pxml>
 
