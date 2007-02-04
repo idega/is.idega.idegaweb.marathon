@@ -62,16 +62,6 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 	private TextInput chipTimeField;
 
 	private DropdownMenu tShirtField;
-	private SelectOption small;
-	private SelectOption medium;
-	private SelectOption large;
-	private SelectOption xlarge;
-	private SelectOption xxlarge;
-	private SelectOption selectKids;
-	private SelectOption smallKids;
-	private SelectOption mediumKids;
-	private SelectOption largeKids;
-	private SelectOption xlargeKids;
 
 	private DropdownMenu payMethodField;
 	private SelectOption notPayed;
