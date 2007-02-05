@@ -5,7 +5,7 @@
   <pomVersion>3</pomVersion>
   <name>idegaWeb Marathon</name>
   <artifactId>is.idega.idegaweb.marathon</artifactId>
-  <currentVersion>3.1.9</currentVersion>
+  <currentVersion>3.1.10</currentVersion>
   <inceptionYear>2000</inceptionYear>
   <shortDescription>Marathon</shortDescription>
   <versions>
@@ -63,6 +63,11 @@
       <id>3.0.9</id>
       <name>3.0.9</name>
       <tag>MARATHON_3_0_9</tag>
+    </version>
+    <version>
+      <id>3.1.10</id>
+      <name>3.1.10</name>
+      <tag>MARATHON_3_1_10</tag>
     </version>
   </versions>
   <branches/>
