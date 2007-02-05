@@ -51,7 +51,7 @@ public class DistanceMenuShirtSizeMenuInputCollectionHandler extends Presentatio
 					//ShirtSizeHome shirtSizeHome = (ShirtSizeHome) IDOLookup.getHome(ShirtSize.class);
 
 					if (shirtIt.hasNext()) {
-				    	ids.add("");
+				    	ids.add("-1");
 				    	names.add(iwrb.getLocalizedString("run_distance_dd.select_shirt_size","Select shirt size..."));
 				    }
 				    while (shirtIt.hasNext()) {
@@ -62,11 +62,11 @@ public class DistanceMenuShirtSizeMenuInputCollectionHandler extends Presentatio
 					    names.add(iwrb.getLocalizedString("shirt_size."+shirtSizeKey,shirtSizeKey));
 				    }
 				    if (shirtSizes.isEmpty()) {
-				    	ids.add("");
+				    	ids.add("-1");
 				    	names.add(iwrb.getLocalizedString("unavailable","Unavailable"));
 				    } 
 				} else {
-					ids.add("");
+					ids.add("-1");
 			    	names.add(iwrb.getLocalizedString("unavailable","Unavailable"));
 				}
 											
