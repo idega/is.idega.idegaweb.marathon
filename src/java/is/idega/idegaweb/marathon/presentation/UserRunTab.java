@@ -132,7 +132,7 @@ public class UserRunTab extends UserTab{
 				catch (RemoteException e) {
 					e.printStackTrace();
 				}
-				Link l = new Link(iwrb.getLocalizedString(run.getName())+ " " + iwrb.getLocalizedString(year.getName()), iwrb.getLocalizedString(run.getName())+ " " + iwrb.getLocalizedString(year.getName()));
+				Link l = new Link(iwrb.getLocalizedString(run.getName(),run.getName())+ " " + iwrb.getLocalizedString(year.getName(),year.getName()), iwrb.getLocalizedString(run.getName(),run.getName())+ " " + iwrb.getLocalizedString(year.getName(),year.getName()));
 				l.setStyleClass("styledLink");
 				l.addParameter(IWMarathonConstants.GROUP_TYPE_RUN,run.getPrimaryKey().toString());
 				l.addParameter("ic_user_id",Integer.parseInt(userID));
