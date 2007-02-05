@@ -5,6 +5,11 @@
 	</properties>
 	<body>
 
+	<release version="3.1.10" date="2007-02-05">
+		<action dev="sigtryggur" type="update">
+			Fixed few javascripts that were not working properly
+		</action>     
+	</release>
 	<release version="3.1.9" date="2007-01-29">
 		<action dev="sigtryggur" type="update">
 			Added new shirtsizedropdownmenu to the registration-form
