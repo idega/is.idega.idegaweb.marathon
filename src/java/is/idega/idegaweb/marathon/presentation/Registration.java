@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.44 2007/02/04 19:10:39 idegaweb Exp $
+ * $Id: Registration.java,v 1.45 2007/02/05 19:03:05 idegaweb Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -61,10 +61,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/02/04 19:10:39 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/02/05 19:03:05 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.44 $
+ * @version $Revision: 1.45 $
  */
 public class Registration extends RunBlock {
 	
@@ -289,7 +289,7 @@ public class Registration extends RunBlock {
 		if (this.runner.getRun() != null) {
 			runDropdown.setSelectedElement(this.runner.getRun().getPrimaryKey().toString());
 		}
-		runDropdown.setAsNotEmpty(localize("run_reg.must_select_run", "You have to select a run"), "");
+		runDropdown.setAsNotEmpty(localize("run_reg.must_select_run", "You have to select a run"));
 		if (!hasRuns) {
 			getParentPage().setAlertOnLoad(localize("run_reg.no_runs_available", "There are no runs you can register for."));
 			if (this.isIcelandic) {
@@ -300,7 +300,7 @@ public class Registration extends RunBlock {
 		}
 		
 		DropdownMenu distanceDropdown = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_DISTANCE));
-		distanceDropdown.addMenuElement("", localize("run_year_ddd.select_distance","Select distance..."));
+		distanceDropdown.addMenuElement("-1", localize("run_year_ddd.select_distance","Select distance..."));
 		if(this.runner.getRun() != null) {
 			String runnerYearString = yearString;
 			boolean finished = false;
@@ -324,7 +324,7 @@ public class Registration extends RunBlock {
 				distanceDropdown.setSelectedElement(this.runner.getDistance().getPrimaryKey().toString());
 			}
 		}
-		distanceDropdown.setAsNotEmpty(localize("run_reg.must_select_distance", "You have to select a distance"), "");
+		distanceDropdown.setAsNotEmpty(localize("run_reg.must_select_distance", "You have to select a distance"));
 
 		Text redStar = getHeader("*");
 		redStar.setFontColor("#ff0000");
@@ -597,7 +597,7 @@ public class Registration extends RunBlock {
 		if (this.runner.getShirtSize() != null) {
 			tShirtField.setSelectedElement(this.runner.getShirtSize());
 		}
-		tShirtField.setAsNotEmpty(localize("run_reg.must_select_shirt_size", "You must select tee-shirt size"), "-1");
+		tShirtField.setAsNotEmpty(localize("run_reg.must_select_shirt_size", "You must select tee-shirt size"));
 
 		RemoteScriptHandler rshShirts = new RemoteScriptHandler(distanceDropdown, tShirtField);
 		try {
@@ -613,7 +613,8 @@ public class Registration extends RunBlock {
 
 		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_COUNTRY, "Country")), 1, iRow);
 		choiceTable.add(redStar, 1, iRow);
-		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_TSHIRT, "T-Shirt")), 3, iRow++);
+		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_TSHIRT, "T-Shirt")), 3, iRow);
+		choiceTable.add(redStar, 3, iRow++);
 		choiceTable.add(countryField, 1, iRow);
 		choiceTable.add(tShirtField, 3, iRow++);
 

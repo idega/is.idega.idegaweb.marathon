@@ -1,5 +1,5 @@
 /*
- * $Id: RunInputCollectionHandler.java,v 1.9 2007/01/17 12:53:37 idegaweb Exp $
+ * $Id: RunInputCollectionHandler.java,v 1.10 2007/02/05 19:03:05 idegaweb Exp $
  * Created on Feb 14, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -33,10 +33,10 @@ import com.idega.util.IWTimestamp;
 
 /**
  * 
- *  Last modified: $Date: 2007/01/17 12:53:37 $ by $Author: idegaweb $
+ *  Last modified: $Date: 2007/02/05 19:03:05 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:birna@idega.com">birna</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class RunInputCollectionHandler extends PresentationObject implements RemoteScriptCollection {
 
@@ -95,7 +95,7 @@ public class RunInputCollectionHandler extends PresentationObject implements Rem
 			    if (distances != null) {
 				    Iterator disIter = distances.iterator();
 				    if (disIter.hasNext()) {
-					    	ids.add("");
+					    	ids.add("-1");
 					    	names.add(iwrb.getLocalizedString("run_year_ddd.select_distance","Select distance..."));
 				    }
 				    while (disIter.hasNext()) {
@@ -114,12 +114,12 @@ public class RunInputCollectionHandler extends PresentationObject implements Rem
 				    		}
 				    }
 				    if (distances.isEmpty()) {
-				    		ids.add("");
+				    		ids.add("-1");
 				    		names.add(iwrb.getLocalizedString("unavailable","Unavailable"));
 				    } 
 			    }
 			    else {
-			    		ids.add("");
+			    		ids.add("-1");
 			    		names.add(iwrb.getLocalizedString("unavailable","Unavailable"));
 			    }
 			    
