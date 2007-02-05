@@ -93,6 +93,8 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 	private static String DEFAULT_MESSAGEBOX_FROM_ADDRESS = "messagebox@idega.com";
 	private static String DEFAULT_CC_ADDRESS = "hjordis@ibr.is";
 
+	private AddressHome addressHome;
+
 	/**
 	 * saves information on the user - creates a new user if he doesn't exsist..
 	 */
@@ -112,6 +114,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				a.setStreetName(address);
 				a.setCity(city);
 				a.setCountry(country);
+				a.setAddressType(getAddressHome().getAddressType2());
 				a.store();
 
 				PostalCodeHome postalHome = (PostalCodeHome) getIDOHome(PostalCode.class);
@@ -1797,5 +1800,17 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			//log(re);
 		}
 		return country;
+	}
+
+	public AddressHome getAddressHome() {
+		if (this.addressHome == null) {
+			try {
+				this.addressHome = (AddressHome) IDOLookup.getHome(Address.class);
+			}
+			catch (RemoteException rme) {
+				throw new RuntimeException(rme.getMessage());
+			}
+		}
+		return this.addressHome;
 	}
 }
