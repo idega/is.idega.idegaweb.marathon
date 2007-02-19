@@ -1,5 +1,5 @@
 /*
- * $Id: DistanceBMPBean.java,v 1.5 2005/08/16 14:09:36 laddi Exp $
+ * $Id: DistanceBMPBean.java,v 1.6 2007/02/19 10:56:13 idegaweb Exp $
  * Created on May 22, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -16,14 +16,16 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2005/08/16 14:09:36 $ by $Author: laddi $
+ * Last modified: $Date: 2007/02/19 10:56:13 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class DistanceBMPBean extends GroupBMPBean  implements Group, Distance{
 
 	private static final String METADATA_USE_CHIP = "use_chip";
+	private static final String METADATA_TRANSPORT_OFFERED = "transport_offered";
+	
 	private static final String METADATA_PRICE_ISK = "price_isk";
 	private static final String METADATA_PRICE_EUR = "price_eur";
 	private static final String METADATA_FAMILY_DISCOUNT = "family_discount";
@@ -43,6 +45,18 @@ public class DistanceBMPBean extends GroupBMPBean  implements Group, Distance{
 
 	public void setUseChip(boolean useChip) {
 		setMetaData(METADATA_USE_CHIP, String.valueOf(useChip), "java.lang.Boolean");
+	}
+	
+	public boolean isTransportOffered() {
+		String transportOffered = this.getMetaData(METADATA_TRANSPORT_OFFERED);
+		if (transportOffered != null) {
+			return new Boolean(transportOffered).booleanValue();
+		}
+		return false;
+	}
+
+	public void setTransportOffered(boolean transportOffered) {
+		setMetaData(METADATA_TRANSPORT_OFFERED, String.valueOf(transportOffered), "java.lang.Boolean");
 	}
 	
 	public float getPrice(Locale locale) {
