@@ -32,6 +32,7 @@ public class RunDistanceTab extends UserGroupTab{
 	private static final String PARAMETER_USE_CHIP = "use_chip";
 	private static final String PARAMETER_FAMILY_DISCOUNT = "family_discount";
 	private static final String PARAMETER_ALLOWS_GROUPS = "allows_groups";
+	private static final String PARAMETER_TRANSPORT_OFFERED = "transport_offered";
 
 	private static final String PARAMETER_PRICE_ISK = "price_isk";
 	private static final String PARAMETER_PRICE_EUR = "price_eur";
@@ -49,6 +50,7 @@ public class RunDistanceTab extends UserGroupTab{
 	private CheckBox useChip;
 	private CheckBox familyDiscount;
 	private CheckBox allowsGroups;
+	private CheckBox transportOffered;
 	
 	private DropdownMenu numberOfSplits;
 	private ShirtSizeSelectionBox shirtSizeSelectionBox;
@@ -60,6 +62,7 @@ public class RunDistanceTab extends UserGroupTab{
 	private Text useChipText;
 	private Text familyDiscountText;
 	private Text allowsGroupsText;
+	private Text transportOfferedText;
 	private Text numberOfSplitsText;
 	private Text shirtSizeSelectionBoxText;
 	
@@ -79,6 +82,7 @@ public class RunDistanceTab extends UserGroupTab{
 			Boolean useChip = new Boolean(iwc.isParameterSet(PARAMETER_USE_CHIP));
 			Boolean familyDiscount = new Boolean(iwc.isParameterSet(PARAMETER_FAMILY_DISCOUNT));
 			Boolean allowsGroups = new Boolean(iwc.isParameterSet(PARAMETER_ALLOWS_GROUPS));
+			Boolean transportOffered = new Boolean(iwc.isParameterSet(PARAMETER_TRANSPORT_OFFERED));
 			
 			String priceISK = iwc.getParameter(PARAMETER_PRICE_ISK);
 			String priceEUR = iwc.getParameter(PARAMETER_PRICE_EUR);
@@ -91,6 +95,7 @@ public class RunDistanceTab extends UserGroupTab{
 			this.fieldValues.put(PARAMETER_USE_CHIP, useChip);
 			this.fieldValues.put(PARAMETER_FAMILY_DISCOUNT, familyDiscount);
 			this.fieldValues.put(PARAMETER_ALLOWS_GROUPS, allowsGroups);
+			this.fieldValues.put(PARAMETER_TRANSPORT_OFFERED, transportOffered);
 
 			if (priceISK != null) {
 				this.fieldValues.put(PARAMETER_PRICE_ISK, new Float(priceISK));
@@ -126,6 +131,7 @@ public class RunDistanceTab extends UserGroupTab{
 			this.fieldValues.put(PARAMETER_USE_CHIP, new Boolean(distance.isUseChip()));
 			this.fieldValues.put(PARAMETER_FAMILY_DISCOUNT, new Boolean(distance.isFamilyDiscount()));
 			this.fieldValues.put(PARAMETER_ALLOWS_GROUPS, new Boolean(distance.isAllowsGroups()));
+			this.fieldValues.put(PARAMETER_TRANSPORT_OFFERED, new Boolean(distance.isTransportOffered()));
 			this.fieldValues.put(PARAMETER_PRICE_ISK, new Float(distance.getPrice(LocaleUtil.getIcelandicLocale())));
 			this.fieldValues.put(PARAMETER_PRICE_EUR, new Float(distance.getPrice(Locale.ENGLISH)));
 			this.fieldValues.put(PARAMETER_CHILDREN_PRICE_ISK, new Float(distance.getChildrenPrice(LocaleUtil.getIcelandicLocale())));
@@ -169,6 +175,7 @@ public class RunDistanceTab extends UserGroupTab{
 		this.useChip = new CheckBox(PARAMETER_USE_CHIP);
 		this.familyDiscount = new CheckBox(PARAMETER_FAMILY_DISCOUNT);
 		this.allowsGroups = new CheckBox(PARAMETER_ALLOWS_GROUPS);
+		this.transportOffered = new CheckBox(PARAMETER_TRANSPORT_OFFERED);
 		
 		this.numberOfSplits = new DropdownMenu(PARAMETER_NUMBER_OF_SPLITS);
 		this.numberOfSplits.addMenuElement(0, "0");
@@ -186,6 +193,7 @@ public class RunDistanceTab extends UserGroupTab{
 		this.fieldValues.put(PARAMETER_USE_CHIP, new Boolean(false));
 		this.fieldValues.put(PARAMETER_FAMILY_DISCOUNT, new Boolean(false));
 		this.fieldValues.put(PARAMETER_ALLOWS_GROUPS, new Boolean(false));
+		this.fieldValues.put(PARAMETER_TRANSPORT_OFFERED, new Boolean(false));
 		this.fieldValues.put(PARAMETER_PRICE_ISK, new Float(0));
 		this.fieldValues.put(PARAMETER_PRICE_EUR, new Float(0));
 		this.fieldValues.put(PARAMETER_CHILDREN_PRICE_ISK, new Float(0));
@@ -221,6 +229,9 @@ public class RunDistanceTab extends UserGroupTab{
 
 		this.allowsGroupsText = new Text(iwrb.getLocalizedString("run_tab.allows_groups", "Allows groups"));
 		this.allowsGroupsText.setBold();
+		
+		this.transportOfferedText = new Text(iwrb.getLocalizedString("run_tab.transport_offered", "Transport offered"));
+		this.transportOfferedText.setBold();
 
 		this.numberOfSplitsText = new Text(iwrb.getLocalizedString("run_tab.number_of_splits", "Number of splits"));
 		this.numberOfSplitsText.setBold();
@@ -282,6 +293,10 @@ public class RunDistanceTab extends UserGroupTab{
 		table.add(Text.getNonBrakingSpace(), 1, 4);
 		table.add(this.allowsGroupsText, 1, 4);
 		table.add(Text.getBreak(), 1, 4);
+		table.add(this.transportOffered, 1, 4);
+		table.add(Text.getNonBrakingSpace(), 1, 4);
+		table.add(this.transportOfferedText, 1, 4);
+		table.add(Text.getBreak(), 1, 4);
 		table.add(Text.getBreak(), 1, 4);
 		table.add(this.shirtSizeSelectionBoxText, 1, 4);
 		table.add(Text.getBreak(), 1, 4);
@@ -301,6 +316,7 @@ public class RunDistanceTab extends UserGroupTab{
 				distance.setUseChip(((Boolean) this.fieldValues.get(PARAMETER_USE_CHIP)).booleanValue());
 				distance.setFamilyDiscount(((Boolean) this.fieldValues.get(PARAMETER_FAMILY_DISCOUNT)).booleanValue());
 				distance.setAllowsGroups(((Boolean) this.fieldValues.get(PARAMETER_ALLOWS_GROUPS)).booleanValue());
+				distance.setTransportOffered(((Boolean) this.fieldValues.get(PARAMETER_TRANSPORT_OFFERED)).booleanValue());
 				
 				distance.setPriceInISK(((Float) this.fieldValues.get(PARAMETER_PRICE_ISK)).floatValue());
 				distance.setPriceInEUR(((Float) this.fieldValues.get(PARAMETER_PRICE_EUR)).floatValue());
@@ -338,6 +354,7 @@ public class RunDistanceTab extends UserGroupTab{
 		this.useChip.setChecked(((Boolean) this.fieldValues.get(PARAMETER_USE_CHIP)).booleanValue());
 		this.familyDiscount.setChecked(((Boolean) this.fieldValues.get(PARAMETER_FAMILY_DISCOUNT)).booleanValue());
 		this.allowsGroups.setChecked(((Boolean) this.fieldValues.get(PARAMETER_ALLOWS_GROUPS)).booleanValue());
+		this.transportOffered.setChecked(((Boolean) this.fieldValues.get(PARAMETER_TRANSPORT_OFFERED)).booleanValue());
 		
 		this.priceISK.setContent(((Float) this.fieldValues.get(PARAMETER_PRICE_ISK)).toString());
 		this.priceEUR.setContent(((Float) this.fieldValues.get(PARAMETER_PRICE_EUR)).toString());
