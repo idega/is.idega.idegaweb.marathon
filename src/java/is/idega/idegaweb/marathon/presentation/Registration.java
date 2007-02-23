@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.45 2007/02/05 19:03:05 idegaweb Exp $
+ * $Id: Registration.java,v 1.46 2007/02/23 10:48:20 idegaweb Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -20,6 +20,7 @@ import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -46,7 +47,6 @@ import com.idega.presentation.ui.DropdownMenu;
 import com.idega.presentation.ui.Form;
 import com.idega.presentation.ui.HiddenInput;
 import com.idega.presentation.ui.RadioButton;
-import com.idega.presentation.ui.SelectOption;
 import com.idega.presentation.ui.SubmitButton;
 import com.idega.presentation.ui.TextInput;
 import com.idega.presentation.ui.util.SelectorUtility;
@@ -57,14 +57,15 @@ import com.idega.user.data.Group;
 import com.idega.user.data.User;
 import com.idega.util.Age;
 import com.idega.util.IWTimestamp;
+import com.idega.util.ListUtil;
 import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/02/05 19:03:05 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/02/23 10:48:20 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.45 $
+ * @version $Revision: 1.46 $
  */
 public class Registration extends RunBlock {
 	
@@ -99,6 +100,7 @@ public class Registration extends RunBlock {
 	private static final String PARAMETER_SHIRT_SIZE = "prm_shirt_size";
 	private static final String PARAMETER_CHIP = "prm_chip";
 	private static final String PARAMETER_CHIP_NUMBER = "prm_chip_number";
+	private static final String PARAMETER_TRANSPORT_AGREE = "prm_transport_agree";
 	private static final String PARAMETER_AGREE = "prm_agree";
 	
 	private static final String PARAMETER_NAME_ON_CARD = "prm_name_on_card";
@@ -109,10 +111,12 @@ public class Registration extends RunBlock {
 	private static final String PARAMETER_AMOUNT = "prm_amount";
 	private static final String PARAMETER_CARD_HOLDER_EMAIL = "prm_card_holder_email";
 	private static final String PARAMETER_REFERENCE_NUMBER = "prm_reference_number";
+	private static final String PARAMETER_SHIRT_SIZES_PER_RUN = "shirt_sizes_per_run";
 
 	private static final int ACTION_STEP_ONE = 1;
 	private static final int ACTION_STEP_TWO = 2;
 	private static final int ACTION_STEP_THREE = 3;
+	private static final int ACTION_STEP_THREE_TRANSPORT = 30;
 	private static final int ACTION_STEP_FOUR = 4;
 	private static final int ACTION_STEP_FIVE = 5;
 	private static final int ACTION_STEP_SIX = 6;
@@ -147,6 +151,9 @@ public class Registration extends RunBlock {
 			case ACTION_STEP_THREE:
 				stepThree(iwc);
 				break;
+			case ACTION_STEP_THREE_TRANSPORT:
+				stepThreeTransport(iwc);
+				break;
 			case ACTION_STEP_FOUR:
 				stepFour(iwc);
 				break;
@@ -168,7 +175,7 @@ public class Registration extends RunBlock {
 	private void stepOne(IWContext iwc) {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
-		form.addParameter(PARAMETER_ACTION, "-1");
+		form.addParameter(PARAMETER_ACTION, ACTION_STEP_TWO);
 		
 		Table table = new Table();
 		table.setCellpadding(0);
@@ -195,7 +202,6 @@ public class Registration extends RunBlock {
 		table.add(input, 1, row++);
 		
 		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
-		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_TWO));
 		
 		table.add(next, 1, row);
 		table.setAlignment(1, row, Table.HORIZONTAL_ALIGN_RIGHT);
@@ -318,7 +324,11 @@ public class Registration extends RunBlock {
 
 			Collection distances = getRunBusiness(iwc).getDistancesMap(this.runner.getRun(), runnerYearString);
 			if(distances != null) {
-				distanceDropdown.addMenuElements(distances);
+				Iterator distanceIt = distances.iterator();
+				while (distanceIt.hasNext()) {
+					Group distance = (Group)distanceIt.next();
+					distanceDropdown.addMenuElement(distance.getPrimaryKey().toString(), localize(distance.getName(),distance.getName()));
+			    }
 			}
 			if (this.runner.getDistance() != null) {
 				distanceDropdown.setSelectedElement(this.runner.getDistance().getPrimaryKey().toString());
@@ -593,9 +603,23 @@ public class Registration extends RunBlock {
 		choiceTable.setHeight(iRow++, 3);
 
 		DropdownMenu tShirtField = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_SHIRT_SIZE));
-		tShirtField.addOption(new SelectOption(localize("run_reg.select_tee_shirt_size", "Select tee-shirt size"), "-1"));
-		if (this.runner.getShirtSize() != null) {
-			tShirtField.setSelectedElement(this.runner.getShirtSize());
+		tShirtField.addMenuElement("-1", localize("run_reg.select_tee_shirt_size","Select tee-shirt size"));
+		if(this.runner.getDistance() != null) {
+			String shirtSizeMetadata = this.runner.getDistance().getMetaData(PARAMETER_SHIRT_SIZES_PER_RUN);
+			List shirtSizes = null;
+			if (shirtSizeMetadata != null) {
+				shirtSizes = ListUtil. convertCommaSeparatedStringToList(shirtSizeMetadata);
+			}
+			if(shirtSizes != null) {
+				Iterator shirtIt = shirtSizes.iterator();
+				while (shirtIt.hasNext()) {
+					String shirtSizeKey = (String) shirtIt.next();
+					tShirtField.addMenuElement(shirtSizeKey, localize("shirt_size."+shirtSizeKey,shirtSizeKey));
+			    }
+			}
+			if (this.runner.getDistance() != null) {
+				tShirtField.setSelectedElement(this.runner.getShirtSize());
+			}
 		}
 		tShirtField.setAsNotEmpty(localize("run_reg.must_select_shirt_size", "You must select tee-shirt size"));
 
@@ -632,6 +656,7 @@ public class Registration extends RunBlock {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
 		form.addParameter(PARAMETER_ACTION, "-1");
+		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_THREE);
 		
 		Table table = new Table();
 		table.setCellpadding(0);
@@ -691,6 +716,50 @@ public class Registration extends RunBlock {
 		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
 		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_TWO));
 		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
+		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_THREE_TRANSPORT));
+
+		table.setHeight(row++, 18);
+		table.add(previous, 1, row);
+		table.add(Text.getNonBrakingSpace(), 1, row);
+		table.add(next, 1, row);
+		table.setAlignment(1, row, Table.HORIZONTAL_ALIGN_RIGHT);
+
+		add(form);
+	}
+	
+	private void stepThreeTransport(IWContext iwc) {
+		Form form = new Form();
+		form.maintainParameter(PARAMETER_PERSONAL_ID);
+		form.addParameter(PARAMETER_ACTION, "-1");
+		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_THREE_TRANSPORT);
+		
+		Table table = new Table();
+		table.setCellpadding(0);
+		table.setCellspacing(0);
+		table.setWidth(Table.HUNDRED_PERCENT);
+		form.add(table);
+		int row = 1;
+
+		table.add(getPhasesTable(this.isIcelandic ? 3 : 2, this.isIcelandic ? 7 : 6, "run_reg.transport_offered", "Transport offered"), 1, row++);
+		table.setHeight(row++, 12);
+
+		table.add(getInformationTable(localize("run_reg.information_text_step_3_transport", "Information text 3 transport...")), 1, row++);
+		table.setHeight(row++, 18);
+		
+		CheckBox orderTransport = getCheckBox(PARAMETER_TRANSPORT_AGREE, Boolean.TRUE.toString());
+		orderTransport.setChecked(this.runner.isTransportOrdered());
+		
+		table.add(orderTransport, 1, row);
+		table.add(Text.getNonBrakingSpace(), 1, row);
+		table.add(getHeader(localize("run_reg.order_transport", "I want to order transport")), 1, row++);
+		table.setHeight(row++, 6);
+		table.add(getText(localize("run_reg.order tranport_information", "Info about transport order.")), 1, row);
+		table.setBottomCellBorder(1, row, 1, "#D7D7D7", "solid");
+		table.setCellpaddingBottom(1, row++, 6);
+		
+		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
+		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_THREE));
+		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
 		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_FOUR));
 
 		table.setHeight(row++, 18);
@@ -736,7 +805,7 @@ public class Registration extends RunBlock {
 		table.add(getHeader(localize("run_reg.agree_terms", "Yes, I agree")), 1, row++);
 		
 		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
-		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_THREE));
+		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_THREE_TRANSPORT));
 
 		table.setHeight(row++, 18);
 		table.add(previous, 1, row);
@@ -1285,6 +1354,9 @@ public class Registration extends RunBlock {
 			if (iwc.isParameterSet(PARAMETER_CHIP_NUMBER)) {
 				runner.setChipNumber(iwc.getParameter(PARAMETER_CHIP_NUMBER));
 			}
+			if (iwc.isParameterSet(PARAMETER_TRANSPORT_AGREE)) {
+				runner.setTransportOrdered(true);
+			}
 			if (iwc.isParameterSet(PARAMETER_AGREE)) {
 				runner.setAgree(true);
 			}
@@ -1313,10 +1385,31 @@ public class Registration extends RunBlock {
 		if (action == ACTION_STEP_THREE) {
 			if (this.runner != null && !this.runner.getDistance().isUseChip()) {
 				int fromAction = Integer.parseInt(iwc.getParameter(PARAMETER_FROM_ACTION));
-				if (fromAction == ACTION_STEP_FOUR) {
+				if (fromAction == ACTION_STEP_FOUR || fromAction == ACTION_STEP_THREE_TRANSPORT) {
 					action = ACTION_STEP_TWO;
 				}
 				else if (fromAction == ACTION_STEP_TWO) {
+					if (this.runner != null && this.runner.getDistance().isTransportOffered()) {
+						action= ACTION_STEP_THREE_TRANSPORT;
+					}
+					else {
+						action= ACTION_STEP_FOUR;
+					}
+				}
+			}
+		}
+		if (action == ACTION_STEP_THREE_TRANSPORT) {
+			if (this.runner != null && !this.runner.getDistance().isTransportOffered()) {
+				int fromAction = Integer.parseInt(iwc.getParameter(PARAMETER_FROM_ACTION));
+				if (fromAction == ACTION_STEP_FOUR) {
+					if (this.runner != null && this.runner.getDistance().isUseChip()) {
+						action = ACTION_STEP_THREE;
+					}
+					else {
+						action = ACTION_STEP_TWO;
+					}
+				}
+				else if (fromAction == ACTION_STEP_TWO || fromAction == ACTION_STEP_THREE) {
 					action= ACTION_STEP_FOUR;
 				}
 			}
