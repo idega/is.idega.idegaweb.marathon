@@ -1,5 +1,5 @@
 /*
- * $Id: DistanceBMPBean.java,v 1.6 2007/02/19 10:56:13 idegaweb Exp $
+ * $Id: DistanceBMPBean.java,v 1.7 2007/02/26 15:31:36 idegaweb Exp $
  * Created on May 22, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -16,10 +16,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/02/19 10:56:13 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/02/26 15:31:36 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class DistanceBMPBean extends GroupBMPBean  implements Group, Distance{
 
@@ -31,6 +31,8 @@ public class DistanceBMPBean extends GroupBMPBean  implements Group, Distance{
 	private static final String METADATA_FAMILY_DISCOUNT = "family_discount";
 	private static final String METADATA_CHILDREN_PRICE_ISK = "children_price_isk";
 	private static final String METADATA_CHILDREN_PRICE_EUR = "children_price_eur";
+	private static final String METADATA_PRICE_FOR_TRANSPORT_ISK = "price_for_transport_isk";
+	private static final String METADATA_PRICE_FOR_TRANSPORT_EUR = "price_for_transport_eur";
 	private static final String METADATA_ALLOWS_GROUPS = "allows_groups";
 	private static final String METADATA_NEXT_PARTICIPANT_NUMBER = "next_participant_number";
 	private static final String METADATA_NUMBER_OF_SPLITS = "number_of_splits";
@@ -105,6 +107,29 @@ public class DistanceBMPBean extends GroupBMPBean  implements Group, Distance{
 
 	public void setChildrenPriceInEUR(float price) {
 		setMetaData(METADATA_CHILDREN_PRICE_EUR, String.valueOf(price), "java.lang.Float");
+	}
+
+	public float getPriceForTransport(Locale locale) {
+		String price = null;
+		if (locale.equals(LocaleUtil.getIcelandicLocale())) {
+			price = getMetaData(METADATA_PRICE_FOR_TRANSPORT_ISK);
+		}
+		else {
+			price = getMetaData(METADATA_PRICE_FOR_TRANSPORT_EUR);
+		}
+		
+		if (price != null) {
+			return Float.parseFloat(price);
+		}
+		return 0;
+	}
+
+	public void setPriceForTransportInISK(float price) {
+		setMetaData(METADATA_PRICE_FOR_TRANSPORT_ISK, String.valueOf(price), "java.lang.Float");
+	}
+
+	public void setPriceForTransportInEUR(float price) {
+		setMetaData(METADATA_PRICE_FOR_TRANSPORT_EUR, String.valueOf(price), "java.lang.Float");
 	}
 
 	public boolean isFamilyDiscount() {

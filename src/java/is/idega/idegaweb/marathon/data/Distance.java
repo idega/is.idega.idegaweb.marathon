@@ -1,5 +1,5 @@
 /*
- * $Id: Distance.java,v 1.5 2007/02/19 10:56:13 idegaweb Exp $
+ * $Id: Distance.java,v 1.6 2007/02/26 15:31:36 idegaweb Exp $
  * Created on Aug 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -14,10 +14,10 @@ import com.idega.user.data.Group;
 
 
 /**
- * Last modified: $Date: 2007/02/19 10:56:13 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/02/26 15:31:36 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public interface Distance extends Group {
 
@@ -70,6 +70,21 @@ public interface Distance extends Group {
 	 * @see is.idega.idegaweb.marathon.data.DistanceBMPBean#setChildrenPriceInEUR
 	 */
 	public void setChildrenPriceInEUR(float price);
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.DistanceBMPBean#getPriceForTransport
+	 */
+	public float getPriceForTransport(Locale locale);
+	
+	/**
+	 * @see is.idega.idegaweb.marathon.data.DistanceBMPBean#setPriceForTransportInISK
+	 */
+	public void setPriceForTransportInISK(float price);
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.DistanceBMPBean#setPriceForTransportInEUR
+	 */
+	public void setPriceForTransportInEUR(float price);
 
 	/**
 	 * @see is.idega.idegaweb.marathon.data.DistanceBMPBean#isFamilyDiscount
