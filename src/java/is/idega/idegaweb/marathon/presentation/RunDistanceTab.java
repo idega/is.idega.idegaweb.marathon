@@ -38,6 +38,8 @@ public class RunDistanceTab extends UserGroupTab{
 	private static final String PARAMETER_PRICE_EUR = "price_eur";
 	private static final String PARAMETER_CHILDREN_PRICE_ISK = "children_price_isk";
 	private static final String PARAMETER_CHILDREN_PRICE_EUR = "children_price_eur";
+	private static final String PARAMETER_PRICE_FOR_TRANSPORT_ISK = "price_for_transport_isk";
+	private static final String PARAMETER_PRICE_FOR_TRANSPORT_EUR = "price_for_transport_eur";
 	
 	private static final String PARAMETER_NUMBER_OF_SPLITS = "number_of_splits";
 	private static final String PARAMETER_SHIRT_SIZES_PER_RUN = "shirt_sizes_per_run";
@@ -46,6 +48,8 @@ public class RunDistanceTab extends UserGroupTab{
 	private TextInput priceEUR;
 	private TextInput childrenPriceISK;
 	private TextInput childrenPriceEUR;
+	private TextInput priceForTransportISK;
+	private TextInput priceForTransportEUR;
 	
 	private CheckBox useChip;
 	private CheckBox familyDiscount;
@@ -59,6 +63,8 @@ public class RunDistanceTab extends UserGroupTab{
 	private Text priceEURText;
 	private Text childrenPriceISKText;
 	private Text childrenPriceEURText;
+	private Text priceForTransportISKText;
+	private Text priceForTransportEURText;
 	private Text useChipText;
 	private Text familyDiscountText;
 	private Text allowsGroupsText;
@@ -88,6 +94,8 @@ public class RunDistanceTab extends UserGroupTab{
 			String priceEUR = iwc.getParameter(PARAMETER_PRICE_EUR);
 			String childPriceISK = iwc.getParameter(PARAMETER_CHILDREN_PRICE_ISK);
 			String childPriceEUR = iwc.getParameter(PARAMETER_CHILDREN_PRICE_EUR);
+			String priceForTransportISK = iwc.getParameter(PARAMETER_PRICE_FOR_TRANSPORT_ISK);
+			String priceForTransportEUR = iwc.getParameter(PARAMETER_PRICE_FOR_TRANSPORT_EUR);
 			
 			String numberOfSplits = iwc.getParameter(PARAMETER_NUMBER_OF_SPLITS);
 			String[] shirtSizesPerRun = iwc.getParameterValues(PARAMETER_SHIRT_SIZES_PER_RUN);
@@ -108,6 +116,12 @@ public class RunDistanceTab extends UserGroupTab{
 			}
 			if(childPriceEUR != null){
 				this.fieldValues.put(PARAMETER_CHILDREN_PRICE_EUR, new Float(childPriceEUR));
+			}
+			if (priceForTransportISK != null) {
+				this.fieldValues.put(PARAMETER_PRICE_FOR_TRANSPORT_ISK, new Float(priceForTransportISK));
+			}
+			if (priceForTransportEUR != null) {
+				this.fieldValues.put(PARAMETER_PRICE_FOR_TRANSPORT_EUR, new Float(priceForTransportEUR));
 			}
 			if(numberOfSplits != null){
 				this.fieldValues.put(PARAMETER_NUMBER_OF_SPLITS, new Integer(numberOfSplits));
@@ -136,6 +150,8 @@ public class RunDistanceTab extends UserGroupTab{
 			this.fieldValues.put(PARAMETER_PRICE_EUR, new Float(distance.getPrice(Locale.ENGLISH)));
 			this.fieldValues.put(PARAMETER_CHILDREN_PRICE_ISK, new Float(distance.getChildrenPrice(LocaleUtil.getIcelandicLocale())));
 			this.fieldValues.put(PARAMETER_CHILDREN_PRICE_EUR, new Float(distance.getChildrenPrice(Locale.ENGLISH)));
+			this.fieldValues.put(PARAMETER_PRICE_FOR_TRANSPORT_ISK, new Float(distance.getPriceForTransport(LocaleUtil.getIcelandicLocale())));
+			this.fieldValues.put(PARAMETER_PRICE_FOR_TRANSPORT_EUR, new Float(distance.getPriceForTransport(Locale.ENGLISH)));
 			this.fieldValues.put(PARAMETER_NUMBER_OF_SPLITS, new Integer(distance.getNumberOfSplits()));
 			String shirtSizeMetadata = distance.getMetaData(PARAMETER_SHIRT_SIZES_PER_RUN);
 			if (shirtSizeMetadata != null) {
@@ -172,6 +188,12 @@ public class RunDistanceTab extends UserGroupTab{
 		this.childrenPriceEUR = new TextInput(PARAMETER_CHILDREN_PRICE_EUR);
 		this.childrenPriceEUR.setAsFloat("Not a valid price");
 		
+		this.priceForTransportISK = new TextInput(PARAMETER_PRICE_FOR_TRANSPORT_ISK);
+		this.priceForTransportISK.setAsFloat("Not a valid price");
+
+		this.priceForTransportEUR = new TextInput(PARAMETER_PRICE_FOR_TRANSPORT_EUR);
+		this.priceForTransportEUR.setAsFloat("Not a valid price");
+		
 		this.useChip = new CheckBox(PARAMETER_USE_CHIP);
 		this.familyDiscount = new CheckBox(PARAMETER_FAMILY_DISCOUNT);
 		this.allowsGroups = new CheckBox(PARAMETER_ALLOWS_GROUPS);
@@ -198,6 +220,8 @@ public class RunDistanceTab extends UserGroupTab{
 		this.fieldValues.put(PARAMETER_PRICE_EUR, new Float(0));
 		this.fieldValues.put(PARAMETER_CHILDREN_PRICE_ISK, new Float(0));
 		this.fieldValues.put(PARAMETER_CHILDREN_PRICE_EUR, new Float(0));
+		this.fieldValues.put(PARAMETER_PRICE_FOR_TRANSPORT_ISK, new Float(0));
+		this.fieldValues.put(PARAMETER_PRICE_FOR_TRANSPORT_EUR, new Float(0));
 		this.fieldValues.put(PARAMETER_NUMBER_OF_SPLITS, new Integer(0));
 		this.fieldValues.put(PARAMETER_SHIRT_SIZES_PER_RUN, new String[0]);
 	}
@@ -220,6 +244,12 @@ public class RunDistanceTab extends UserGroupTab{
 		
 		this.childrenPriceEURText = new Text(iwrb.getLocalizedString("run_tab.children_price_EUR", "Children price (EUR)"));
 		this.childrenPriceEURText.setBold();
+		
+		this.priceForTransportISKText = new Text(iwrb.getLocalizedString("run_tab.price_for_transport_ISK", "Price tor transport (ISK)"));
+		this.priceForTransportISKText.setBold();
+		
+		this.priceForTransportEURText = new Text(iwrb.getLocalizedString("run_tab.price_for_transport_EUR", "Price for transport (EUR)"));
+		this.priceForTransportEURText.setBold();
 		
 		this.useChipText = new Text(iwrb.getLocalizedString("run_tab.use_chip", "Uses chips"));
 		this.useChipText.setBold();
@@ -297,6 +327,14 @@ public class RunDistanceTab extends UserGroupTab{
 		table.add(Text.getNonBrakingSpace(), 1, 4);
 		table.add(this.transportOfferedText, 1, 4);
 		table.add(Text.getBreak(), 1, 4);
+		table.add(this.priceForTransportISKText, 1, 4);
+		table.add(Text.getBreak(), 1, 4);
+		table.add(this.priceForTransportISK, 1, 4);
+		table.add(Text.getBreak(), 1, 4);
+		table.add(this.priceForTransportEURText, 1, 4);
+		table.add(Text.getBreak(), 1, 4);
+		table.add(this.priceForTransportEUR, 1, 4);
+		table.add(Text.getBreak(), 1, 4);
 		table.add(Text.getBreak(), 1, 4);
 		table.add(this.shirtSizeSelectionBoxText, 1, 4);
 		table.add(Text.getBreak(), 1, 4);
@@ -322,6 +360,8 @@ public class RunDistanceTab extends UserGroupTab{
 				distance.setPriceInEUR(((Float) this.fieldValues.get(PARAMETER_PRICE_EUR)).floatValue());
 				distance.setChildrenPriceInISK(((Float) this.fieldValues.get(PARAMETER_CHILDREN_PRICE_ISK)).floatValue());
 				distance.setChildrenPriceInEUR(((Float) this.fieldValues.get(PARAMETER_CHILDREN_PRICE_EUR)).floatValue());
+				distance.setPriceForTransportInISK(((Float) this.fieldValues.get(PARAMETER_PRICE_FOR_TRANSPORT_ISK)).floatValue());
+				distance.setPriceForTransportInEUR(((Float) this.fieldValues.get(PARAMETER_PRICE_FOR_TRANSPORT_EUR)).floatValue());
 
 				distance.setNumberOfSplits(((Integer) this.fieldValues.get(PARAMETER_NUMBER_OF_SPLITS)).intValue());
 				String[] shirtSizesPerRun = (String[]) this.fieldValues.get(PARAMETER_SHIRT_SIZES_PER_RUN);
@@ -360,6 +400,9 @@ public class RunDistanceTab extends UserGroupTab{
 		this.priceEUR.setContent(((Float) this.fieldValues.get(PARAMETER_PRICE_EUR)).toString());
 		this.childrenPriceISK.setContent(((Float) this.fieldValues.get(PARAMETER_CHILDREN_PRICE_ISK)).toString());
 		this.childrenPriceEUR.setContent(((Float) this.fieldValues.get(PARAMETER_CHILDREN_PRICE_EUR)).toString());
+		this.priceForTransportISK.setContent(((Float) this.fieldValues.get(PARAMETER_PRICE_FOR_TRANSPORT_ISK)).toString());
+		this.priceForTransportEUR.setContent(((Float) this.fieldValues.get(PARAMETER_PRICE_FOR_TRANSPORT_EUR)).toString());
+		
 
 		this.numberOfSplits.setSelectedElement(((Integer) this.fieldValues.get(PARAMETER_NUMBER_OF_SPLITS)).intValue());
 		this.shirtSizeSelectionBox.setSelectedElements((String[]) this.fieldValues.get(PARAMETER_SHIRT_SIZES_PER_RUN));

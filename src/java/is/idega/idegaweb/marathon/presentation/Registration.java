@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.46 2007/02/23 10:48:20 idegaweb Exp $
+ * $Id: Registration.java,v 1.47 2007/02/26 15:33:13 idegaweb Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -11,11 +11,13 @@ package is.idega.idegaweb.marathon.presentation;
 
 import is.idega.idegaweb.marathon.business.ConverterUtility;
 import is.idega.idegaweb.marathon.business.Runner;
+import is.idega.idegaweb.marathon.data.Distance;
 import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.data.Year;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
 import java.rmi.RemoteException;
+import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.HashMap;
@@ -62,10 +64,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/02/23 10:48:20 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/02/26 15:33:13 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.46 $
+ * @version $Revision: 1.47 $
  */
 public class Registration extends RunBlock {
 	
@@ -100,7 +102,7 @@ public class Registration extends RunBlock {
 	private static final String PARAMETER_SHIRT_SIZE = "prm_shirt_size";
 	private static final String PARAMETER_CHIP = "prm_chip";
 	private static final String PARAMETER_CHIP_NUMBER = "prm_chip_number";
-	private static final String PARAMETER_TRANSPORT_AGREE = "prm_transport_agree";
+	private static final String PARAMETER_TRANSPORT = "prm_transport_agree";
 	private static final String PARAMETER_AGREE = "prm_agree";
 	
 	private static final String PARAMETER_NAME_ON_CARD = "prm_name_on_card";
@@ -740,22 +742,36 @@ public class Registration extends RunBlock {
 		form.add(table);
 		int row = 1;
 
-		table.add(getPhasesTable(this.isIcelandic ? 3 : 2, this.isIcelandic ? 7 : 6, "run_reg.transport_offered", "Transport offered"), 1, row++);
+		table.add(getPhasesTable(this.isIcelandic ? 3 : 2, this.isIcelandic ? 7 : 6, "run_reg.transport_offered", "Order transport"), 1, row++);
 		table.setHeight(row++, 12);
 
 		table.add(getInformationTable(localize("run_reg.information_text_step_3_transport", "Information text 3 transport...")), 1, row++);
 		table.setHeight(row++, 18);
 		
-		CheckBox orderTransport = getCheckBox(PARAMETER_TRANSPORT_AGREE, Boolean.TRUE.toString());
-		orderTransport.setChecked(this.runner.isTransportOrdered());
+		RadioButton orderTransport = getRadioButton(PARAMETER_TRANSPORT, Boolean.TRUE.toString());
+		orderTransport.setSelected(this.runner.isTransportOrdered());
+		orderTransport.setMustBeSelected(localize("run_reg.must_select_transport_option", "You have to select transport option"));
 		
+		RadioButton notOrderTransport = getRadioButton(PARAMETER_TRANSPORT, Boolean.FALSE.toString());
+		notOrderTransport.setSelected(!this.runner.isTransportOrdered());
+
 		table.add(orderTransport, 1, row);
 		table.add(Text.getNonBrakingSpace(), 1, row);
-		table.add(getHeader(localize("run_reg.order_transport", "I want to order transport")), 1, row++);
+		Distance distance = runner.getDistance();
+		String distancePriceString = "";
+		if (distance != null) {
+			distancePriceString = formatAmount(iwc.getCurrentLocale(), distance.getPriceForTransport(iwc.getCurrentLocale()));
+		}
+		Object[] args = { distancePriceString };
+		table.add(getHeader(MessageFormat.format(localize("run_reg.order_transport_text", "I want to order transport. Price for transport is: {0}"), args)), 1, row);
 		table.setHeight(row++, 6);
-		table.add(getText(localize("run_reg.order tranport_information", "Info about transport order.")), 1, row);
+		
+		table.add(getText((localize("run_reg.order_tranport_information_"+runner.getRun().getName().replace(' ', '_'), "Info about transport order..."))), 1, row);
 		table.setBottomCellBorder(1, row, 1, "#D7D7D7", "solid");
 		table.setCellpaddingBottom(1, row++, 6);
+		table.add(notOrderTransport, 1, row);
+		table.add(Text.getNonBrakingSpace(), 1, row);
+		table.add(getHeader(localize("run_reg.not_order_transport_text", "I don't want to order transport.")), 1, row);
 		
 		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
 		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_THREE));
@@ -1086,7 +1102,7 @@ public class Registration extends RunBlock {
 		emailField.keepStatusOnAction(true);
 		
 		creditCardTable.setHeight(creditRow++, 3);
-		creditCardTable.add(getHeader(localize("run_reg.card_holder_email", "Email")), 1, creditRow++);
+		creditCardTable.add(getHeader(localize("run_reg.card_holder_email", "Cardholder email")), 1, creditRow++);
 		creditCardTable.add(emailField, 1, creditRow++);
 		creditCardTable.add(new HiddenInput(PARAMETER_AMOUNT, String.valueOf(totalAmount)));
 		creditCardTable.setHeight(creditRow++, 18);
@@ -1354,8 +1370,14 @@ public class Registration extends RunBlock {
 			if (iwc.isParameterSet(PARAMETER_CHIP_NUMBER)) {
 				runner.setChipNumber(iwc.getParameter(PARAMETER_CHIP_NUMBER));
 			}
-			if (iwc.isParameterSet(PARAMETER_TRANSPORT_AGREE)) {
-				runner.setTransportOrdered(true);
+			if (iwc.isParameterSet(PARAMETER_TRANSPORT)) {
+				String transport = iwc.getParameter(PARAMETER_TRANSPORT);
+				if (transport.equals(Boolean.TRUE.toString())) {
+					runner.setTransportOrdered(true);
+				}
+				else {
+					runner.setTransportOrdered(false);
+				}
 			}
 			if (iwc.isParameterSet(PARAMETER_AGREE)) {
 				runner.setAgree(true);
