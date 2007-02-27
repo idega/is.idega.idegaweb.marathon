@@ -5,6 +5,11 @@
 	</properties>
 	<body>
 
+	<release version="3.1.11" date="2007-02-27">
+		<action dev="sigtryggur" type="update">
+			Added an optional extra step in the registration where users can select transport
+		</action>     
+	</release>
 	<release version="3.1.10" date="2007-02-05">
 		<action dev="sigtryggur" type="update">
 			Fixed few javascripts that were not working properly

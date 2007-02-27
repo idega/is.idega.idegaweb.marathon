@@ -186,6 +186,7 @@ run_reg.not_valid_card_number=Not a valid card number
 run_reg.not_valid_ccv=Not a valid CCV number
 run_reg.not_valid_personal_id=The personal ID you've entered is not valid
 run_reg.order_tranport_information_Laugavegur=Info about transport order\:
+run_reg.order_tranport_information_Rvk_Marathon=Info about transport order...
 run_reg.order_transport_text=I want to order transport. Price for transport is\: {0}
 run_reg.overview=Overview
 run_reg.own_chip=Own Chip - number\: 
