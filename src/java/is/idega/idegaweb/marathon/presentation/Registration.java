@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.47 2007/02/26 15:33:13 idegaweb Exp $
+ * $Id: Registration.java,v 1.48 2007/02/27 14:23:21 idegaweb Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -64,10 +64,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/02/26 15:33:13 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/02/27 14:23:21 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.47 $
+ * @version $Revision: 1.48 $
  */
 public class Registration extends RunBlock {
 	
@@ -1073,7 +1073,7 @@ public class Registration extends RunBlock {
 				cardNumber.setMaxlength(4);
 			}
 			else {
-				cardNumber.setLength(7);
+				cardNumber.setLength(4);
 				cardNumber.setMaxlength(7);
 			}
 			cardNumber.setMininumLength(4, localize("run_reg.not_valid_card_number", "Not a valid card number"));
