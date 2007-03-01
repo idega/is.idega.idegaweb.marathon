@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.49 2007/03/01 15:26:31 idegaweb Exp $
+ * $Id: Registration.java,v 1.50 2007/03/01 16:23:50 idegaweb Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -64,10 +64,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/03/01 15:26:31 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/03/01 16:23:50 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.49 $
+ * @version $Revision: 1.50 $
  */
 public class Registration extends RunBlock {
 	
@@ -130,6 +130,7 @@ public class Registration extends RunBlock {
 	private float chipDiscount;
 	private float childDiscount = 0;
 	private Runner runner;
+	private boolean disableTransportStep = false;
 	
 	public void main(IWContext iwc) throws Exception {
 		this.isIcelandic = iwc.getCurrentLocale().equals(LocaleUtil.getIcelandicLocale());
@@ -1427,7 +1428,7 @@ public class Registration extends RunBlock {
 					action = ACTION_STEP_TWO;
 				}
 				else if (fromAction == ACTION_STEP_TWO) {
-					if (this.runner != null && this.runner.getDistance().isTransportOffered()) {
+					if (this.runner != null && this.runner.getDistance().isTransportOffered() && !disableTransportStep) {
 						action= ACTION_STEP_THREE_TRANSPORT;
 					}
 					else {
@@ -1437,7 +1438,7 @@ public class Registration extends RunBlock {
 			}
 		}
 		if (action == ACTION_STEP_THREE_TRANSPORT) {
-			if (this.runner != null && !this.runner.getDistance().isTransportOffered()) {
+			if (this.runner != null && !(this.runner.getDistance().isTransportOffered() && !disableTransportStep)) {
 				int fromAction = Integer.parseInt(iwc.getParameter(PARAMETER_FROM_ACTION));
 				if (fromAction == ACTION_STEP_FOUR) {
 					if (this.runner != null && this.runner.getDistance().isUseChip()) {
@@ -1557,5 +1558,9 @@ public class Registration extends RunBlock {
 		} else {
 			return "invalid chipcode.";
 		}
+	}
+
+	public void setDisableTransportStep(boolean disableTransportStep) {
+		this.disableTransportStep = disableTransportStep;
 	}
 }
