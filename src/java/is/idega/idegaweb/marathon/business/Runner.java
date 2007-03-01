@@ -1,5 +1,5 @@
 /*
- * $Id: Runner.java,v 1.4 2007/02/23 10:46:32 idegaweb Exp $ Created on May 16, 2005
+ * $Id: Runner.java,v 1.5 2007/03/01 15:26:31 idegaweb Exp $ Created on May 16, 2005
  * 
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
  * 
@@ -19,10 +19,10 @@ import com.idega.user.data.User;
  * A holder class for information about runners and their selection when
  * registering.
  * 
- * Last modified: $Date: 2007/02/23 10:46:32 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/03/01 15:26:31 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class Runner {
 
@@ -35,6 +35,7 @@ public class Runner {
 	private boolean buyChip;
 	private String chipNumber;
 	private boolean transportOrdered;
+	private boolean noTransportOrdered;
 	private String shirtSize;
 
 	private String name;
@@ -125,7 +126,17 @@ public class Runner {
 	}
 
 	public void setTransportOrdered(boolean transportOrdered) {
+		this.noTransportOrdered = !transportOrdered;
 		this.transportOrdered = transportOrdered;
+	}
+
+	public boolean isNoTransportOrdered() {
+		return this.noTransportOrdered;
+	}
+
+	public void setNoTransportOrdered(boolean noTransportOrdered) {
+		this.transportOrdered = !noTransportOrdered;
+		this.noTransportOrdered = noTransportOrdered;
 	}
 
 	public String getShirtSize() {

@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.48 2007/02/27 14:23:21 idegaweb Exp $
+ * $Id: Registration.java,v 1.49 2007/03/01 15:26:31 idegaweb Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -64,10 +64,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/02/27 14:23:21 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/03/01 15:26:31 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.48 $
+ * @version $Revision: 1.49 $
  */
 public class Registration extends RunBlock {
 	
@@ -102,7 +102,7 @@ public class Registration extends RunBlock {
 	private static final String PARAMETER_SHIRT_SIZE = "prm_shirt_size";
 	private static final String PARAMETER_CHIP = "prm_chip";
 	private static final String PARAMETER_CHIP_NUMBER = "prm_chip_number";
-	private static final String PARAMETER_TRANSPORT = "prm_transport_agree";
+	private static final String PARAMETER_TRANSPORT = "prm_transport";
 	private static final String PARAMETER_AGREE = "prm_agree";
 	
 	private static final String PARAMETER_NAME_ON_CARD = "prm_name_on_card";
@@ -126,7 +126,7 @@ public class Registration extends RunBlock {
 	private static final int ACTION_CANCEL = 8;
 
 	private boolean isIcelandic = false;
-	private float price;
+	private float chipPrice;
 	private float chipDiscount;
 	private float childDiscount = 0;
 	private Runner runner;
@@ -134,12 +134,12 @@ public class Registration extends RunBlock {
 	public void main(IWContext iwc) throws Exception {
 		this.isIcelandic = iwc.getCurrentLocale().equals(LocaleUtil.getIcelandicLocale());
 		if (this.isIcelandic) {
-			this.price = Float.parseFloat(getBundle().getProperty(PROPERTY_CHIP_PRICE_ISK, "2700"));
+			this.chipPrice = Float.parseFloat(getBundle().getProperty(PROPERTY_CHIP_PRICE_ISK, "2700"));
 			this.chipDiscount = Float.parseFloat(getBundle().getProperty(PROPERTY_CHIP_DISCOUNT_ISK, "300"));
 			this.childDiscount = Float.parseFloat(getBundle().getProperty(PROPERTY_CHILD_DISCOUNT_ISK, "300"));
 		}
 		else {
-			this.price = Float.parseFloat(getBundle().getProperty(PROPERTY_CHIP_PRICE_EUR, "33"));
+			this.chipPrice = Float.parseFloat(getBundle().getProperty(PROPERTY_CHIP_PRICE_EUR, "33"));
 			this.chipDiscount = Float.parseFloat(getBundle().getProperty(PROPERTY_CHIP_DISCOUNT_EUR, "3"));
 		}
 
@@ -711,7 +711,7 @@ public class Registration extends RunBlock {
 		table.add(Text.getNonBrakingSpace(), 1, row);
 		table.add(getHeader(localize("run_reg.buy_chip", "I want to buy a multi use chip")), 1, row++);
 		table.setHeight(row++, 6);
-		String priceText = formatAmount(iwc.getCurrentLocale(), this.price);
+		String priceText = formatAmount(iwc.getCurrentLocale(), this.chipPrice);
 		table.add(getText(localize("run_reg.buy_chip_information", "You can buy a multi use chip that you can use in future tournaments.  The price of the chip is ") + priceText), 1, row++);
 		
 		
@@ -742,18 +742,18 @@ public class Registration extends RunBlock {
 		form.add(table);
 		int row = 1;
 
-		table.add(getPhasesTable(this.isIcelandic ? 3 : 2, this.isIcelandic ? 7 : 6, "run_reg.transport_offered", "Order transport"), 1, row++);
+		table.add(getPhasesTable(this.isIcelandic ? 3 : 2, this.isIcelandic ? 7 : 6, "run_reg.order_transport", "Order transport"), 1, row++);
 		table.setHeight(row++, 12);
 
-		table.add(getInformationTable(localize("run_reg.information_text_step_3_transport", "Information text 3 transport...")), 1, row++);
+		table.add(getInformationTable(localize("run_reg.information_text_step_3_transport", "Bus trip to race starting point and back to Reykjavik after the race is organized by Reykjavik Marathon. Please select if you like to order a seat or not.")), 1, row++);
 		table.setHeight(row++, 18);
 		
 		RadioButton orderTransport = getRadioButton(PARAMETER_TRANSPORT, Boolean.TRUE.toString());
 		orderTransport.setSelected(this.runner.isTransportOrdered());
-		orderTransport.setMustBeSelected(localize("run_reg.must_select_transport_option", "You have to select transport option"));
+		orderTransport.setMustBeSelected(localize("run_reg.must_select_transport_option", "You must select bus trip option."));
 		
 		RadioButton notOrderTransport = getRadioButton(PARAMETER_TRANSPORT, Boolean.FALSE.toString());
-		notOrderTransport.setSelected(!this.runner.isTransportOrdered());
+		notOrderTransport.setSelected(this.runner.isNoTransportOrdered());
 
 		table.add(orderTransport, 1, row);
 		table.add(Text.getNonBrakingSpace(), 1, row);
@@ -763,7 +763,7 @@ public class Registration extends RunBlock {
 			distancePriceString = formatAmount(iwc.getCurrentLocale(), distance.getPriceForTransport(iwc.getCurrentLocale()));
 		}
 		Object[] args = { distancePriceString };
-		table.add(getHeader(MessageFormat.format(localize("run_reg.order_transport_text", "I want to order transport. Price for transport is: {0}"), args)), 1, row);
+		table.add(getHeader(MessageFormat.format(localize("run_reg.order_transport_text", "I want to order a bus trip. The price is: {0}"), args)), 1, row);
 		table.setHeight(row++, 6);
 		
 		table.add(getText((localize("run_reg.order_tranport_information_"+runner.getRun().getName().replace(' ', '_'), "Info about transport order..."))), 1, row);
@@ -771,7 +771,7 @@ public class Registration extends RunBlock {
 		table.setCellpaddingBottom(1, row++, 6);
 		table.add(notOrderTransport, 1, row);
 		table.add(Text.getNonBrakingSpace(), 1, row);
-		table.add(getHeader(localize("run_reg.not_order_transport_text", "I don't want to order transport.")), 1, row);
+		table.add(getHeader(localize("run_reg.not_order_transport_text", "I don't want to order bus trip.")), 1, row);
 		
 		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
 		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_THREE));
@@ -932,6 +932,7 @@ public class Registration extends RunBlock {
 		int childNumber = 0;
 		float totalAmount = 0;
 		int chipsToBuy = 0;
+		int transportToBuy = 0;
 		Iterator iter = runners.values().iterator();
 		boolean first = true;
 		while (iter.hasNext()) {
@@ -962,6 +963,10 @@ public class Registration extends RunBlock {
 			
 			if (runner.isBuyChip()) {
 				chipsToBuy++;
+			}
+			
+			if (runner.isTransportOrdered()) {
+				transportToBuy++;
 			}
 			
 			runner.setAmount(runPrice);
@@ -998,12 +1003,21 @@ public class Registration extends RunBlock {
 		}
 		
 		if (chipsToBuy > 0) {
-			float totalChips = chipsToBuy * this.price;
+			float totalChips = chipsToBuy * this.chipPrice;
 			totalAmount += totalChips;
 			
 			runnerTable.setHeight(runRow++, 12);
-			runnerTable.add(getText(chipsToBuy + "x " + localize("run_reg.multi_use_chips", "Multi use chips")), 1, runRow);
+			runnerTable.add(getText(chipsToBuy + " x " + localize("run_reg.multi_use_chips", "Multi use chips")), 1, runRow);
 			runnerTable.add(getText(formatAmount(iwc.getCurrentLocale(), totalChips)), 4, runRow++);
+		}
+		
+		if (transportToBuy > 0) {
+			float totalTransport = transportToBuy * runner.getDistance().getPriceForTransport(iwc.getCurrentLocale());
+			totalAmount += totalTransport;
+			
+			runnerTable.setHeight(runRow++, 12);
+			runnerTable.add(getText(transportToBuy + " x " + localize("run_reg.transport_to_race_starting_point", "Bus trip to race starting point")), 1, runRow);
+			runnerTable.add(getText(formatAmount(iwc.getCurrentLocale(), totalTransport)), 4, runRow++);
 		}
 		
 		runnerTable.setHeight(runRow++, 12);
@@ -1102,6 +1116,8 @@ public class Registration extends RunBlock {
 		emailField.keepStatusOnAction(true);
 		
 		creditCardTable.setHeight(creditRow++, 3);
+		creditCardTable.mergeCells(3, creditRow, 3, creditRow+1);
+		creditCardTable.add(getText(localize("run_reg.ccv_explanation_text","A CCV number is a three digit number located on the back of all major credit cards.")), 3, creditRow);
 		creditCardTable.add(getHeader(localize("run_reg.card_holder_email", "Cardholder email")), 1, creditRow++);
 		creditCardTable.add(emailField, 1, creditRow++);
 		creditCardTable.add(new HiddenInput(PARAMETER_AMOUNT, String.valueOf(totalAmount)));
@@ -1375,8 +1391,8 @@ public class Registration extends RunBlock {
 				if (transport.equals(Boolean.TRUE.toString())) {
 					runner.setTransportOrdered(true);
 				}
-				else {
-					runner.setTransportOrdered(false);
+				else if (transport.equals(Boolean.FALSE.toString())){
+					runner.setNoTransportOrdered(true);
 				}
 			}
 			if (iwc.isParameterSet(PARAMETER_AGREE)) {
