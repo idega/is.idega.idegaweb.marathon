@@ -19,6 +19,8 @@
   </classpathentry>
   <classpathentry kind="src" path="/is.idega.block.family">
   </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/bundles/jars/com.idega.workspace-3.1.1.jar">
+  </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/jdom/jars/jdom-1.0.jar">
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/jai/jars/jai-1.0.jar">
