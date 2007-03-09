@@ -60,6 +60,7 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		addAttribute(getColumnNameParticipantNumber(), "Participant number", true, true, Integer.class);
 		addAttribute(getColumnNamePayMethod(), "Pay method", true, true, String.class);
 		addAttribute(getColumnNameAmountPayed(), "Amount payed", true, true, String.class);
+		addAttribute(getColumnNameTransportOrdered(), "Transport ordered", true, true, String.class);
 	}
 
 	public static String getEntityTableName() {
@@ -148,6 +149,10 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 	
 	public static String getColumnNameAmountPayed() {
 		return "payed_amount";
+	}
+
+	public static String getColumnNameTransportOrdered() {
+		return "transport_ordered";
 	}
 
 	public String getIDColumnName() {
@@ -263,6 +268,10 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		return getStringColumnValue(getColumnNameAmountPayed());
 	}
 
+	public String getTransportOrdered() {
+		return getStringColumnValue(getColumnNameTransportOrdered());
+	}
+
 	//SET
 	public void setRunTypeGroupID(int runTypeGroupID) {
 		setColumn(getColumnNameRunTypeGroupID(), runTypeGroupID);
@@ -364,6 +373,10 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		setColumn(getColumnNameAmountPayed(),amount);
 	}
 	
+	public void setTransportOrdered(String transportOrdered) {
+		setColumn(getColumnNameTransportOrdered(),transportOrdered);
+	}
+
 	public Collection ejbFindAll() throws FinderException {
 		Table table = new Table(this);
 		

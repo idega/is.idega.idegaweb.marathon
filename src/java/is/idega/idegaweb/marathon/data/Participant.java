@@ -1,5 +1,5 @@
 /*
- * $Id: Participant.java,v 1.7 2007/02/02 01:58:01 idegaweb Exp $
+ * $Id: Participant.java,v 1.8 2007/03/09 09:22:34 idegaweb Exp $
  * Created on Aug 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -15,10 +15,10 @@ import com.idega.user.data.User;
 
 
 /**
- * Last modified: $Date: 2007/02/02 01:58:01 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/03/09 09:22:34 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public interface Participant extends IDOEntity {
 
@@ -153,6 +153,11 @@ public interface Participant extends IDOEntity {
 	public String getPayedAmount();
 
 	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getTransportOrdered
+	 */
+	public String getTransportOrdered();
+
+	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setRunTypeGroupID
 	 */
 	public void setRunTypeGroupID(int runTypeGroupID);
@@ -276,4 +281,9 @@ public interface Participant extends IDOEntity {
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setPayedAmount
 	 */
 	public void setPayedAmount(String amount);
+	
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setTransportOrdered
+	 */
+	public void setTransportOrdered(String transportOrdered);
 }
