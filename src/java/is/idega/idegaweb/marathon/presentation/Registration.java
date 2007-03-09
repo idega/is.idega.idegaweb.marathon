@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.51 2007/03/09 12:37:14 idegaweb Exp $
+ * $Id: Registration.java,v 1.52 2007/03/09 16:00:06 idegaweb Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -64,10 +64,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/03/09 12:37:14 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/03/09 16:00:06 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.51 $
+ * @version $Revision: 1.52 $
  */
 public class Registration extends RunBlock {
 	
@@ -1017,6 +1017,7 @@ public class Registration extends RunBlock {
 			totalAmount += totalTransport;
 			
 			runnerTable.setHeight(runRow++, 12);
+			runnerTable.mergeCells(1, runRow, 3, runRow);
 			runnerTable.add(getText(transportToBuy + " x " + localize("run_reg.transport_to_race_starting_point", "Bus trip to race starting point")), 1, runRow);
 			runnerTable.add(getText(formatAmount(iwc.getCurrentLocale(), totalTransport)), 4, runRow++);
 		}
