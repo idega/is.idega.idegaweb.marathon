@@ -447,6 +447,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					if (runner.getDistance() != null) {
 						participant.setParticipantNumber(getNextAvailableParticipantNumber(runner.getRun(), runner.getDistance()));
 					}
+					participant.setTransportOrdered(String.valueOf(runner.isTransportOrdered()));
 					participant.store();
 					participants.add(participant);
 					
@@ -456,7 +457,11 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 
 					if (runner.getEmail() != null) {
 						IWResourceBundle iwrb = getIWApplicationContext().getIWMainApplication().getBundle(IWMarathonConstants.IW_BUNDLE_IDENTIFIER).getResourceBundle(locale);
-						Object[] args = { user.getName(), iwrb.getLocalizedString(run.getName(),run.getName()), iwrb.getLocalizedString(distance.getName(),distance.getName()), iwrb.getLocalizedString("shirt_size." + runner.getShirtSize(), runner.getShirtSize()), String.valueOf(participant.getParticipantNumber()) };
+						String distanceString = iwrb.getLocalizedString(distance.getName(),distance.getName());
+						if (runner.isTransportOrdered()) {
+							distanceString = distanceString + " (" + iwrb.getLocalizedString("run_reg.with_bus_trip","with bus trip") + ")";
+						}
+						Object[] args = { user.getName(), iwrb.getLocalizedString(run.getName(),run.getName()), distanceString, iwrb.getLocalizedString("shirt_size." + runner.getShirtSize(), runner.getShirtSize()), String.valueOf(participant.getParticipantNumber()) };
 						String subject = iwrb.getLocalizedString("registration_received_subject_mail", "Your registration has been received.");
 						String body = MessageFormat.format(iwrb.getLocalizedString("registration_received_body_mail", "Your registration has been received."), args);
 						sendMessage(runner.getEmail(), subject, body);
