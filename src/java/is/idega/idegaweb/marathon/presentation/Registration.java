@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.50 2007/03/01 16:23:50 idegaweb Exp $
+ * $Id: Registration.java,v 1.51 2007/03/09 12:37:14 idegaweb Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -64,10 +64,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/03/01 16:23:50 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/03/09 12:37:14 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.50 $
+ * @version $Revision: 1.51 $
  */
 public class Registration extends RunBlock {
 	
@@ -1244,7 +1244,7 @@ public class Registration extends RunBlock {
 		table.add(getText(localize("run_reg.payment_received", "We have received payment for the following:")), 1, row++);
 		table.setHeight(row++, 8);
 
-		Table runnerTable = new Table(5, runners.size() + 1);
+		Table runnerTable = new Table(5, runners.size() + 3);
 		runnerTable.setWidth(Table.HUNDRED_PERCENT);
 		runnerTable.add(getHeader(localize("run_reg.runner_name", "Runner name")), 1, 1);
 		runnerTable.add(getHeader(localize("run_reg.run", "Run")), 2, 1);
@@ -1253,7 +1253,7 @@ public class Registration extends RunBlock {
 		runnerTable.add(getHeader(localize("run_reg.shirt_size", "Shirt size")), 5, 1);
 		table.add(runnerTable, 1, row++);
 		int runRow = 2;
-		
+		int transportToBuy = 0;
 		Iterator iter = runners.iterator();
 		while (iter.hasNext()) {
 			Participant participant = (Participant) iter.next();
@@ -1265,7 +1265,16 @@ public class Registration extends RunBlock {
 			runnerTable.add(getText(localize(distance.getName(), distance.getName())), 3, runRow);
 			runnerTable.add(getText(String.valueOf(participant.getParticipantNumber())), 4, runRow);
 			runnerTable.add(getText(localize("shirt_size." + participant.getShirtSize(), participant.getShirtSize())), 5, runRow++);
+			if (participant.getTransportOrdered().equalsIgnoreCase(Boolean.TRUE.toString())) {
+				transportToBuy++;
+			}
 		}
+		if (transportToBuy > 0) {
+			runRow++;
+			runnerTable.mergeCells(1, runRow, 5, runRow);
+			runnerTable.add(getText(transportToBuy + " x " + localize("run_reg.transport_to_race_starting_point", "Bus trip to race starting point")), 1, runRow);
+		}
+
 		
 		if (doPayment) {
 			Table creditCardTable = new Table(2, 3);
