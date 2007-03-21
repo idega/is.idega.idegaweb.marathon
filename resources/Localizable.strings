@@ -300,6 +300,7 @@ run_year_sort.groups=Groups
 run_year_sort.groups_comp=Group competition
 run_year_sort.total=Total result list
 save=Save
+select_run=Select run
 shirt_size.large=Large
 shirt_size.large_adult=Large Adult
 shirt_size.large_female=Large Female
