@@ -1,5 +1,5 @@
 /*
- * $Id: IWBundleStarter.java,v 1.2 2006/05/31 22:49:06 gimmi Exp $
+ * $Id: IWBundleStarter.java,v 1.3 2007/03/21 13:27:24 sigtryggur Exp $
  * Created on May 23, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -30,10 +30,10 @@ import com.idega.idegaweb.IWMainApplication;
 
 
 /**
- * Last modified: $Date: 2006/05/31 22:49:06 $ by $Author: gimmi $
+ * Last modified: $Date: 2007/03/21 13:27:24 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class IWBundleStarter implements IWBundleStartable {
 	
@@ -41,6 +41,7 @@ public class IWBundleStarter implements IWBundleStartable {
 	 * @see com.idega.idegaweb.IWBundleStartable#start(com.idega.idegaweb.IWBundle)
 	 */
 	public void start(IWBundle starterBundle) {
+		addStandardViews(starterBundle.getApplication());
 		IWApplicationContext iwac = IWMainApplication.getDefaultIWApplicationContext();
 		String merchantPK = null;
 		ICApplicationBindingBusiness abb = null;
@@ -88,5 +89,10 @@ public class IWBundleStarter implements IWBundleStartable {
 	 * @see com.idega.idegaweb.IWBundleStartable#stop(com.idega.idegaweb.IWBundle)
 	 */
 	public void stop(IWBundle starterBundle) {
+	}
+
+	protected void addStandardViews(IWMainApplication iwma){
+		MarathonViewManager manager = MarathonViewManager.getInstance(iwma);
+		manager.getMarathonViewNode();
 	}
 }

@@ -1,5 +1,7 @@
 package is.idega.idegaweb.marathon;
 
+import is.idega.idegaweb.marathon.presentation.RunYearEditor;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -52,6 +54,10 @@ public class MarathonViewManager {
 		DefaultViewNode setupNode = new WorkspaceClassViewNode("setup",marathonNode);
 		setupNode.setName("#{localizedStrings['is.idega.idegaweb.marathon']['Setup']}");
 		
+		WorkspaceClassViewNode years = new WorkspaceClassViewNode("runYears",setupNode);
+		years.setName("#{localizedStrings['is.idega.idegaweb.marathon']['marathon_run_years']}");
+		years.setComponentClass(RunYearEditor.class);
+
 		return marathonNode;
 	}
 

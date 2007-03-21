@@ -1,5 +1,5 @@
 /*
- * $Id: RunBlock.java,v 1.3 2006/04/12 14:43:32 laddi Exp $
+ * $Id: RunBlock.java,v 1.4 2007/03/21 13:27:24 sigtryggur Exp $
  * Created on May 17, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -21,6 +21,7 @@ import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.Block;
 import com.idega.presentation.IWContext;
+import com.idega.presentation.Image;
 import com.idega.presentation.Table;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
@@ -33,10 +34,10 @@ import com.idega.user.business.UserBusiness;
 
 
 /**
- * Last modified: $Date: 2006/04/12 14:43:32 $ by $Author: laddi $
+ * Last modified: $Date: 2007/03/21 13:27:24 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class RunBlock extends Block {
 
@@ -181,6 +182,28 @@ public class RunBlock extends Block {
 		table.add(getText(information), 1, 1);
 		
 		return table;
+	}
+	
+	/**
+	 * Returns the default edit icon with the tooltip specified.
+	 * @param toolTip	The tooltip to display on mouse over.
+	 * @return Image	The edit icon.
+	 */
+	protected Image getEditIcon(String toolTip) {
+		Image editImage = this.iwb.getImage("shared/edit.gif", 12, 12);
+		editImage.setToolTip(toolTip);
+		return editImage;
+	}
+
+	/**
+	 * Returns the default delete icon with the tooltip specified.
+	 * @param toolTip	The tooltip to display on mouse over.
+	 * @return Image	The delete icon.
+	 */
+	protected Image getDeleteIcon(String toolTip) {
+		Image deleteImage = this.iwb.getImage("shared/delete.gif", 12, 12);
+		deleteImage.setToolTip(toolTip);
+		return deleteImage;
 	}
 	
 	public String getBundleIdentifier() {
