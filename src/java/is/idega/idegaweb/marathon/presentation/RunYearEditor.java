@@ -15,11 +15,13 @@ import com.idega.presentation.TableRowGroup;
 import com.idega.presentation.text.Break;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
+import com.idega.presentation.ui.DateInput;
 import com.idega.presentation.ui.DropdownMenu;
 import com.idega.presentation.ui.Form;
 import com.idega.presentation.ui.Label;
 import com.idega.presentation.ui.SubmitButton;
 import com.idega.presentation.ui.TextInput;
+import com.idega.presentation.ui.TimestampInput;
 import com.idega.user.data.Group;
 
 public class RunYearEditor extends RunBlock {
@@ -78,7 +80,6 @@ public class RunYearEditor extends RunBlock {
 	}
 	
 	public void showList(IWContext iwc) throws RemoteException {
-		System.out.println("showList");
 		Form form = new Form();
 				
 		Table2 table = new Table2();
@@ -146,8 +147,6 @@ public class RunYearEditor extends RunBlock {
 		}
 		if (iwc.isParameterSet(PARAMETER_MARATHON_PK)) {
 			SubmitButton newLink = (SubmitButton) getButton(new SubmitButton(localize("new_year", "New year"), PARAMETER_ACTION, String.valueOf(ACTION_NEW)));
-			//Link newLink = new Link(localize("new_year", "New year"));
-			//newLink.addParameter(PARAMETER_ACTION, ACTION_NEW);
 			group = table.createFooterRowGroup();
 			group.createRow().createCell().setHeight("20");
 			row = group.createRow();
@@ -161,9 +160,10 @@ public class RunYearEditor extends RunBlock {
 
 	public void showEditor(IWContext iwc, Object runYearPK) throws java.rmi.RemoteException {
 		Form form = new Form();
+
 		TextInput year = new TextInput(PARAMETER_YEAR);
-		TextInput runDate = new TextInput(PARAMETER_RUN_DATE);
-		TextInput lastRegistrationDate = new TextInput(PARAMETER_LAST_REGISTRATION_DATE);
+		DateInput runDate = new DateInput(PARAMETER_RUN_DATE);
+		TimestampInput lastRegistrationDate = new TimestampInput(PARAMETER_LAST_REGISTRATION_DATE);
 		
 		Layer layer = new Layer(Layer.DIV);
 		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
@@ -175,7 +175,8 @@ public class RunYearEditor extends RunBlock {
 		
 		layer = new Layer(Layer.DIV);
 		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		label = new Label(localize("run_tab.run_date", "Run Date"), runDate);
+		label = new Label();
+		label.setLabel(localize("run_tab.run_date", "Run Date"));
 		layer.add(label);
 		layer.add(runDate);
 		form.add(layer);
@@ -183,20 +184,17 @@ public class RunYearEditor extends RunBlock {
 		
 		layer = new Layer(Layer.DIV);
 		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		label = new Label(localize("run_tab.last_registration_date", "Last Registration Sate"), lastRegistrationDate);
+		label = new Label(localize("run_tab.last_registration_date", "Last Registration Date"), lastRegistrationDate);
 		layer.add(label);
 		layer.add(lastRegistrationDate);
 		form.add(layer);
 		form.add(new Break());
-		
-		
 
 		SubmitButton save = (SubmitButton) getButton(new SubmitButton(localize("save", "Save"), PARAMETER_ACTION, String.valueOf(ACTION_SAVE)));
 		SubmitButton cancel = (SubmitButton) getButton(new SubmitButton(localize("cancel", "Cancel"), PARAMETER_ACTION, String.valueOf(ACTION_VIEW)));
-		save.setToolTip(localize("save", "Save"));
 
-		form.add(cancel);
 		form.add(save);
+		form.add(cancel);
 
 		add(form);
 	}
