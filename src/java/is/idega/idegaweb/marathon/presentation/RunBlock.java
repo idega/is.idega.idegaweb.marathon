@@ -1,5 +1,5 @@
 /*
- * $Id: RunBlock.java,v 1.5 2007/03/22 15:26:30 sigtryggur Exp $
+ * $Id: RunBlock.java,v 1.6 2007/03/28 15:21:43 sigtryggur Exp $
  * Created on May 17, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -34,29 +34,16 @@ import com.idega.user.business.UserBusiness;
 
 
 /**
- * Last modified: $Date: 2007/03/22 15:26:30 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/03/28 15:21:43 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class RunBlock extends Block {
 
 	public final static String IW_BUNDLE_IDENTIFIER = "is.idega.idegaweb.marathon";
-	
+
 	public final static String STYLENAME_FORM_ELEMENT = "FormElement";
-	public final static String STYLENAME_SCHOOL_FORM = "schoolForm";
-	public final static String STYLENAME_LIST_TABLE = "listTable";
-	public final static String STYLENAME_LIST_TABLE_ODD_ROW = "listTable_oddRow";
-	public final static String STYLENAME_LIST_TABLE_EVEN_ROW = "listTable_evenRow";
-
-	public final static String STYLENAME_HEADER_ROW = "HeaderRow";
-	public final static String STYLENAME_LIGHT_ROW = "LightRow";
-	public final static String STYLENAME_DARK_ROW = "DarkRow";
-
-	public final static String STYLENAME_SMALL_HEADER = "SmallHeader";
-	public final static String STYLENAME_SMALL_LINK = "SmallLink";
-
-		
 	public final static String STYLENAME_HEADER = "Header";
 	public final static String STYLENAME_TEXT = "Text";
 	public final static String STYLENAME_SMALL_TEXT = "SmallText";
