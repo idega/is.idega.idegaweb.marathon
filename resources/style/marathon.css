@@ -1,0 +1,26 @@
+div.FormElement {
+	clear:left;
+	height: auto;
+	margin-left: 12px;
+}
+
+div.FormElement label {
+	width: 120px;
+	float:left;
+}
+
+div.FormElement input, div.FormElement textarea, div.FormElement select {
+	margin-bottom: 6px;
+	font-size: 9px;
+	border: 1px #CCCCCC solid;
+}
+
+div.FormElement iframe {
+	border: 0;
+	margin: 0;
+}
+
+div.FormElement textarea {
+	width: 300px;
+	height: 50px;
+}
