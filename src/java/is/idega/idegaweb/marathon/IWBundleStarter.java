@@ -1,5 +1,5 @@
 /*
- * $Id: IWBundleStarter.java,v 1.3 2007/03/21 13:27:24 sigtryggur Exp $
+ * $Id: IWBundleStarter.java,v 1.4 2007/03/28 15:22:51 sigtryggur Exp $
  * Created on May 23, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -12,6 +12,7 @@ package is.idega.idegaweb.marathon;
 import java.io.IOException;
 import java.rmi.RemoteException;
 
+import is.idega.idegaweb.marathon.presentation.RunBlock;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
 import javax.ejb.CreateException;
@@ -27,13 +28,14 @@ import com.idega.idegaweb.IWApplicationContext;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWBundleStartable;
 import com.idega.idegaweb.IWMainApplication;
+import com.idega.idegaweb.include.GlobalIncludeManager;
 
 
 /**
- * Last modified: $Date: 2007/03/21 13:27:24 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/03/28 15:22:51 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class IWBundleStarter implements IWBundleStartable {
 	
@@ -41,6 +43,7 @@ public class IWBundleStarter implements IWBundleStartable {
 	 * @see com.idega.idegaweb.IWBundleStartable#start(com.idega.idegaweb.IWBundle)
 	 */
 	public void start(IWBundle starterBundle) {
+		updateData();
 		addStandardViews(starterBundle.getApplication());
 		IWApplicationContext iwac = IWMainApplication.getDefaultIWApplicationContext();
 		String merchantPK = null;
@@ -94,5 +97,10 @@ public class IWBundleStarter implements IWBundleStartable {
 	protected void addStandardViews(IWMainApplication iwma){
 		MarathonViewManager manager = MarathonViewManager.getInstance(iwma);
 		manager.getMarathonViewNode();
+	}
+
+	private void updateData() {
+		GlobalIncludeManager includeManager = GlobalIncludeManager.getInstance();
+		includeManager.addBundleStyleSheet(RunBlock.IW_BUNDLE_IDENTIFIER, "/style/marathon.css");
 	}
 }
