@@ -176,7 +176,7 @@ public class RunYearEditor extends RunBlock {
 		layer = new Layer(Layer.DIV);
 		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
 		label = new Label();
-		label.setLabel(localize("run_tab.run_date", "Run Date"));
+		label.setLabel(localize("run_tab.run_date", "Run date"));
 		layer.add(label);
 		layer.add(runDate);
 		form.add(layer);
@@ -184,7 +184,7 @@ public class RunYearEditor extends RunBlock {
 		
 		layer = new Layer(Layer.DIV);
 		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		label = new Label(localize("run_tab.last_registration_date", "Last Registration Date"), lastRegistrationDate);
+		label = new Label(localize("run_tab.last_registration_date", "Last registration date"), lastRegistrationDate);
 		layer.add(label);
 		layer.add(lastRegistrationDate);
 		form.add(layer);
