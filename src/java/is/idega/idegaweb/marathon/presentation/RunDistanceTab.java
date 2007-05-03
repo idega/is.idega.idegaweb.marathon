@@ -300,45 +300,50 @@ public class RunDistanceTab extends UserGroupTab{
 		table.add(this.childrenPriceEURText, 2, 2);
 		table.add(Text.getBreak(), 2, 2);
 		table.add(this.childrenPriceEUR, 2, 2);
-		
-		table.mergeCells(1, 3, 2, 3);
+
 		table.add(this.numberOfSplitsText, 1, 3);
 		table.add(Text.getNonBrakingSpace(), 1, 3);
 		table.add(this.numberOfSplits, 1, 3);
 
-		table.mergeCells(1, 4, 2, 4);
-		table.add(this.useChip, 1, 4);
-		table.add(Text.getNonBrakingSpace(), 1, 4);
-		table.add(this.useChipText, 1, 4);
-		
-		table.add(Text.getBreak(), 1, 4);
-		
-		table.add(this.familyDiscount, 1, 4);
-		table.add(Text.getNonBrakingSpace(), 1, 4);
-		table.add(this.familyDiscountText, 1, 4);
+		table.add(Text.getBreak(), 1, 3);
+		table.add(Text.getBreak(), 1, 3);	
 
-		table.add(Text.getBreak(), 1, 4);
+		table.add(this.useChip, 1, 3);
+		table.add(Text.getNonBrakingSpace(), 1, 3);
+		table.add(this.useChipText, 1, 3);
 		
-		table.add(this.allowsGroups, 1, 4);
-		table.add(Text.getNonBrakingSpace(), 1, 4);
-		table.add(this.allowsGroupsText, 1, 4);
-		table.add(Text.getBreak(), 1, 4);
-		table.add(this.transportOffered, 1, 4);
-		table.add(Text.getNonBrakingSpace(), 1, 4);
-		table.add(this.transportOfferedText, 1, 4);
-		table.add(Text.getBreak(), 1, 4);
-		table.add(this.priceForTransportISKText, 1, 4);
-		table.add(Text.getBreak(), 1, 4);
-		table.add(this.priceForTransportISK, 1, 4);
-		table.add(Text.getBreak(), 1, 4);
-		table.add(this.priceForTransportEURText, 1, 4);
-		table.add(Text.getBreak(), 1, 4);
-		table.add(this.priceForTransportEUR, 1, 4);
-		table.add(Text.getBreak(), 1, 4);
-		table.add(Text.getBreak(), 1, 4);
-		table.add(this.shirtSizeSelectionBoxText, 1, 4);
-		table.add(Text.getBreak(), 1, 4);
-		table.add(this.shirtSizeSelectionBox,1,4);
+		table.add(Text.getBreak(), 1, 3);
+		
+		table.add(this.familyDiscount, 1, 3);
+		table.add(Text.getNonBrakingSpace(), 1, 3);
+		table.add(this.familyDiscountText, 1, 3);
+
+		table.add(Text.getBreak(), 1, 3);
+		
+		table.add(this.allowsGroups, 1, 3);
+		table.add(Text.getNonBrakingSpace(), 1, 3);
+		table.add(this.allowsGroupsText, 1, 3);
+		table.add(Text.getBreak(), 1, 3);
+		table.add(this.transportOffered, 1, 3);
+		table.add(Text.getNonBrakingSpace(), 1, 3);
+		table.add(this.transportOfferedText, 1, 3);
+		table.add(Text.getBreak(), 1, 3);
+		table.add(Text.getBreak(), 1, 3);
+		table.add(Text.getBreak(), 1, 3);
+		table.add(this.priceForTransportISKText, 1, 3);
+		table.add(Text.getBreak(), 1, 3);
+		table.add(this.priceForTransportISK, 1, 3);
+		table.add(Text.getBreak(), 1, 3);
+		table.add(Text.getBreak(), 1, 3);
+		table.add(this.priceForTransportEURText, 1, 3);
+		table.add(Text.getBreak(), 1, 3);
+		table.add(this.priceForTransportEUR, 1, 3);
+		table.setVerticalAlignment(1, 3, Table.VERTICAL_ALIGN_TOP);
+
+		table.mergeCells(2, 3, 2, 4);		
+		table.add(this.shirtSizeSelectionBoxText, 2, 3);
+		table.add(Text.getBreak(), 2, 3);
+		table.add(this.shirtSizeSelectionBox, 2, 3);
 		
 		add(table, 1, 1);
 	}
