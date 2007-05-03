@@ -1316,7 +1316,25 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		return null;
 	}
 
-	public void createNewGroupYear(IWContext iwc, Group run, String year, String[] priceISK, String[] priceEUR, String[] useChips, String[] childrenPriceISK, String[] childrenPriceEUR, String[] familyDiscount, String[] allowsGroups) {
+	public void createNewGroupYear(IWContext iwc, String runID) {
+		String year = iwc.getParameter("year");
+		String[] priceISK = iwc.getParameterValues("price_isk");
+		String[] priceEUR = iwc.getParameterValues("price_eur");
+		String[] useChips = iwc.getParameterValues("use_chip");
+		String[] childrenPriceISK = iwc.getParameterValues("price_children_isk");
+		String[] childrenPriceEUR = iwc.getParameterValues("price_children_eur");
+		String[] familyDiscount = iwc.getParameterValues("family_discount");
+		String[] allowsGroups = iwc.getParameterValues("allows_groups");
+		
+		Group run = null;
+		try {
+			if (runID != null && !runID.equals("")) {
+				int id = Integer.parseInt(runID);
+				run = getGroupBiz().getGroupByGroupID(id);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		String runName = run.getName();
 		Group group = null;
 		try {
@@ -1368,15 +1386,28 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				try {
 					Distance distanceGroup = ConverterUtility.getInstance().convertGroupToDistance(distance);
 					distanceGroup.setUseChip(new Boolean(useChips[i]).booleanValue());
-					distanceGroup.setPriceInISK(Float.parseFloat(priceISK[i]));
-					distanceGroup.setPriceInEUR(Float.parseFloat(priceEUR[i]));
-					distanceGroup.setFamilyDiscount(new Boolean(familyDiscount[i]).booleanValue());
+					if (priceISK[i] != null  && priceISK[i].length() > 0) {
+						distanceGroup.setPriceInISK(Float.parseFloat(priceISK[i]));
+					} else {
+						distanceGroup.setPriceInISK(0);
+					}
+					if (priceEUR[i] != null  && priceEUR[i].length() > 0) {
+						distanceGroup.setPriceInEUR(Float.parseFloat(priceEUR[i]));
+					} else {
+						distanceGroup.setPriceInEUR(0);
+					}
 					if (childrenPriceISK[i] != null && childrenPriceISK[i].length() > 0) {
 						distanceGroup.setChildrenPriceInISK(Float.parseFloat(childrenPriceISK[i]));
+					} else {
+						distanceGroup.setChildrenPriceInISK(0);
 					}
 					if (childrenPriceEUR[i] != null && childrenPriceEUR[i].length() > 0) {
 						distanceGroup.setChildrenPriceInEUR(Float.parseFloat(childrenPriceEUR[i]));
+					} else {
+						distanceGroup.setChildrenPriceInEUR(0);
 					}
+						
+					distanceGroup.setFamilyDiscount(new Boolean(familyDiscount[i]).booleanValue());
 					distanceGroup.setAllowsGroups(new Boolean(allowsGroups[i]).booleanValue());
 					distanceGroup.store();
 				}

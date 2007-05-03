@@ -1,5 +1,5 @@
 /*
- * $Id: RunBusiness.java,v 1.29 2007/02/02 11:14:52 idegaweb Exp $
+ * $Id: RunBusiness.java,v 1.30 2007/05/03 22:13:40 sigtryggur Exp $
  * Created on Aug 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -31,10 +31,10 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2007/02/02 11:14:52 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/05/03 22:13:40 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  */
 public interface RunBusiness extends IBOService {
 
@@ -204,9 +204,7 @@ public interface RunBusiness extends IBOService {
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#createNewGroupYear
 	 */
-	public void createNewGroupYear(IWContext iwc, Group run, String year, String[] priceISK, String[] priceEUR,
-			String[] useChips, String[] childrenPriceISK, String[] childrenPriceEUR, String[] familyDiscount,
-			String[] allowsGroups) throws java.rmi.RemoteException;
+	public void createNewGroupYear(IWContext iwc, String runID) throws java.rmi.RemoteException;
 
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getRuns
