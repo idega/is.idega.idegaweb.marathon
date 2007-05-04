@@ -1296,8 +1296,8 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 	
 	public String[] getDistancesForRun(Group run) {
 		String runName = run.getName();
-		String[] disForMarathon = { IWMarathonConstants.DISTANCE_42, IWMarathonConstants.DISTANCE_21, IWMarathonConstants.DISTANCE_10, IWMarathonConstants.DISTANCE_3, IWMarathonConstants.DISTANCE_CHARITY_42, IWMarathonConstants.DISTANCE_CHARITY_21 };
-		String[] disForLaugavegur = { IWMarathonConstants.DISTANCE_55_WITH_BUS, IWMarathonConstants.DISTANCE_55 };
+		String[] disForMarathon = { IWMarathonConstants.DISTANCE_42, IWMarathonConstants.DISTANCE_21, IWMarathonConstants.DISTANCE_10, IWMarathonConstants.DISTANCE_3, IWMarathonConstants.DISTANCE_CHARITY_42 };
+		String[] disForLaugavegur = { IWMarathonConstants.DISTANCE_55 };
 		String[] disForMidnight = { IWMarathonConstants.DISTANCE_10, IWMarathonConstants.DISTANCE_5, IWMarathonConstants.DISTANCE_3 };
 		String[] disForRollerSkate = { IWMarathonConstants.DISTANCE_10, IWMarathonConstants.DISTANCE_5 };
 
@@ -1325,6 +1325,8 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		String[] childrenPriceEUR = iwc.getParameterValues("price_children_eur");
 		String[] familyDiscount = iwc.getParameterValues("family_discount");
 		String[] allowsGroups = iwc.getParameterValues("allows_groups");
+		String[] numberOfSplits = iwc.getParameterValues("number_of_splits");
+		String[] offersTransport = iwc.getParameterValues("offers_transport");
 		
 		Group run = null;
 		try {
@@ -1357,16 +1359,16 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		//TODO: remove this hack - set metadata on the groups containing the
 		// specific run...
 		if (runName.equals("Rvk Marathon")) {
-			generateSubGroups(iwc, group, getDistancesForRun(run), grForMarathon, priceISK, priceEUR, useChips, childrenPriceISK, childrenPriceEUR, familyDiscount, allowsGroups);
+			generateSubGroups(iwc, group, getDistancesForRun(run), grForMarathon, priceISK, priceEUR, useChips, childrenPriceISK, childrenPriceEUR, familyDiscount, allowsGroups, numberOfSplits, offersTransport);
 		}
 		else if (runName.equals("Midnight Run")) {
-			generateSubGroups(iwc, group, getDistancesForRun(run), grForMidnight, priceISK, priceEUR, useChips, childrenPriceISK, childrenPriceEUR, familyDiscount, allowsGroups);
+			generateSubGroups(iwc, group, getDistancesForRun(run), grForMidnight, priceISK, priceEUR, useChips, childrenPriceISK, childrenPriceEUR, familyDiscount, allowsGroups, numberOfSplits, offersTransport);
 		}
 		else if (runName.equals("Laugavegur")) {
-			generateSubGroups(iwc, group, getDistancesForRun(run), grForLaugavegur, priceISK, priceEUR, useChips, childrenPriceISK, childrenPriceEUR, familyDiscount, allowsGroups);
+			generateSubGroups(iwc, group, getDistancesForRun(run), grForLaugavegur, priceISK, priceEUR, useChips, childrenPriceISK, childrenPriceEUR, familyDiscount, allowsGroups, numberOfSplits, offersTransport);
 		}
 		else if (runName.equals("Roller Skate")) {
-			generateSubGroups(iwc, group, getDistancesForRun(run), grForMarathon, priceISK, priceEUR, useChips, childrenPriceISK, childrenPriceEUR, familyDiscount, allowsGroups);
+			generateSubGroups(iwc, group, getDistancesForRun(run), grForMarathon, priceISK, priceEUR, useChips, childrenPriceISK, childrenPriceEUR, familyDiscount, allowsGroups, numberOfSplits, offersTransport);
 		}
 	}
 
@@ -1376,7 +1378,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 	 * @param disForMarathon
 	 * @param grForMarathon
 	 */
-	private void generateSubGroups(IWContext iwc, Group group, String[] dis, String[] gr, String[] priceISK, String[] priceEUR, String[] useChips, String[] childrenPriceISK, String[] childrenPriceEUR, String[] familyDiscount, String[] allowsGroups) {
+	private void generateSubGroups(IWContext iwc, Group group, String[] dis, String[] gr, String[] priceISK, String[] priceEUR, String[] useChips, String[] childrenPriceISK, String[] childrenPriceEUR, String[] familyDiscount, String[] allowsGroups, String[] numberOfSplits, String[] offersTransport) {
 		for (int i = 0; i < dis.length; i++) {
 			Group distance = null;
 			try {
@@ -1385,7 +1387,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				distance.store();
 				try {
 					Distance distanceGroup = ConverterUtility.getInstance().convertGroupToDistance(distance);
-					distanceGroup.setUseChip(new Boolean(useChips[i]).booleanValue());
+					distanceGroup.setUseChip("Y".equals(useChips[i]));
 					if (priceISK[i] != null  && priceISK[i].length() > 0) {
 						distanceGroup.setPriceInISK(Float.parseFloat(priceISK[i]));
 					} else {
@@ -1407,8 +1409,10 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 						distanceGroup.setChildrenPriceInEUR(0);
 					}
 						
-					distanceGroup.setFamilyDiscount(new Boolean(familyDiscount[i]).booleanValue());
-					distanceGroup.setAllowsGroups(new Boolean(allowsGroups[i]).booleanValue());
+					distanceGroup.setFamilyDiscount("Y".equals(familyDiscount[i]));
+					distanceGroup.setAllowsGroups("Y".equals(allowsGroups[i]));
+					distanceGroup.setNumberOfSplits(new Integer(numberOfSplits[i]).intValue());
+					distanceGroup.setTransportOffered("Y".equals(offersTransport[i]));
 					distanceGroup.store();
 				}
 				catch (FinderException fe) {
