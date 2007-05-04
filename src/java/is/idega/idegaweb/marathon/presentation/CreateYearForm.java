@@ -11,6 +11,7 @@ import com.idega.presentation.Block;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Table;
 import com.idega.presentation.text.Text;
+import com.idega.presentation.ui.BooleanInput;
 import com.idega.presentation.ui.DropdownMenu;
 import com.idega.presentation.ui.Form;
 import com.idega.presentation.ui.SubmitButton;
@@ -46,59 +47,67 @@ public class CreateYearForm extends Block {
 
 		Table table = new Table();
 		table.setCellpadding(3);
-		table.setColumns(8);
 		int row = 1;
+		int col = 2;
 		
-		table.add(new Text("Year: "), 1, row);
-		table.mergeCells(2, 1, 8, 1);
+		table.add(new Text(iwrb.getLocalizedString("run_tab.year","Year")+": "), 1, row);
+		table.mergeCells(2, 1, 9, 1);
 		table.add(new TextInput("year"), 2, row++);
 		table.setHeight(row++, 12);
-		
-		table.add(new Text("Price (ISK)"), 2, row);
-		table.add(new Text("Price (EUR)"), 3, row);
-		table.add(new Text("Child Price (ISK)"), 4, row);
-		table.add(new Text("Child Price (EUR)"), 5, row);
-		table.add(new Text("Use chip"), 6, row);
-		table.add(new Text("Family discount"), 7, row);
-		table.add(new Text("Allows groups"), 8, row++);
+
+		table.add(new Text(iwrb.getLocalizedString("run_tab.price_ISK", "Price (ISK)")), col++, row);
+		table.add(new Text(iwrb.getLocalizedString("run_tab.price_EUR", "Price (EUR)")), col++, row);
+		table.add(new Text(iwrb.getLocalizedString("run_tab.children_price_EUR", "Child Price (ISK)")), col++, row);
+		table.add(new Text(iwrb.getLocalizedString("run_tab.children_price_EUR", "Child Price (EUR)")), col++, row);
+		table.add(new Text(iwrb.getLocalizedString("run_tab.number_of_splits", "Number of splits")), col++, row);
+		table.add(new Text(iwrb.getLocalizedString("run_tab.use_chip", "Use chip")), col++, row);
+		table.add(new Text(iwrb.getLocalizedString("run_tab.family_discount", "Family discount")), col++, row);
+		table.add(new Text(iwrb.getLocalizedString("run_tab.allows_groups", "Allows groups")), col++, row);
+		table.add(new Text(iwrb.getLocalizedString("run_tab.transport_offered", "Transport offered")), col++, row++);
 		String[] distances = getRunBiz(iwc).getDistancesForRun(run);
 		if (distances != null) {
 			for (int i = 0; i < distances.length; i++) {
+				col = 1;
 				String distance = distances[i];
-				table.add(new Text(iwrb.getLocalizedString("distance." + distance, distance)), 1, row);
+				table.add(new Text(iwrb.getLocalizedString("distance." + distance, distance)), col++, row);
 				
 				TextInput text = new TextInput("price_isk");
 				text.setLength(12);
-				table.add(text, 2, row);
+				table.add(text, col++, row);
 				
 				text = new TextInput("price_eur");
 				text.setLength(12);
-				table.add(text, 3, row);
+				table.add(text, col++, row);
 				
 				text = new TextInput("price_children_isk");
 				text.setLength(12);
-				table.add(text, 4, row);
+				table.add(text, col++, row);
 				
 				text = new TextInput("price_children_eur");
 				text.setLength(12);
-				table.add(text, 5, row);
+				table.add(text, col++, row);
+
+				DropdownMenu menu = new DropdownMenu("number_of_splits");
+				menu.addMenuElement(0, "0");
+				menu.addMenuElement(1, "1");
+				menu.addMenuElement(2, "2");
+				table.add(menu, col++, row);
+
+				menu = new BooleanInput("use_chip");
+				menu.setSelectedElement("Y");
+				table.add(menu, col++, row);
+
+				menu = new BooleanInput("family_discount");
+				menu.setSelectedElement("N");
+				table.add(menu, col++, row);
+
+				menu = new BooleanInput("allows_groups");
+				menu.setSelectedElement("N");
+				table.add(menu, col++, row);
 				
-				DropdownMenu menu = new DropdownMenu("use_chip");
-				menu.addMenuElement(Boolean.TRUE.toString(), "Yes");
-				menu.addMenuElement(Boolean.FALSE.toString(), "No");
-				table.add(menu, 6, row);
-
-				menu = new DropdownMenu("family_discount");
-				menu.addMenuElement(Boolean.TRUE.toString(), "Yes");
-				menu.addMenuElement(Boolean.FALSE.toString(), "No");
-				menu.setSelectedElement(Boolean.FALSE.toString());
-				table.add(menu, 7, row);
-
-				menu = new DropdownMenu("allows_groups");
-				menu.addMenuElement(Boolean.TRUE.toString(), "Yes");
-				menu.addMenuElement(Boolean.FALSE.toString(), "No");
-				menu.setSelectedElement(Boolean.FALSE.toString());
-				table.add(menu, 8, row++);
+				menu = new BooleanInput("offers_transport");
+				menu.setSelectedElement("N");
+				table.add(menu, col++, row++);
 			}
 		}
 		form.add(table);
