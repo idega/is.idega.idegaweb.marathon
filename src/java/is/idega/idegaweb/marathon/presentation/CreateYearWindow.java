@@ -26,7 +26,7 @@ public class CreateYearWindow extends StyledIWAdminWindow {
 	
 	public CreateYearWindow() {
 		super();
-		setWidth(730);
+		setWidth(760);
 		setHeight(500);
 	}
 	
