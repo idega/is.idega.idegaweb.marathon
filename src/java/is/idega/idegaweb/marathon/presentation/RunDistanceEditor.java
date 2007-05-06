@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.idega.presentation.IWContext;
+import com.idega.presentation.Layer;
 import com.idega.presentation.Table2;
 import com.idega.presentation.TableCell2;
 import com.idega.presentation.TableRow;
@@ -16,12 +17,16 @@ import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.DropdownMenu;
 import com.idega.presentation.ui.Form;
+import com.idega.presentation.ui.Label;
 import com.idega.presentation.ui.SubmitButton;
+import com.idega.presentation.ui.TextInput;
 import com.idega.user.data.Group;
+import com.idega.util.IWTimestamp;
 
 public class RunDistanceEditor extends RunBlock {
 	
 	private static final String PARAMETER_ACTION = "marathon_prm_action";
+	private static final String PARAMETER_DISTANCE = "prm_distance";
 	private static final String PARAMETER_MARATHON_PK = "prm_run_pk";
 	private static final String PARAMETER_MARATHON_YEAR_PK = "prm_run_year_pk";
 	private static final String PARAMETER_MARATHON_DISTANCE_PK = "prm_run_distance_pk";
@@ -119,8 +124,11 @@ public class RunDistanceEditor extends RunBlock {
 						Group distance = (Group) iter.next();
 						try {
 							Link edit = new Link(getEditIcon(localize("edit", "Edit")));
+							edit.addParameter(PARAMETER_MARATHON_PK, run.getPrimaryKey().toString());
+							edit.addParameter(PARAMETER_MARATHON_YEAR_PK, selectedYear.getPrimaryKey().toString());
 							edit.addParameter(PARAMETER_MARATHON_DISTANCE_PK, distance.getPrimaryKey().toString());
 							edit.addParameter(PARAMETER_ACTION, ACTION_EDIT);
+							
 										
 							cell = row.createCell();
 							cell.add(new Text(distance.getName()));
@@ -144,7 +152,32 @@ public class RunDistanceEditor extends RunBlock {
 	}
 	
 	public void showEditor(IWContext iwc, String distanceID) throws java.rmi.RemoteException {
-		System.out.println(distanceID);
+		Form form = new Form();
+		form.maintainParameter(PARAMETER_MARATHON_PK);
+		form.maintainParameter(PARAMETER_MARATHON_YEAR_PK);
+
+		TextInput distance = new TextInput(PARAMETER_MARATHON_YEAR_PK);
+		
+		Layer layer = new Layer(Layer.DIV);
+		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
+		Label label = new Label(localize("run_tab.distance", "Distance"), distance);
+		layer.add(label);
+		layer.add(distance);
+		form.add(layer);
+		form.add(new Break());
+		
+		SubmitButton save = (SubmitButton) getButton(new SubmitButton(localize("save", "Save"), PARAMETER_ACTION, String.valueOf(ACTION_SAVE)));
+		SubmitButton cancel = (SubmitButton) getButton(new SubmitButton(localize("cancel", "Cancel"), PARAMETER_ACTION, String.valueOf(ACTION_VIEW)));
+
+		form.add(save);
+		form.add(cancel);
+		
+		if (distanceID != null) {
+			Group selectedDistance = getRunBusiness(iwc).getRunGroupByGroupId(Integer.valueOf(distanceID.toString()));
+			distance.setValue(selectedDistance.getName());
+			distance.setDisabled(true);
+		}
+		add(form);
 	}
 
 	public void save(IWContext iwc) throws java.rmi.RemoteException {
