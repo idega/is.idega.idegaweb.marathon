@@ -245,7 +245,7 @@ public class RunDistanceTab extends UserGroupTab{
 		this.childrenPriceEURText = new Text(iwrb.getLocalizedString("run_tab.children_price_EUR", "Children price (EUR)"));
 		this.childrenPriceEURText.setBold();
 		
-		this.priceForTransportISKText = new Text(iwrb.getLocalizedString("run_tab.price_for_transport_ISK", "Price tor transport (ISK)"));
+		this.priceForTransportISKText = new Text(iwrb.getLocalizedString("run_tab.price_for_transport_ISK", "Price for transport (ISK)"));
 		this.priceForTransportISKText.setBold();
 		
 		this.priceForTransportEURText = new Text(iwrb.getLocalizedString("run_tab.price_for_transport_EUR", "Price for transport (EUR)"));
