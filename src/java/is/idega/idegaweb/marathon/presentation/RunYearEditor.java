@@ -1,11 +1,15 @@
 package is.idega.idegaweb.marathon.presentation;
 
+import is.idega.idegaweb.marathon.business.ConverterUtility;
 import is.idega.idegaweb.marathon.business.RunBusiness;
+import is.idega.idegaweb.marathon.data.Year;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
 import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.Iterator;
+
+import javax.ejb.FinderException;
 
 
 import com.idega.business.IBOLookup;
@@ -46,7 +50,6 @@ public class RunYearEditor extends RunBlock {
 	private static final int ACTION_NEW = 3;
 	private static final int ACTION_SAVE_NEW = 4;
 	private static final int ACTION_SAVE_EDIT = 5;
-	private static final int ACTION_DELETE = 6;
 	
 
 	public void main(IWContext iwc) throws Exception {
@@ -74,11 +77,6 @@ public class RunYearEditor extends RunBlock {
 
 			case ACTION_SAVE_EDIT:
 				saveEdit(iwc);
-				showList(iwc);
-				break;
-
-			case ACTION_DELETE:
-				//COULD-DO: implement delete functions if needed
 				showList(iwc);
 				break;
 		}
@@ -137,18 +135,19 @@ public class RunYearEditor extends RunBlock {
 		
 		if (years != null) {
 			Iterator iter = years.iterator();
-			Group run;
+			Group year;
 			
 			while (iter.hasNext()) {
 				row = group.createRow();
-				run = (Group) iter.next();
+				year = (Group) iter.next();
 				try {
 					Link edit = new Link(getEditIcon(localize("edit", "Edit")));
-					edit.addParameter(PARAMETER_MARATHON_YEAR_PK, run.getPrimaryKey().toString());
+					edit.addParameter(PARAMETER_MARATHON_PK, iwc.getParameter(PARAMETER_MARATHON_PK));
+					edit.addParameter(PARAMETER_MARATHON_YEAR_PK, year.getPrimaryKey().toString());
 					edit.addParameter(PARAMETER_ACTION, ACTION_EDIT);
 								
 					cell = row.createCell();
-					cell.add(new Text(run.getName()));
+					cell.add(new Text(year.getName()));
 					row.createCell().add(edit);
 				}
 				catch (Exception ex) {
@@ -175,6 +174,8 @@ public class RunYearEditor extends RunBlock {
 	public void showEditor(IWContext iwc) throws java.rmi.RemoteException {
 		String yearID = iwc.getParameter(PARAMETER_MARATHON_YEAR_PK);
 		Form form = new Form();
+		form.maintainParameter(PARAMETER_MARATHON_PK);
+		form.maintainParameter(PARAMETER_MARATHON_YEAR_PK);
 		TextInput year = new TextInput(PARAMETER_YEAR);
 		DateInput runDate = new DateInput(PARAMETER_RUN_DATE);
 		TimestampInput lastRegistrationDate = new TimestampInput(PARAMETER_LAST_REGISTRATION_DATE);
@@ -232,7 +233,21 @@ public class RunYearEditor extends RunBlock {
 	}
 	
 	private void saveEdit(IWContext iwc) throws java.rmi.RemoteException {
-		System.out.println("saveYear");
+		String yearID = iwc.getParameter(PARAMETER_MARATHON_YEAR_PK);
+		Year year = null;
+		if (yearID != null) {
+			try {
+				year = ConverterUtility.getInstance().convertGroupToYear(new Integer(yearID));
+			} 
+			catch (FinderException e){
+				//no year found, nothing saved
+			}
+		}
+		if (year != null) {
+			year.setRunDate(new IWTimestamp(iwc.getParameter(PARAMETER_RUN_DATE)).getTimestamp());
+			year.setLastRegistrationDate(new IWTimestamp(iwc.getParameter(PARAMETER_LAST_REGISTRATION_DATE)).getTimestamp());
+			year.store();
+		}
 	}
 
 	private RunBusiness getRunBiz(IWContext iwc) {
