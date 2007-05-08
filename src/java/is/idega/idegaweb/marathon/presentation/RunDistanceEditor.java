@@ -147,7 +147,7 @@ public class RunDistanceEditor extends RunBlock {
 						Group distance = (Group) iter.next();
 						try {
 							Link edit = new Link(getEditIcon(localize("edit", "Edit")));
-							edit.addParameter(PARAMETER_MARATHON_PK, run.getPrimaryKey().toString());
+							edit.addParameter(PARAMETER_MARATHON_PK, iwc.getParameter(PARAMETER_MARATHON_PK));
 							edit.addParameter(PARAMETER_MARATHON_YEAR_PK, selectedYear.getPrimaryKey().toString());
 							edit.addParameter(PARAMETER_MARATHON_DISTANCE_PK, distance.getPrimaryKey().toString());
 							edit.addParameter(PARAMETER_ACTION, ACTION_EDIT);
@@ -347,12 +347,11 @@ public class RunDistanceEditor extends RunBlock {
 			try {
 				String distanceString = iwc.getParameter(PARAMETER_DISTANCE);
 				if (distanceString == null || "".equals(distanceString)) {
-					;
+					group = getGroupBiz().createGroupUnder(distanceString, null, year);
+					group.setGroupType(IWMarathonConstants.GROUP_TYPE_RUN_DISTANCE);
+					group.store();
+					distanceID = group.getPrimaryKey().toString();
 				}
-				group = getGroupBiz().createGroupUnder(distanceString, null, year);
-				group.setGroupType(IWMarathonConstants.GROUP_TYPE_RUN_DISTANCE);
-				group.store();
-				distanceID = group.getPrimaryKey().toString();
 			}
 			catch (IBOLookupException e) {
 				e.printStackTrace();
@@ -365,11 +364,13 @@ public class RunDistanceEditor extends RunBlock {
 			}
 		}
 		
-		try {
-			distance = ConverterUtility.getInstance().convertGroupToDistance(new Integer(distanceID));
-		} 
-		catch (FinderException e){
-			//no distance found, nothing saved
+		if (distanceID != null) {
+			try {
+				distance = ConverterUtility.getInstance().convertGroupToDistance(new Integer(distanceID));
+			} 
+			catch (FinderException e){
+				//no distance found, nothing saved
+			}
 		}
 		
 		if (distance != null) { 
@@ -427,7 +428,6 @@ public class RunDistanceEditor extends RunBlock {
 					distance.setMetaData(PARAMETER_SHIRT_SIZES_PER_RUN, commaSeparated);
 				}
 			}
-	
 			distance.store();
 		}
 	}
