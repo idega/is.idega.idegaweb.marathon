@@ -1752,9 +1752,6 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		else if (distanceType.equals(IWMarathonConstants.DISTANCE_CHARITY_42)) {
 			return IWMarathonConstants.MAX_NUMBER_DISTANCE_CHARITY_42;
 		}
-		else if (distanceType.equals(IWMarathonConstants.DISTANCE_CHARITY_21)) {
-			return IWMarathonConstants.MAX_NUMBER_DISTANCE_CHARITY_21;
-		}
 		else if (distanceType.equals(IWMarathonConstants.DISTANCE_10)) {
 			if (run.equals("Midnight Run")) {
 				return IWMarathonConstants.MAX_NUMBER_DISTANCE_MIDNIGHT_10;
@@ -1764,12 +1761,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			}
 		}
 		else if (distanceType.equals(IWMarathonConstants.DISTANCE_5)) {
-			if (run.equals("Midnight Run")) {
-				return IWMarathonConstants.MAX_NUMBER_DISTANCE_MIDNIGHT_5;
-			}
-			else {
-				return IWMarathonConstants.MAX_NUMBER_DISTANCE_5;
-			}
+			return IWMarathonConstants.MAX_NUMBER_DISTANCE_MIDNIGHT_5;
 		}
 		else if (distanceType.equals(IWMarathonConstants.DISTANCE_3)) {
 			return IWMarathonConstants.MAX_NUMBER_DISTANCE_3;
@@ -1793,9 +1785,6 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		else if (distanceType.equals(IWMarathonConstants.DISTANCE_CHARITY_42)) {
 			return IWMarathonConstants.MIN_NUMBER_DISTANCE_CHARITY_42;
 		}
-		else if (distanceType.equals(IWMarathonConstants.DISTANCE_CHARITY_21)) {
-			return IWMarathonConstants.MIN_NUMBER_DISTANCE_CHARITY_21;
-		}
 		else if (distanceType.equals(IWMarathonConstants.DISTANCE_10)) {
 			if (run.equals("Midnight Run")) {
 				return IWMarathonConstants.MIN_NUMBER_DISTANCE_MIDNIGHT_10;
@@ -1805,12 +1794,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			}
 		}
 		else if (distanceType.equals(IWMarathonConstants.DISTANCE_5)) {
-			if (run.equals("Midnight Run")) {
-				return IWMarathonConstants.MIN_NUMBER_DISTANCE_MIDNIGHT_5;
-			}
-			else {
-				return IWMarathonConstants.MIN_NUMBER_DISTANCE_5;
-			}
+			return IWMarathonConstants.MIN_NUMBER_DISTANCE_MIDNIGHT_5;
 		}
 		else if (distanceType.equals(IWMarathonConstants.DISTANCE_3)) {
 			return IWMarathonConstants.MIN_NUMBER_DISTANCE_3;
