@@ -115,7 +115,6 @@ public class IWMarathonConstants {
   public static final String DISTANCE_3 = "3_km";
   public static final String DISTANCE_1_5 = "1_5_km";
   public static final String DISTANCE_CHARITY_42 = "42_km_charity";
-  public static final String DISTANCE_CHARITY_21 = "21_km_charity";
   
   public static final String FEMALE_11 = "female_11";
   public static final String FEMALE_14 = "female_14";
@@ -142,28 +141,26 @@ public class IWMarathonConstants {
   public static final String MALE_50_59 = "male_50_59";
   public static final String MALE_60 = "male_60";
   
-  public static final int MAX_NUMBER_DISTANCE_55 = 499;
   public static final int MIN_NUMBER_DISTANCE_55 = 1;
-  public static final int MAX_NUMBER_DISTANCE_42 = 799;
-  public static final int MIN_NUMBER_DISTANCE_42 = 21;
-  public static final int MAX_NUMBER_DISTANCE_21 = 1999;
-  public static final int MIN_NUMBER_DISTANCE_21 = 800;
-  public static final int MAX_NUMBER_DISTANCE_CHARITY_42 = 2499;
-  public static final int MIN_NUMBER_DISTANCE_CHARITY_42 = 2000;
-  public static final int MAX_NUMBER_DISTANCE_CHARITY_21 = 2999;
-  public static final int MIN_NUMBER_DISTANCE_CHARITY_21 = 2500;
-  public static final int MAX_NUMBER_DISTANCE_10 = 4999;
-  public static final int MIN_NUMBER_DISTANCE_10 = 3000;
-  public static final int MAX_NUMBER_DISTANCE_5 = 1999;
-  public static final int MIN_NUMBER_DISTANCE_5 = 1;
-  public static final int MAX_NUMBER_DISTANCE_3 = 7999;
-  public static final int MIN_NUMBER_DISTANCE_3 = 5000;
-  public static final int MAX_NUMBER_DISTANCE_MIDNIGHT_10 = 1000;
-  public static final int MIN_NUMBER_DISTANCE_MIDNIGHT_10 = 500;
-  public static final int MAX_NUMBER_DISTANCE_MIDNIGHT_5 = 499;
-  public static final int MIN_NUMBER_DISTANCE_MIDNIGHT_5 = 1;
-  public static final int MAX_NUMBER_DISTANCE_1_5 = 14999;
+  public static final int MAX_NUMBER_DISTANCE_55 = 499;
+  
+  public static final int MIN_NUMBER_DISTANCE_42 = 20;
+  public static final int MAX_NUMBER_DISTANCE_42 = 999;
+  public static final int MIN_NUMBER_DISTANCE_21 = 1000;
+  public static final int MAX_NUMBER_DISTANCE_21 = 2999;
+  public static final int MIN_NUMBER_DISTANCE_CHARITY_42 = 3000;
+  public static final int MAX_NUMBER_DISTANCE_CHARITY_42 = 3499;
+  public static final int MIN_NUMBER_DISTANCE_10 = 3500;
+  public static final int MAX_NUMBER_DISTANCE_10 = 6999;
+  public static final int MIN_NUMBER_DISTANCE_3 = 7000;  
+  public static final int MAX_NUMBER_DISTANCE_3 = 9999;
   public static final int MIN_NUMBER_DISTANCE_1_5 = 10000;
+  public static final int MAX_NUMBER_DISTANCE_1_5 = 14999;
+  
+  public static final int MIN_NUMBER_DISTANCE_MIDNIGHT_5 = 1;
+  public static final int MAX_NUMBER_DISTANCE_MIDNIGHT_5 = 499;
+  public static final int MIN_NUMBER_DISTANCE_MIDNIGHT_10 = 500;
+  public static final int MAX_NUMBER_DISTANCE_MIDNIGHT_10 = 999;
   
   public static final String PROPERTY_SEND_EMAILS = "send_emails";
 }
