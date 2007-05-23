@@ -102,9 +102,8 @@ public class RunDistanceEditor extends RunBlock {
 		Iterator runIt = runs.iterator();
 		DropdownMenu runDropDown = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_MARATHON_PK)); 
 		runDropDown.addMenuElement("", localize("select_run","Select run"));
-		Group run = null;
 		while (runIt.hasNext()) {
-			run = (Group)runIt.next();
+			Group run = (Group)runIt.next();
 			runDropDown.addMenuElement(run.getPrimaryKey().toString(), localize(run.getName(),run.getName()));
 		}
 		runDropDown.setToSubmit();
@@ -113,6 +112,7 @@ public class RunDistanceEditor extends RunBlock {
 		if (iwc.isParameterSet(PARAMETER_MARATHON_PK)) {
 			String runID = iwc.getParameter(PARAMETER_MARATHON_PK);
 			runDropDown.setSelectedElement(runID);
+			Group run = getRunBusiness(iwc).getRunGroupByGroupId(Integer.valueOf(runID));
 			String[] yearType = {IWMarathonConstants.GROUP_TYPE_RUN_YEAR};
 			Collection years = run.getChildGroups(yearType,true); 
 			Iterator yearIt = years.iterator();
@@ -154,7 +154,7 @@ public class RunDistanceEditor extends RunBlock {
 							
 										
 							cell = row.createCell();
-							cell.add(new Text(distance.getName()));
+							cell.add(new Text(localize(distance.getName(), distance.getName())));
 							row.createCell().add(edit);
 						}
 						catch (Exception ex) {
