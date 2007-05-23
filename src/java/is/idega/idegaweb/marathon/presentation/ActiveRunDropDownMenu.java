@@ -38,7 +38,6 @@ public class ActiveRunDropDownMenu extends DropdownMenu {
 	}
 
 	public void main(IWContext iwc) throws Exception {
-		System.out.println("main í rundropdown");
 		super.main(iwc);
 		IWResourceBundle iwrb = this.getResourceBundle(iwc);
 		
@@ -101,10 +100,5 @@ public class ActiveRunDropDownMenu extends DropdownMenu {
 	
 	public String getBundleIdentifier() {
 		return IW_BUNDLE_IDENTIFIER;
-	}
-	
-	protected void initInMain(IWContext iwc) throws Exception {
-		System.out.println("initInMain í rundropdown");
-		super.initInMain(iwc);
 	}
 }
