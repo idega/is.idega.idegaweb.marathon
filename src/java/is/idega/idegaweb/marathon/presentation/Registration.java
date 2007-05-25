@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.52 2007/03/09 16:00:06 idegaweb Exp $
+ * $Id: Registration.java,v 1.53 2007/05/25 17:16:09 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -13,7 +13,6 @@ import is.idega.idegaweb.marathon.business.ConverterUtility;
 import is.idega.idegaweb.marathon.business.Runner;
 import is.idega.idegaweb.marathon.data.Distance;
 import is.idega.idegaweb.marathon.data.Participant;
-import is.idega.idegaweb.marathon.data.Year;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
 import java.rmi.RemoteException;
@@ -64,10 +63,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/03/09 16:00:06 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/05/25 17:16:09 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.52 $
+ * @version $Revision: 1.53 $
  */
 public class Registration extends RunBlock {
 	
@@ -243,63 +242,15 @@ public class Registration extends RunBlock {
 		choiceTable.setWidth(Table.HUNDRED_PERCENT);
 		table.add(choiceTable, 1, row++);
 		int iRow = 1;
-		
-		IWTimestamp ts = IWTimestamp.RightNow();
-    Integer y = new Integer(ts.getYear());
-    String yearString = y.toString();
-    IWTimestamp stamp = new IWTimestamp();
-    stamp.addYears(1);
-    String nextYearString = String.valueOf(stamp.getYear());
-    
-		boolean hasRuns = false;
-		DropdownMenu runDropdown = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_RUN));
-		Collection runs = getRunBusiness(iwc).getRuns();
-		runDropdown.addMenuElement("-1", localize("run_year_ddd.select_run","Select run..."));
-		if(runs != null) {
-			Iterator iter = runs.iterator();
-			while (iter.hasNext()) {
-				Group run = (Group) iter.next();
-				String runnerYearString = yearString;
-				
-				boolean show = false;
-				boolean finished = true;
-				Map yearMap = getRunBusiness(iwc).getYearsMap(run);
-				Year year = (Year) yearMap.get(yearString);
-				if (year != null && year.getLastRegistrationDate() != null) {
-					IWTimestamp runDate = new IWTimestamp(year.getLastRegistrationDate());
-					if (ts.isEarlierThan(runDate)) {
-						finished = false;
-						show = true;
-					}
-				}
-				Year nextYear = (Year) yearMap.get(nextYearString);
-				if (finished && nextYear != null) {
-					runnerYearString = nextYearString;
-					show = true;
-				}
-				// this.runner.getUser() != null 
-				// adda parameter member_ID
-				
 
-				if (show) {
-					if (this.runner.getUser() != null) {
-						if (!getRunBusiness(iwc).isRegisteredInRun(runnerYearString, run, this.runner.getUser())) {
-							runDropdown.addMenuElement(run.getPrimaryKey().toString(), localize(run.getName(), run.getName()) + " - " + runnerYearString);
-							hasRuns = true;
-						}
-					}
-					else {
-						runDropdown.addMenuElement(run.getPrimaryKey().toString(), localize(run.getName(), run.getName()) + " - " + runnerYearString);
-						hasRuns = true;
-					}
-				}
-			}
-		}
-		if (this.runner.getRun() != null) {
-			runDropdown.setSelectedElement(this.runner.getRun().getPrimaryKey().toString());
-		}
+		ActiveRunDropDownMenu runDropdown = (ActiveRunDropDownMenu) getStyledInterface(new ActiveRunDropDownMenu(PARAMETER_RUN, runner));
 		runDropdown.setAsNotEmpty(localize("run_reg.must_select_run", "You have to select a run"));
-		if (!hasRuns) {
+		try {
+			runDropdown.main(iwc);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (runDropdown.getChildCount() == 1) {
 			getParentPage().setAlertOnLoad(localize("run_reg.no_runs_available", "There are no runs you can register for."));
 			if (this.isIcelandic) {
 				removeRunner(iwc, this.runner.getPersonalID());
@@ -307,36 +258,9 @@ public class Registration extends RunBlock {
 				return;
 			}
 		}
+		runDropdown.clearChildren();
 		
-		DropdownMenu distanceDropdown = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_DISTANCE));
-		distanceDropdown.addMenuElement("-1", localize("run_year_ddd.select_distance","Select distance..."));
-		if(this.runner.getRun() != null) {
-			String runnerYearString = yearString;
-			boolean finished = false;
-			Map yearMap = getRunBusiness(iwc).getYearsMap(this.runner.getRun());
-			Year year = (Year) yearMap.get(yearString);
-			if (year != null && year.getLastRegistrationDate() != null) {
-				if (ts.isLaterThanOrEquals(stamp)) {
-					finished = true;
-				}
-			}
-			Year nextYear = (Year) yearMap.get(nextYearString);
-			if (finished && nextYear != null) {
-				runnerYearString = nextYearString;
-			}
-
-			Collection distances = getRunBusiness(iwc).getDistancesMap(this.runner.getRun(), runnerYearString);
-			if(distances != null) {
-				Iterator distanceIt = distances.iterator();
-				while (distanceIt.hasNext()) {
-					Group distance = (Group)distanceIt.next();
-					distanceDropdown.addMenuElement(distance.getPrimaryKey().toString(), localize(distance.getName(),distance.getName()));
-			    }
-			}
-			if (this.runner.getDistance() != null) {
-				distanceDropdown.setSelectedElement(this.runner.getDistance().getPrimaryKey().toString());
-			}
-		}
+		DistanceDropDownMenu distanceDropdown = (DistanceDropDownMenu) getStyledInterface(new DistanceDropDownMenu(PARAMETER_DISTANCE, runner));
 		distanceDropdown.setAsNotEmpty(localize("run_reg.must_select_distance", "You have to select a distance"));
 
 		Text redStar = getHeader("*");
