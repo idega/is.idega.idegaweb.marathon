@@ -63,6 +63,7 @@ group_male_40_49=group_male_40_49
 group_male_50_59=group_male_50_59
 group_male_60=group_male_60
 iw.component.is.idega.idegaweb.marathon.presentation.GroupRegistration.name=GroupRegistration
+iw.component.is.idega.idegaweb.marathon.presentation.PledgeWizard.name=PledgeWizard
 iw.component.is.idega.idegaweb.marathon.presentation.Registration.name=Registration
 iw.component.is.idega.idegaweb.marathon.presentation.RunRegistration.name=RunRegistration
 iw.component.is.idega.idegaweb.marathon.presentation.RunResultViewer.name=RunResultViewer
