@@ -17,6 +17,7 @@
 Laugavegur=Laugavegur
 Marathon=Marathon
 Midnight\ Run=Midnight Run
+Registration=Registration
 Roller\ Skate=Roller Skate
 Rvk\ Marathon=Rvk Marathon
 Setup=Setup
@@ -74,6 +75,7 @@ male_19_39=male_19_39
 male_40_49=male_40_49
 male_50=male_50
 male_50_59=male_50_59
+marathon_register_users=marathon_register_users
 marathon_run_distances=marathon_run_distances
 marathon_run_years=marathon_run_years
 marathon_runs=marathon_runs
