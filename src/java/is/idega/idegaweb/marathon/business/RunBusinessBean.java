@@ -1764,7 +1764,12 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			return IWMarathonConstants.MAX_NUMBER_DISTANCE_MIDNIGHT_5;
 		}
 		else if (distanceType.equals(IWMarathonConstants.DISTANCE_3)) {
-			return IWMarathonConstants.MAX_NUMBER_DISTANCE_3;
+			if (run.equals("Midnight Run")) {
+				return IWMarathonConstants.MAX_NUMBER_DISTANCE_MIDNIGHT_3;
+			}
+			else {
+				return IWMarathonConstants.MAX_NUMBER_DISTANCE_3;
+			}
 		}
 		else if (distanceType.equals(IWMarathonConstants.DISTANCE_1_5)) {
 			return IWMarathonConstants.MAX_NUMBER_DISTANCE_1_5;
@@ -1797,7 +1802,12 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			return IWMarathonConstants.MIN_NUMBER_DISTANCE_MIDNIGHT_5;
 		}
 		else if (distanceType.equals(IWMarathonConstants.DISTANCE_3)) {
-			return IWMarathonConstants.MIN_NUMBER_DISTANCE_3;
+			if (run.equals("Midnight Run")) {
+				return IWMarathonConstants.MIN_NUMBER_DISTANCE_MIDNIGHT_3;
+			}
+			else {
+				return IWMarathonConstants.MIN_NUMBER_DISTANCE_3;
+			}
 		}
 		else if (distanceType.equals(IWMarathonConstants.DISTANCE_1_5)) {
 			return IWMarathonConstants.MIN_NUMBER_DISTANCE_1_5;
