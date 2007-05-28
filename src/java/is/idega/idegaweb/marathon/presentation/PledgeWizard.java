@@ -3,17 +3,13 @@ package is.idega.idegaweb.marathon.presentation;
 import java.rmi.RemoteException;
 
 import com.idega.presentation.IWContext;
-import com.idega.presentation.Table;
-import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.Form;
-import com.idega.presentation.ui.SubmitButton;
-import com.idega.presentation.ui.TextInput;
 
 public class PledgeWizard extends RunBlock {
 	
 	private static final String PARAMETER_ACTION = "prm_action";
 	//private static final String PARAMETER_FROM_ACTION = "prm_from_action";
-	private static final String PARAMETER_PERSONAL_ID = "prm_personal_id";
+	//private static final String PARAMETER_PERSONAL_ID = "prm_personal_id";
 	
 	private static final int ACTION_STEP_ONE = 1;
 	private static final int ACTION_STEP_TWO = 2;
@@ -59,7 +55,7 @@ public class PledgeWizard extends RunBlock {
 	
 	private void stepOne(IWContext iwc) {
 		Form form = new Form();
-
+		
 		add(form);
 	}
 	
