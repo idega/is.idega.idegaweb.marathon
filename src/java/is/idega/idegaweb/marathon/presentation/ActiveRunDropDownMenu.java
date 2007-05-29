@@ -19,20 +19,20 @@ import com.idega.user.data.Group;
 import com.idega.util.IWTimestamp;
 
 public class ActiveRunDropDownMenu extends DropdownMenu {
-	
+
 	private static final String IW_BUNDLE_IDENTIFIER = "is.idega.idegaweb.marathon";
 	private static final String PARAMETER_ACTIVE_RUNS = "prm_active_runs";
 	private Runner runner = null;
 
-	public ActiveRunDropDownMenu(){
-		this(PARAMETER_ACTIVE_RUNS); 
+	public ActiveRunDropDownMenu() {
+		this(PARAMETER_ACTIVE_RUNS);
 	}
-	
-	public ActiveRunDropDownMenu(String parameterName){
-		this(parameterName, null); 
+
+	public ActiveRunDropDownMenu(String parameterName) {
+		this(parameterName, null);
 	}
-	
-	public ActiveRunDropDownMenu(String parameterName, Runner runner){
+
+	public ActiveRunDropDownMenu(String parameterName, Runner runner) {
 		super(parameterName);
 		this.runner = runner;
 	}
@@ -40,21 +40,21 @@ public class ActiveRunDropDownMenu extends DropdownMenu {
 	public void main(IWContext iwc) throws Exception {
 		super.main(iwc);
 		IWResourceBundle iwrb = this.getResourceBundle(iwc);
-		
+
 		IWTimestamp thisYearStamp = IWTimestamp.RightNow();
-	    String yearString = String.valueOf(thisYearStamp.getYear());
-	    IWTimestamp nextYearStamp = IWTimestamp.RightNow();;
-	    nextYearStamp.addYears(1);
-	    String nextYearString = String.valueOf(nextYearStamp.getYear());
-		
+		String yearString = String.valueOf(thisYearStamp.getYear());
+		IWTimestamp nextYearStamp = IWTimestamp.RightNow();
+		nextYearStamp.addYears(1);
+		String nextYearString = String.valueOf(nextYearStamp.getYear());
+
 		Collection runs = getRunBusiness(iwc).getRuns();
-		addMenuElement("-1", iwrb.getLocalizedString("run_year_ddd.select_run","Select run..."));
-		if(runs != null) {
+		addMenuElement("-1", iwrb.getLocalizedString("run_year_ddd.select_run", "Select run..."));
+		if (runs != null) {
 			Iterator iter = runs.iterator();
 			while (iter.hasNext()) {
 				Group run = (Group) iter.next();
 				String runnerYearString = yearString;
-				
+
 				boolean show = false;
 				boolean finished = true;
 				Map yearMap = getRunBusiness(iwc).getYearsMap(run);
@@ -88,7 +88,7 @@ public class ActiveRunDropDownMenu extends DropdownMenu {
 			setSelectedElement(this.runner.getRun().getPrimaryKey().toString());
 		}
 	}
-	
+
 	protected RunBusiness getRunBusiness(IWApplicationContext iwac) {
 		try {
 			return (RunBusiness) IBOLookup.getServiceInstance(iwac, RunBusiness.class);
@@ -97,7 +97,7 @@ public class ActiveRunDropDownMenu extends DropdownMenu {
 			throw new IBORuntimeException(e);
 		}
 	}
-	
+
 	public String getBundleIdentifier() {
 		return IW_BUNDLE_IDENTIFIER;
 	}
