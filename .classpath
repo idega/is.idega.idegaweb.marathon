@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <classpath>
   <classpathentry excluding="" kind="src" path="src/java">
   </classpathentry>
@@ -48,6 +47,8 @@
   <classpathentry kind="var" path="MAVEN_REPO/jta/jars/jta-spec1_0_1.jar">
   </classpathentry>
   <classpathentry kind="src" path="/com.idega.block.web2.0">
+  </classpathentry>
+  <classpathentry kind="src" path="/com.idega.block.entity">
   </classpathentry>
   <classpathentry kind="output" path="target/classes">
   </classpathentry>
