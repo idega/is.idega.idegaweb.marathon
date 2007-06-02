@@ -1,5 +1,5 @@
 /*
- * $Id: DistanceBMPBean.java,v 1.7 2007/02/26 15:31:36 idegaweb Exp $
+ * $Id: DistanceBMPBean.java,v 1.8 2007/06/02 18:05:53 tryggvil Exp $
  * Created on May 22, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -16,10 +16,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/02/26 15:31:36 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/06/02 18:05:53 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class DistanceBMPBean extends GroupBMPBean  implements Group, Distance{
 
@@ -37,6 +37,9 @@ public class DistanceBMPBean extends GroupBMPBean  implements Group, Distance{
 	private static final String METADATA_NEXT_PARTICIPANT_NUMBER = "next_participant_number";
 	private static final String METADATA_NUMBER_OF_SPLITS = "number_of_splits";
 
+	//Suffix that all distance groups are suffixed with in their name
+	public static final String KM_SUFFIX="_km";
+	
 	public boolean isUseChip() {
 		String useChip = this.getMetaData(METADATA_USE_CHIP);
 		if (useChip != null) {
@@ -179,4 +182,28 @@ public class DistanceBMPBean extends GroupBMPBean  implements Group, Distance{
 	public void setNumberOfSplits(int number) {
 		setMetaData(METADATA_NUMBER_OF_SPLITS, String.valueOf(number), "java.lang.Integer");
 	}
+	
+	/**
+	 * <p>
+	 * Returns the distance set on the group in KiloMeters.
+	 * Returns -1 when an error occurs or distance not decipherable.
+	 * </p>
+	 * @return
+	 */
+	public int getDistanceInKms(){
+		String name = getName();
+		int kmIndex = name.indexOf(KM_SUFFIX);
+		if(kmIndex!=-1){
+			String distStr = name.substring(0,kmIndex);
+			try{
+				int distance = Integer.parseInt(distStr);
+				return distance;
+			}
+			catch(NumberFormatException nfe){
+				nfe.printStackTrace();
+			}
+		}
+		return -1;
+	}
+	
 }

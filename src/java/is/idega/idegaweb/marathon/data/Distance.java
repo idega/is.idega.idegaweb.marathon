@@ -1,5 +1,5 @@
 /*
- * $Id: Distance.java,v 1.6 2007/02/26 15:31:36 idegaweb Exp $
+ * $Id: Distance.java,v 1.7 2007/06/02 18:05:53 tryggvil Exp $
  * Created on Aug 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -14,10 +14,10 @@ import com.idega.user.data.Group;
 
 
 /**
- * Last modified: $Date: 2007/02/26 15:31:36 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/06/02 18:05:53 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public interface Distance extends Group {
 
@@ -125,4 +125,12 @@ public interface Distance extends Group {
 	 * @see is.idega.idegaweb.marathon.data.DistanceBMPBean#setNumberOfSplits
 	 */
 	public void setNumberOfSplits(int number);
+	/**
+	 * <p>
+	 * Returns the distance set on the group in KiloMeters.
+	 * Returns -1 when an error occurs or distance not decipherable.
+	 * </p>
+	 * @return
+	 */
+	public int getDistanceInKms();
 }
