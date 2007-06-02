@@ -12,7 +12,7 @@ public interface Charity extends IDOEntity {
 	/**
 	 * @see is.idega.idegaweb.marathon.data.CharityBMPBean#getPersonalID
 	 */
-	public String getPersonalID();
+	public String getOrganizationalID();
 
 	/**
 	 * @see is.idega.idegaweb.marathon.data.CharityBMPBean#setName
@@ -22,5 +22,5 @@ public interface Charity extends IDOEntity {
 	/**
 	 * @see is.idega.idegaweb.marathon.data.CharityBMPBean#setPersonalID
 	 */
-	public void setPersonalID(String personalID);
+	public void setOrganizationalID(String personalID);
 }
