@@ -1,5 +1,5 @@
 /*
- * $Id: RunBlock.java,v 1.6 2007/03/28 15:21:43 sigtryggur Exp $
+ * $Id: RunBlock.java,v 1.7 2007/06/02 21:13:55 sigtryggur Exp $
  * Created on May 17, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -30,14 +30,15 @@ import com.idega.presentation.ui.GenericButton;
 import com.idega.presentation.ui.InterfaceObject;
 import com.idega.presentation.ui.RadioButton;
 import com.idega.user.business.GenderBusiness;
+import com.idega.user.business.GroupBusiness;
 import com.idega.user.business.UserBusiness;
 
 
 /**
- * Last modified: $Date: 2007/03/28 15:21:43 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/02 21:13:55 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class RunBlock extends Block {
 
@@ -141,6 +142,15 @@ public class RunBlock extends Block {
 	protected UserBusiness getUserBusiness(IWApplicationContext iwac) {
 		try {
 			return (UserBusiness) IBOLookup.getServiceInstance(iwac, UserBusiness.class);
+		}
+		catch (IBOLookupException e) {
+			throw new IBORuntimeException(e);
+		}
+	}
+
+	protected GroupBusiness getGroupBusiness(IWApplicationContext iwac) {
+		try {
+			return (GroupBusiness) IBOLookup.getServiceInstance(iwac, GroupBusiness.class);
 		}
 		catch (IBOLookupException e) {
 			throw new IBORuntimeException(e);
