@@ -2,9 +2,9 @@ package is.idega.idegaweb.marathon.data;
 
 
 import java.util.Collection;
-
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
+import com.idega.data.IDOEntity;
 import com.idega.data.IDOFactory;
 
 public class CharityHomeImpl extends IDOFactory implements CharityHome {
@@ -19,11 +19,18 @@ public class CharityHomeImpl extends IDOFactory implements CharityHome {
 	public Charity findByPrimaryKey(Object pk) throws FinderException {
 		return (Charity) super.findByPrimaryKeyIDO(pk);
 	}
-	
-	public java.util.Collection findAllCharities()throws javax.ejb.FinderException{
-		com.idega.data.IDOEntity entity = this.idoCheckOutPooledEntity();
-		java.util.Collection ids = ((CharityBMPBean)entity).ejbFindAllCharities();
+
+	public Collection findAllCharities() throws FinderException {
+		IDOEntity entity = this.idoCheckOutPooledEntity();
+		Collection ids = ((CharityBMPBean) entity).ejbFindAllCharities();
 		this.idoCheckInPooledEntity(entity);
 		return this.getEntityCollectionForPrimaryKeys(ids);
+	}
+
+	public Charity findCharityByOrganizationalId(String organizationalId) throws FinderException {
+		IDOEntity entity = this.idoCheckOutPooledEntity();
+		Object pk = ((CharityBMPBean) entity).ejbFindCharityByOrganizationalId(organizationalId);
+		this.idoCheckInPooledEntity(entity);
+		return this.findByPrimaryKey(pk);
 	}
 }
