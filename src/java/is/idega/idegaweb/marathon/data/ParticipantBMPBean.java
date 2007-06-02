@@ -5,11 +5,13 @@ package is.idega.idegaweb.marathon.data;
 
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Iterator;
 
 import javax.ejb.FinderException;
 
 import com.idega.data.GenericEntity;
 import com.idega.data.IDOException;
+import com.idega.data.IDOLookupException;
 import com.idega.data.IDOQuery;
 import com.idega.data.query.Column;
 import com.idega.data.query.CountColumn;
@@ -19,6 +21,7 @@ import com.idega.data.query.SelectQuery;
 import com.idega.data.query.Table;
 import com.idega.data.query.WildCardColumn;
 import com.idega.user.data.Group;
+import com.idega.user.data.GroupHome;
 import com.idega.user.data.User;
 
 /**
@@ -61,6 +64,9 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		addAttribute(getColumnNamePayMethod(), "Pay method", true, true, String.class);
 		addAttribute(getColumnNameAmountPayed(), "Amount payed", true, true, String.class);
 		addAttribute(getColumnNameTransportOrdered(), "Transport ordered", true, true, String.class);
+		
+		addAttribute(getColumnNameCharityId(), "CharityId", true, true, String.class);
+		addAttribute(getColumnNameMaySponsorContact(), "May Sponsor Contact", true, true, Boolean.class);
 	}
 
 	public static String getEntityTableName() {
@@ -155,6 +161,14 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		return "transport_ordered";
 	}
 
+	public static String getColumnNameCharityId() {
+		return "charity_organizational_id";
+	}
+
+	public static String getColumnNameMaySponsorContact() {
+		return "may_sponsor_contact";
+	}
+	
 	public String getIDColumnName() {
 		return getColumnNameRunID();
 	}
@@ -188,8 +202,17 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		return getIntColumnValue(getColumnNameRunDistanceGroupID());
 	}
 
-	public Group getRunDistanceGroup() {
-		return (Group) getColumnValue(getColumnNameRunDistanceGroupID());
+	public Distance getRunDistanceGroup() {
+		
+		int distanceGroupId = getIntColumnValue(getColumnNameRunDistanceGroupID());
+		DistanceHome dHome;
+		try {
+			dHome = (DistanceHome) getIDOHome(Distance.class);
+			return (Distance) dHome.findByPrimaryKey(new Integer(distanceGroupId));
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
 	}
 
 	public int getRunGroupGroupID() {
@@ -377,6 +400,30 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		setColumn(getColumnNameTransportOrdered(),transportOrdered);
 	}
 
+	public void setCharityId(String charityId) {
+		setColumn(getColumnNameCharityId(),charityId);
+	}
+	
+	public String getCharityId() {
+		return getStringColumnValue(getColumnNameCharityId());
+	}
+	
+	public boolean getParticipatesInCharity(){
+		String charityId = getCharityId();
+		if(charityId!=null){
+			return true;
+		}
+		return false;
+	}
+	
+	public void setMaySponsorContact(String mayContact) {
+		setColumn(getColumnNameMaySponsorContact(),mayContact);
+	}
+	
+	public boolean getMaySponsorContact() {
+		return getBooleanColumnValue(getColumnNameMaySponsorContact());
+	}
+	
 	public Collection ejbFindAll() throws FinderException {
 		Table table = new Table(this);
 		
@@ -490,5 +537,34 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 			query.appendAnd().append(getColumnNameRunDistanceGroupID()).appendNOTEqual().append(distanceIDtoIgnore);
 		}
 		return super.idoFindPKsByQuery(query);		
+	}
+	
+	public Collection ejbFindAllByRunGroupIdAndYearGroupId(int runId, int yearId) throws FinderException{
+		IDOQuery query = idoQueryGetSelect();
+		//query.appendWhereEquals(getColumnNameUserID(),user);
+		query.appendWhereEquals(getColumnNameRunTypeGroupID(),runId);
+		query.appendAndEquals(getColumnNameRunYearGroupID(),yearId);
+		return super.idoFindPKsByQuery(query);
+	}
+	
+	public Collection ejbFindAllByRunGroupIdAndYear(int runId, int year) throws FinderException{
+		
+		GroupHome groupHome;
+		try {
+			groupHome = (GroupHome) getIDOHome(Group.class);
+		} catch (IDOLookupException e) {
+			throw new RuntimeException(e);
+		}
+		Group runGroup = groupHome.findByPrimaryKey(new Integer(runId));
+		Collection childrenGroups = runGroup.getChildren();
+		Integer yearId = new Integer(-1);
+		for (Iterator iter = childrenGroups.iterator(); iter.hasNext();) {
+			Group childGroup = (Group) iter.next();
+			if(childGroup.getName().equals(Integer.toString(year))){
+				yearId = (Integer) childGroup.getPrimaryKey();
+			}
+		}
+		
+		return ejbFindAllByRunGroupIdAndYearGroupId(runId,yearId.intValue());
 	}
 }

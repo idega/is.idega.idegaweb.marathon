@@ -1,27 +1,11 @@
-/*
- * $Id: Participant.java,v 1.8 2007/03/09 09:22:34 idegaweb Exp $
- * Created on Aug 16, 2005
- *
- * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
- *
- * This software is the proprietary information of Idega hf.
- * Use is subject to license terms.
- */
 package is.idega.idegaweb.marathon.data;
 
-import com.idega.data.IDOEntity;
+
 import com.idega.user.data.Group;
 import com.idega.user.data.User;
+import com.idega.data.IDOEntity;
 
-
-/**
- * Last modified: $Date: 2007/03/09 09:22:34 $ by $Author: idegaweb $
- * 
- * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.8 $
- */
 public interface Participant extends IDOEntity {
-
 	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getRunID
 	 */
@@ -55,7 +39,7 @@ public interface Participant extends IDOEntity {
 	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getRunDistanceGroup
 	 */
-	public Group getRunDistanceGroup();
+	public Distance getRunDistanceGroup();
 
 	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getRunGroupGroupID
@@ -281,9 +265,34 @@ public interface Participant extends IDOEntity {
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setPayedAmount
 	 */
 	public void setPayedAmount(String amount);
-	
+
 	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setTransportOrdered
 	 */
 	public void setTransportOrdered(String transportOrdered);
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setCharityId
+	 */
+	public void setCharityId(String charityId);
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getCharityId
+	 */
+	public String getCharityId();
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getParticipatesInCharity
+	 */
+	public boolean getParticipatesInCharity();
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setMaySponsorContact
+	 */
+	public void setMaySponsorContact(String mayContact);
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getMaySponsorContact
+	 */
+	public boolean getMaySponsorContact();
 }
