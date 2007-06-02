@@ -12,7 +12,7 @@
     <project>com.idega.block.text</project>
     <project>com.idega.block.creditcard</project>
     <project>is.idega.block.family</project>
-    <project>is.idega.block.entity</project>
+    <project>com.idega.block.entity</project>
   </projects>
   <buildSpec>
     <buildCommand>
