@@ -5,7 +5,7 @@
   <pomVersion>3</pomVersion>
   <name>idegaWeb Marathon</name>
   <artifactId>is.idega.idegaweb.marathon</artifactId>
-  <currentVersion>3.1.12</currentVersion>
+  <currentVersion>3.1.13</currentVersion>
   <inceptionYear>2000</inceptionYear>
   <shortDescription>Marathon</shortDescription>
   <versions>
@@ -78,6 +78,11 @@
       <id>3.1.12</id>
       <name>3.1.12</name>
       <tag>MARATHON_3_1_12</tag>
+    </version>
+    <version>
+      <id>3.1.13</id>
+      <name>3.1.13</name>
+      <tag>MARATHON_3_1_13</tag>
     </version>
   </versions>
   <branches/>
@@ -195,7 +200,7 @@
     <dependency>
       <groupId>bundles</groupId>
       <artifactId>com.idega.block.entity</artifactId>
-      <version>3.0.1</version>
+      <version>3.1.0</version>
       <type>jar</type>
       <url>http://www.idega.com/</url>
       <properties>
