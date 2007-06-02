@@ -37,7 +37,7 @@ public class CharitiesForRunDropDownMenu extends DropdownMenu {
 			Iterator iter = charities.iterator();
 			while (iter.hasNext()) {
 				Charity charity = (Charity) iter.next();
-				addMenuElement(charity.getPrimaryKey().toString(), charity.getName());
+				addMenuElement(charity.getOrganizationalID(), charity.getName());
 			}
 		}
 	}
