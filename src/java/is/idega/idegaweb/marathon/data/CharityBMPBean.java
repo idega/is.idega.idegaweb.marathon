@@ -9,6 +9,7 @@ import com.idega.data.query.Column;
 import com.idega.data.query.MatchCriteria;
 import com.idega.data.query.SelectQuery;
 import com.idega.data.query.Table;
+import com.idega.data.query.WildCardColumn;
 
 public class CharityBMPBean extends GenericEntity implements Charity {
 
@@ -52,6 +53,7 @@ public class CharityBMPBean extends GenericEntity implements Charity {
 		Column orgId = new Column(table, COLUMN_NAME_ORGANIZATIONAL_ID);
 		
 		SelectQuery query = new SelectQuery(table);
+		query.addColumn(new WildCardColumn(table));
 		query.addCriteria(new MatchCriteria(orgId, MatchCriteria.EQUALS, organizationalId));
 		
 		return idoFindOnePKByQuery(query);
