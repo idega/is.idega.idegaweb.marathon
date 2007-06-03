@@ -16,9 +16,18 @@ public class CharityBusinessBean extends IBOServiceBean implements CharityBusine
 	
 	private CharityHome charityHome;
 	
-	public Collection getCharities() throws EJBException, RemoteException {
+	public Collection getCharities() throws EJBException {
 		try {
 			return getCharityHome().findAllCharities();
+		}
+		catch (FinderException fe) {
+			return null;
+		}
+	}
+	
+	public Charity getCharityByOrganisationalID(String organizationalId) throws EJBException {
+		try {
+			return getCharityHome().findCharityByOrganizationalId(organizationalId);
 		}
 		catch (FinderException fe) {
 			return null;
