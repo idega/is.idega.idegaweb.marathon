@@ -1,4 +1,5 @@
 10_km=10_km
+10_km_short_name=10_km
 1_5_km=1_5_km
 2003=2003
 2004=2004
@@ -7,9 +8,13 @@
 2007=2007
 21_km=21_km
 21_km_charity=21_km_charity
+21_km_short_name=21_km
 3_km=3_km
+3_km_short_name=3_km
 42_km=42_km
 42_km_charity=42_km_charity
+42_km_charity_short_name=42_km_charity
+42_km_short_name=42_km
 55_km=55_km
 55_km_with_bus=55_km_with_bus
 5_km=5_km
