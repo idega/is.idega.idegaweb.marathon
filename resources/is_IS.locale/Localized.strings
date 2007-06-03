@@ -1,4 +1,5 @@
 10_km=10 km (t\u00EDmataka)
+10_km_short_name=10 km
 1_5_km=Latab\u00E6jarhlaup (1,5 km)
 2003=2003
 2004=2004
@@ -7,9 +8,13 @@
 2007=2007
 21_km=21 km h\u00E1lfmara\u00FEon
 21_km_charity=21 km h\u00E1lfmara\u00FEon (lengur en 5 klst)
+21_km_short_name=21 km
 3_km=3 km skemmtiskokk (ekki t\u00EDmataka)
+3_km_short_name=3 km
 42_km=42.2 km mara\u00FEon (undir 5 klst)
 42_km_charity=42.2 km mara\u00FEon (lengur en 5 klst)
+42_km_charity_short_name=42 km
+42_km_short_name=42 km
 55_km=55 km
 55_km_with_bus=55 km (me\u00F0 r\u00FAtu)
 5_km=5 km (t\u00EDmataka)
