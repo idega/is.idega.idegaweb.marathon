@@ -2,13 +2,15 @@ package is.idega.idegaweb.marathon.presentation;
 
 import is.idega.idegaweb.marathon.data.Charity;
 import is.idega.idegaweb.marathon.data.Participant;
-import is.idega.idegaweb.marathon.data.ParticipantHome;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
+
+import javax.ejb.FinderException;
 
 
 import com.idega.block.entity.business.EntityToPresentationObjectConverter;
@@ -31,6 +33,7 @@ import com.idega.user.data.Group;
 import com.idega.user.data.User;
 import com.idega.user.data.UserHome;
 import com.idega.util.IWColor;
+import com.idega.util.IWTimestamp;
 
 public class PledgeWizard extends RunBlock {
 	
@@ -93,17 +96,15 @@ public class PledgeWizard extends RunBlock {
 	
 	private void stepOne(IWContext iwc) {
 		Form form = new Form();
-		form.maintainParameter(PARAMETER_PERSONAL_ID);
+		//form.maintainParameter(PARAMETER_PERSONAL_ID);
 		//form.addParameter(PARAMETER_ACTION, ACTION_STEP_TWO);
 		
 		form.add(getPhasesTable(1, 4, "run_reg.make_pledge", "Make a pledge"));
 		form.add(localize("run_reg.pledge_information_text_step_1", "Information text 1..."));
 		
 		TextInput personalIDInput = new TextInput(PARAMETER_PERSONAL_ID);
-		//input.setAsIcelandicSSNumber(localize("run_reg.not_valid_personal_id", "The personal ID you've entered is not valid"));
 		personalIDInput.setLength(10);
 		personalIDInput.setMaxlength(10);
-		//input.setInFocusOnPageLoad(true);
 		Layer personalIDLayer = new Layer(Layer.DIV);
 		personalIDLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
 		Label personalIDLabel = new Label(localize("run_reg.personal_id", "Personal ID") + ":", personalIDInput);
@@ -147,52 +148,68 @@ public class PledgeWizard extends RunBlock {
 		charityDropDownLayer.add(charityDropDown);
 		form.add(charityDropDownLayer);
 		form.add(new Break());
-		
-		SubmitButton search = new SubmitButton(PARAMETER_SEARCH, localize("search", "Search"));
-		form.add(search);
 
-		if (iwc.isParameterSet(PARAMETER_SEARCH)) {
+		SubmitButton search;
+		if (iwc.isParameterSet(PARAMETER_FIRST_NAME)){
+			firstNameInput.setValue(iwc.getParameter(PARAMETER_FIRST_NAME));
+		}
+		if (iwc.isParameterSet(PARAMETER_SEARCH) || iwc.isParameterSet(EntityBrowser.HEADER_FORM_KEY + EntityBrowser.SHOW_ALL_KEY)) {
 			
+			search = new SubmitButton(localize("search_again", "Search again"),PARAMETER_SEARCH, PARAMETER_SEARCH);
+			form.add(search);
 			String first = iwc.getParameter(PARAMETER_FIRST_NAME);
 			String middle = iwc.getParameter(PARAMETER_MIDDLE_NAME);
 			String last = iwc.getParameter(PARAMETER_LAST_NAME);
 			String pid = iwc.getParameter(PARAMETER_PERSONAL_ID);
 			String charity = iwc.getParameter(PARAMETER_CHARITY);
-			try {
-				UserHome userHome = (UserHome) IDOLookup.getHome(User.class);
-				ParticipantHome runHome = (ParticipantHome) IDOLookup.getHome(Participant.class);
-				
-				
-		        Collection groups = null;
-				Group run = null;
-				if (this.runGroupID != -1) {
-					run = getGroupBusiness(iwc).getGroupByGroupID(this.runGroupID);
-				}
-		    
-			if (run != null) {
-				Collection groupTypesFilter = new ArrayList();
-				groupTypesFilter.add(IWMarathonConstants.GROUP_TYPE_RUN_GROUP);
-				groups = getGroupBusiness(iwc).getChildGroupsRecursiveResultFiltered(run, groupTypesFilter, true, true, true);
-			}
 			
-			String[] group_id = {"346530"};
-			group_id = new String[groups.size()];
-			Iterator grIt = groups.iterator();
-			for (int i=0; grIt.hasNext(); i++) {
-				Group group = (Group)grIt.next();
-				group_id[i] = group.getPrimaryKey().toString();
-			}
-				Collection usersFound = userHome.findUsersByConditions(first, middle, last, pid, null, null, -1, -1, -1, -1, group_id, null, true, false);
-				EntityBrowser browser = getBrowser(usersFound, iwc);
-		        form.add(browser);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			SubmitButton next = new SubmitButton(localize("next", "Next"), PARAMETER_ACTION, String.valueOf(ACTION_STEP_PERSONAL_DETAILS));
-			form.add(next);
+			if (this.runGroupID != -1) {
+				try {
+					Group runYear = getGroupBusiness(iwc).getGroupByGroupID(this.runGroupID);
+					Group run = getRunBusiness(iwc).getRunGroupOfTypeForGroup(runYear, IWMarathonConstants.GROUP_TYPE_RUN);
+					Collection groupTypesFilter = new ArrayList();
+					groupTypesFilter.add(IWMarathonConstants.GROUP_TYPE_RUN_GROUP);
+					Collection runnerGroups = getGroupBusiness(iwc).getChildGroupsRecursiveResultFiltered(runYear, groupTypesFilter, true, true, true);
+					String[] group_ids = new String[runnerGroups.size()];
+					Iterator grIt = runnerGroups.iterator();
+					for (int i=0; grIt.hasNext(); i++) {
+						Group group = (Group)grIt.next();
+						group_ids[i] = group.getPrimaryKey().toString();
+					}
+					UserHome userHome = (UserHome) IDOLookup.getHome(User.class);
+					Collection usersFound = userHome.findUsersByConditions(first, middle, last, pid, null, null, -1, -1, -1, -1, group_ids, null, true, false);
+					Collection runRegistrations = new ArrayList();
+					Iterator userIt = usersFound.iterator();
+					while (userIt.hasNext()) {
+						User user = (User)userIt.next();
+						Participant runRegistration = getRunBusiness(iwc).getParticipantByRunAndYear(user, run, runYear);
+						
+						if (charity.equals("-1") || (runRegistration.getCharityId() != null && runRegistration.getCharityId().equals(charity))) {
+							if (runRegistration.getCharityId() != null && runRegistration.getCharityId() != "-1") {
+								runRegistrations.add(runRegistration);
+							}
+						}
+					}
+					if (runRegistrations.isEmpty()) {
+						form.add(new Text(localize("no_runners_found", "No runners found")));
+					} else {
+						EntityBrowser browser = getBrowser(runRegistrations, iwc);
+						form.add(browser);
+						SubmitButton next = new SubmitButton(localize("next", "Next"), PARAMETER_ACTION, String.valueOf(ACTION_STEP_PERSONAL_DETAILS));
+						form.add(next);
+					}
+				} catch (FinderException e) {
+					e.printStackTrace();
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
+			} 
+		} else {
+			search = new SubmitButton(localize("search", "Search"),PARAMETER_SEARCH, PARAMETER_SEARCH);
+			form.add(search);
 		}
 		add(form);
-	}
+	} 
 	
 	private void stepTwo(IWContext iwc) {
 		Form form = new Form();
@@ -257,50 +274,84 @@ public class PledgeWizard extends RunBlock {
 	}
 	
 	private EntityBrowser getBrowser(Collection entities, IWContext iwc)  {
-	    // define checkbox button converter class
-	    EntityToPresentationObjectConverter converterToChooseButton = new EntityToPresentationObjectConverter() {
-	      public PresentationObject getHeaderPresentationObject(EntityPath entityPath, EntityBrowser browser, IWContext iwc) {
-	        return browser.getDefaultConverter().getHeaderPresentationObject(entityPath, browser, iwc);  
-	      } 
-
-	      public PresentationObject getPresentationObject(Object entity, EntityPath path, EntityBrowser browser, IWContext iwc) {
-	        User user = (User) entity;
-	        RadioButton radioButton = new RadioButton(PARAMETER_USER_ID, user.getPrimaryKey().toString());
-	        radioButton.setMustBeSelected(localize("must_be_selected", "You must select person"));
-	        return radioButton;
-	      }
-	    };
-	    
-	    EntityToPresentationObjectConverter converterCharity = new EntityToPresentationObjectConverter() {
-            public PresentationObject getHeaderPresentationObject(EntityPath entityPath, EntityBrowser browser, IWContext iwc) {
-              return browser.getDefaultConverter().getHeaderPresentationObject(entityPath, browser, iwc);
-          }
-          
-          public PresentationObject getPresentationObject(Object entity, EntityPath path, EntityBrowser browser, IWContext iwc) {
-              Participant participant = (Participant) entity;
-              Charity charity = null;
-              String charitySSN = null;
-//              try {
-//            	  charitySSN = null;//getRunBusiness(iwc).getCharityForRunner(participant, null, null);
-//              }
-//              catch (RemoteException e) {
-//                  e.printStackTrace();
-//              }
-              Text text = null;
-              if (charity!= null) {
-				text = new Text(charity.getName());
+		// define checkbox button converter class
+		EntityToPresentationObjectConverter converterToChooseButton = new EntityToPresentationObjectConverter() {
+			public PresentationObject getHeaderPresentationObject(EntityPath entityPath, EntityBrowser browser, IWContext iwc) {
+				return browser.getDefaultConverter().getHeaderPresentationObject(entityPath, browser, iwc);
 			}
-              return text; 
-          }
-        };
+
+			public PresentationObject getPresentationObject(Object entity, EntityPath path, EntityBrowser browser, IWContext iwc) {
+				Participant participant = (Participant) entity;
+				RadioButton radioButton = new RadioButton(PARAMETER_USER_ID, participant.getUser().getPrimaryKey().toString());
+				radioButton.setMustBeSelected(localize("must_be_selected", "You must select person"));
+				return radioButton;
+			}
+		};
+		
+		EntityToPresentationObjectConverter converterToCharityOrganization = new EntityToPresentationObjectConverter() {
+			public PresentationObject getHeaderPresentationObject(EntityPath entityPath, EntityBrowser browser, IWContext iwc) {
+				return browser.getDefaultConverter().getHeaderPresentationObject(entityPath, browser, iwc);
+			}
+
+			public PresentationObject getPresentationObject(Object entity, EntityPath path, EntityBrowser browser, IWContext iwc) {
+				Participant participant = (Participant) entity;
+				String charityString = "";
+				try {
+					Charity charity = getCharityBusiness(iwc).getCharityByOrganisationalID(participant.getCharityId());
+					charityString = charity.getName();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				Text charityOrganisation = new Text(charityString);
+				return charityOrganisation;
+			}
+		};
+
+		EntityToPresentationObjectConverter converterToUserName = new EntityToPresentationObjectConverter() {
+			public PresentationObject getHeaderPresentationObject(EntityPath entityPath, EntityBrowser browser, IWContext iwc) {
+				return browser.getDefaultConverter().getHeaderPresentationObject(entityPath, browser, iwc);
+			}
+
+			public PresentationObject getPresentationObject(Object entity, EntityPath path, EntityBrowser browser, IWContext iwc) {
+				Participant participant = (Participant) entity;
+				return  new Text(participant.getUser().getName());
+			}
+		};
+		
+		EntityToPresentationObjectConverter converterToDistanceName = new EntityToPresentationObjectConverter() {
+			public PresentationObject getHeaderPresentationObject(EntityPath entityPath, EntityBrowser browser, IWContext iwc) {
+				return browser.getDefaultConverter().getHeaderPresentationObject(entityPath, browser, iwc);
+			}
+
+			public PresentationObject getPresentationObject(Object entity, EntityPath path, EntityBrowser browser, IWContext iwc) {
+				Participant participant = (Participant) entity;
+				return  new Text(localize(participant.getRunDistanceGroup().getName()+ "_short_name",participant.getRunDistanceGroup().getName()));
+			}
+		};
+		
+		EntityToPresentationObjectConverter converterToUserPersonalID = new EntityToPresentationObjectConverter() {
+			public PresentationObject getHeaderPresentationObject(EntityPath entityPath, EntityBrowser browser, IWContext iwc) {
+				return browser.getDefaultConverter().getHeaderPresentationObject(entityPath, browser, iwc);
+			}
+
+			public PresentationObject getPresentationObject(Object entity, EntityPath path, EntityBrowser browser, IWContext iwc) {
+				Participant participant = (Participant) entity;
+				Date dob = participant.getUser().getDateOfBirth();
+				IWTimestamp dobStamp = new IWTimestamp(dob);
+				return  new Text(dobStamp.getDateString("dd. MMM yyyy", iwc.getCurrentLocale()));
+			}
+		};
+
 
 	    // set default columns
-	    String nameKey = User.class.getName()+".FIRST_NAME:" + User.class.getName()+".MIDDLE_NAME:"+User.class.getName()+".LAST_NAME";
-	    String pinKey = User.class.getName()+".PERSONAL_ID";
-	    //String charityKey = Charity.class.getName()+".NAME";
-	    EntityBrowser browser = EntityBrowser.getInstanceUsingExternalForm();
+		String nameKey = User.class.getName()+".FIRST_NAME:" + User.class.getName()+".MIDDLE_NAME:"+User.class.getName()+".LAST_NAME";
+	    String pinKey = User.class.getName()+".DATE_OF_BIRTH";
+	    String distanceKey = Group.class.getName()+".DISTANCE";
+	    String charityKey = Participant.class.getName()+".CHARITY_ORGANIZATIONAL_ID";
+	    EntityBrowser browser = EntityBrowser.getInstance();
 	    browser.setAcceptUserSettingsShowUserSettingsButton(false, false);
 	    browser.setDefaultNumberOfRows(NUMBER_OF_ROWS);
+	    browser.setUseExternalForm(true);
 	    browser.setEntities("pledge_wizard", entities);
 	    browser.setWidth(Table.HUNDRED_PERCENT);
 	    //fonts
@@ -313,10 +364,18 @@ public class PledgeWizard extends RunBlock {
 	      
 	    browser.setDefaultColumn(1, nameKey);
 	    browser.setDefaultColumn(2, pinKey);
-	    //browser.setDefaultColumn(3, charityKey);
+	    browser.setDefaultColumn(3, distanceKey);
+	    browser.setDefaultColumn(4, charityKey);
 	    browser.setMandatoryColumn(1, "Choose");
+        // set foreign entities
+        browser.addEntity(User.class.getName());
+        browser.addEntity(Group.class.getName());
 	    // set special converters
 	    browser.setEntityToPresentationConverter("Choose", converterToChooseButton);
+	    browser.setEntityToPresentationConverter(nameKey, converterToUserName);
+	    browser.setEntityToPresentationConverter(pinKey, converterToUserPersonalID);
+	    browser.setEntityToPresentationConverter(distanceKey, converterToDistanceName);
+	    browser.setEntityToPresentationConverter(charityKey, converterToCharityOrganization);
 	    return browser;
 	}
 	
