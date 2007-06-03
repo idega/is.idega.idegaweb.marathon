@@ -30,7 +30,7 @@
                             <key>
                               <name>iw_method_param_handler</name>
                               <type>java.lang.String</type>
-                              <value />
+                              <value>com.idega.user.handler.GroupHandler</value>
                             </key>
                             <key>
                               <name>iw_method_param_prim_key</name>
@@ -40,7 +40,7 @@
                             <key>
                               <name>iw_method_param_desc</name>
                               <type>java.lang.String</type>
-                              <value>Run Group</value>
+                              <value>Run Year Group</value>
                             </key>
                           </map>
                         </value>
@@ -58,7 +58,7 @@
                 <key>
                   <name>iw_method_description</name>
                   <type>java.lang.String</type>
-                  <value>Run Group</value>
+                  <value>Run Year Group</value>
                 </key>
                 <key>
                   <name>iw_method_identifier</name>
