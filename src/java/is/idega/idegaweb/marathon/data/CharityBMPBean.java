@@ -7,14 +7,12 @@ import javax.ejb.FinderException;
 import com.idega.data.GenericEntity;
 import com.idega.data.query.Column;
 import com.idega.data.query.MatchCriteria;
-import com.idega.data.query.OR;
 import com.idega.data.query.SelectQuery;
 import com.idega.data.query.Table;
-import com.idega.data.query.WildCardColumn;
 
 public class CharityBMPBean extends GenericEntity implements Charity {
 
-	protected static final String ENTITY_NAME = "ic_charity_organization";
+	protected static final String ENTITY_NAME = "run_charity_organization";
 	protected static final String COLUMN_NAME_NAME = "name";
 	protected static final String COLUMN_NAME_ORGANIZATIONAL_ID = "organizational_id";
 	
