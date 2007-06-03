@@ -1,5 +1,5 @@
 /*
- * $Id: RunBlock.java,v 1.7 2007/06/02 21:13:55 sigtryggur Exp $
+ * $Id: RunBlock.java,v 1.8 2007/06/03 15:24:18 sigtryggur Exp $
  * Created on May 17, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -9,6 +9,7 @@
  */
 package is.idega.idegaweb.marathon.presentation;
 
+import is.idega.idegaweb.marathon.business.CharityBusiness;
 import is.idega.idegaweb.marathon.business.RunBusiness;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 import java.util.HashMap;
@@ -35,10 +36,10 @@ import com.idega.user.business.UserBusiness;
 
 
 /**
- * Last modified: $Date: 2007/06/02 21:13:55 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/03 15:24:18 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class RunBlock extends Block {
 
@@ -133,6 +134,15 @@ public class RunBlock extends Block {
 	protected RunBusiness getRunBusiness(IWApplicationContext iwac) {
 		try {
 			return (RunBusiness) IBOLookup.getServiceInstance(iwac, RunBusiness.class);
+		}
+		catch (IBOLookupException e) {
+			throw new IBORuntimeException(e);
+		}
+	}
+	
+	protected CharityBusiness getCharityBusiness(IWApplicationContext iwac) {
+		try {
+			return (CharityBusiness) IBOLookup.getServiceInstance(iwac, CharityBusiness.class);
 		}
 		catch (IBOLookupException e) {
 			throw new IBORuntimeException(e);
