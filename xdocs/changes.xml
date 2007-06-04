@@ -5,9 +5,16 @@
 	</properties>
 	<body>
 
+	<release version="3.1.14" date="2007-06-04">
+		<action dev="sigtryggur" type="update">
+			Additions to PledgeWizard
+			Uppdated dependency to com.idega.block.entity to 3.1.1
+		</action>     
+	</release>
+	
 	<release version="3.1.13" date="2007-06-02">
 		<action dev="sigtryggur" type="update">
-			PledgeWizard and an extra step for charity in the registration-wizard
+			Early version of PledgeWizard and an extra step for charity in the registration-wizard
 		</action>     
 	</release>
 
