@@ -7,7 +7,12 @@ public interface Pledge extends IDOEntity {
 	/**
 	 * @see is.idega.idegaweb.marathon.data.PledgeBMPBean#getParticipantID
 	 */
-	public String getParticipantID();
+	public int getParticipantID();
+	
+	/**
+	 * @see is.idega.idegaweb.marathon.data.PledgeBMPBean#getParticipant
+	 */
+	public Participant getParticipant();
 
 	/**
 	 * @see is.idega.idegaweb.marathon.data.PledgeBMPBean#getOrganizationalID
@@ -32,7 +37,12 @@ public interface Pledge extends IDOEntity {
 	/**
 	 * @see is.idega.idegaweb.marathon.data.PledgeBMPBean#setParticipantID
 	 */
-	public void setParticipantID(String participantID);
+	public void setParticipantID(int participantID);
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.PledgeBMPBean#setParticipant
+	 */
+	public void setParticipant(Participant participant);
 
 	/**
 	 * @see is.idega.idegaweb.marathon.data.PledgeBMPBean#setOrganizationalID

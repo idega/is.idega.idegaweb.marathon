@@ -7,7 +7,7 @@ import javax.ejb.FinderException;
 import com.idega.data.GenericEntity;
 import com.idega.data.query.SelectQuery;
 
-public class PledgeBMPBean extends GenericEntity {
+public class PledgeBMPBean extends GenericEntity implements Pledge {
 
 	protected static final String ENTITY_NAME = "run_pledge";
 	protected static final String COLUMN_NAME_PARTICIPANT_ID = "participant_id";
@@ -29,9 +29,14 @@ public class PledgeBMPBean extends GenericEntity {
 		addAttribute(COLUMN_NAME_PAYMENT_TIMESTAMP, "Payment timestamp", true, true, String.class);
 	}
 	
-	public String getParticipantID() {
-		return (String) getColumnValue(COLUMN_NAME_PARTICIPANT_ID);
+	public int getParticipantID() {
+		return getIntColumnValue(COLUMN_NAME_PARTICIPANT_ID);
 	}
+	
+	public Participant getParticipant() {
+		return (Participant) getColumnValue(COLUMN_NAME_PARTICIPANT_ID);
+	}
+
 
 	public String getOrganizationalID() {
 		return (String) getColumnValue(COLUMN_NAME_ORGANIZATIONAL_ID);
@@ -49,8 +54,12 @@ public class PledgeBMPBean extends GenericEntity {
 		return (String) getColumnValue(COLUMN_NAME_PAYMENT_TIMESTAMP);
 	}
 	
-	public void setParticipantID(String participantID) {
+	public void setParticipantID(int participantID) {
 		setColumn(COLUMN_NAME_PARTICIPANT_ID, participantID);
+	}
+	
+	public void setParticipant(Participant participant) {
+		setColumn(COLUMN_NAME_PARTICIPANT_ID, participant);
 	}
 
 	public void setOrganizationalID(String organizationalID) {
