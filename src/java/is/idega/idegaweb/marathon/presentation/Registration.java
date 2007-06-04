@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.55 2007/06/04 22:00:43 tryggvil Exp $
+ * $Id: Registration.java,v 1.56 2007/06/04 22:32:45 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -46,6 +46,7 @@ import com.idega.presentation.Layer;
 import com.idega.presentation.Script;
 import com.idega.presentation.Table;
 import com.idega.presentation.remotescripting.RemoteScriptHandler;
+import com.idega.presentation.text.Break;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.CheckBox;
@@ -70,10 +71,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/04 22:00:43 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/06/04 22:32:45 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.55 $
+ * @version $Revision: 1.56 $
  */
 public class Registration extends RunBlock {
 	
@@ -1449,12 +1450,12 @@ public class Registration extends RunBlock {
 						if(distance!=null){
 							Year year = distance.getYear();
 							if(year!=null){
-								if(year.isCharityEnabled()){
-									action = ACTION_STEP_CHARITY;
-								}
-							}
-						}
+					if(year.isCharityEnabled()){
+						action = ACTION_STEP_CHARITY;
 					}
+				}
+			}
+		}
 					else{
 //						do nothing - go directly to DISCLAIMER step for english users
 					}
@@ -1590,11 +1591,9 @@ public class Registration extends RunBlock {
 		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_DISCLAIMER));
 		
 		table.add(getInformationTable(localize("run_reg.charity_headertext", "Now every runner can run for a good cause for a charity of his/her choice. On marathon.is it is now possible to search for all registered runners and pledge on each.")), 1, row++);
-		
-		DropdownMenu charities = new CharitiesForRunDropDownMenu(PARAMETER_CHARITY_ID);
-		//charities.setAsNotEmpty(errorMessage, emptyValue)
-		//charities.setAsNotEmpty("Must select");
-				
+
+		DropdownMenu charities = (CharitiesForRunDropDownMenu)(getStyledInterface(new CharitiesForRunDropDownMenu(PARAMETER_CHARITY_ID)));
+		charities.setWidth("300");
 		
 		Layer acceptCharityDiv = new Layer(Layer.DIV);
 		CheckBox acceptCharityCheck = getCheckBox(PARAMETER_ACCEPT_CHARITY , Boolean.TRUE.toString());
@@ -1608,7 +1607,7 @@ public class Registration extends RunBlock {
 		
 		table.add(charities,1,row++);
 		
-		
+
 		int pledgePerKilometerISK = this.runner.getDistance().getYear().getPledgedBySponsorPerKilometer();
 		int kilometersRun = this.runner.getDistance().getDistanceInKms();
 		int totalPledgedISK = pledgePerKilometerISK*kilometersRun;
@@ -1625,8 +1624,12 @@ public class Registration extends RunBlock {
 		Layer allowContactDiv = new Layer(Layer.DIV);
 		CheckBox allowContactCheck = getCheckBox(PARAMETER_ALLOW_CONTACT , Boolean.TRUE.toString());
 		Label allowContactLabel = new Label(localize("run_reg.allow_sponsor_contact", "I allow that an employee from the sponsor may contact me"),allowContactCheck);
+		Text footnoteText = new Text(localize("run_reg.footnoteText", ""));
 		allowContactDiv.add(allowContactCheck);
 		allowContactDiv.add(allowContactLabel);
+		allowContactDiv.add(new Break());
+		allowContactDiv.add(new Break());
+		allowContactDiv.add(footnoteText);
 		table.add(allowContactDiv,1,row++);
 		
 		/*
@@ -1666,7 +1669,7 @@ public class Registration extends RunBlock {
 		table.setAlignment(1, row, Table.HORIZONTAL_ALIGN_RIGHT);
 
 		add(form);
-		
+
 		String selectCharitiesMessage = localize("run_reg.must_select_charity", "Please select a valid charity");
 		charities.setOnSubmitFunction("checkCharities", "function checkCharities(){ var checkbox = findObj('"+PARAMETER_ACCEPT_CHARITY+"'); var charities = findObj('"+PARAMETER_CHARITY_ID+"');  if(checkbox.checked){if(charities.options[charities.selectedIndex].value=='-1'){ alert('"+selectCharitiesMessage+"'); return false;} } return true;}");
 
