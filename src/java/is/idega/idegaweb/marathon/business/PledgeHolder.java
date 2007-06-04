@@ -1,7 +1,6 @@
 package is.idega.idegaweb.marathon.business;
 
-import com.idega.user.data.Group;
-import com.idega.user.data.User;
+import is.idega.idegaweb.marathon.data.Participant;
 
 /**
  * A holder class for information about pledge in the PledgeWizard.
@@ -10,10 +9,7 @@ import com.idega.user.data.User;
  */
 
 public class PledgeHolder {
-	private User runner;
-	private Group run;
-	private Group year;
-	private Group distance;
+	private Participant participant;
 
 	private String firstNameFilter;
 	private String middleNameFilter;
@@ -28,7 +24,6 @@ public class PledgeHolder {
 	private String cardholderPersonalID;
 	
 	private boolean agreeToTerms;
-	
 	
 
 	public String getPersonalIDFilter() {
@@ -71,37 +66,12 @@ public class PledgeHolder {
 		this.charityFilter = charityFilter;
 	}
 	
-	public User getRunner() {
-		return this.runner;
+	public Participant getParticipant() {
+		return this.participant;
 	}
 
-	public void setRunner(User user) {
-		this.runner = user;
-	}
-
-	public Group getRun() {
-		return this.run;
-	}
-
-	public void setRun(Group run) {
-		this.run = run;
-	}
-
-	public Group getYear() {
-		return this.year;
-	}
-
-	public void setYear(Group year) {
-		this.year = year;
-	}
-
-	public Group getDistance() {
-		return this.distance;
-	}
-
-
-	public void setDistance(Group distance) {
-		this.distance = distance;
+	public void setParticipant(Participant participant) {
+		this.participant = participant;
 	}
 
 	public String getCardHolderName() {

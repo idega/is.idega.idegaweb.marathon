@@ -23,7 +23,6 @@ import com.idega.data.IDOCreateException;
 import com.idega.data.IDOLookup;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWResourceBundle;
-import com.idega.idegaweb.help.presentation.Help;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
@@ -32,7 +31,6 @@ import com.idega.presentation.Table;
 import com.idega.presentation.text.Break;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
-import com.idega.presentation.ui.CheckBox;
 import com.idega.presentation.ui.DropdownMenu;
 import com.idega.presentation.ui.Form;
 import com.idega.presentation.ui.HiddenInput;
@@ -193,7 +191,6 @@ public class PledgeWizard extends RunBlock {
 				try {
 					Group runYear = getGroupBusiness(iwc).getGroupByGroupID(this.runGroupID);
 					Group run = getRunBusiness(iwc).getRunGroupOfTypeForGroup(runYear, IWMarathonConstants.GROUP_TYPE_RUN);
-					pledgeHolder.setRun(run);
 					Collection groupTypesFilter = new ArrayList();
 					groupTypesFilter.add(IWMarathonConstants.GROUP_TYPE_RUN_GROUP);
 					Collection runnerGroups = getGroupBusiness(iwc).getChildGroupsRecursiveResultFiltered(runYear, groupTypesFilter, true, true, true);
@@ -259,7 +256,7 @@ public class PledgeWizard extends RunBlock {
 		Participant participant = null;
 		try {
 			participant = getRunBusiness(iwc).getParticipantByPrimaryKey(Integer.parseInt(iwc.getParameter(PARAMETER_PARTICIPANT_ID)));
-			pledgeHolder.setRunner(participant.getUser());
+			pledgeHolder.setParticipant(participant);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -273,8 +270,24 @@ public class PledgeWizard extends RunBlock {
 		//form.add(nameLayer);
 		//form.add(new Break());
 		if (participant != null) {
-			nameInput.setValue(pledgeHolder.getRunner().getName());
+			nameInput.setValue(participant.getUser().getName());
+			nameInput.setDisabled(true);
 		}
+		TextInput dobInput = new TextInput();
+		Layer dobLayer = new Layer(Layer.DIV);
+	    dobLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
+		Label dobLabel = new Label(localize("pledgewizard.date_of_birth", "Date of Birth") + ":", dobInput);
+		dobLayer.add(dobLabel);
+		dobLayer.add(dobInput);
+		//form.add(nameLayer);
+		//form.add(new Break());
+		if (participant != null) {
+			IWTimestamp dobStamp = new IWTimestamp(participant.getUser().getDateOfBirth());
+			String dobString = dobStamp.getDateString("dd. MMM yyyy", iwc.getCurrentLocale());
+			dobInput.setValue(dobString);
+			dobInput.setDisabled(true);
+		}
+		
 		Collection runs = new ArrayList();
 		runs.add(participant);
 		EntityBrowser browser = getRunsBrowser(runs, iwc);
@@ -282,6 +295,8 @@ public class PledgeWizard extends RunBlock {
 		table.add(getText(localize("pledgewizard.pledge_information_text_step_2", "Information text 2...")), 1, row++);
 		table.setHeight(row++, 6);
 		table.add(nameLayer, 1, row++);
+		table.setHeight(row++, 6);
+		table.add(dobLayer, 1, row++);
 		table.setHeight(row++, 6);
 		table.add(browser, 1, row++);
 	    
@@ -328,17 +343,16 @@ public class PledgeWizard extends RunBlock {
 		
 		float totalAmount = 0;
 
-		if (pledgeHolder.getRunner() != null) {
-			runnerTable.add(getText(pledgeHolder.getRunner().getName()), 1, runRow);
+		if (pledgeHolder.getParticipant() != null && pledgeHolder.getParticipant().getUser() != null) {
+			runnerTable.add(getText(pledgeHolder.getParticipant().getUser().getName()), 1, runRow);
+			runnerTable.add(getText(localize(pledgeHolder.getParticipant().getRunTypeGroup().getName(), pledgeHolder.getParticipant().getRunTypeGroup().getName())+ " " + localize(pledgeHolder.getParticipant().getRunYearGroup().getName(), pledgeHolder.getParticipant().getRunYearGroup().getName())), 2, runRow);
+			runnerTable.add(getText(localize(pledgeHolder.getParticipant().getRunDistanceGroup().getName()+"_short_name", pledgeHolder.getParticipant().getRunDistanceGroup().getName())), 3, runRow);
 		}
-		runnerTable.add(getText(localize(pledgeHolder.getRun().getName(), pledgeHolder.getRun().getName())), 2, runRow);
-		//runnerTable.add(getText(localize(pledgeHolder.getDistance().getName(), pledgeHolder.getDistance().getName())), 3, runRow);
 		float pledgeAmount = pledgeHolder.getPledgeAmount();
 		totalAmount += pledgeAmount;
 		runnerTable.add(getText(formatAmount(iwc.getCurrentLocale(), pledgeAmount)), 4, runRow++);
 		
 		pledgeHolder.setPledgeAmount(pledgeAmount);
-		//runnerTable.add(new HiddenInput(PARAMETER_REFERENCE_NUMBER, pledgeHolder.getPersonalID().replaceAll("-", "")));
 		
 		if (totalAmount == 0) {
 			//save(iwc, false);
@@ -434,41 +448,50 @@ public class PledgeWizard extends RunBlock {
 		creditCardTable.add(year, 1, creditRow);
 		creditCardTable.add(ccv, 3, creditRow++);
 		
+		TextInput personalIDField = (TextInput) getStyledInterface(new TextInput(PARAMETER_CARDHOLDER_PERSONAL_ID));
+		personalIDField.setAsPersonalID(iwc.getCurrentLocale(), localize("run_reg.personal_id_err_msg", "Not a valid personal_id"));
+		personalIDField.setWidth(Table.HUNDRED_PERCENT);
+		personalIDField.keepStatusOnAction(true);
+		
+		creditCardTable.setHeight(creditRow++, 3);
+		creditCardTable.mergeCells(3, creditRow, 3, creditRow+1);
+		creditCardTable.add(getText(localize("run_reg.ccv_explanation_text","A CCV number is a three digit number located on the back of all major credit cards.")), 3, creditRow);
+		creditCardTable.add(getHeader(localize("run_reg.card_holder_personal_id", "Cardholder personal ID")), 1, creditRow++);
+		creditCardTable.add(personalIDField, 1, creditRow++);
+		creditCardTable.add(new HiddenInput(PARAMETER_PLEDGE_AMOUNT, String.valueOf(totalAmount)));
+		
 		TextInput emailField = (TextInput) getStyledInterface(new TextInput(PARAMETER_CARDHOLDER_EMAIL));
 		emailField.setAsEmail(localize("run_reg.email_err_msg", "Not a valid email address"));
 		emailField.setWidth(Table.HUNDRED_PERCENT);
 		emailField.keepStatusOnAction(true);
 		
-		creditCardTable.setHeight(creditRow++, 3);
-		creditCardTable.mergeCells(3, creditRow, 3, creditRow+1);
-		creditCardTable.add(getText(localize("run_reg.ccv_explanation_text","A CCV number is a three digit number located on the back of all major credit cards.")), 3, creditRow);
 		creditCardTable.add(getHeader(localize("run_reg.card_holder_email", "Cardholder email")), 1, creditRow++);
 		creditCardTable.add(emailField, 1, creditRow++);
-		creditCardTable.add(new HiddenInput(PARAMETER_PLEDGE_AMOUNT, String.valueOf(totalAmount)));
-		creditCardTable.setHeight(creditRow++, 18);
-		creditCardTable.mergeCells(1, creditRow, creditCardTable.getColumns(), creditRow);
-		creditCardTable.add(getText(localize("run_reg.read_conditions", "Please read before you finish your payment") + ": "), 1, creditRow);
 		
-		Help help = new Help();
-		help.setHelpTextBundle(IWMarathonConstants.IW_BUNDLE_IDENTIFIER);
-		help.setHelpTextKey("terms_and_conditions");
-		help.setShowAsText(true);
-		help.setLinkText(localize("run_reg.terms_and_conditions", "Terms and conditions"));
-		creditCardTable.add(help, 1, creditRow++);
+		//creditCardTable.setHeight(creditRow++, 18);
+		//creditCardTable.mergeCells(1, creditRow, creditCardTable.getColumns(), creditRow);
+		//creditCardTable.add(getText(localize("run_reg.read_conditions", "Please read before you finish your payment") + ": "), 1, creditRow);
+		
+		//Help help = new Help();
+		//help.setHelpTextBundle(IWMarathonConstants.IW_BUNDLE_IDENTIFIER);
+		//help.setHelpTextKey("terms_and_conditions");
+		//help.setShowAsText(true);
+		//help.setLinkText(localize("run_reg.terms_and_conditions", "Terms and conditions"));
+		//creditCardTable.add(help, 1, creditRow++);
 
 		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("run_reg.pay", "Pay")));
 		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_SAVE));
-		next.setDisabled(true);
+		//next.setDisabled(true);
 
-		CheckBox agree = getCheckBox(PARAMETER_AGREE, Boolean.TRUE.toString());
-		agree.setToEnableWhenChecked(next);
-		agree.setToDisableWhenUnchecked(next);
+		//CheckBox agree = getCheckBox(PARAMETER_AGREE, Boolean.TRUE.toString());
+		//agree.setToEnableWhenChecked(next);
+		//agree.setToDisableWhenUnchecked(next);
 		
-		creditCardTable.setHeight(creditRow++, 12);
-		creditCardTable.mergeCells(1, creditRow, creditCardTable.getColumns(), creditRow);
-		creditCardTable.add(agree, 1, creditRow);
-		creditCardTable.add(Text.getNonBrakingSpace(), 1, creditRow);
-		creditCardTable.add(getHeader(localize("run_reg.agree_terms_and_conditions", "I agree to the terms and conditions")), 1, creditRow++);
+		//creditCardTable.setHeight(creditRow++, 12);
+		//creditCardTable.mergeCells(1, creditRow, creditCardTable.getColumns(), creditRow);
+		//creditCardTable.add(agree, 1, creditRow);
+		//creditCardTable.add(Text.getNonBrakingSpace(), 1, creditRow);
+		//creditCardTable.add(getHeader(localize("run_reg.agree_terms_and_conditions", "I agree to the terms and conditions")), 1, creditRow++);
 
 		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
 		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_PERSONAL_DETAILS));
@@ -560,7 +583,8 @@ public class PledgeWizard extends RunBlock {
 	
 	private void save(IWContext iwc, boolean doPayment) throws RemoteException {
 		try {
-			Collection runners = new ArrayList();//((Map) iwc.getSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP)).values();
+			Collection runners = new ArrayList();
+			runners.add(pledgeHolder.getParticipant());
 
 			String nameOnCard = null;
 			String cardNumber = null;
@@ -598,11 +622,11 @@ public class PledgeWizard extends RunBlock {
 			if (doPayment) {
 				properties = getRunBusiness(iwc).authorizePayment(nameOnCard, cardNumber, expiresMonth, expiresYear, ccVerifyNumber, amount, this.isIcelandic ? "ISK" : "EUR", referenceNumber);
 			}
-			Collection participants = getRunBusiness(iwc).saveParticipants(runners, email, hiddenCardNumber, amount, paymentStamp, iwc.getCurrentLocale());
+			Collection pledges = getRunBusiness(iwc).saveParticipants(runners, email, hiddenCardNumber, amount, paymentStamp, iwc.getCurrentLocale());
 			if (doPayment) {
 				getRunBusiness(iwc).finishPayment(properties);
 			}			
-			showReceipt(iwc, participants, amount, hiddenCardNumber, paymentStamp, doPayment);
+			showReceipt(iwc, pledges, amount, hiddenCardNumber, paymentStamp, doPayment);
 		}
 		catch (IDOCreateException ice) {
 			getParentPage().setAlertOnLoad(localize("run_reg.save_failed", "There was an error when trying to finish registration.  Please contact the marathon.is office."));
@@ -685,7 +709,6 @@ public class PledgeWizard extends RunBlock {
 				return  new Text(dobStamp.getDateString("dd. MMM yyyy", iwc.getCurrentLocale()));
 			}
 		};
-
 
 	    // set default columns
 		String nameKey = User.class.getName()+".FIRST_NAME:" + User.class.getName()+".MIDDLE_NAME:"+User.class.getName()+".LAST_NAME";
@@ -805,7 +828,8 @@ public class PledgeWizard extends RunBlock {
 	    browser.setDefaultColumn(2, distanceKey);
 	    browser.setDefaultColumn(3, charityKey);
 	    browser.setDefaultColumn(4, "Amount");
-        // set foreign entities
+	    
+	    // set foreign entities
         browser.addEntity(User.class.getName());
         browser.addEntity(Group.class.getName());
 	    // set special converters
