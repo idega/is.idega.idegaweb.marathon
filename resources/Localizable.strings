@@ -176,6 +176,7 @@ run_reg.email_err_msg=Not a valid email address
 run_reg.estimated_time=Estimated time in distance
 run_reg.family_discount=Family discount
 run_reg.female=Female
+run_reg.footnoteText=
 run_reg.gender=Gender 
 run_reg.gender_not_empty=Gender can not be empty
 run_reg.goal_time=Your goal in running this distance now
