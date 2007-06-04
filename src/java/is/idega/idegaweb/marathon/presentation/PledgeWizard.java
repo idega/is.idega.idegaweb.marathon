@@ -157,7 +157,7 @@ public class PledgeWizard extends RunBlock {
 		DropdownMenu charityDropDown = new CharitiesForRunDropDownMenu(PARAMETER_CHARITY_FILTER);
 		Layer charityDropDownLayer = new Layer(Layer.DIV);
 		charityDropDownLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		Label charityDropDownLabel = new Label(localize("pledgewizard.charity", "Charity Organization") + ":", charityDropDown);
+		Label charityDropDownLabel = new Label(localize("pledgewizard.charity_organization", "Charity Organization") + ":", charityDropDown);
 		charityDropDownLayer.add(charityDropDownLabel);
 		charityDropDownLayer.add(charityDropDown);
 		form.add(charityDropDownLayer);
@@ -509,7 +509,7 @@ public class PledgeWizard extends RunBlock {
 		runnerTable.add(getHeader(localize("run_reg.runner_name", "Runner name")), 1, 1);
 		runnerTable.add(getHeader(localize("run_reg.run", "Run")), 2, 1);
 		runnerTable.add(getHeader(localize("run_reg.distance", "Distance")), 3, 1);
-		runnerTable.add(getHeader(localize("run_reg.charity_organization", "Charity Organization")), 4, 1);
+		runnerTable.add(getHeader(localize("pledgewizard.charity_organization", "Charity Organization")), 4, 1);
 		runnerTable.add(getHeader(localize("run_reg.amount", "Amount")), 5, 1);
 		table.add(runnerTable, 1, row++);
 		int runRow = 2;
