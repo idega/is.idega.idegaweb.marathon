@@ -53,7 +53,7 @@ public class PledgeWizard extends RunBlock {
 	private static final String PARAMETER_FROM_ACTION = "prm_from_action";
 	private static final String PARAMETER_SEARCH = "prm_search";
 	
-	private static final String PARAMETER_PARTICIPATION_ID = "prm_user_id";
+	private static final String PARAMETER_PARTICIPANT_ID = "prm_participant_id";
 	private static final String PARAMETER_PERSONAL_ID_FILTER = "prm_personal_id_filter";
 	private static final String PARAMETER_FIRST_NAME_FILTER = "prm_first_name_filter";
 	private static final String PARAMETER_MIDDLE_NAME_FILTER = "prm_middle_name_filter";
@@ -63,14 +63,13 @@ public class PledgeWizard extends RunBlock {
 	private static final String PARAMETER_PLEDGE_AMOUNT = "prm_pledge_amount";
 	private static final String PARAMETER_AGREE = "prm_agree";
 	
-	private static final String PARAMETER_CARDHOLDER_NAME = "prm_name_on_card";
+	private static final String PARAMETER_CARDHOLDER_NAME = "prm_cardholder_name";
+	private static final String PARAMETER_CARDHOLDER_PERSONAL_ID = "prm_cardholder_personal_id";
+	private static final String PARAMETER_CARDHOLDER_EMAIL = "prm_card_holder_email";
 	private static final String PARAMETER_CARD_NUMBER = "prm_card_number";
 	private static final String PARAMETER_EXPIRES_MONTH = "prm_expires_month";
 	private static final String PARAMETER_EXPIRES_YEAR = "prm_expires_year";
 	private static final String PARAMETER_CCV = "prm_ccv";
-
-	private static final String PARAMETER_CARDHOLDER_EMAIL = "prm_card_holder_email";
-	private static final String PARAMETER_REFERENCE_NUMBER = "prm_reference_number";
 
 	private static final int ACTION_STEP_PERSON_LOOKUP = 1;
 	private static final int ACTION_STEP_PERSONAL_DETAILS = 2;
@@ -118,15 +117,15 @@ public class PledgeWizard extends RunBlock {
 	private void stepPersonLookup(IWContext iwc) {
 		Form form = new Form();
 		
-		form.add(getPhasesTable(1, 4, "run_reg.make_pledge", "Find runner to make a pledge for"));
-		form.add(localize("run_reg.pledge_information_text_step_1", "Information text 1..."));
+		form.add(getPhasesTable(1, 4, "pledgewizard.make_pledge", "Find runner to make a pledge for"));
+		form.add(localize("pledgewizard.pledge_information_text_step_1", "Information text 1..."));
 		
 		TextInput personalIDInput = new TextInput(PARAMETER_PERSONAL_ID_FILTER);
 		personalIDInput.setLength(10);
 		personalIDInput.setMaxlength(10);
 		Layer personalIDLayer = new Layer(Layer.DIV);
 		personalIDLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		Label personalIDLabel = new Label(localize("run_reg.personal_id", "Personal ID") + ":", personalIDInput);
+		Label personalIDLabel = new Label(localize("pledgewizard.personal_id", "Personal ID") + ":", personalIDInput);
 		personalIDLayer.add(personalIDLabel);
 		personalIDLayer.add(personalIDInput);
 		form.add(personalIDLayer);
@@ -135,7 +134,7 @@ public class PledgeWizard extends RunBlock {
 		TextInput firstNameInput = new TextInput(PARAMETER_FIRST_NAME_FILTER);
 		Layer firstnameLayer = new Layer(Layer.DIV);
 		firstnameLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		Label firstnameLabel = new Label(localize("run_reg.first_name", "First name") + ":", firstNameInput);
+		Label firstnameLabel = new Label(localize("pledgewizard.first_name", "First name") + ":", firstNameInput);
 		firstnameLayer.add(firstnameLabel);
 		firstnameLayer.add(firstNameInput);
 		form.add(firstnameLayer);
@@ -144,7 +143,7 @@ public class PledgeWizard extends RunBlock {
 		TextInput middleNameInput = new TextInput(PARAMETER_MIDDLE_NAME_FILTER);
 		Layer middleNameLayer = new Layer(Layer.DIV);
 		middleNameLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		Label middleNameLabel = new Label(localize("run_reg.middle_name", "Middle name") + ":", middleNameInput);
+		Label middleNameLabel = new Label(localize("pledgewizard.middle_name", "Middle name") + ":", middleNameInput);
 		middleNameLayer.add(middleNameLabel);
 		middleNameLayer.add(middleNameInput);
 		form.add(middleNameLayer);
@@ -153,7 +152,7 @@ public class PledgeWizard extends RunBlock {
 		TextInput lastNameInput = new TextInput(PARAMETER_LAST_NAME_FILTER);
 		Layer lastNameLayer = new Layer(Layer.DIV);
 		lastNameLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		Label lastNameLabel = new Label(localize("run_reg.last_name", "Last name") + ":", lastNameInput);
+		Label lastNameLabel = new Label(localize("pledgewizard.last_name", "Last name") + ":", lastNameInput);
 		lastNameLayer.add(lastNameLabel);
 		lastNameLayer.add(lastNameInput);
 		form.add(lastNameLayer);
@@ -162,7 +161,7 @@ public class PledgeWizard extends RunBlock {
 		DropdownMenu charityDropDown = new CharitiesForRunDropDownMenu(PARAMETER_CHARITY_FILTER);
 		Layer charityDropDownLayer = new Layer(Layer.DIV);
 		charityDropDownLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		Label charityDropDownLabel = new Label(localize("run_reg.charity", "Charity") + ":", charityDropDown);
+		Label charityDropDownLabel = new Label(localize("pledgewizard.charity", "Charity Organization") + ":", charityDropDown);
 		charityDropDownLayer.add(charityDropDownLabel);
 		charityDropDownLayer.add(charityDropDown);
 		form.add(charityDropDownLayer);
@@ -185,7 +184,7 @@ public class PledgeWizard extends RunBlock {
 			charityDropDown.setSelectedElement(pledgeHolder.getCharityFilter());
 
 		}
-		if (iwc.isParameterSet(PARAMETER_SEARCH) || iwc.isParameterSet(EntityBrowser.HEADER_FORM_KEY + EntityBrowser.SHOW_ALL_KEY)) {
+		if (iwc.isParameterSet(PARAMETER_SEARCH) || iwc.isParameterSet(EntityBrowser.BOTTOM_FORM_KEY + EntityBrowser.SHOW_ALL_KEY)) {
 			
 			search = new SubmitButton(localize("search_again", "Search again"),PARAMETER_SEARCH, PARAMETER_SEARCH);
 			form.add(search);
@@ -219,7 +218,7 @@ public class PledgeWizard extends RunBlock {
 						}
 					}
 					if (runRegistrations.isEmpty()) {
-						form.add(new Text(localize("no_runners_found", "No runners found")));
+						form.add(new Text(localize("pledgewizard.no_runners_found", "No runners were found from your search criteria")));
 					} else {
 						EntityBrowser browser = getRunnersBrowser(runRegistrations, iwc);
 						form.add(browser);
@@ -251,7 +250,7 @@ public class PledgeWizard extends RunBlock {
 		form.add(table);
 		int row = 1;
 
-		table.add(getPhasesTable(2, 4, "run_reg.specify_pledge_amount", "Specify pledge amount"), 1, row++);
+		table.add(getPhasesTable(2, 4, "pledgewizard.specify_pledge_amount", "Specify pledge amount"), 1, row++);
 		table.setHeight(row++, 18);
 
 		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
@@ -259,7 +258,7 @@ public class PledgeWizard extends RunBlock {
 
 		Participant participant = null;
 		try {
-			participant = getRunBusiness(iwc).getParticipantByPrimaryKey(Integer.parseInt(iwc.getParameter(PARAMETER_PARTICIPATION_ID)));
+			participant = getRunBusiness(iwc).getParticipantByPrimaryKey(Integer.parseInt(iwc.getParameter(PARAMETER_PARTICIPANT_ID)));
 			pledgeHolder.setRunner(participant.getUser());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -268,7 +267,7 @@ public class PledgeWizard extends RunBlock {
 		TextInput nameInput = new TextInput();
 		Layer nameLayer = new Layer(Layer.DIV);
 		nameLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		Label nameLabel = new Label(localize("run_reg.name", "Name") + ":", nameInput);
+		Label nameLabel = new Label(localize("pledgewizard.runner_name", "Runner name") + ":", nameInput);
 		nameLayer.add(nameLabel);
 		nameLayer.add(nameInput);
 		//form.add(nameLayer);
@@ -280,7 +279,7 @@ public class PledgeWizard extends RunBlock {
 		runs.add(participant);
 		EntityBrowser browser = getRunsBrowser(runs, iwc);
 		
-		table.add(getText(localize("run_reg.pledge_information_text_step_2", "Information text 2...")), 1, row++);
+		table.add(getText(localize("pledgewizard.pledge_information_text_step_2", "Information text 2...")), 1, row++);
 		table.setHeight(row++, 6);
 		table.add(nameLayer, 1, row++);
 		table.setHeight(row++, 6);
@@ -313,7 +312,7 @@ public class PledgeWizard extends RunBlock {
 		table.add(getPhasesTable(3, 4, "run_reg.payment_info", "Payment info"), 1, row++);
 		table.setHeight(row++, 12);
 
-		table.add(getInformationTable(localize("run_reg.pledge_information_text_step_3", "Information text 3...")), 1, row++);
+		table.add(getInformationTable(localize("pledgewizard.pledge_information_text_step_3", "Information text 3...")), 1, row++);
 		table.setHeight(row++, 18);
 		
 		Table runnerTable = new Table();
@@ -592,7 +591,7 @@ public class PledgeWizard extends RunBlock {
 				ccVerifyNumber = iwc.getParameter(PARAMETER_CCV);
 				email = iwc.getParameter(PARAMETER_CARDHOLDER_EMAIL);
 				amount = Double.parseDouble(iwc.getParameter(PARAMETER_PLEDGE_AMOUNT));
-				referenceNumber = iwc.getParameter(PARAMETER_REFERENCE_NUMBER);
+				referenceNumber = iwc.getParameter(PARAMETER_CARDHOLDER_PERSONAL_ID);
 			}
 			
 			String properties = null;
@@ -627,8 +626,8 @@ public class PledgeWizard extends RunBlock {
 
 			public PresentationObject getPresentationObject(Object entity, EntityPath path, EntityBrowser browser, IWContext iwc) {
 				Participant participant = (Participant) entity;
-				RadioButton radioButton = new RadioButton(PARAMETER_PARTICIPATION_ID, participant.getPrimaryKey().toString());
-				radioButton.setMustBeSelected(localize("must_be_selected", "You must select person"));
+				RadioButton radioButton = new RadioButton(PARAMETER_PARTICIPANT_ID, participant.getPrimaryKey().toString());
+				radioButton.setMustBeSelected(localize("pledgewizard.runner_must_be_selected", "You must select one runner from the list"));
 				return radioButton;
 			}
 		};
@@ -733,8 +732,11 @@ public class PledgeWizard extends RunBlock {
 			}
 
 			public PresentationObject getPresentationObject(Object entity, EntityPath path, EntityBrowser browser, IWContext iwc) {
-				TextInput pledgeAmountInput = new TextInput(PARAMETER_PLEDGE_AMOUNT);
-				pledgeAmountInput.setAsNotEmpty(localize("must_put_amount", "You must type in amount"));
+				TextInput pledgeAmountInput = (TextInput)getStyledInterface(new TextInput(PARAMETER_PLEDGE_AMOUNT));
+				pledgeAmountInput.setMaxlength(9);
+				pledgeAmountInput.setWidth("50");
+				pledgeAmountInput.setAsNotEmpty(localize("pledgewizard.you_must_put_amount", "You must type in amount"));
+				pledgeAmountInput.setAsIntegers(localize("pledgewizard.only_put_digits_in_amount_field","Please, only type in digits into the amount field"));
 				return pledgeAmountInput;
 			}
 		};
@@ -802,7 +804,7 @@ public class PledgeWizard extends RunBlock {
 	    browser.setDefaultColumn(1, runYearKey);
 	    browser.setDefaultColumn(2, distanceKey);
 	    browser.setDefaultColumn(3, charityKey);
-	    browser.setMandatoryColumn(4, "Amount");
+	    browser.setDefaultColumn(4, "Amount");
         // set foreign entities
         browser.addEntity(User.class.getName());
         browser.addEntity(Group.class.getName());
