@@ -3,6 +3,7 @@ package is.idega.idegaweb.marathon.presentation;
 import is.idega.idegaweb.marathon.business.PledgeHolder;
 import is.idega.idegaweb.marathon.data.Charity;
 import is.idega.idegaweb.marathon.data.Participant;
+import is.idega.idegaweb.marathon.data.Pledge;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
 import java.rmi.RemoteException;
@@ -62,8 +63,6 @@ public class PledgeWizard extends RunBlock {
 	private static final String PARAMETER_AGREE = "prm_agree";
 	
 	private static final String PARAMETER_CARDHOLDER_NAME = "prm_cardholder_name";
-	private static final String PARAMETER_CARDHOLDER_PERSONAL_ID = "prm_cardholder_personal_id";
-	private static final String PARAMETER_CARDHOLDER_EMAIL = "prm_card_holder_email";
 	private static final String PARAMETER_CARD_NUMBER = "prm_card_number";
 	private static final String PARAMETER_EXPIRES_MONTH = "prm_expires_month";
 	private static final String PARAMETER_EXPIRES_YEAR = "prm_expires_year";
@@ -118,17 +117,6 @@ public class PledgeWizard extends RunBlock {
 		form.add(getPhasesTable(1, 4, "pledgewizard.make_pledge", "Find runner to make a pledge for"));
 		form.add(localize("pledgewizard.pledge_information_text_step_1", "Information text 1..."));
 		
-		TextInput personalIDInput = new TextInput(PARAMETER_PERSONAL_ID_FILTER);
-		personalIDInput.setLength(10);
-		personalIDInput.setMaxlength(10);
-		Layer personalIDLayer = new Layer(Layer.DIV);
-		personalIDLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		Label personalIDLabel = new Label(localize("pledgewizard.personal_id", "Personal ID") + ":", personalIDInput);
-		personalIDLayer.add(personalIDLabel);
-		personalIDLayer.add(personalIDInput);
-		form.add(personalIDLayer);
-		form.add(new Break());
-		
 		TextInput firstNameInput = new TextInput(PARAMETER_FIRST_NAME_FILTER);
 		Layer firstnameLayer = new Layer(Layer.DIV);
 		firstnameLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
@@ -155,7 +143,18 @@ public class PledgeWizard extends RunBlock {
 		lastNameLayer.add(lastNameInput);
 		form.add(lastNameLayer);
 		form.add(new Break());
-		
+
+		TextInput personalIDInput = new TextInput(PARAMETER_PERSONAL_ID_FILTER);
+		personalIDInput.setLength(10);
+		personalIDInput.setMaxlength(10);
+		Layer personalIDLayer = new Layer(Layer.DIV);
+		personalIDLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
+		Label personalIDLabel = new Label(localize("pledgewizard.personal_id", "Personal ID") + ":", personalIDInput);
+		personalIDLayer.add(personalIDLabel);
+		personalIDLayer.add(personalIDInput);
+		form.add(personalIDLayer);
+		form.add(new Break());
+
 		DropdownMenu charityDropDown = new CharitiesForRunDropDownMenu(PARAMETER_CHARITY_FILTER);
 		Layer charityDropDownLayer = new Layer(Layer.DIV);
 		charityDropDownLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
@@ -271,7 +270,7 @@ public class PledgeWizard extends RunBlock {
 		//form.add(new Break());
 		if (participant != null) {
 			nameInput.setValue(participant.getUser().getName());
-			nameInput.setDisabled(true);
+			nameInput.setReadOnly(true);
 		}
 		TextInput dobInput = new TextInput();
 		Layer dobLayer = new Layer(Layer.DIV);
@@ -285,7 +284,7 @@ public class PledgeWizard extends RunBlock {
 			IWTimestamp dobStamp = new IWTimestamp(participant.getUser().getDateOfBirth());
 			String dobString = dobStamp.getDateString("dd. MMM yyyy", iwc.getCurrentLocale());
 			dobInput.setValue(dobString);
-			dobInput.setDisabled(true);
+			dobInput.setReadOnly(true);
 		}
 		
 		Collection runs = new ArrayList();
@@ -426,7 +425,7 @@ public class PledgeWizard extends RunBlock {
 			}
 			else {
 				cardNumber.setLength(4);
-				cardNumber.setMaxlength(7);
+				cardNumber.setMaxlength(4);
 			}
 			cardNumber.setMininumLength(4, localize("run_reg.not_valid_card_number", "Not a valid card number"));
 			cardNumber.setAsIntegers(localize("run_reg.not_valid_card_number", "Not a valid card number"));
@@ -448,25 +447,10 @@ public class PledgeWizard extends RunBlock {
 		creditCardTable.add(year, 1, creditRow);
 		creditCardTable.add(ccv, 3, creditRow++);
 		
-		TextInput personalIDField = (TextInput) getStyledInterface(new TextInput(PARAMETER_CARDHOLDER_PERSONAL_ID));
-		personalIDField.setAsPersonalID(iwc.getCurrentLocale(), localize("run_reg.personal_id_err_msg", "Not a valid personal_id"));
-		personalIDField.setWidth(Table.HUNDRED_PERCENT);
-		personalIDField.keepStatusOnAction(true);
-		
 		creditCardTable.setHeight(creditRow++, 3);
 		creditCardTable.mergeCells(3, creditRow, 3, creditRow+1);
 		creditCardTable.add(getText(localize("run_reg.ccv_explanation_text","A CCV number is a three digit number located on the back of all major credit cards.")), 3, creditRow);
-		creditCardTable.add(getHeader(localize("run_reg.card_holder_personal_id", "Cardholder personal ID")), 1, creditRow++);
-		creditCardTable.add(personalIDField, 1, creditRow++);
 		creditCardTable.add(new HiddenInput(PARAMETER_PLEDGE_AMOUNT, String.valueOf(totalAmount)));
-		
-		TextInput emailField = (TextInput) getStyledInterface(new TextInput(PARAMETER_CARDHOLDER_EMAIL));
-		emailField.setAsEmail(localize("run_reg.email_err_msg", "Not a valid email address"));
-		emailField.setWidth(Table.HUNDRED_PERCENT);
-		emailField.keepStatusOnAction(true);
-		
-		creditCardTable.add(getHeader(localize("run_reg.card_holder_email", "Cardholder email")), 1, creditRow++);
-		creditCardTable.add(emailField, 1, creditRow++);
 		
 		//creditCardTable.setHeight(creditRow++, 18);
 		//creditCardTable.mergeCells(1, creditRow, creditCardTable.getColumns(), creditRow);
@@ -516,7 +500,7 @@ public class PledgeWizard extends RunBlock {
 		//iwc.setSessionAttribute(SESSION_ATTRIBUTE_CARD_NUMBER, cardNumber);
 		//iwc.setSessionAttribute(SESSION_ATTRIBUTE_PAYMENT_DATE, paymentStamp);
 
-		table.add(getPhasesTable(this.isIcelandic ? 7 : 6, this.isIcelandic ? 7 : 6, "run_reg.receipt", "Receipt"), 1, row++);
+		table.add(getPhasesTable(4, 4,  "pledgewizard.receipt", "Receipt"), 1, row++);
 		table.setHeight(row++, 18);
 		
 		table.add(getHeader(localize("run_reg.hello_participant", "Hello participant(s)")), 1, row++);
@@ -536,7 +520,8 @@ public class PledgeWizard extends RunBlock {
 		int runRow = 2;
 		Iterator iter = runners.iterator();
 		while (iter.hasNext()) {
-			Participant participant = (Participant) iter.next();
+			Pledge pledge = (Pledge) iter.next();
+			Participant participant = pledge.getParticipant();
 			Group run = participant.getRunTypeGroup();
 			Group distance = participant.getRunDistanceGroup();
 			
@@ -583,17 +568,16 @@ public class PledgeWizard extends RunBlock {
 	
 	private void save(IWContext iwc, boolean doPayment) throws RemoteException {
 		try {
-			Collection runners = new ArrayList();
-			runners.add(pledgeHolder.getParticipant());
+			Collection pledgeHolders = new ArrayList();
+			pledgeHolders.add(pledgeHolder);
 
 			String nameOnCard = null;
 			String cardNumber = null;
 			String hiddenCardNumber = "XXXX-XXXX-XXXX-XXXX";
-			String email = pledgeHolder.getCardholderEmail();
 			String expiresMonth = null;
 			String expiresYear = null;
 			String ccVerifyNumber = null;
-			String referenceNumber = null;
+			String referenceNumber = IWTimestamp.RightNow().toString();
 			double amount = 0;
 			IWTimestamp paymentStamp = new IWTimestamp();
 
@@ -613,16 +597,15 @@ public class PledgeWizard extends RunBlock {
 				expiresMonth = iwc.getParameter(PARAMETER_EXPIRES_MONTH);
 				expiresYear = iwc.getParameter(PARAMETER_EXPIRES_YEAR);
 				ccVerifyNumber = iwc.getParameter(PARAMETER_CCV);
-				email = iwc.getParameter(PARAMETER_CARDHOLDER_EMAIL);
 				amount = Double.parseDouble(iwc.getParameter(PARAMETER_PLEDGE_AMOUNT));
-				referenceNumber = iwc.getParameter(PARAMETER_CARDHOLDER_PERSONAL_ID);
+				referenceNumber = IWTimestamp.RightNow().toString();
 			}
 			
 			String properties = null;
 			if (doPayment) {
 				properties = getRunBusiness(iwc).authorizePayment(nameOnCard, cardNumber, expiresMonth, expiresYear, ccVerifyNumber, amount, this.isIcelandic ? "ISK" : "EUR", referenceNumber);
 			}
-			Collection pledges = getRunBusiness(iwc).saveParticipants(runners, email, hiddenCardNumber, amount, paymentStamp, iwc.getCurrentLocale());
+			Collection pledges = getPledgeBusiness(iwc).saveParticipants(pledgeHolders);
 			if (doPayment) {
 				getRunBusiness(iwc).finishPayment(properties);
 			}			
@@ -758,6 +741,7 @@ public class PledgeWizard extends RunBlock {
 				TextInput pledgeAmountInput = (TextInput)getStyledInterface(new TextInput(PARAMETER_PLEDGE_AMOUNT));
 				pledgeAmountInput.setMaxlength(9);
 				pledgeAmountInput.setWidth("50");
+				pledgeAmountInput.setInFocusOnPageLoad(true);
 				pledgeAmountInput.setAsNotEmpty(localize("pledgewizard.you_must_put_amount", "You must type in amount"));
 				pledgeAmountInput.setAsIntegers(localize("pledgewizard.only_put_digits_in_amount_field","Please, only type in digits into the amount field"));
 				return pledgeAmountInput;
@@ -889,9 +873,6 @@ public class PledgeWizard extends RunBlock {
 		}
 		if (iwc.isParameterSet(PARAMETER_CARDHOLDER_NAME)) {
 			pledgeHolder.setCardholderName(iwc.getParameter(PARAMETER_CARDHOLDER_NAME));
-		}
-		if (iwc.isParameterSet(PARAMETER_CARDHOLDER_EMAIL)) {
-			pledgeHolder.setCardholderEmail(iwc.getParameter(PARAMETER_CARDHOLDER_EMAIL));
 		}
 		if (iwc.isParameterSet(PARAMETER_AGREE)) {
 			pledgeHolder.setAgreeToTerms(true);
