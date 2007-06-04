@@ -213,6 +213,7 @@ run_reg.must_provide_address=\u00DE\u00FA ver\u00F0ur a\u00F0 skr\u00E1 heimilis
 run_reg.must_provide_city=\u00DE\u00FA ver\u00F0ur a\u00F0 skr\u00E1 borg
 run_reg.must_provide_email=\u00DE\u00FA ver\u00F0ur a\u00F0 skr\u00E1 netfang
 run_reg.must_provide_postal=\u00DE\u00FA ver\u00F0ur a\u00F0 skr\u00E1 p\u00F3stn\u00FAmer
+run_reg.must_select_charity=Vinsamlegast veldu g\u00F3\u00F0ger\u00F0af\u00E9lag
 run_reg.must_select_chip_option=\u00DE\u00FA ver\u00F0ur a\u00F0 velja einn fl\u00F6gum\u00F6guleika
 run_reg.must_select_country=\u00DE\u00FA ver\u00F0ur a\u00F0 velja land
 run_reg.must_select_distance=\u00DE\u00FA ver\u00F0ur a\u00F0 velja vegalengd
