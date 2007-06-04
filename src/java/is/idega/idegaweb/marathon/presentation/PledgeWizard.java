@@ -1,30 +1,41 @@
 package is.idega.idegaweb.marathon.presentation;
 
+import is.idega.idegaweb.marathon.business.PledgeHolder;
 import is.idega.idegaweb.marathon.data.Charity;
 import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
 import java.rmi.RemoteException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Locale;
 
 import javax.ejb.FinderException;
 
-
+import com.idega.block.creditcard.business.CreditCardAuthorizationException;
 import com.idega.block.entity.business.EntityToPresentationObjectConverter;
 import com.idega.block.entity.data.EntityPath;
 import com.idega.block.entity.presentation.EntityBrowser;
+import com.idega.data.IDOCreateException;
 import com.idega.data.IDOLookup;
+import com.idega.idegaweb.IWBundle;
+import com.idega.idegaweb.IWResourceBundle;
+import com.idega.idegaweb.help.presentation.Help;
 import com.idega.presentation.IWContext;
+import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
 import com.idega.presentation.PresentationObject;
 import com.idega.presentation.Table;
 import com.idega.presentation.text.Break;
+import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
+import com.idega.presentation.ui.CheckBox;
 import com.idega.presentation.ui.DropdownMenu;
 import com.idega.presentation.ui.Form;
+import com.idega.presentation.ui.HiddenInput;
 import com.idega.presentation.ui.Label;
 import com.idega.presentation.ui.RadioButton;
 import com.idega.presentation.ui.SubmitButton;
@@ -34,58 +45,68 @@ import com.idega.user.data.User;
 import com.idega.user.data.UserHome;
 import com.idega.util.IWColor;
 import com.idega.util.IWTimestamp;
+import com.idega.util.LocaleUtil;
 
 public class PledgeWizard extends RunBlock {
 	
 	private static final String PARAMETER_ACTION = "prm_action";
-	//private static final String PARAMETER_FROM_ACTION = "prm_from_action";
-	private static final String PARAMETER_USER_ID = "prm_user_id";
-	private static final String PARAMETER_PERSONAL_ID = "prm_personal_id";
-	private static final String PARAMETER_FIRST_NAME = "prm_first_name";
-	private static final String PARAMETER_MIDDLE_NAME = "prm_middle_name";
-	private static final String PARAMETER_LAST_NAME = "prm_last_name";
-	private static final String PARAMETER_NAME = "prm_name";
-	private static final String PARAMETER_CHARITY = "prm_charity";
+	private static final String PARAMETER_FROM_ACTION = "prm_from_action";
 	private static final String PARAMETER_SEARCH = "prm_search";
 	
-	private static int NUMBER_OF_ROWS = 10;
+	private static final String PARAMETER_PARTICIPATION_ID = "prm_user_id";
+	private static final String PARAMETER_PERSONAL_ID_FILTER = "prm_personal_id_filter";
+	private static final String PARAMETER_FIRST_NAME_FILTER = "prm_first_name_filter";
+	private static final String PARAMETER_MIDDLE_NAME_FILTER = "prm_middle_name_filter";
+	private static final String PARAMETER_LAST_NAME_FILTER = "prm_last_name_filter";
+	private static final String PARAMETER_CHARITY_FILTER = "prm_charity_filter";
+
+	private static final String PARAMETER_PLEDGE_AMOUNT = "prm_pledge_amount";
+	private static final String PARAMETER_AGREE = "prm_agree";
+	
+	private static final String PARAMETER_CARDHOLDER_NAME = "prm_name_on_card";
+	private static final String PARAMETER_CARD_NUMBER = "prm_card_number";
+	private static final String PARAMETER_EXPIRES_MONTH = "prm_expires_month";
+	private static final String PARAMETER_EXPIRES_YEAR = "prm_expires_year";
+	private static final String PARAMETER_CCV = "prm_ccv";
+
+	private static final String PARAMETER_CARDHOLDER_EMAIL = "prm_card_holder_email";
+	private static final String PARAMETER_REFERENCE_NUMBER = "prm_reference_number";
 
 	private static final int ACTION_STEP_PERSON_LOOKUP = 1;
 	private static final int ACTION_STEP_PERSONAL_DETAILS = 2;
 	private static final int ACTION_STEP_PAYMENT = 3;
-	private static final int ACTION_STEP_RECEIPT = 4;
-	private static final int ACTION_SAVE = 5;
-	private static final int ACTION_CANCEL = 6;
+	private static final int ACTION_SAVE = 4;
+	
+	private static int NUMBER_OF_ROWS_IN_ENTITY_BROWSER = 10;
+	
+	private PledgeHolder pledgeHolder = new PledgeHolder();
+	private boolean isIcelandic = false;
 	private int runGroupID = -1;
 	
 	
 	public void main(IWContext iwc) throws Exception {
+		this.isIcelandic = iwc.getCurrentLocale().equals(LocaleUtil.getIcelandicLocale());
 
 		switch (parseAction(iwc)) {
 			case ACTION_STEP_PERSON_LOOKUP:
-				stepOne(iwc);
+				stepPersonLookup(iwc);
 				break;
 			case ACTION_STEP_PERSONAL_DETAILS:
-				stepTwo(iwc);
+				stepPersonalDetails(iwc);
 				break;
 			case ACTION_STEP_PAYMENT:
-				stepThree(iwc);
-				break;
-			case ACTION_STEP_RECEIPT:
-				stepFour(iwc);
+				stepPayment(iwc);
 				break;
 			case ACTION_SAVE:
 				save(iwc, true);
-				break;
-			case ACTION_CANCEL:
-				cancel(iwc);
 				break;
 		}
 	}
 	
 	private int parseAction(IWContext iwc) {
-		int action;
+		collectValues(iwc);
 		
+		int action;
 		if (iwc.isParameterSet(PARAMETER_ACTION)) {
 			action = Integer.parseInt(iwc.getParameter(PARAMETER_ACTION));
 		} else {
@@ -94,15 +115,13 @@ public class PledgeWizard extends RunBlock {
 		return action;
 	}
 	
-	private void stepOne(IWContext iwc) {
+	private void stepPersonLookup(IWContext iwc) {
 		Form form = new Form();
-		//form.maintainParameter(PARAMETER_PERSONAL_ID);
-		//form.addParameter(PARAMETER_ACTION, ACTION_STEP_TWO);
 		
-		form.add(getPhasesTable(1, 4, "run_reg.make_pledge", "Make a pledge"));
+		form.add(getPhasesTable(1, 4, "run_reg.make_pledge", "Find runner to make a pledge for"));
 		form.add(localize("run_reg.pledge_information_text_step_1", "Information text 1..."));
 		
-		TextInput personalIDInput = new TextInput(PARAMETER_PERSONAL_ID);
+		TextInput personalIDInput = new TextInput(PARAMETER_PERSONAL_ID_FILTER);
 		personalIDInput.setLength(10);
 		personalIDInput.setMaxlength(10);
 		Layer personalIDLayer = new Layer(Layer.DIV);
@@ -113,7 +132,7 @@ public class PledgeWizard extends RunBlock {
 		form.add(personalIDLayer);
 		form.add(new Break());
 		
-		TextInput firstNameInput = new TextInput(PARAMETER_FIRST_NAME);
+		TextInput firstNameInput = new TextInput(PARAMETER_FIRST_NAME_FILTER);
 		Layer firstnameLayer = new Layer(Layer.DIV);
 		firstnameLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
 		Label firstnameLabel = new Label(localize("run_reg.first_name", "First name") + ":", firstNameInput);
@@ -122,7 +141,7 @@ public class PledgeWizard extends RunBlock {
 		form.add(firstnameLayer);
 		form.add(new Break());
 		
-		TextInput middleNameInput = new TextInput(PARAMETER_MIDDLE_NAME);
+		TextInput middleNameInput = new TextInput(PARAMETER_MIDDLE_NAME_FILTER);
 		Layer middleNameLayer = new Layer(Layer.DIV);
 		middleNameLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
 		Label middleNameLabel = new Label(localize("run_reg.middle_name", "Middle name") + ":", middleNameInput);
@@ -131,16 +150,16 @@ public class PledgeWizard extends RunBlock {
 		form.add(middleNameLayer);
 		form.add(new Break());
 		
-		TextInput lastName = new TextInput(PARAMETER_LAST_NAME);
+		TextInput lastNameInput = new TextInput(PARAMETER_LAST_NAME_FILTER);
 		Layer lastNameLayer = new Layer(Layer.DIV);
 		lastNameLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		Label lastNameLabel = new Label(localize("run_reg.last_name", "Last name") + ":", lastName);
+		Label lastNameLabel = new Label(localize("run_reg.last_name", "Last name") + ":", lastNameInput);
 		lastNameLayer.add(lastNameLabel);
-		lastNameLayer.add(lastName);
+		lastNameLayer.add(lastNameInput);
 		form.add(lastNameLayer);
 		form.add(new Break());
 		
-		DropdownMenu charityDropDown = new CharitiesForRunDropDownMenu(PARAMETER_CHARITY);
+		DropdownMenu charityDropDown = new CharitiesForRunDropDownMenu(PARAMETER_CHARITY_FILTER);
 		Layer charityDropDownLayer = new Layer(Layer.DIV);
 		charityDropDownLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
 		Label charityDropDownLabel = new Label(localize("run_reg.charity", "Charity") + ":", charityDropDown);
@@ -150,23 +169,32 @@ public class PledgeWizard extends RunBlock {
 		form.add(new Break());
 
 		SubmitButton search;
-		if (iwc.isParameterSet(PARAMETER_FIRST_NAME)){
-			firstNameInput.setValue(iwc.getParameter(PARAMETER_FIRST_NAME));
+		if (pledgeHolder.getPersonalIDFilter() != null){
+			personalIDInput.setValue(pledgeHolder.getPersonalIDFilter());
+		}
+		if (pledgeHolder.getFirstNameFilter() != null){
+			firstNameInput.setValue(pledgeHolder.getFirstNameFilter());
+		}
+		if (pledgeHolder.getMiddleNameFilter() != null){
+			middleNameInput.setValue(pledgeHolder.getMiddleNameFilter());
+		}
+		if (pledgeHolder.getLastNameFilter() != null){
+			lastNameInput.setValue(pledgeHolder.getLastNameFilter());
+		}
+		if (pledgeHolder.getCharityFilter() != null){
+			charityDropDown.setSelectedElement(pledgeHolder.getCharityFilter());
+
 		}
 		if (iwc.isParameterSet(PARAMETER_SEARCH) || iwc.isParameterSet(EntityBrowser.HEADER_FORM_KEY + EntityBrowser.SHOW_ALL_KEY)) {
 			
 			search = new SubmitButton(localize("search_again", "Search again"),PARAMETER_SEARCH, PARAMETER_SEARCH);
 			form.add(search);
-			String first = iwc.getParameter(PARAMETER_FIRST_NAME);
-			String middle = iwc.getParameter(PARAMETER_MIDDLE_NAME);
-			String last = iwc.getParameter(PARAMETER_LAST_NAME);
-			String pid = iwc.getParameter(PARAMETER_PERSONAL_ID);
-			String charity = iwc.getParameter(PARAMETER_CHARITY);
 			
 			if (this.runGroupID != -1) {
 				try {
 					Group runYear = getGroupBusiness(iwc).getGroupByGroupID(this.runGroupID);
 					Group run = getRunBusiness(iwc).getRunGroupOfTypeForGroup(runYear, IWMarathonConstants.GROUP_TYPE_RUN);
+					pledgeHolder.setRun(run);
 					Collection groupTypesFilter = new ArrayList();
 					groupTypesFilter.add(IWMarathonConstants.GROUP_TYPE_RUN_GROUP);
 					Collection runnerGroups = getGroupBusiness(iwc).getChildGroupsRecursiveResultFiltered(runYear, groupTypesFilter, true, true, true);
@@ -177,14 +205,14 @@ public class PledgeWizard extends RunBlock {
 						group_ids[i] = group.getPrimaryKey().toString();
 					}
 					UserHome userHome = (UserHome) IDOLookup.getHome(User.class);
-					Collection usersFound = userHome.findUsersByConditions(first, middle, last, pid, null, null, -1, -1, -1, -1, group_ids, null, true, false);
+					Collection usersFound = userHome.findUsersByConditions(pledgeHolder.getFirstNameFilter(), pledgeHolder.getMiddleNameFilter(), pledgeHolder.getLastNameFilter(), pledgeHolder.getPersonalIDFilter(), null, null, -1, -1, -1, -1, group_ids, null, true, false);
 					Collection runRegistrations = new ArrayList();
 					Iterator userIt = usersFound.iterator();
 					while (userIt.hasNext()) {
 						User user = (User)userIt.next();
 						Participant runRegistration = getRunBusiness(iwc).getParticipantByRunAndYear(user, run, runYear);
 						
-						if (charity.equals("-1") || (runRegistration.getCharityId() != null && runRegistration.getCharityId().equals(charity))) {
+						if (pledgeHolder.getCharityFilter().equals("-1") || (runRegistration.getCharityId() != null && runRegistration.getCharityId().equals(pledgeHolder.getCharityFilter()))) {
 							if (runRegistration.getCharityId() != null && runRegistration.getCharityId() != "-1") {
 								runRegistrations.add(runRegistration);
 							}
@@ -193,7 +221,7 @@ public class PledgeWizard extends RunBlock {
 					if (runRegistrations.isEmpty()) {
 						form.add(new Text(localize("no_runners_found", "No runners found")));
 					} else {
-						EntityBrowser browser = getBrowser(runRegistrations, iwc);
+						EntityBrowser browser = getRunnersBrowser(runRegistrations, iwc);
 						form.add(browser);
 						SubmitButton next = new SubmitButton(localize("next", "Next"), PARAMETER_ACTION, String.valueOf(ACTION_STEP_PERSONAL_DETAILS));
 						form.add(next);
@@ -211,69 +239,386 @@ public class PledgeWizard extends RunBlock {
 		add(form);
 	} 
 	
-	private void stepTwo(IWContext iwc) {
+	private void stepPersonalDetails(IWContext iwc) {
 		Form form = new Form();
-		form.maintainParameter(PARAMETER_PERSONAL_ID);
-		//form.addParameter(PARAMETER_ACTION, ACTION_STEP_TWO);
+		form.addParameter(PARAMETER_ACTION, "-1");
+		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_PERSON_LOOKUP);
 		
-		form.add(getPhasesTable(2, 4, "run_reg.select_run", "Select run"));
-		form.add(localize("run_reg.pledge_information_text_step_2", "Information text 2..."));
-		
-		User user = null;
+		Table table = new Table();
+		table.setCellpadding(0);
+		table.setCellspacing(0);
+		table.setWidth(Table.HUNDRED_PERCENT);
+		form.add(table);
+		int row = 1;
+
+		table.add(getPhasesTable(2, 4, "run_reg.specify_pledge_amount", "Specify pledge amount"), 1, row++);
+		table.setHeight(row++, 18);
+
+		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
+		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_PAYMENT));
+
+		Participant participant = null;
 		try {
-			user = getUserBusiness(iwc).getUser(Integer.parseInt(iwc.getParameter(PARAMETER_USER_ID)));
+			participant = getRunBusiness(iwc).getParticipantByPrimaryKey(Integer.parseInt(iwc.getParameter(PARAMETER_PARTICIPATION_ID)));
+			pledgeHolder.setRunner(participant.getUser());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		TextInput input = new TextInput(PARAMETER_PERSONAL_ID);
-		//input.setAsIcelandicSSNumber(localize("run_reg.not_valid_personal_id", "The personal ID you've entered is not valid"));
-		input.setLength(10);
-		input.setMaxlength(10);
-		//input.setInFocusOnPageLoad(true);
-		Layer layer = new Layer(Layer.DIV);
-		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		Label label = new Label(localize("run_reg.personal_id", "Personal ID") + ":", input);
-		layer.add(label);
-		layer.add(input);
-		form.add(layer);
-		form.add(new Break());
-		input.setValue(user.getPersonalID());
+		TextInput nameInput = new TextInput();
+		Layer nameLayer = new Layer(Layer.DIV);
+		nameLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
+		Label nameLabel = new Label(localize("run_reg.name", "Name") + ":", nameInput);
+		nameLayer.add(nameLabel);
+		nameLayer.add(nameInput);
+		//form.add(nameLayer);
+		//form.add(new Break());
+		if (participant != null) {
+			nameInput.setValue(pledgeHolder.getRunner().getName());
+		}
+		Collection runs = new ArrayList();
+		runs.add(participant);
+		EntityBrowser browser = getRunsBrowser(runs, iwc);
 		
-		input = new TextInput(PARAMETER_NAME);
-		//input.setAsIcelandicSSNumber(localize("run_reg.not_valid_personal_id", "The personal ID you've entered is not valid"));
-		input.setLength(10);
-		input.setMaxlength(10);
-		//input.setInFocusOnPageLoad(true);
-		layer = new Layer(Layer.DIV);
-		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		label = new Label(localize("run_reg.name", "Name") + ":", input);
-		layer.add(label);
-		layer.add(input);
-		form.add(layer);
-		form.add(new Break());
-		input.setValue(user.getName());
+		table.add(getText(localize("run_reg.pledge_information_text_step_2", "Information text 2...")), 1, row++);
+		table.setHeight(row++, 6);
+		table.add(nameLayer, 1, row++);
+		table.setHeight(row++, 6);
+		table.add(browser, 1, row++);
+	    
+		
+		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
+		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_PERSON_LOOKUP));
 
-		SubmitButton next = new SubmitButton(localize("next", "Next"), PARAMETER_ACTION, String.valueOf(ACTION_STEP_PERSONAL_DETAILS));
-		form.add(next);
+		table.setHeight(row++, 18);
+		table.add(previous, 1, row);
+		table.add(Text.getNonBrakingSpace(), 1, row);
+		table.add(next, 1, row);
+		table.setAlignment(1, row, Table.HORIZONTAL_ALIGN_RIGHT);
+
 		add(form);
 	}
 
-	private void stepThree(IWContext iwc) {
+	private void stepPayment(IWContext iwc) throws RemoteException {
+		Form form = new Form();
+		form.addParameter(PARAMETER_ACTION, "-1");
+		
+		Table table = new Table();
+		table.setCellpadding(0);
+		table.setCellspacing(0);
+		table.setWidth(Table.HUNDRED_PERCENT);
+		form.add(table);
+		int row = 1;
+
+		table.add(getPhasesTable(3, 4, "run_reg.payment_info", "Payment info"), 1, row++);
+		table.setHeight(row++, 12);
+
+		table.add(getInformationTable(localize("run_reg.pledge_information_text_step_3", "Information text 3...")), 1, row++);
+		table.setHeight(row++, 18);
+		
+		Table runnerTable = new Table();
+		runnerTable.setWidth(Table.HUNDRED_PERCENT);
+		runnerTable.setCellspacing(0);
+		runnerTable.add(getHeader(localize("run_reg.runner_name", "Runner name")), 1, 1);
+		runnerTable.add(getHeader(localize("run_reg.run", "Run")), 2, 1);
+		runnerTable.add(getHeader(localize("run_reg.distance", "Distance")), 3, 1);
+		runnerTable.add(getHeader(localize("run_reg.price", "Price")), 4, 1);
+		table.add(runnerTable, 1, row++);
+		table.setHeight(row++, 18);
+		int runRow = 2;
+		
+		float totalAmount = 0;
+
+		if (pledgeHolder.getRunner() != null) {
+			runnerTable.add(getText(pledgeHolder.getRunner().getName()), 1, runRow);
+		}
+		runnerTable.add(getText(localize(pledgeHolder.getRun().getName(), pledgeHolder.getRun().getName())), 2, runRow);
+		//runnerTable.add(getText(localize(pledgeHolder.getDistance().getName(), pledgeHolder.getDistance().getName())), 3, runRow);
+		float pledgeAmount = pledgeHolder.getPledgeAmount();
+		totalAmount += pledgeAmount;
+		runnerTable.add(getText(formatAmount(iwc.getCurrentLocale(), pledgeAmount)), 4, runRow++);
+		
+		pledgeHolder.setPledgeAmount(pledgeAmount);
+		//runnerTable.add(new HiddenInput(PARAMETER_REFERENCE_NUMBER, pledgeHolder.getPersonalID().replaceAll("-", "")));
+		
+		if (totalAmount == 0) {
+			//save(iwc, false);
+			//return;
+		}		
+		runnerTable.setHeight(runRow++, 12);
+		runnerTable.add(getHeader(localize("run_reg.total_amount", "Total amount")), 1, runRow);
+		runnerTable.add(getHeader(formatAmount(iwc.getCurrentLocale(), totalAmount)), 4, runRow);
+		runnerTable.setColumnAlignment(4, Table.HORIZONTAL_ALIGN_RIGHT);
+
+		Table creditCardTable = new Table();
+		creditCardTable.setWidth(Table.HUNDRED_PERCENT);
+		creditCardTable.setWidth(1, "50%");
+		creditCardTable.setWidth(3, "50%");
+		creditCardTable.setWidth(2, 12);
+		creditCardTable.setColumns(3);
+		creditCardTable.setCellspacing(0);
+		creditCardTable.setCellpadding(0);
+		table.setTopCellBorder(1, row, 1, "#D7D7D7", "solid");
+		table.setCellpaddingBottom(1, row++, 6);
+		table.add(creditCardTable, 1, row++);
+		int creditRow = 1;
+		
+		creditCardTable.add(getHeader(localize("run_reg.credit_card_information", "Credit card information")), 1, creditRow);
+		Collection images = getRunBusiness(iwc).getCreditCardImages();
+		if (images != null) {
+			Iterator iterator = images.iterator();
+			while (iterator.hasNext()) {
+				Image image = (Image) iterator.next();
+				creditCardTable.add(image, 3, creditRow);
+				if (iterator.hasNext()) {
+					creditCardTable.add(Text.getNonBrakingSpace(), 3, creditRow);
+				}
+			}
+		}
+		creditCardTable.setAlignment(3, creditRow++, Table.HORIZONTAL_ALIGN_RIGHT);
+		creditCardTable.setHeight(creditRow++, 12);
+
+		TextInput nameField = (TextInput) getStyledInterface(new TextInput(PARAMETER_CARDHOLDER_NAME));
+		nameField.setAsNotEmpty(localize("run_reg.must_supply_card_holder_name", "You must supply card holder name"));
+		nameField.keepStatusOnAction(true);
+		
+		TextInput ccv = (TextInput) getStyledInterface(new TextInput(PARAMETER_CCV));
+		ccv.setLength(3);
+		ccv.setMaxlength(3);
+		ccv.setMininumLength(3, localize("run_reg.not_valid_ccv", "Not a valid CCV number"));
+		ccv.setAsIntegers(localize("run_reg.not_valid_ccv", "Not a valid CCV number"));
+		ccv.setAsNotEmpty(localize("run_reg.must_supply_ccv", "You must enter the CCV number"));
+		ccv.keepStatusOnAction(true);
+		
+		IWTimestamp stamp = new IWTimestamp();
+		DropdownMenu month = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_EXPIRES_MONTH));
+		for (int a = 1; a <= 12; a++) {
+			month.addMenuElement(a < 10 ? "0" + a : String.valueOf(a), a < 10 ? "0" + a : String.valueOf(a));
+		}
+		month.keepStatusOnAction(true);
+		DropdownMenu year = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_EXPIRES_YEAR));
+		for (int a = stamp.getYear(); a <= stamp.getYear() + 8; a++) {
+			year.addMenuElement(String.valueOf(a).substring(2), String.valueOf(a));
+		}
+		year.keepStatusOnAction(true);
+		
+		creditCardTable.add(getHeader(localize("run_reg.card_holder", "Card holder")), 1, creditRow);
+		creditCardTable.add(getHeader(localize("run_reg.card_number", "Card number")), 3, creditRow++);
+		creditCardTable.add(nameField, 1, creditRow);
+		for (int a = 1; a <= 4; a++) {
+			TextInput cardNumber = (TextInput) getStyledInterface(new TextInput(PARAMETER_CARD_NUMBER + "_" + a));
+			if (a < 4) {
+				cardNumber.setLength(4);
+				cardNumber.setMaxlength(4);
+			}
+			else {
+				cardNumber.setLength(4);
+				cardNumber.setMaxlength(7);
+			}
+			cardNumber.setMininumLength(4, localize("run_reg.not_valid_card_number", "Not a valid card number"));
+			cardNumber.setAsIntegers(localize("run_reg.not_valid_card_number", "Not a valid card number"));
+			cardNumber.setAsNotEmpty(localize("run_reg.must_supply_card_number", "You must enter the credit card number"));
+			cardNumber.keepStatusOnAction(true);
+
+			creditCardTable.add(cardNumber, 3, creditRow);
+			if (a != 4) {
+				creditCardTable.add(Text.getNonBrakingSpace(), 3, creditRow);
+			}
+		}
+		creditRow++;
+		creditCardTable.setHeight(creditRow++, 3);
+
+		creditCardTable.add(getHeader(localize("run_reg.card_expires", "Card expires")), 1, creditRow);
+		creditCardTable.add(getHeader(localize("run_reg.ccv_number", "CCV number")), 3, creditRow++);
+		creditCardTable.add(month, 1, creditRow);
+		creditCardTable.add(getText("/"), 1, creditRow);
+		creditCardTable.add(year, 1, creditRow);
+		creditCardTable.add(ccv, 3, creditRow++);
+		
+		TextInput emailField = (TextInput) getStyledInterface(new TextInput(PARAMETER_CARDHOLDER_EMAIL));
+		emailField.setAsEmail(localize("run_reg.email_err_msg", "Not a valid email address"));
+		emailField.setWidth(Table.HUNDRED_PERCENT);
+		emailField.keepStatusOnAction(true);
+		
+		creditCardTable.setHeight(creditRow++, 3);
+		creditCardTable.mergeCells(3, creditRow, 3, creditRow+1);
+		creditCardTable.add(getText(localize("run_reg.ccv_explanation_text","A CCV number is a three digit number located on the back of all major credit cards.")), 3, creditRow);
+		creditCardTable.add(getHeader(localize("run_reg.card_holder_email", "Cardholder email")), 1, creditRow++);
+		creditCardTable.add(emailField, 1, creditRow++);
+		creditCardTable.add(new HiddenInput(PARAMETER_PLEDGE_AMOUNT, String.valueOf(totalAmount)));
+		creditCardTable.setHeight(creditRow++, 18);
+		creditCardTable.mergeCells(1, creditRow, creditCardTable.getColumns(), creditRow);
+		creditCardTable.add(getText(localize("run_reg.read_conditions", "Please read before you finish your payment") + ": "), 1, creditRow);
+		
+		Help help = new Help();
+		help.setHelpTextBundle(IWMarathonConstants.IW_BUNDLE_IDENTIFIER);
+		help.setHelpTextKey("terms_and_conditions");
+		help.setShowAsText(true);
+		help.setLinkText(localize("run_reg.terms_and_conditions", "Terms and conditions"));
+		creditCardTable.add(help, 1, creditRow++);
+
+		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("run_reg.pay", "Pay")));
+		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_SAVE));
+		next.setDisabled(true);
+
+		CheckBox agree = getCheckBox(PARAMETER_AGREE, Boolean.TRUE.toString());
+		agree.setToEnableWhenChecked(next);
+		agree.setToDisableWhenUnchecked(next);
+		
+		creditCardTable.setHeight(creditRow++, 12);
+		creditCardTable.mergeCells(1, creditRow, creditCardTable.getColumns(), creditRow);
+		creditCardTable.add(agree, 1, creditRow);
+		creditCardTable.add(Text.getNonBrakingSpace(), 1, creditRow);
+		creditCardTable.add(getHeader(localize("run_reg.agree_terms_and_conditions", "I agree to the terms and conditions")), 1, creditRow++);
+
+		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
+		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_PERSONAL_DETAILS));
+		table.setHeight(row++, 18);
+		table.add(previous, 1, row);
+		table.add(Text.getNonBrakingSpace(), 1, row);
+		table.add(next, 1, row);
+		form.setToDisableOnSubmit(next, true);
+		table.setAlignment(1, row, Table.HORIZONTAL_ALIGN_RIGHT);
+
+		add(form);
 	}
 
-	private void stepFour(IWContext iwc) {
+	private void showReceipt(IWContext iwc, Collection runners, double amount, String cardNumber, IWTimestamp paymentStamp, boolean doPayment) {
+		Table table = new Table();
+		table.setCellpadding(0);
+		table.setCellspacing(0);
+		table.setWidth(Table.HUNDRED_PERCENT);
+		int row = 1;
+		//iwc.setSessionAttribute(SESSION_ATTRIBUTE_PARTICIPANTS, runners);
+		//iwc.setSessionAttribute(SESSION_ATTRIBUTE_AMOUNT, new Double(amount));
+		//iwc.setSessionAttribute(SESSION_ATTRIBUTE_CARD_NUMBER, cardNumber);
+		//iwc.setSessionAttribute(SESSION_ATTRIBUTE_PAYMENT_DATE, paymentStamp);
+
+		table.add(getPhasesTable(this.isIcelandic ? 7 : 6, this.isIcelandic ? 7 : 6, "run_reg.receipt", "Receipt"), 1, row++);
+		table.setHeight(row++, 18);
+		
+		table.add(getHeader(localize("run_reg.hello_participant", "Hello participant(s)")), 1, row++);
+		table.setHeight(row++, 16);
+
+		table.add(getText(localize("run_reg.payment_received", "We have received payment for the following:")), 1, row++);
+		table.setHeight(row++, 8);
+
+		Table runnerTable = new Table(5, runners.size() + 3);
+		runnerTable.setWidth(Table.HUNDRED_PERCENT);
+		runnerTable.add(getHeader(localize("run_reg.runner_name", "Runner name")), 1, 1);
+		runnerTable.add(getHeader(localize("run_reg.run", "Run")), 2, 1);
+		runnerTable.add(getHeader(localize("run_reg.distance", "Distance")), 3, 1);
+		runnerTable.add(getHeader(localize("run_reg.race_number", "Race number")), 4, 1);
+		runnerTable.add(getHeader(localize("run_reg.shirt_size", "Shirt size")), 5, 1);
+		table.add(runnerTable, 1, row++);
+		int runRow = 2;
+		Iterator iter = runners.iterator();
+		while (iter.hasNext()) {
+			Participant participant = (Participant) iter.next();
+			Group run = participant.getRunTypeGroup();
+			Group distance = participant.getRunDistanceGroup();
+			
+			runnerTable.add(getText(participant.getUser().getName()), 1, runRow);
+			runnerTable.add(getText(localize(run.getName(), run.getName())), 2, runRow);
+			runnerTable.add(getText(localize(distance.getName(), distance.getName())), 3, runRow);
+			runnerTable.add(getText(String.valueOf(participant.getParticipantNumber())), 4, runRow);
+			runnerTable.add(getText(localize("shirt_size." + participant.getShirtSize(), participant.getShirtSize())), 5, runRow++);
+		}
+		
+		if (doPayment) {
+			Table creditCardTable = new Table(2, 3);
+			creditCardTable.add(getHeader(localize("run_reg.payment_received_timestamp", "Payment received") + ":"), 1, 1);
+			creditCardTable.add(getText(paymentStamp.getLocaleDateAndTime(iwc.getCurrentLocale(), IWTimestamp.SHORT, IWTimestamp.SHORT)), 2, 1);
+			creditCardTable.add(getHeader(localize("run_reg.card_number", "Card number") + ":"), 1, 2);
+			creditCardTable.add(getText(cardNumber), 2, 2);
+			creditCardTable.add(getHeader(localize("run_reg.amount", "Amount") + ":"), 1, 3);
+			creditCardTable.add(getText(formatAmount(iwc.getCurrentLocale(), (float) amount)), 2, 3);
+			table.setHeight(row++, 16);
+			table.add(creditCardTable, 1, row++);
+		}
+		
+		table.setHeight(row++, 16);
+		table.add(getHeader(localize("run_reg.delivery_of_race_material_headline", "Race material and T-shirt/sweatshirt")), 1, row++);
+		table.add(getText(localize("run_reg.delivery_of_race_material_body", "Participants can collect their race number and the t-shirt/sweatshirt here.")), 1, row++);
+
+		table.setHeight(row++, 16);
+		table.add(getHeader(localize("run_reg.receipt_info_headline", "Receipt - Please Print It Out")), 1, row++);
+		table.add(getText(localize("run_reg.receipt_info_headline_body", "This document is your receipt, please print this out and bring it with you when you get your race number and T-shirt/sweatshirt.")), 1, row++);
+
+		table.setHeight(row++, 16);
+		table.add(getText(localize("run_reg.best_regards", "Best regards,")), 1, row++);
+		table.add(getText(localize("run_reg.reykjavik_marathon", "Reykjavik Marathon")), 1, row++);
+		table.add(getText("www.marathon.is"), 1, row++);
+		
+		table.setHeight(row++, 16);
+		
+		Link print = new Link(localize("print", "Print"));
+		print.setPublicWindowToOpen(RegistrationReceivedPrintable.class);
+		table.add(print, 1, row);
+		
+		add(table);
 	}
 	
 	private void save(IWContext iwc, boolean doPayment) throws RemoteException {
-		
+		try {
+			Collection runners = new ArrayList();//((Map) iwc.getSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP)).values();
+
+			String nameOnCard = null;
+			String cardNumber = null;
+			String hiddenCardNumber = "XXXX-XXXX-XXXX-XXXX";
+			String email = pledgeHolder.getCardholderEmail();
+			String expiresMonth = null;
+			String expiresYear = null;
+			String ccVerifyNumber = null;
+			String referenceNumber = null;
+			double amount = 0;
+			IWTimestamp paymentStamp = new IWTimestamp();
+
+			IWBundle iwb = getBundle(iwc);
+			boolean disablePaymentProcess = "true".equalsIgnoreCase(iwb.getProperty("disable_payment_authorization_process","false"));
+			if (doPayment && disablePaymentProcess) {
+				doPayment = false;
+			}
+
+			if (doPayment) {
+				nameOnCard = iwc.getParameter(PARAMETER_CARDHOLDER_NAME);
+				cardNumber = "";
+				for (int i = 1; i <= 4; i++) {
+					cardNumber += iwc.getParameter(PARAMETER_CARD_NUMBER + "_" + i);
+				}
+				hiddenCardNumber = "XXXX-XXXX-XXXX-" + iwc.getParameter(PARAMETER_CARD_NUMBER + "_" + 4);
+				expiresMonth = iwc.getParameter(PARAMETER_EXPIRES_MONTH);
+				expiresYear = iwc.getParameter(PARAMETER_EXPIRES_YEAR);
+				ccVerifyNumber = iwc.getParameter(PARAMETER_CCV);
+				email = iwc.getParameter(PARAMETER_CARDHOLDER_EMAIL);
+				amount = Double.parseDouble(iwc.getParameter(PARAMETER_PLEDGE_AMOUNT));
+				referenceNumber = iwc.getParameter(PARAMETER_REFERENCE_NUMBER);
+			}
+			
+			String properties = null;
+			if (doPayment) {
+				properties = getRunBusiness(iwc).authorizePayment(nameOnCard, cardNumber, expiresMonth, expiresYear, ccVerifyNumber, amount, this.isIcelandic ? "ISK" : "EUR", referenceNumber);
+			}
+			Collection participants = getRunBusiness(iwc).saveParticipants(runners, email, hiddenCardNumber, amount, paymentStamp, iwc.getCurrentLocale());
+			if (doPayment) {
+				getRunBusiness(iwc).finishPayment(properties);
+			}			
+			showReceipt(iwc, participants, amount, hiddenCardNumber, paymentStamp, doPayment);
+		}
+		catch (IDOCreateException ice) {
+			getParentPage().setAlertOnLoad(localize("run_reg.save_failed", "There was an error when trying to finish registration.  Please contact the marathon.is office."));
+			ice.printStackTrace();
+			stepPayment(iwc);
+		}
+		catch (CreditCardAuthorizationException ccae) {
+			IWResourceBundle creditCardBundle = iwc.getIWMainApplication().getBundle("com.idega.block.creditcard").getResourceBundle(iwc.getCurrentLocale());
+			getParentPage().setAlertOnLoad(ccae.getLocalizedMessage(creditCardBundle));
+			ccae.printStackTrace();
+			stepPayment(iwc);
+		}
 	}
 	
-	private void cancel(IWContext iwc) {
-		//iwc.removeSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP);
-	}
-	
-	private EntityBrowser getBrowser(Collection entities, IWContext iwc)  {
+	private EntityBrowser getRunnersBrowser(Collection entities, IWContext iwc)  {
 		// define checkbox button converter class
 		EntityToPresentationObjectConverter converterToChooseButton = new EntityToPresentationObjectConverter() {
 			public PresentationObject getHeaderPresentationObject(EntityPath entityPath, EntityBrowser browser, IWContext iwc) {
@@ -282,7 +627,7 @@ public class PledgeWizard extends RunBlock {
 
 			public PresentationObject getPresentationObject(Object entity, EntityPath path, EntityBrowser browser, IWContext iwc) {
 				Participant participant = (Participant) entity;
-				RadioButton radioButton = new RadioButton(PARAMETER_USER_ID, participant.getUser().getPrimaryKey().toString());
+				RadioButton radioButton = new RadioButton(PARAMETER_PARTICIPATION_ID, participant.getPrimaryKey().toString());
 				radioButton.setMustBeSelected(localize("must_be_selected", "You must select person"));
 				return radioButton;
 			}
@@ -345,12 +690,12 @@ public class PledgeWizard extends RunBlock {
 
 	    // set default columns
 		String nameKey = User.class.getName()+".FIRST_NAME:" + User.class.getName()+".MIDDLE_NAME:"+User.class.getName()+".LAST_NAME";
-	    String pinKey = User.class.getName()+".DATE_OF_BIRTH";
+	    String pinKey = User.class.getName()+".DATE_OF_BIRTH_SHORT";
 	    String distanceKey = Group.class.getName()+".DISTANCE";
 	    String charityKey = Participant.class.getName()+".CHARITY_ORGANIZATIONAL_ID";
 	    EntityBrowser browser = EntityBrowser.getInstance();
 	    browser.setAcceptUserSettingsShowUserSettingsButton(false, false);
-	    browser.setDefaultNumberOfRows(NUMBER_OF_ROWS);
+	    browser.setDefaultNumberOfRows(NUMBER_OF_ROWS_IN_ENTITY_BROWSER);
 	    browser.setUseExternalForm(true);
 	    browser.setEntities("pledge_wizard", entities);
 	    browser.setWidth(Table.HUNDRED_PERCENT);
@@ -376,8 +721,99 @@ public class PledgeWizard extends RunBlock {
 	    browser.setEntityToPresentationConverter(pinKey, converterToUserPersonalID);
 	    browser.setEntityToPresentationConverter(distanceKey, converterToDistanceName);
 	    browser.setEntityToPresentationConverter(charityKey, converterToCharityOrganization);
+	    browser.setShowNavigation(false,true);
 	    return browser;
 	}
+	
+	private EntityBrowser getRunsBrowser(Collection entities, IWContext iwc)  {
+		// define checkbox button converter class
+		EntityToPresentationObjectConverter converterPledgeAmountTextInput = new EntityToPresentationObjectConverter() {
+			public PresentationObject getHeaderPresentationObject(EntityPath entityPath, EntityBrowser browser, IWContext iwc) {
+				return browser.getDefaultConverter().getHeaderPresentationObject(entityPath, browser, iwc);
+			}
+
+			public PresentationObject getPresentationObject(Object entity, EntityPath path, EntityBrowser browser, IWContext iwc) {
+				TextInput pledgeAmountInput = new TextInput(PARAMETER_PLEDGE_AMOUNT);
+				pledgeAmountInput.setAsNotEmpty(localize("must_put_amount", "You must type in amount"));
+				return pledgeAmountInput;
+			}
+		};
+		
+		EntityToPresentationObjectConverter converterToRunYearName = new EntityToPresentationObjectConverter() {
+			public PresentationObject getHeaderPresentationObject(EntityPath entityPath, EntityBrowser browser, IWContext iwc) {
+				return browser.getDefaultConverter().getHeaderPresentationObject(entityPath, browser, iwc);
+			}
+
+			public PresentationObject getPresentationObject(Object entity, EntityPath path, EntityBrowser browser, IWContext iwc) {
+				Participant participant = (Participant) entity;
+				return  new Text(localize(participant.getRunTypeGroup().getName(),participant.getRunTypeGroup().getName())+ " " +localize(participant.getRunYearGroup().getName(),participant.getRunYearGroup().getName()));
+			}
+		};
+		
+		EntityToPresentationObjectConverter converterToDistanceName = new EntityToPresentationObjectConverter() {
+			public PresentationObject getHeaderPresentationObject(EntityPath entityPath, EntityBrowser browser, IWContext iwc) {
+				return browser.getDefaultConverter().getHeaderPresentationObject(entityPath, browser, iwc);
+			}
+
+			public PresentationObject getPresentationObject(Object entity, EntityPath path, EntityBrowser browser, IWContext iwc) {
+				Participant participant = (Participant) entity;
+				return  new Text(localize(participant.getRunDistanceGroup().getName()+ "_short_name",participant.getRunDistanceGroup().getName()));
+			}
+		};
+		
+		EntityToPresentationObjectConverter converterToCharityOrganization = new EntityToPresentationObjectConverter() {
+			public PresentationObject getHeaderPresentationObject(EntityPath entityPath, EntityBrowser browser, IWContext iwc) {
+				return browser.getDefaultConverter().getHeaderPresentationObject(entityPath, browser, iwc);
+			}
+
+			public PresentationObject getPresentationObject(Object entity, EntityPath path, EntityBrowser browser, IWContext iwc) {
+				Participant participant = (Participant) entity;
+				String charityString = "";
+				try {
+					Charity charity = getCharityBusiness(iwc).getCharityByOrganisationalID(participant.getCharityId());
+					charityString = charity.getName();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				Text charityOrganisation = new Text(charityString);
+				return charityOrganisation;
+			}
+		};
+
+	    // set default columns
+		String runYearKey = Participant.class.getName()+".RUN|YEAR";
+		String distanceKey = Group.class.getName()+".DISTANCE";
+	    String charityKey = Participant.class.getName()+".CHARITY_ORGANIZATIONAL_ID";
+	    EntityBrowser browser = EntityBrowser.getInstance();
+	    browser.setAcceptUserSettingsShowUserSettingsButton(false, false);
+	    browser.setShowNavigation(false,false);
+	    browser.setDefaultNumberOfRows(NUMBER_OF_ROWS_IN_ENTITY_BROWSER);
+	    browser.setUseExternalForm(true);
+	    browser.setEntities("pledge_wizard_runs", entities);
+	    browser.setWidth(Table.HUNDRED_PERCENT);
+	    //fonts
+	    Text column = new Text();
+	    column.setBold();
+	    browser.setColumnTextProxy(column);
+	    //   set color of rows
+	    browser.setColorForEvenRows(IWColor.getHexColorString(246, 246, 247));
+	    browser.setColorForOddRows("#FFFFFF");
+	      
+	    browser.setDefaultColumn(1, runYearKey);
+	    browser.setDefaultColumn(2, distanceKey);
+	    browser.setDefaultColumn(3, charityKey);
+	    browser.setMandatoryColumn(4, "Amount");
+        // set foreign entities
+        browser.addEntity(User.class.getName());
+        browser.addEntity(Group.class.getName());
+	    // set special converters
+	    browser.setEntityToPresentationConverter(runYearKey, converterToRunYearName);
+	    browser.setEntityToPresentationConverter(distanceKey, converterToDistanceName);
+	    browser.setEntityToPresentationConverter(charityKey, converterToCharityOrganization);
+	    browser.setEntityToPresentationConverter("Amount", converterPledgeAmountTextInput);
+	    return browser;
+	}
+
 	
 	public void setRunYearGroup(Group group) {
 		setRunYearGroup(new Integer(group.getPrimaryKey().toString()).intValue());
@@ -386,6 +822,53 @@ public class PledgeWizard extends RunBlock {
 	public void setRunYearGroup(int groupID) {
 		if (groupID != -1) {
 			this.runGroupID = groupID;
+		}
+	}
+	
+	private String formatAmount(Locale locale, float amount) {
+		return NumberFormat.getInstance(locale).format(amount) + " " + (this.isIcelandic ? "ISK" : "EUR");
+	}
+	
+	private void collectValues(IWContext iwc) {
+		if (iwc.isParameterSet(PARAMETER_PERSONAL_ID_FILTER)) {
+			pledgeHolder.setPersonalIDFilter(iwc.getParameter(PARAMETER_PERSONAL_ID_FILTER));
+		} else if (iwc.isParameterSetAsEmpty(PARAMETER_PERSONAL_ID_FILTER)) {
+			pledgeHolder.setPersonalIDFilter(null);
+		}
+		if (iwc.isParameterSet(PARAMETER_FIRST_NAME_FILTER)) {
+			pledgeHolder.setFirstNameFilter(iwc.getParameter(PARAMETER_FIRST_NAME_FILTER));
+		} else if (iwc.isParameterSetAsEmpty(PARAMETER_FIRST_NAME_FILTER)) {
+			pledgeHolder.setFirstNameFilter(null);
+		}
+		if (iwc.isParameterSet(PARAMETER_MIDDLE_NAME_FILTER)) {
+			pledgeHolder.setMiddleNameFilter(iwc.getParameter(PARAMETER_MIDDLE_NAME_FILTER));
+		} else if (iwc.isParameterSetAsEmpty(PARAMETER_MIDDLE_NAME_FILTER)) {
+			pledgeHolder.setMiddleNameFilter(null);
+		} 
+		if (iwc.isParameterSet(PARAMETER_LAST_NAME_FILTER)) {
+			pledgeHolder.setLastNameFilter(iwc.getParameter(PARAMETER_LAST_NAME_FILTER));
+		} else if (iwc.isParameterSetAsEmpty(PARAMETER_LAST_NAME_FILTER)) {
+			pledgeHolder.setLastNameFilter(null);
+		} 
+		if (iwc.isParameterSet(PARAMETER_CHARITY_FILTER)) {
+			pledgeHolder.setCharityFilter(iwc.getParameter(PARAMETER_CHARITY_FILTER));
+		} else if (iwc.isParameterSetAsEmpty(PARAMETER_CHARITY_FILTER)) {
+			pledgeHolder.setCharityFilter(null);
+		} 
+		if (iwc.isParameterSet(PARAMETER_FIRST_NAME_FILTER)) {
+			pledgeHolder.setFirstNameFilter(iwc.getParameter(PARAMETER_FIRST_NAME_FILTER));
+		}
+		if (iwc.isParameterSet(PARAMETER_PLEDGE_AMOUNT)) {
+			pledgeHolder.setPledgeAmount(Float.parseFloat(iwc.getParameter(PARAMETER_PLEDGE_AMOUNT)));
+		}
+		if (iwc.isParameterSet(PARAMETER_CARDHOLDER_NAME)) {
+			pledgeHolder.setCardholderName(iwc.getParameter(PARAMETER_CARDHOLDER_NAME));
+		}
+		if (iwc.isParameterSet(PARAMETER_CARDHOLDER_EMAIL)) {
+			pledgeHolder.setCardholderEmail(iwc.getParameter(PARAMETER_CARDHOLDER_EMAIL));
+		}
+		if (iwc.isParameterSet(PARAMETER_AGREE)) {
+			pledgeHolder.setAgreeToTerms(true);
 		}
 	}
 }
