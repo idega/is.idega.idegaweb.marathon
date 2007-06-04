@@ -1,5 +1,5 @@
 /*
- * $Id: RunBlock.java,v 1.9 2007/06/04 14:07:54 sigtryggur Exp $
+ * $Id: RunBlock.java,v 1.10 2007/06/04 21:35:40 sigtryggur Exp $
  * Created on May 17, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -37,10 +37,10 @@ import com.idega.user.business.UserBusiness;
 
 
 /**
- * Last modified: $Date: 2007/06/04 14:07:54 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/04 21:35:40 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class RunBlock extends Block {
 
@@ -237,6 +237,17 @@ public class RunBlock extends Block {
 		Image deleteImage = this.iwb.getImage("shared/delete.gif", 12, 12);
 		deleteImage.setToolTip(toolTip);
 		return deleteImage;
+	}
+
+	/**
+	 * Returns the default forward icon with the tooltip specified.
+	 * @param toolTip	The tooltip to display on mouse over.
+	 * @return Image	The forward icon.
+	 */
+	protected Image getForwardIcon(String toolTip) {
+		Image forwardImage = this.iwb.getImage("shared/forward.gif", 12, 12);
+		forwardImage.setToolTip(toolTip);
+		return forwardImage;
 	}
 	
 	public String getBundleIdentifier() {
