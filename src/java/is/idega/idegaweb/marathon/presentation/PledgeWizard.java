@@ -30,7 +30,6 @@ import com.idega.presentation.Layer;
 import com.idega.presentation.PresentationObject;
 import com.idega.presentation.Table;
 import com.idega.presentation.text.Break;
-import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.DropdownMenu;
 import com.idega.presentation.ui.Form;
@@ -495,15 +494,11 @@ public class PledgeWizard extends RunBlock {
 		table.setCellspacing(0);
 		table.setWidth(Table.HUNDRED_PERCENT);
 		int row = 1;
-		//iwc.setSessionAttribute(SESSION_ATTRIBUTE_PARTICIPANTS, runners);
-		//iwc.setSessionAttribute(SESSION_ATTRIBUTE_AMOUNT, new Double(amount));
-		//iwc.setSessionAttribute(SESSION_ATTRIBUTE_CARD_NUMBER, cardNumber);
-		//iwc.setSessionAttribute(SESSION_ATTRIBUTE_PAYMENT_DATE, paymentStamp);
 
 		table.add(getPhasesTable(4, 4,  "pledgewizard.receipt", "Receipt"), 1, row++);
 		table.setHeight(row++, 18);
 		
-		table.add(getHeader(localize("run_reg.hello_participant", "Hello participant(s)")), 1, row++);
+		table.add(getHeader(localize("pledgewizard.hello_participant", "Thank you for making a pledge")), 1, row++);
 		table.setHeight(row++, 16);
 
 		table.add(getText(localize("run_reg.payment_received", "We have received payment for the following:")), 1, row++);
@@ -514,8 +509,8 @@ public class PledgeWizard extends RunBlock {
 		runnerTable.add(getHeader(localize("run_reg.runner_name", "Runner name")), 1, 1);
 		runnerTable.add(getHeader(localize("run_reg.run", "Run")), 2, 1);
 		runnerTable.add(getHeader(localize("run_reg.distance", "Distance")), 3, 1);
-		runnerTable.add(getHeader(localize("run_reg.race_number", "Race number")), 4, 1);
-		runnerTable.add(getHeader(localize("run_reg.shirt_size", "Shirt size")), 5, 1);
+		runnerTable.add(getHeader(localize("run_reg.charity_organization", "Charity Organization")), 4, 1);
+		runnerTable.add(getHeader(localize("run_reg.amount", "Amount")), 5, 1);
 		table.add(runnerTable, 1, row++);
 		int runRow = 2;
 		Iterator iter = runners.iterator();
@@ -523,13 +518,14 @@ public class PledgeWizard extends RunBlock {
 			Pledge pledge = (Pledge) iter.next();
 			Participant participant = pledge.getParticipant();
 			Group run = participant.getRunTypeGroup();
+			Group year = participant.getRunYearGroup();
 			Group distance = participant.getRunDistanceGroup();
 			
 			runnerTable.add(getText(participant.getUser().getName()), 1, runRow);
-			runnerTable.add(getText(localize(run.getName(), run.getName())), 2, runRow);
-			runnerTable.add(getText(localize(distance.getName(), distance.getName())), 3, runRow);
-			runnerTable.add(getText(String.valueOf(participant.getParticipantNumber())), 4, runRow);
-			runnerTable.add(getText(localize("shirt_size." + participant.getShirtSize(), participant.getShirtSize())), 5, runRow++);
+			runnerTable.add(getText(localize(run.getName(), run.getName()) + " " + localize(year.getName(), year.getName())), 2, runRow);
+			runnerTable.add(getText(localize(distance.getName()+"_short_name", distance.getName())), 3, runRow);
+			runnerTable.add(getText(pledge.getOrganizationalID()), 4, runRow);
+			runnerTable.add(getText(pledge.getAmountPayed()), 5, runRow++);
 		}
 		
 		if (doPayment) {
@@ -545,10 +541,6 @@ public class PledgeWizard extends RunBlock {
 		}
 		
 		table.setHeight(row++, 16);
-		table.add(getHeader(localize("run_reg.delivery_of_race_material_headline", "Race material and T-shirt/sweatshirt")), 1, row++);
-		table.add(getText(localize("run_reg.delivery_of_race_material_body", "Participants can collect their race number and the t-shirt/sweatshirt here.")), 1, row++);
-
-		table.setHeight(row++, 16);
 		table.add(getHeader(localize("run_reg.receipt_info_headline", "Receipt - Please Print It Out")), 1, row++);
 		table.add(getText(localize("run_reg.receipt_info_headline_body", "This document is your receipt, please print this out and bring it with you when you get your race number and T-shirt/sweatshirt.")), 1, row++);
 
@@ -559,9 +551,9 @@ public class PledgeWizard extends RunBlock {
 		
 		table.setHeight(row++, 16);
 		
-		Link print = new Link(localize("print", "Print"));
-		print.setPublicWindowToOpen(RegistrationReceivedPrintable.class);
-		table.add(print, 1, row);
+		//Link print = new Link(localize("print", "Print"));
+		//print.setPublicWindowToOpen(RegistrationReceivedPrintable.class);
+		//table.add(print, 1, row);
 		
 		add(table);
 	}
