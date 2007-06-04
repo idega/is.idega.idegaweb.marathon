@@ -1344,6 +1344,12 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				charityEnabled=true;
 			}
 		}
+		String sPledgedBySponsor = iwc.getParameter(CreateYearForm.PARAMETER_PLEDGED_BY_SPONSOR);
+		int pledgedBySponsor = -1;
+		try{
+			pledgedBySponsor = Integer.parseInt(sPledgedBySponsor);
+		}
+		catch(Exception e){}
 		
 		Group run = null;
 		try {
@@ -1360,6 +1366,9 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			group = getGroupBiz().createGroupUnder(year, null, run);
 			group.setGroupType(IWMarathonConstants.GROUP_TYPE_RUN_YEAR);
 			group.setMetaData(YearBMPBean.METADATA_ENABLE_CHARITY,new Boolean(charityEnabled).toString());
+			if(pledgedBySponsor!=-1){
+				group.setMetaData(YearBMPBean.METADATA_PLEDGED_PER_KILOMETER_BY_SPONSOR, sPledgedBySponsor);
+			}
 			group.store();
 		}
 		catch (IBOLookupException e) {

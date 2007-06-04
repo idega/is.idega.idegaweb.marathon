@@ -28,6 +28,7 @@ public class CreateYearForm extends Block {
 	private static final String PARAMETER_MARATHON_PK = "prm_run_pk";
 	private static final String PARAMETER_GROUP_ID = "ic_group_id";
 	public static final String PARAMETER_CHARITY_ENABLED = "charity_enabled";
+	public static final String PARAMETER_PLEDGED_BY_SPONSOR = "pledged_by_sponsor";
 	private static final int ACTION_SAVE = 4;
 
 	private String runID = null;
@@ -146,6 +147,16 @@ public class CreateYearForm extends Block {
 		
 		table.setHeight(row++, 12);
 		table.add(charityDiv, 1, row);
+		
+		Layer SponsorPledgeDiv = new Layer(Layer.DIV);
+		CheckBox SponsorPledgeCheck = new CheckBox(PARAMETER_PLEDGED_BY_SPONSOR);
+		Label SponsorPledgeLabel = new Label(iwrb.getLocalizedString("run_reg.pledge_amount_from_sponsor", "Sponsor pledges per kilometer"),charityEnabledCheck);
+		SponsorPledgeDiv.add(SponsorPledgeLabel);
+		SponsorPledgeDiv.add(SponsorPledgeCheck);
+		
+		table.setHeight(row++, 12);
+		table.add(SponsorPledgeDiv, 1, row);
+		
 		
 		SubmitButton create = new SubmitButton(iwrb.getLocalizedString("run_reg.save", "Save"), PARAMETER_ACTION, String.valueOf(ACTION_SAVE));
 		table.setHeight(row++, 12);

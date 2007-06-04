@@ -27,6 +27,7 @@ import com.idega.presentation.ui.CheckBox;
 import com.idega.presentation.ui.DateInput;
 import com.idega.presentation.ui.DropdownMenu;
 import com.idega.presentation.ui.Form;
+import com.idega.presentation.ui.IntegerInput;
 import com.idega.presentation.ui.Label;
 import com.idega.presentation.ui.SubmitButton;
 import com.idega.presentation.ui.TextInput;
@@ -213,6 +214,15 @@ public class RunYearEditor extends RunBlock {
 		layer.add(charityEnabledCheck);
 		layer.add(charityEnabledLabel);
 		form.add(layer);
+		form.add(new Break());
+		
+		layer = new Layer(Layer.DIV);
+		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
+		IntegerInput pledgedBySponsorInput = new IntegerInput(CreateYearForm.PARAMETER_PLEDGED_BY_SPONSOR);
+		Label pledgedBySponsorLabel = new Label(localize("run_reg.pledge_amount_from_sponsor", "Sponsor pledges per kilometer"),pledgedBySponsorInput);
+		layer.add(pledgedBySponsorLabel);
+		layer.add(pledgedBySponsorInput);
+		form.add(layer);
 		form.add(new Break());		
 		
 		SubmitButton save = (SubmitButton) getButton(new SubmitButton(localize("save", "Save"), PARAMETER_ACTION, String.valueOf(ACTION_SAVE_EDIT)));
@@ -235,6 +245,10 @@ public class RunYearEditor extends RunBlock {
 				lastRegistrationDate.setTimestamp(new IWTimestamp(lastRegistrationString).getTimestamp());
 			}
 			charityEnabledCheck.setChecked(selectedYear.isCharityEnabled());
+			int pledged = selectedYear.getPledgedBySponsorPerKilometer();
+			if(pledged!=-1){
+				pledgedBySponsorInput.setValue(pledged);
+			}
 		}
 		add(form);
 	}
@@ -251,6 +265,14 @@ public class RunYearEditor extends RunBlock {
 		if(sCharityEnabled!=null){
 			charityEnabled=true;
 		}
+		String sPledged = iwc.getParameter(CreateYearForm.PARAMETER_PLEDGED_BY_SPONSOR);
+		int pledged = -1;
+		if(sPledged!=null){
+			try{
+				pledged = Integer.parseInt(sPledged);
+			}
+			catch(Exception e){}
+		}
 		Year year = null;
 		if (yearID != null) {
 			try {
@@ -264,6 +286,9 @@ public class RunYearEditor extends RunBlock {
 			year.setRunDate(new IWTimestamp(iwc.getParameter(PARAMETER_RUN_DATE)).getTimestamp());
 			year.setLastRegistrationDate(new IWTimestamp(iwc.getParameter(PARAMETER_LAST_REGISTRATION_DATE)).getTimestamp());
 			year.setCharityEnabled(charityEnabled);
+			if(pledged!=-1){
+				year.setPledgedBySponsorPerKilometer(pledged);
+			}
 			year.store();
 		}
 	}

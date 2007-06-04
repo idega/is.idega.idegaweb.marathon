@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.54 2007/06/04 13:48:19 tryggvil Exp $
+ * $Id: Registration.java,v 1.55 2007/06/04 22:00:43 tryggvil Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -43,6 +43,7 @@ import com.idega.idegaweb.help.presentation.Help;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
+import com.idega.presentation.Script;
 import com.idega.presentation.Table;
 import com.idega.presentation.remotescripting.RemoteScriptHandler;
 import com.idega.presentation.text.Link;
@@ -69,10 +70,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/04 13:48:19 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/06/04 22:00:43 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.54 $
+ * @version $Revision: 1.55 $
  */
 public class Registration extends RunBlock {
 	
@@ -239,7 +240,7 @@ public class Registration extends RunBlock {
 		form.add(table);
 		int row = 1;
 
-		table.add(getPhasesTable(this.isIcelandic ? 2 : 1, this.isIcelandic ? 8 : 7, "run_reg.registration", "Registration"), 1, row++);
+		table.add(getPhasesTable(this.isIcelandic ? 2 : 1, this.isIcelandic ? 8 : 6, "run_reg.registration", "Registration"), 1, row++);
 		table.setHeight(row++, 12);
 
 		table.add(getInformationTable(localize("run_reg.information_text_step_2", "Information text 2...")), 1, row++);
@@ -605,7 +606,7 @@ public class Registration extends RunBlock {
 		form.add(table);
 		int row = 1;
 
-		table.add(getPhasesTable(this.isIcelandic ? 3 : 2, this.isIcelandic ? 8 : 7, "run_reg.time_registration_chip", "Time registration chip"), 1, row++);
+		table.add(getPhasesTable(this.isIcelandic ? 3 : 2, this.isIcelandic ? 8 : 6, "run_reg.time_registration_chip", "Time registration chip"), 1, row++);
 		table.setHeight(row++, 12);
 
 		table.add(getInformationTable(localize("run_reg.information_text_step_3", "Information text 3...")), 1, row++);
@@ -680,7 +681,7 @@ public class Registration extends RunBlock {
 		form.add(table);
 		int row = 1;
 
-		table.add(getPhasesTable(this.isIcelandic ? 3 : 2, this.isIcelandic ? 8 : 7, "run_reg.order_transport", "Order transport"), 1, row++);
+		table.add(getPhasesTable(this.isIcelandic ? 3 : 2, this.isIcelandic ? 8 : 6, "run_reg.order_transport", "Order transport"), 1, row++);
 		table.setHeight(row++, 12);
 
 		table.add(getInformationTable(localize("run_reg.information_text_step_3_transport", "Bus trip to race starting point and back to Reykjavik after the race is organized by Reykjavik Marathon. Please select if you like to order a seat or not.")), 1, row++);
@@ -738,7 +739,7 @@ public class Registration extends RunBlock {
 		form.add(table);
 		int row = 1;
 
-		table.add(getPhasesTable(this.isIcelandic ? 5 : 4, this.isIcelandic ? 8 : 7, "run_reg.consent", "Consent"), 1, row++);
+		table.add(getPhasesTable(this.isIcelandic ? 5 : 4, this.isIcelandic ? 8 : 6, "run_reg.consent", "Consent"), 1, row++);
 		table.setHeight(row++, 18);
 
 		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
@@ -759,7 +760,8 @@ public class Registration extends RunBlock {
 		table.add(getHeader(localize("run_reg.agree_terms", "Yes, I agree")), 1, row++);
 		
 		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
-		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_TRANSPORT));
+		String fromValue = iwc.getParameter(PARAMETER_FROM_ACTION);
+		previous.setValueOnClick(PARAMETER_ACTION, fromValue);
 
 		table.setHeight(row++, 18);
 		table.add(previous, 1, row);
@@ -782,7 +784,7 @@ public class Registration extends RunBlock {
 		form.add(table);
 		int row = 1;
 
-		table.add(getPhasesTable(this.isIcelandic ? 6 : 5, this.isIcelandic ? 8 : 7, "run_reg.overview", "Overview"), 1, row++);
+		table.add(getPhasesTable(this.isIcelandic ? 6 : 5, this.isIcelandic ? 8 : 6, "run_reg.overview", "Overview"), 1, row++);
 		table.setHeight(row++, 12);
 
 		table.add(getInformationTable(localize("run_reg.information_text_step_5", "Information text 5...")), 1, row++);
@@ -846,7 +848,7 @@ public class Registration extends RunBlock {
 		form.add(table);
 		int row = 1;
 
-		table.add(getPhasesTable(this.isIcelandic ? 7 : 6, this.isIcelandic ? 8 : 7, "run_reg.payment_info", "Payment info"), 1, row++);
+		table.add(getPhasesTable(this.isIcelandic ? 7 : 6, this.isIcelandic ? 8 : 6, "run_reg.payment_info", "Payment info"), 1, row++);
 		table.setHeight(row++, 12);
 
 		table.add(getInformationTable(localize("run_reg.information_text_step_6", "Information text 6...")), 1, row++);
@@ -1173,7 +1175,7 @@ public class Registration extends RunBlock {
 		iwc.setSessionAttribute(SESSION_ATTRIBUTE_CARD_NUMBER, cardNumber);
 		iwc.setSessionAttribute(SESSION_ATTRIBUTE_PAYMENT_DATE, paymentStamp);
 
-		table.add(getPhasesTable(this.isIcelandic ? 8 : 7, this.isIcelandic ? 8 : 7, "run_reg.receipt", "Receipt"), 1, row++);
+		table.add(getPhasesTable(this.isIcelandic ? 8 : 7, this.isIcelandic ? 8 : 6, "run_reg.receipt", "Receipt"), 1, row++);
 		table.setHeight(row++, 18);
 		
 		table.add(getHeader(localize("run_reg.hello_participant", "Hello participant(s)")), 1, row++);
@@ -1439,12 +1441,22 @@ public class Registration extends RunBlock {
 			else{
 				String actionFrom = iwc.getParameter(PARAMETER_FROM_ACTION);
 				if(actionFrom!=null&&actionFrom.equals(String.valueOf(ACTION_STEP_CHARITY))){
-					//do nothing
+					//do nothing - go directly to DISCLAIMER step
 				}
 				else{
-					Year year = this.runner.getDistance().getYear();
-					if(year.isCharityEnabled()){
-						action = ACTION_STEP_CHARITY;
+					if(this.isIcelandic){
+						Distance distance = this.runner.getDistance();
+						if(distance!=null){
+							Year year = distance.getYear();
+							if(year!=null){
+								if(year.isCharityEnabled()){
+									action = ACTION_STEP_CHARITY;
+								}
+							}
+						}
+					}
+					else{
+//						do nothing - go directly to DISCLAIMER step for english users
 					}
 				}
 			}
@@ -1567,21 +1579,26 @@ public class Registration extends RunBlock {
 		form.add(table);
 		int row = 1;
 
-		table.add(getPhasesTable(this.isIcelandic ? 4 : 3, this.isIcelandic ? 8 : 7, "run_reg.charity", "Allow Charity"), 1, row++);
+		table.add(getPhasesTable(this.isIcelandic ? 4 : 3, this.isIcelandic ? 8 : 6, "run_reg.charity", "Charity"), 1, row++);
 		table.setHeight(row++, 12);
 
 		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
-		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_CHIP));
+		
+		String fromValue = iwc.getParameter(PARAMETER_FROM_ACTION);
+		previous.setValueOnClick(PARAMETER_ACTION, fromValue);
 		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
 		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_DISCLAIMER));
 		
 		table.add(getInformationTable(localize("run_reg.charity_headertext", "Now every runner can run for a good cause for a charity of his/her choice. On marathon.is it is now possible to search for all registered runners and pledge on each.")), 1, row++);
-
+		
 		DropdownMenu charities = new CharitiesForRunDropDownMenu(PARAMETER_CHARITY_ID);
-		charities.setDisabled(true);
+		//charities.setAsNotEmpty(errorMessage, emptyValue)
+		//charities.setAsNotEmpty("Must select");
+				
 		
 		Layer acceptCharityDiv = new Layer(Layer.DIV);
 		CheckBox acceptCharityCheck = getCheckBox(PARAMETER_ACCEPT_CHARITY , Boolean.TRUE.toString());
+		acceptCharityCheck.setChecked(true);
 		acceptCharityCheck.setToEnableWhenChecked(charities);
 		acceptCharityCheck.setToDisableWhenUnchecked(charities);
 		Label accepCharityLabel = new Label(localize("run_reg.agree_charity_participation", "I agree to participate in running for a charity and searchable by others in a pledge form"),acceptCharityCheck);
@@ -1591,7 +1608,17 @@ public class Registration extends RunBlock {
 		
 		table.add(charities,1,row++);
 		
-		table.add(getInformationTable(localize("run_reg.charity_sponsortext", "The sponsor will pay x kr. to the Charity for each kilometer run")), 1, row++);
+		
+		int pledgePerKilometerISK = this.runner.getDistance().getYear().getPledgedBySponsorPerKilometer();
+		int kilometersRun = this.runner.getDistance().getDistanceInKms();
+		int totalPledgedISK = pledgePerKilometerISK*kilometersRun;
+		
+		String locStr = localize("run_reg.charity_sponsortext", "The sponsor will pay x kr. to the Charity for each kilometer run. The sponsor will pay {0} ISK to the charity of your choice for your run.");
+		String[] attributes = { String.valueOf(totalPledgedISK)};
+		//format.setFormat(formatElementIndex, newFormat)
+		
+		String localizedString = MessageFormat.format(locStr, attributes );
+		table.add(getInformationTable(localizedString), 1, row++);
 
 		table.setHeight(row++, 12);
 
@@ -1639,6 +1666,10 @@ public class Registration extends RunBlock {
 		table.setAlignment(1, row, Table.HORIZONTAL_ALIGN_RIGHT);
 
 		add(form);
+		
+		String selectCharitiesMessage = localize("run_reg.must_select_charity", "Please select a valid charity");
+		charities.setOnSubmitFunction("checkCharities", "function checkCharities(){ var checkbox = findObj('"+PARAMETER_ACCEPT_CHARITY+"'); var charities = findObj('"+PARAMETER_CHARITY_ID+"');  if(checkbox.checked){if(charities.options[charities.selectedIndex].value=='-1'){ alert('"+selectCharitiesMessage+"'); return false;} } return true;}");
+
 
 	}
 }

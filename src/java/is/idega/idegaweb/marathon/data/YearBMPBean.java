@@ -1,5 +1,5 @@
 /*
- * $Id: YearBMPBean.java,v 1.4 2007/06/04 13:48:18 tryggvil Exp $
+ * $Id: YearBMPBean.java,v 1.5 2007/06/04 22:00:43 tryggvil Exp $
  * Created on May 22, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -17,17 +17,20 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2007/06/04 13:48:18 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/06/04 22:00:43 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class YearBMPBean extends GroupBMPBean  implements Year,Group{
 
 	public static final String METADATA_RUN_DATE = "run_date";
 	public static final String METADATA_LAST_REGISTRATION_DATE = "last_registration_date";
 	public static final String METADATA_ENABLE_CHARITY = "enable_charity";
+	public static final String METADATA_PLEDGED_PER_KILOMETER_BY_SPONSOR = "sponsor_pledge_amount";
 
+	//private int pledgedBySponsorPerKilometer;
+	
 	public Timestamp getRunDate() {
 		String date = getMetaData(METADATA_RUN_DATE);
 		if (date != null) {
@@ -66,6 +69,20 @@ public class YearBMPBean extends GroupBMPBean  implements Year,Group{
 
 	public void setCharityEnabled(boolean charityEnabled) {
 		setMetaData(METADATA_ENABLE_CHARITY, String.valueOf(charityEnabled), "java.lang.Boolean");
+	}
+
+	public int getPledgedBySponsorPerKilometer() {
+		String sAmount = getMetaData(METADATA_PLEDGED_PER_KILOMETER_BY_SPONSOR);
+		int amount=-1;
+		try{
+			amount = Integer.parseInt(sAmount);
+		}
+		catch(Exception e){}
+		return amount;
+	}
+
+	public void setPledgedBySponsorPerKilometer(int pledgedBySponsorPerKilometer) {
+		setMetaData(METADATA_PLEDGED_PER_KILOMETER_BY_SPONSOR,String.valueOf(pledgedBySponsorPerKilometer));
 	}
 	
 	
