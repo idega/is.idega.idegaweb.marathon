@@ -1,0 +1,53 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from MarathonRegistrationServiceService WSDL service -->
+
+  <service name="RegistrationService" provider="java:RPC" style="rpc" use="encoded">
+      <parameter name="wsdlTargetNamespace" value="urn:MarathonRegistrationService"/>
+      <parameter name="wsdlServiceElement" value="MarathonRegistrationServiceService"/>
+      <parameter name="schemaUnqualified" value="urn:MarathonRegistrationService"/>
+      <parameter name="wsdlServicePort" value="RegistrationService"/>
+      <parameter name="className" value="is.idega.idegaweb.marathon.webservice.impl.RegistrationServiceSoapBindingImpl"/>
+      <parameter name="wsdlPortType" value="MarathonRegistrationService"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <operation name="getRegistrations" qname="operNS:getRegistrations" xmlns:operNS="urn:MarathonRegistrationService" returnQName="getRegistrationsReturn" returnType="rtns:Registrations" xmlns:rtns="urn:MarathonRegistrationService" soapAction="" >
+        <parameter qname="runId" type="tns:string" xmlns:tns="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <parameter qname="year" type="tns:string" xmlns:tns="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </operation>
+      <parameter name="allowedMethods" value="getRegistrations"/>
+
+      <arrayMapping
+        xmlns:ns="urn:MarathonRegistrationService"
+        qname="ns:ArrayOfRegistration"
+        type="java:is.idega.idegaweb.marathon.webservice.impl.Registration[]"
+        innerType="cmp-ns:Registration" xmlns:cmp-ns="urn:MarathonRegistrationService"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="urn:MarathonRegistrationService"
+        qname="ns:Registration"
+        type="java:is.idega.idegaweb.marathon.webservice.impl.Registration"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="urn:MarathonRegistrationService"
+        qname="ns:Registrations"
+        type="java:is.idega.idegaweb.marathon.webservice.impl.Registrations"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+  </service>
+</deployment>
