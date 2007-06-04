@@ -69,7 +69,7 @@ public class PledgeBMPBean extends GenericEntity {
 		setColumn(COLUMN_NAME_PAYMENT_TIMESTAMP, paymentTimestamp);
 	}
 
-	public Collection ejbFindAllCharities() throws FinderException {
+	public Collection ejbFindAllPledges() throws FinderException {
 		SelectQuery query = idoSelectQuery();
 		return idoFindPKsByQuery(query);
 	}
