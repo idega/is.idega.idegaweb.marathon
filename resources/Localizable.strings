@@ -217,6 +217,7 @@ run_reg.must_provide_address=You must enter your address.
 run_reg.must_provide_city=You must enter your city of living.
 run_reg.must_provide_email=You must enter your e-mail address.
 run_reg.must_provide_postal=You must enter your postal address.
+run_reg.must_select_charity=Please select a valid charity
 run_reg.must_select_chip_option=You have to select one chip option.
 run_reg.must_select_country=You must select your country
 run_reg.must_select_distance=You have to select a distance
