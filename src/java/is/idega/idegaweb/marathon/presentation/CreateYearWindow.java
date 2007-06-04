@@ -35,11 +35,11 @@ public class CreateYearWindow extends StyledIWAdminWindow {
 		CreateYearForm form = new CreateYearForm(runID);
 		add(form, iwc);
 
-		switch (parseAction(iwc)) {
+		/*switch (parseAction(iwc)) {
 			case ACTION_SAVE:
 				getRunBiz(iwc).createNewGroupYear(iwc, runID);
 				close();
-		}
+		}*/
 	}
 
 	private int parseAction(IWContext iwc) {

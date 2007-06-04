@@ -9,11 +9,14 @@ import com.idega.business.IBOLookupException;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.Block;
 import com.idega.presentation.IWContext;
+import com.idega.presentation.Layer;
 import com.idega.presentation.Table;
 import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.BooleanInput;
+import com.idega.presentation.ui.CheckBox;
 import com.idega.presentation.ui.DropdownMenu;
 import com.idega.presentation.ui.Form;
+import com.idega.presentation.ui.Label;
 import com.idega.presentation.ui.SubmitButton;
 import com.idega.presentation.ui.TextInput;
 import com.idega.user.business.GroupBusiness;
@@ -24,6 +27,7 @@ public class CreateYearForm extends Block {
 	private static final String PARAMETER_ACTION = "marathon_prm_action";
 	private static final String PARAMETER_MARATHON_PK = "prm_run_pk";
 	private static final String PARAMETER_GROUP_ID = "ic_group_id";
+	public static final String PARAMETER_CHARITY_ENABLED = "charity_enabled";
 	private static final int ACTION_SAVE = 4;
 
 	private String runID = null;
@@ -33,7 +37,29 @@ public class CreateYearForm extends Block {
 		this.runID = runID;
 	}
 	
+	
+	/*switch (parseAction(iwc)) {
+	case ACTION_SAVE:
+		getRunBiz(iwc).createNewGroupYear(iwc, runID);
+		close();
+	}*/
+
+	private int parseAction(IWContext iwc) {
+		if (iwc.isParameterSet(PARAMETER_ACTION)) {
+			return Integer.parseInt(iwc.getParameter(PARAMETER_ACTION));
+		} else {
+			return 0;
+		}
+	}
+	
 	public void main(IWContext iwc) throws Exception {
+		
+		switch (parseAction(iwc)) {
+			case ACTION_SAVE:
+				getRunBiz(iwc).createNewGroupYear(iwc, runID);
+				//close();
+		}
+		
 		IWResourceBundle iwrb = getResourceBundle(iwc);
 		Group run = null;
 		if (this.runID != null && !this.runID.equals("")) {
@@ -112,6 +138,15 @@ public class CreateYearForm extends Block {
 		}
 		form.add(table);
 
+		Layer charityDiv = new Layer(Layer.DIV);
+		CheckBox charityEnabledCheck = new CheckBox(PARAMETER_CHARITY_ENABLED);
+		Label charityEnabledLabel = new Label(iwrb.getLocalizedString("run_reg.charity_enabled", "Charity enabled"),charityEnabledCheck);
+		charityDiv.add(charityEnabledCheck);
+		charityDiv.add(charityEnabledLabel);
+		
+		table.setHeight(row++, 12);
+		table.add(charityDiv, 1, row);
+		
 		SubmitButton create = new SubmitButton(iwrb.getLocalizedString("run_reg.save", "Save"), PARAMETER_ACTION, String.valueOf(ACTION_SAVE));
 		table.setHeight(row++, 12);
 		table.add(create, 1, row);

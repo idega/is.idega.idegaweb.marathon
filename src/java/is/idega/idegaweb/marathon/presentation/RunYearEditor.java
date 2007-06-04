@@ -23,6 +23,7 @@ import com.idega.presentation.TableRowGroup;
 import com.idega.presentation.text.Break;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
+import com.idega.presentation.ui.CheckBox;
 import com.idega.presentation.ui.DateInput;
 import com.idega.presentation.ui.DropdownMenu;
 import com.idega.presentation.ui.Form;
@@ -171,7 +172,7 @@ public class RunYearEditor extends RunBlock {
 		add(form);
 	}
 
-	public void showEditor(IWContext iwc) throws java.rmi.RemoteException {
+	public void showEditor(IWContext iwc) throws java.rmi.RemoteException, FinderException {
 		String yearID = iwc.getParameter(PARAMETER_MARATHON_YEAR_PK);
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_MARATHON_PK);
@@ -205,6 +206,15 @@ public class RunYearEditor extends RunBlock {
 		form.add(layer);
 		form.add(new Break());
 
+		layer = new Layer(Layer.DIV);
+		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
+		CheckBox charityEnabledCheck = new CheckBox(CreateYearForm.PARAMETER_CHARITY_ENABLED);
+		Label charityEnabledLabel = new Label(localize("run_reg.charity_enabled", "Charity enabled"),charityEnabledCheck);
+		layer.add(charityEnabledCheck);
+		layer.add(charityEnabledLabel);
+		form.add(layer);
+		form.add(new Break());		
+		
 		SubmitButton save = (SubmitButton) getButton(new SubmitButton(localize("save", "Save"), PARAMETER_ACTION, String.valueOf(ACTION_SAVE_EDIT)));
 		SubmitButton cancel = (SubmitButton) getButton(new SubmitButton(localize("cancel", "Cancel"), PARAMETER_ACTION, String.valueOf(ACTION_VIEW)));
 
@@ -212,7 +222,8 @@ public class RunYearEditor extends RunBlock {
 		form.add(cancel);
 		
 		if (yearID != null) {
-			Group selectedYear = getRunBusiness(iwc).getRunGroupByGroupId(Integer.valueOf(yearID.toString()));
+			Group selectedGroupYear = getRunBusiness(iwc).getRunGroupByGroupId(Integer.valueOf(yearID.toString()));
+			Year selectedYear = ConverterUtility.getInstance().convertGroupToYear(selectedGroupYear);
 			year.setValue(selectedYear.getName());
 			year.setDisabled(true);
 			String runDateString = selectedYear.getMetaData(METADATA_RUN_DATE);
@@ -223,6 +234,7 @@ public class RunYearEditor extends RunBlock {
 			if (lastRegistrationString != null) { 
 				lastRegistrationDate.setTimestamp(new IWTimestamp(lastRegistrationString).getTimestamp());
 			}
+			charityEnabledCheck.setChecked(selectedYear.isCharityEnabled());
 		}
 		add(form);
 	}
@@ -234,6 +246,11 @@ public class RunYearEditor extends RunBlock {
 	
 	private void saveEdit(IWContext iwc) throws java.rmi.RemoteException {
 		String yearID = iwc.getParameter(PARAMETER_MARATHON_YEAR_PK);
+		String sCharityEnabled = iwc.getParameter(CreateYearForm.PARAMETER_CHARITY_ENABLED);
+		boolean charityEnabled = false;
+		if(sCharityEnabled!=null){
+			charityEnabled=true;
+		}
 		Year year = null;
 		if (yearID != null) {
 			try {
@@ -246,6 +263,7 @@ public class RunYearEditor extends RunBlock {
 		if (year != null) {
 			year.setRunDate(new IWTimestamp(iwc.getParameter(PARAMETER_RUN_DATE)).getTimestamp());
 			year.setLastRegistrationDate(new IWTimestamp(iwc.getParameter(PARAMETER_LAST_REGISTRATION_DATE)).getTimestamp());
+			year.setCharityEnabled(charityEnabled);
 			year.store();
 		}
 	}

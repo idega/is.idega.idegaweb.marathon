@@ -1,5 +1,5 @@
 /*
- * $Id: YearBMPBean.java,v 1.3 2007/01/30 01:59:36 idegaweb Exp $
+ * $Id: YearBMPBean.java,v 1.4 2007/06/04 13:48:18 tryggvil Exp $
  * Created on May 22, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -10,20 +10,23 @@
 package is.idega.idegaweb.marathon.data;
 
 import java.sql.Timestamp;
+
+import com.idega.user.data.Group;
 import com.idega.user.data.GroupBMPBean;
 import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2007/01/30 01:59:36 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/06/04 13:48:18 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
-public class YearBMPBean extends GroupBMPBean  implements Year{
+public class YearBMPBean extends GroupBMPBean  implements Year,Group{
 
-	private static final String METADATA_RUN_DATE = "run_date";
-	private static final String METADATA_LAST_REGISTRATION_DATE = "last_registration_date";
+	public static final String METADATA_RUN_DATE = "run_date";
+	public static final String METADATA_LAST_REGISTRATION_DATE = "last_registration_date";
+	public static final String METADATA_ENABLE_CHARITY = "enable_charity";
 
 	public Timestamp getRunDate() {
 		String date = getMetaData(METADATA_RUN_DATE);
@@ -52,4 +55,18 @@ public class YearBMPBean extends GroupBMPBean  implements Year{
 		IWTimestamp stamp = new IWTimestamp(date);
 		setMetaData(METADATA_LAST_REGISTRATION_DATE, stamp.toSQLString(), "java.sql.Timestamp");
 	}
+	
+	public boolean isCharityEnabled() {
+		String enable = this.getMetaData(METADATA_ENABLE_CHARITY);
+		if (enable != null) {
+			return new Boolean(enable).booleanValue();
+		}
+		return false;
+	}
+
+	public void setCharityEnabled(boolean charityEnabled) {
+		setMetaData(METADATA_ENABLE_CHARITY, String.valueOf(charityEnabled), "java.lang.Boolean");
+	}
+	
+	
 }

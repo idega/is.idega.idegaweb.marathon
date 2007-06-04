@@ -1,5 +1,5 @@
 /*
- * $Id: Runner.java,v 1.5 2007/03/01 15:26:31 idegaweb Exp $ Created on May 16, 2005
+ * $Id: Runner.java,v 1.6 2007/06/04 13:48:19 tryggvil Exp $ Created on May 16, 2005
  * 
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
  * 
@@ -8,9 +8,12 @@
  */
 package is.idega.idegaweb.marathon.business;
 
+import is.idega.idegaweb.marathon.data.Charity;
 import is.idega.idegaweb.marathon.data.Distance;
 import is.idega.idegaweb.marathon.data.Run;
+
 import java.sql.Date;
+
 import com.idega.core.location.data.Country;
 import com.idega.user.data.Gender;
 import com.idega.user.data.User;
@@ -19,10 +22,10 @@ import com.idega.user.data.User;
  * A holder class for information about runners and their selection when
  * registering.
  * 
- * Last modified: $Date: 2007/03/01 15:26:31 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/06/04 13:48:19 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class Runner {
 
@@ -52,6 +55,10 @@ public class Runner {
 	private String mobilePhone;
 	private boolean agree;
 	private float amount;
+	private boolean participateInCharity=false;
+	private boolean maySponsorContactRunner=false;
+	private Charity charity;
+	
 
 	public User getUser() {
 		return this.user;
@@ -261,5 +268,29 @@ public class Runner {
 	
 	public void setAmount(float amount) {
 		this.amount = amount;
+	}
+
+	public Charity getCharity() {
+		return charity;
+	}
+
+	public void setCharity(Charity charity) {
+		this.charity = charity;
+	}
+
+	public boolean isMaySponsorContactRunner() {
+		return maySponsorContactRunner;
+	}
+
+	public void setMaySponsorContactRunner(boolean mayContactRunner) {
+		this.maySponsorContactRunner = mayContactRunner;
+	}
+
+	public boolean isParticipateInCharity() {
+		return participateInCharity;
+	}
+
+	public void setParticipateInCharity(boolean participateInCharity) {
+		this.participateInCharity = participateInCharity;
 	}
 }

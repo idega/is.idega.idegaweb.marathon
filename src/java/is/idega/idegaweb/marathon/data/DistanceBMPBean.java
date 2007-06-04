@@ -1,5 +1,5 @@
 /*
- * $Id: DistanceBMPBean.java,v 1.8 2007/06/02 18:05:53 tryggvil Exp $
+ * $Id: DistanceBMPBean.java,v 1.9 2007/06/04 13:48:19 tryggvil Exp $
  * Created on May 22, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -9,17 +9,21 @@
  */
 package is.idega.idegaweb.marathon.data;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
+
+import com.idega.data.IDOLookupException;
 import com.idega.user.data.Group;
 import com.idega.user.data.GroupBMPBean;
 import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/02 18:05:53 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/06/04 13:48:19 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class DistanceBMPBean extends GroupBMPBean  implements Group, Distance{
 
@@ -39,6 +43,7 @@ public class DistanceBMPBean extends GroupBMPBean  implements Group, Distance{
 
 	//Suffix that all distance groups are suffixed with in their name
 	public static final String KM_SUFFIX="_km";
+	private Year year;
 	
 	public boolean isUseChip() {
 		String useChip = this.getMetaData(METADATA_USE_CHIP);
@@ -205,5 +210,23 @@ public class DistanceBMPBean extends GroupBMPBean  implements Group, Distance{
 		}
 		return -1;
 	}
-	
+
+	public Year getYear(){
+		if(year==null){
+			List parentGroups = getParentGroups();
+			for (Iterator iter = parentGroups.iterator(); iter.hasNext();) {
+				Group group = (Group) iter.next();
+				Object pk = group.getPrimaryKey();
+				YearHome yHome;
+				try {
+					yHome = (YearHome) getIDOHome(Year.class);
+					year = yHome.findByPrimaryKey(pk);		
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return year;
+	}
 }

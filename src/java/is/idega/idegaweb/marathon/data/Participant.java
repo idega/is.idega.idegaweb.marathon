@@ -289,7 +289,7 @@ public interface Participant extends IDOEntity {
 	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setMaySponsorContact
 	 */
-	public void setMaySponsorContact(String mayContact);
+	public void setMaySponsorContact(boolean mayContact);
 
 	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getMaySponsorContact

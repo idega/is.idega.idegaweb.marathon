@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.53 2007/05/25 17:16:09 sigtryggur Exp $
+ * $Id: Registration.java,v 1.54 2007/06/04 13:48:19 tryggvil Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -11,8 +11,11 @@ package is.idega.idegaweb.marathon.presentation;
 
 import is.idega.idegaweb.marathon.business.ConverterUtility;
 import is.idega.idegaweb.marathon.business.Runner;
+import is.idega.idegaweb.marathon.data.Charity;
+import is.idega.idegaweb.marathon.data.CharityHome;
 import is.idega.idegaweb.marathon.data.Distance;
 import is.idega.idegaweb.marathon.data.Participant;
+import is.idega.idegaweb.marathon.data.Year;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
 import java.rmi.RemoteException;
@@ -33,11 +36,13 @@ import com.idega.core.contact.data.Phone;
 import com.idega.core.location.data.Address;
 import com.idega.core.location.data.PostalCode;
 import com.idega.data.IDOCreateException;
+import com.idega.data.IDOLookup;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.help.presentation.Help;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;
+import com.idega.presentation.Layer;
 import com.idega.presentation.Table;
 import com.idega.presentation.remotescripting.RemoteScriptHandler;
 import com.idega.presentation.text.Link;
@@ -47,6 +52,7 @@ import com.idega.presentation.ui.DateInput;
 import com.idega.presentation.ui.DropdownMenu;
 import com.idega.presentation.ui.Form;
 import com.idega.presentation.ui.HiddenInput;
+import com.idega.presentation.ui.Label;
 import com.idega.presentation.ui.RadioButton;
 import com.idega.presentation.ui.SubmitButton;
 import com.idega.presentation.ui.TextInput;
@@ -63,10 +69,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/05/25 17:16:09 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/04 13:48:19 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.53 $
+ * @version $Revision: 1.54 $
  */
 public class Registration extends RunBlock {
 	
@@ -113,14 +119,18 @@ public class Registration extends RunBlock {
 	private static final String PARAMETER_CARD_HOLDER_EMAIL = "prm_card_holder_email";
 	private static final String PARAMETER_REFERENCE_NUMBER = "prm_reference_number";
 	private static final String PARAMETER_SHIRT_SIZES_PER_RUN = "shirt_sizes_per_run";
-
-	private static final int ACTION_STEP_ONE = 1;
-	private static final int ACTION_STEP_TWO = 2;
-	private static final int ACTION_STEP_THREE = 3;
-	private static final int ACTION_STEP_THREE_TRANSPORT = 30;
-	private static final int ACTION_STEP_FOUR = 4;
-	private static final int ACTION_STEP_FIVE = 5;
-	private static final int ACTION_STEP_SIX = 6;
+	private static final String PARAMETER_CHARITY_ID = "prm_charity_id";
+	private static final String PARAMETER_ACCEPT_CHARITY = "prm_accept_charity";
+	private static final String PARAMETER_ALLOW_CONTACT = "prm_allow_contact";
+	
+	private static final int ACTION_STEP_PERSONLOOKUP = 1;
+	private static final int ACTION_STEP_PERSONALDETAILS = 2;
+	private static final int ACTION_STEP_CHIP = 3;
+	private static final int ACTION_STEP_TRANSPORT = 30;
+	private static final int ACTION_STEP_CHARITY = 31;
+	private static final int ACTION_STEP_DISCLAIMER = 4;
+	private static final int ACTION_STEP_PAYMENT = 5;
+	private static final int ACTION_STEP_RECEIPT = 6;
 	private static final int ACTION_SAVE = 7;
 	private static final int ACTION_CANCEL = 8;
 
@@ -144,26 +154,29 @@ public class Registration extends RunBlock {
 		}
 
 		switch (parseAction(iwc)) {
-			case ACTION_STEP_ONE:
-				stepOne(iwc);
+			case ACTION_STEP_PERSONLOOKUP:
+				stepPersonalLookup(iwc);
 				break;
-			case ACTION_STEP_TWO:
-				stepTwo(iwc);
+			case ACTION_STEP_PERSONALDETAILS:
+				stepPersonalDetails(iwc);
 				break;
-			case ACTION_STEP_THREE:
-				stepThree(iwc);
+			case ACTION_STEP_CHIP:
+				stepChip(iwc);
 				break;
-			case ACTION_STEP_THREE_TRANSPORT:
-				stepThreeTransport(iwc);
+			case ACTION_STEP_TRANSPORT:
+				stepTransport(iwc);
 				break;
-			case ACTION_STEP_FOUR:
-				stepFour(iwc);
+			case ACTION_STEP_CHARITY:
+				stepCharity(iwc);
 				break;
-			case ACTION_STEP_FIVE:
-				stepFive(iwc);
+			case ACTION_STEP_DISCLAIMER:
+				stepDisclaimer(iwc);
 				break;
-			case ACTION_STEP_SIX:
-				stepSix(iwc);
+			case ACTION_STEP_PAYMENT:
+				stepPayment(iwc);
+				break;
+			case ACTION_STEP_RECEIPT:
+				stepReceipt(iwc);
 				break;
 			case ACTION_SAVE:
 				save(iwc, true);
@@ -173,11 +186,11 @@ public class Registration extends RunBlock {
 				break;
 		}
 	}
-	
-	private void stepOne(IWContext iwc) {
+
+	private void stepPersonalLookup(IWContext iwc) {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
-		form.addParameter(PARAMETER_ACTION, ACTION_STEP_TWO);
+		form.addParameter(PARAMETER_ACTION, ACTION_STEP_PERSONALDETAILS);
 		
 		Table table = new Table();
 		table.setCellpadding(0);
@@ -211,13 +224,13 @@ public class Registration extends RunBlock {
 		add(form);
 	}
 
-	private void stepTwo(IWContext iwc) throws RemoteException {
+	private void stepPersonalDetails(IWContext iwc) throws RemoteException {
 		Form form = new Form();
 		if (this.isIcelandic) {
 			form.maintainParameter(PARAMETER_PERSONAL_ID);
 		}
 		form.addParameter(PARAMETER_ACTION, "-1");
-		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_TWO);
+		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_PERSONALDETAILS);
 		
 		Table table = new Table();
 		table.setCellpadding(0);
@@ -226,7 +239,7 @@ public class Registration extends RunBlock {
 		form.add(table);
 		int row = 1;
 
-		table.add(getPhasesTable(this.isIcelandic ? 2 : 1, this.isIcelandic ? 7 : 6, "run_reg.registration", "Registration"), 1, row++);
+		table.add(getPhasesTable(this.isIcelandic ? 2 : 1, this.isIcelandic ? 8 : 7, "run_reg.registration", "Registration"), 1, row++);
 		table.setHeight(row++, 12);
 
 		table.add(getInformationTable(localize("run_reg.information_text_step_2", "Information text 2...")), 1, row++);
@@ -254,7 +267,7 @@ public class Registration extends RunBlock {
 			getParentPage().setAlertOnLoad(localize("run_reg.no_runs_available", "There are no runs you can register for."));
 			if (this.isIcelandic) {
 				removeRunner(iwc, this.runner.getPersonalID());
-				stepOne(iwc);
+				stepPersonalLookup(iwc);
 				return;
 			}
 		}
@@ -570,7 +583,7 @@ public class Registration extends RunBlock {
 		choiceTable.add(tShirtField, 3, iRow++);
 
 		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
-		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_THREE));
+		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_CHIP));
 		
 		table.setHeight(row++, 18);
 		table.add(next, 1, row);
@@ -579,11 +592,11 @@ public class Registration extends RunBlock {
 		add(form);
 	}
 
-	private void stepThree(IWContext iwc) {
+	private void stepChip(IWContext iwc) {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
 		form.addParameter(PARAMETER_ACTION, "-1");
-		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_THREE);
+		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_CHIP);
 		
 		Table table = new Table();
 		table.setCellpadding(0);
@@ -592,7 +605,7 @@ public class Registration extends RunBlock {
 		form.add(table);
 		int row = 1;
 
-		table.add(getPhasesTable(this.isIcelandic ? 3 : 2, this.isIcelandic ? 7 : 6, "run_reg.time_registration_chip", "Time registration chip"), 1, row++);
+		table.add(getPhasesTable(this.isIcelandic ? 3 : 2, this.isIcelandic ? 8 : 7, "run_reg.time_registration_chip", "Time registration chip"), 1, row++);
 		table.setHeight(row++, 12);
 
 		table.add(getInformationTable(localize("run_reg.information_text_step_3", "Information text 3...")), 1, row++);
@@ -641,9 +654,9 @@ public class Registration extends RunBlock {
 		
 		
 		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
-		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_TWO));
+		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_PERSONALDETAILS));
 		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
-		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_THREE_TRANSPORT));
+		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_TRANSPORT));
 
 		table.setHeight(row++, 18);
 		table.add(previous, 1, row);
@@ -654,11 +667,11 @@ public class Registration extends RunBlock {
 		add(form);
 	}
 	
-	private void stepThreeTransport(IWContext iwc) {
+	private void stepTransport(IWContext iwc) {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
 		form.addParameter(PARAMETER_ACTION, "-1");
-		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_THREE_TRANSPORT);
+		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_TRANSPORT);
 		
 		Table table = new Table();
 		table.setCellpadding(0);
@@ -667,7 +680,7 @@ public class Registration extends RunBlock {
 		form.add(table);
 		int row = 1;
 
-		table.add(getPhasesTable(this.isIcelandic ? 3 : 2, this.isIcelandic ? 7 : 6, "run_reg.order_transport", "Order transport"), 1, row++);
+		table.add(getPhasesTable(this.isIcelandic ? 3 : 2, this.isIcelandic ? 8 : 7, "run_reg.order_transport", "Order transport"), 1, row++);
 		table.setHeight(row++, 12);
 
 		table.add(getInformationTable(localize("run_reg.information_text_step_3_transport", "Bus trip to race starting point and back to Reykjavik after the race is organized by Reykjavik Marathon. Please select if you like to order a seat or not.")), 1, row++);
@@ -699,9 +712,9 @@ public class Registration extends RunBlock {
 		table.add(getHeader(localize("run_reg.not_order_transport_text", "I don't want to order bus trip.")), 1, row);
 		
 		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
-		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_THREE));
+		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_CHIP));
 		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
-		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_FOUR));
+		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_DISCLAIMER));
 
 		table.setHeight(row++, 18);
 		table.add(previous, 1, row);
@@ -712,11 +725,11 @@ public class Registration extends RunBlock {
 		add(form);
 	}
 
-	private void stepFour(IWContext iwc) {
+	private void stepDisclaimer(IWContext iwc) {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
 		form.addParameter(PARAMETER_ACTION, "-1");
-		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_FOUR);
+		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_DISCLAIMER);
 		
 		Table table = new Table();
 		table.setCellpadding(0);
@@ -725,11 +738,11 @@ public class Registration extends RunBlock {
 		form.add(table);
 		int row = 1;
 
-		table.add(getPhasesTable(this.isIcelandic ? 4 : 3, this.isIcelandic ? 7 : 6, "run_reg.consent", "Consent"), 1, row++);
+		table.add(getPhasesTable(this.isIcelandic ? 5 : 4, this.isIcelandic ? 8 : 7, "run_reg.consent", "Consent"), 1, row++);
 		table.setHeight(row++, 18);
 
 		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
-		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_FIVE));
+		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_PAYMENT));
 		if (!this.runner.isAgree()) {
 			next.setDisabled(true);
 		}
@@ -746,7 +759,7 @@ public class Registration extends RunBlock {
 		table.add(getHeader(localize("run_reg.agree_terms", "Yes, I agree")), 1, row++);
 		
 		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
-		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_THREE_TRANSPORT));
+		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_TRANSPORT));
 
 		table.setHeight(row++, 18);
 		table.add(previous, 1, row);
@@ -757,7 +770,7 @@ public class Registration extends RunBlock {
 		add(form);
 	}
 
-	private void stepFive(IWContext iwc) {
+	private void stepPayment(IWContext iwc) {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
 		form.addParameter(PARAMETER_ACTION, "-1");
@@ -769,7 +782,7 @@ public class Registration extends RunBlock {
 		form.add(table);
 		int row = 1;
 
-		table.add(getPhasesTable(this.isIcelandic ? 5 : 4, this.isIcelandic ? 7 : 6, "run_reg.overview", "Overview"), 1, row++);
+		table.add(getPhasesTable(this.isIcelandic ? 6 : 5, this.isIcelandic ? 8 : 7, "run_reg.overview", "Overview"), 1, row++);
 		table.setHeight(row++, 12);
 
 		table.add(getInformationTable(localize("run_reg.information_text_step_5", "Information text 5...")), 1, row++);
@@ -803,12 +816,12 @@ public class Registration extends RunBlock {
 		}
 		
 		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
-		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_FOUR));
+		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_DISCLAIMER));
 		SubmitButton registerOther = (SubmitButton) getButton(new SubmitButton(localize("run_reg.register_other", "Register other")));
-		registerOther.setValueOnClick(PARAMETER_ACTION, this.isIcelandic ? String.valueOf(ACTION_STEP_ONE) : String.valueOf(String.valueOf(ACTION_STEP_TWO)));
+		registerOther.setValueOnClick(PARAMETER_ACTION, this.isIcelandic ? String.valueOf(ACTION_STEP_PERSONLOOKUP) : String.valueOf(String.valueOf(ACTION_STEP_PERSONALDETAILS)));
 		registerOther.setValueOnClick(PARAMETER_PERSONAL_ID, "");
 		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("run_reg.pay", "Pay")));
-		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_SIX));
+		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_RECEIPT));
 
 		table.setHeight(row++, 18);
 		table.add(previous, 1, row);
@@ -821,7 +834,7 @@ public class Registration extends RunBlock {
 		add(form);
 	}
 
-	private void stepSix(IWContext iwc) throws RemoteException {
+	private void stepReceipt(IWContext iwc) throws RemoteException {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
 		form.addParameter(PARAMETER_ACTION, "-1");
@@ -833,7 +846,7 @@ public class Registration extends RunBlock {
 		form.add(table);
 		int row = 1;
 
-		table.add(getPhasesTable(this.isIcelandic ? 6 : 5, this.isIcelandic ? 7 : 6, "run_reg.payment_info", "Payment info"), 1, row++);
+		table.add(getPhasesTable(this.isIcelandic ? 7 : 6, this.isIcelandic ? 8 : 7, "run_reg.payment_info", "Payment info"), 1, row++);
 		table.setHeight(row++, 12);
 
 		table.add(getInformationTable(localize("run_reg.information_text_step_6", "Information text 6...")), 1, row++);
@@ -1073,7 +1086,7 @@ public class Registration extends RunBlock {
 		creditCardTable.add(getHeader(localize("run_reg.agree_terms_and_conditions", "I agree to the terms and conditions")), 1, creditRow++);
 
 		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
-		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_FIVE));
+		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_PAYMENT));
 		table.setHeight(row++, 18);
 		table.add(previous, 1, row);
 		table.add(Text.getNonBrakingSpace(), 1, row);
@@ -1139,13 +1152,13 @@ public class Registration extends RunBlock {
 		catch (IDOCreateException ice) {
 			getParentPage().setAlertOnLoad(localize("run_reg.save_failed", "There was an error when trying to finish registration.  Please contact the marathon.is office."));
 			ice.printStackTrace();
-			stepSix(iwc);
+			stepReceipt(iwc);
 		}
 		catch (CreditCardAuthorizationException ccae) {
 			IWResourceBundle creditCardBundle = iwc.getIWMainApplication().getBundle("com.idega.block.creditcard").getResourceBundle(iwc.getCurrentLocale());
 			getParentPage().setAlertOnLoad(ccae.getLocalizedMessage(creditCardBundle));
 			ccae.printStackTrace();
-			stepSix(iwc);
+			stepReceipt(iwc);
 		}
 	}
 	
@@ -1160,7 +1173,7 @@ public class Registration extends RunBlock {
 		iwc.setSessionAttribute(SESSION_ATTRIBUTE_CARD_NUMBER, cardNumber);
 		iwc.setSessionAttribute(SESSION_ATTRIBUTE_PAYMENT_DATE, paymentStamp);
 
-		table.add(getPhasesTable(this.isIcelandic ? 7 : 6, this.isIcelandic ? 7 : 6, "run_reg.receipt", "Receipt"), 1, row++);
+		table.add(getPhasesTable(this.isIcelandic ? 8 : 7, this.isIcelandic ? 8 : 7, "run_reg.receipt", "Receipt"), 1, row++);
 		table.setHeight(row++, 18);
 		
 		table.add(getHeader(localize("run_reg.hello_participant", "Hello participant(s)")), 1, row++);
@@ -1333,6 +1346,37 @@ public class Registration extends RunBlock {
 			if (iwc.isParameterSet(PARAMETER_AGREE)) {
 				runner.setAgree(true);
 			}
+			if (iwc.isParameterSet(PARAMETER_ACCEPT_CHARITY)) {
+				String participate = iwc.getParameter(PARAMETER_ACCEPT_CHARITY);
+				if (participate.equals(Boolean.TRUE.toString())) {
+					runner.setParticipateInCharity(true);
+				}
+				else if (participate.equals(Boolean.FALSE.toString())){
+					runner.setParticipateInCharity(false);
+				}
+			}
+			if (iwc.isParameterSet(PARAMETER_CHARITY_ID)) {
+				String organizationalId = iwc.getParameter(PARAMETER_CHARITY_ID);
+				try{
+					CharityHome cHome = (CharityHome) IDOLookup.getHome(Charity.class);
+					if((organizationalId!=null)&&(!organizationalId.equals("-1"))){
+						Charity charity = cHome.findCharityByOrganizationalId(organizationalId);
+						runner.setCharity(charity);
+					}
+				}
+				catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+			if (iwc.isParameterSet(PARAMETER_ALLOW_CONTACT)) {
+				String allowContact = iwc.getParameter(PARAMETER_ALLOW_CONTACT);
+				if (allowContact.equals(Boolean.TRUE.toString())) {
+					runner.setMaySponsorContactRunner(true);
+				}
+				else if (allowContact.equals(Boolean.FALSE.toString())){
+					runner.setMaySponsorContactRunner(false);
+				}
+			}
 
 			addRunner(iwc, personalID, runner);
 			return runner;
@@ -1341,7 +1385,7 @@ public class Registration extends RunBlock {
 	}
 	
 	private int parseAction(IWContext iwc) throws RemoteException {
-		int action = this.isIcelandic ? ACTION_STEP_ONE : ACTION_STEP_TWO;
+		int action = this.isIcelandic ? ACTION_STEP_PERSONLOOKUP : ACTION_STEP_PERSONALDETAILS;
 		
 		if (iwc.isParameterSet(PARAMETER_ACTION)) {
 			action = Integer.parseInt(iwc.getParameter(PARAMETER_ACTION));
@@ -1352,45 +1396,57 @@ public class Registration extends RunBlock {
 		}
 		catch (FinderException fe) {
 			getParentPage().setAlertOnLoad(localize("run_reg.user_not_found_for_personal_id", "No user found with personal ID."));
-			action = ACTION_STEP_ONE;
+			action = ACTION_STEP_PERSONLOOKUP;
 		}
 
-		if (action == ACTION_STEP_THREE) {
+		if (action == ACTION_STEP_CHIP) {
 			if (this.runner != null && !this.runner.getDistance().isUseChip()) {
 				int fromAction = Integer.parseInt(iwc.getParameter(PARAMETER_FROM_ACTION));
-				if (fromAction == ACTION_STEP_FOUR || fromAction == ACTION_STEP_THREE_TRANSPORT) {
-					action = ACTION_STEP_TWO;
+				if (fromAction == ACTION_STEP_DISCLAIMER || fromAction == ACTION_STEP_TRANSPORT) {
+					action = ACTION_STEP_PERSONALDETAILS;
 				}
-				else if (fromAction == ACTION_STEP_TWO) {
+				else if (fromAction == ACTION_STEP_PERSONALDETAILS) {
 					if (this.runner != null && this.runner.getDistance().isTransportOffered() && !disableTransportStep) {
-						action= ACTION_STEP_THREE_TRANSPORT;
+						action= ACTION_STEP_TRANSPORT;
 					}
 					else {
-						action= ACTION_STEP_FOUR;
+						action= ACTION_STEP_DISCLAIMER;
 					}
 				}
 			}
 		}
-		if (action == ACTION_STEP_THREE_TRANSPORT) {
+		if (action == ACTION_STEP_TRANSPORT) {
 			if (this.runner != null && !(this.runner.getDistance().isTransportOffered() && !disableTransportStep)) {
 				int fromAction = Integer.parseInt(iwc.getParameter(PARAMETER_FROM_ACTION));
-				if (fromAction == ACTION_STEP_FOUR) {
+				if (fromAction == ACTION_STEP_DISCLAIMER) {
 					if (this.runner != null && this.runner.getDistance().isUseChip()) {
-						action = ACTION_STEP_THREE;
+						action = ACTION_STEP_CHIP;
 					}
 					else {
-						action = ACTION_STEP_TWO;
+						action = ACTION_STEP_PERSONALDETAILS;
 					}
 				}
-				else if (fromAction == ACTION_STEP_TWO || fromAction == ACTION_STEP_THREE) {
-					action= ACTION_STEP_FOUR;
+				else if (fromAction == ACTION_STEP_PERSONALDETAILS || fromAction == ACTION_STEP_CHIP) {
+					action= ACTION_STEP_DISCLAIMER;
 				}
 			}
 		}
-		if (action == ACTION_STEP_FOUR) {
+		if (action == ACTION_STEP_DISCLAIMER) {
 			if (this.runner != null && this.runner.isOwnChip() && (this.runner.getChipNumber() == null || !checkChipNumber(this.runner.getChipNumber()).equals(""))) {
 				getParentPage().setAlertOnLoad(localize("run_reg.must_fill_in_chip_number", "You have to fill in a valid chip number (seven characters)."));
-				action = ACTION_STEP_THREE;
+				action = ACTION_STEP_CHIP;
+			}
+			else{
+				String actionFrom = iwc.getParameter(PARAMETER_FROM_ACTION);
+				if(actionFrom!=null&&actionFrom.equals(String.valueOf(ACTION_STEP_CHARITY))){
+					//do nothing
+				}
+				else{
+					Year year = this.runner.getDistance().getYear();
+					if(year.isCharityEnabled()){
+						action = ACTION_STEP_CHARITY;
+					}
+				}
 			}
 		}
 
@@ -1496,5 +1552,93 @@ public class Registration extends RunBlock {
 
 	public void setDisableTransportStep(boolean disableTransportStep) {
 		this.disableTransportStep = disableTransportStep;
+	}
+	
+	private void stepCharity(IWContext iwc) {
+		Form form = new Form();
+		form.maintainParameter(PARAMETER_PERSONAL_ID);
+		form.addParameter(PARAMETER_ACTION, "-1");
+		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_CHARITY);
+		
+		Table table = new Table();
+		table.setCellpadding(0);
+		table.setCellspacing(0);
+		table.setWidth(Table.HUNDRED_PERCENT);
+		form.add(table);
+		int row = 1;
+
+		table.add(getPhasesTable(this.isIcelandic ? 4 : 3, this.isIcelandic ? 8 : 7, "run_reg.charity", "Allow Charity"), 1, row++);
+		table.setHeight(row++, 12);
+
+		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
+		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_CHIP));
+		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
+		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_DISCLAIMER));
+		
+		table.add(getInformationTable(localize("run_reg.charity_headertext", "Now every runner can run for a good cause for a charity of his/her choice. On marathon.is it is now possible to search for all registered runners and pledge on each.")), 1, row++);
+
+		DropdownMenu charities = new CharitiesForRunDropDownMenu(PARAMETER_CHARITY_ID);
+		charities.setDisabled(true);
+		
+		Layer acceptCharityDiv = new Layer(Layer.DIV);
+		CheckBox acceptCharityCheck = getCheckBox(PARAMETER_ACCEPT_CHARITY , Boolean.TRUE.toString());
+		acceptCharityCheck.setToEnableWhenChecked(charities);
+		acceptCharityCheck.setToDisableWhenUnchecked(charities);
+		Label accepCharityLabel = new Label(localize("run_reg.agree_charity_participation", "I agree to participate in running for a charity and searchable by others in a pledge form"),acceptCharityCheck);
+		acceptCharityDiv.add(acceptCharityCheck);
+		acceptCharityDiv.add(accepCharityLabel);
+		table.add(acceptCharityDiv,1,row++);
+		
+		table.add(charities,1,row++);
+		
+		table.add(getInformationTable(localize("run_reg.charity_sponsortext", "The sponsor will pay x kr. to the Charity for each kilometer run")), 1, row++);
+
+		table.setHeight(row++, 12);
+
+		Layer allowContactDiv = new Layer(Layer.DIV);
+		CheckBox allowContactCheck = getCheckBox(PARAMETER_ALLOW_CONTACT , Boolean.TRUE.toString());
+		Label allowContactLabel = new Label(localize("run_reg.allow_sponsor_contact", "I allow that an employee from the sponsor may contact me"),allowContactCheck);
+		allowContactDiv.add(allowContactCheck);
+		allowContactDiv.add(allowContactLabel);
+		table.add(allowContactDiv,1,row++);
+		
+		/*
+		table.add(getInformationTable(localize("run_reg.information_text_step_3_transport", "Bus trip to race starting point and back to Reykjavik after the race is organized by Reykjavik Marathon. Please select if you like to order a seat or not.")), 1, row++);
+		table.setHeight(row++, 18);
+		
+		RadioButton orderTransport = getRadioButton(PARAMETER_TRANSPORT, Boolean.TRUE.toString());
+		orderTransport.setSelected(this.runner.isTransportOrdered());
+		orderTransport.setMustBeSelected(localize("run_reg.must_select_transport_option", "You must select bus trip option."));
+		
+		RadioButton notOrderTransport = getRadioButton(PARAMETER_TRANSPORT, Boolean.FALSE.toString());
+		notOrderTransport.setSelected(this.runner.isNoTransportOrdered());
+
+		table.add(orderTransport, 1, row);
+		table.add(Text.getNonBrakingSpace(), 1, row);
+		Distance distance = runner.getDistance();
+		String distancePriceString = "";
+		if (distance != null) {
+			distancePriceString = formatAmount(iwc.getCurrentLocale(), distance.getPriceForTransport(iwc.getCurrentLocale()));
+		}
+		Object[] args = { distancePriceString };
+		table.add(getHeader(MessageFormat.format(localize("run_reg.order_transport_text", "I want to order a bus trip. The price is: {0}"), args)), 1, row);
+		table.setHeight(row++, 6);
+		
+		table.add(getText((localize("run_reg.order_tranport_information_"+runner.getRun().getName().replace(' ', '_'), "Info about transport order..."))), 1, row);
+		table.setBottomCellBorder(1, row, 1, "#D7D7D7", "solid");
+		table.setCellpaddingBottom(1, row++, 6);
+		table.add(notOrderTransport, 1, row);
+		table.add(Text.getNonBrakingSpace(), 1, row);
+		table.add(getHeader(localize("run_reg.not_order_transport_text", "I don't want to order bus trip.")), 1, row);
+		*/
+
+		table.setHeight(row++, 18);
+		table.add(previous, 1, row);
+		table.add(Text.getNonBrakingSpace(), 1, row);
+		table.add(next, 1, row);
+		table.setAlignment(1, row, Table.HORIZONTAL_ALIGN_RIGHT);
+
+		add(form);
+
 	}
 }

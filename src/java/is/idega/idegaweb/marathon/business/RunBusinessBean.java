@@ -5,11 +5,14 @@ package is.idega.idegaweb.marathon.business;
 
 import is.idega.block.family.business.FamilyLogic;
 import is.idega.block.family.business.NoParentFound;
+import is.idega.idegaweb.marathon.data.Charity;
 import is.idega.idegaweb.marathon.data.Distance;
 import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.data.ParticipantHome;
 import is.idega.idegaweb.marathon.data.Run;
 import is.idega.idegaweb.marathon.data.Year;
+import is.idega.idegaweb.marathon.data.YearBMPBean;
+import is.idega.idegaweb.marathon.presentation.CreateYearForm;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
 import java.rmi.RemoteException;
@@ -428,6 +431,13 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					participant.setRunDistanceGroup(distance);
 					participant.setRunYearGroup(yearGroup);
 					participant.setRunGroupGroup(ageGenderGroup);
+					participant.setMaySponsorContact(runner.isMaySponsorContactRunner());
+					if(runner.isParticipateInCharity()){
+						Charity charity = runner.getCharity();
+						if(charity!=null){
+							participant.setCharityId(charity.getOrganizationalID());
+						}
+					}
 					if (runner.getAmount() > 0) {
 						participant.setPayedAmount(String.valueOf(runner.getAmount()));
 					}
@@ -1327,6 +1337,13 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		String[] allowsGroups = iwc.getParameterValues("allows_groups");
 		String[] numberOfSplits = iwc.getParameterValues("number_of_splits");
 		String[] offersTransport = iwc.getParameterValues("offers_transport");
+		String sCharityEnabled = iwc.getParameter(CreateYearForm.PARAMETER_CHARITY_ENABLED);
+		boolean charityEnabled = false;
+		if(sCharityEnabled!=null){
+			if(sCharityEnabled.equalsIgnoreCase("Y")){
+				charityEnabled=true;
+			}
+		}
 		
 		Group run = null;
 		try {
@@ -1342,6 +1359,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		try {
 			group = getGroupBiz().createGroupUnder(year, null, run);
 			group.setGroupType(IWMarathonConstants.GROUP_TYPE_RUN_YEAR);
+			group.setMetaData(YearBMPBean.METADATA_ENABLE_CHARITY,new Boolean(charityEnabled).toString());
 			group.store();
 		}
 		catch (IBOLookupException e) {

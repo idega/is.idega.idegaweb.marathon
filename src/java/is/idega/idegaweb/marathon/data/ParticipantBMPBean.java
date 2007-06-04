@@ -416,7 +416,7 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		return false;
 	}
 	
-	public void setMaySponsorContact(String mayContact) {
+	public void setMaySponsorContact(boolean mayContact) {
 		setColumn(getColumnNameMaySponsorContact(),mayContact);
 	}
 	
