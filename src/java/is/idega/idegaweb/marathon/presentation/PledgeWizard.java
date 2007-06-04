@@ -30,6 +30,7 @@ import com.idega.presentation.Layer;
 import com.idega.presentation.PresentationObject;
 import com.idega.presentation.Table;
 import com.idega.presentation.text.Break;
+import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.DropdownMenu;
 import com.idega.presentation.ui.Form;
@@ -155,6 +156,7 @@ public class PledgeWizard extends RunBlock {
 		form.add(new Break());
 
 		DropdownMenu charityDropDown = new CharitiesForRunDropDownMenu(PARAMETER_CHARITY_FILTER);
+		charityDropDown.setWidth("300");
 		Layer charityDropDownLayer = new Layer(Layer.DIV);
 		charityDropDownLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
 		Label charityDropDownLabel = new Label(localize("pledgewizard.charity_organization", "Charity Organization") + ":", charityDropDown);
@@ -217,8 +219,6 @@ public class PledgeWizard extends RunBlock {
 					} else {
 						EntityBrowser browser = getRunnersBrowser(runRegistrations, iwc);
 						form.add(browser);
-						SubmitButton next = new SubmitButton(localize("next", "Next"), PARAMETER_ACTION, String.valueOf(ACTION_STEP_PERSONAL_DETAILS));
-						form.add(next);
 					}
 				} catch (FinderException e) {
 					e.printStackTrace();
@@ -625,10 +625,15 @@ public class PledgeWizard extends RunBlock {
 
 			public PresentationObject getPresentationObject(Object entity, EntityPath path, EntityBrowser browser, IWContext iwc) {
 				Participant participant = (Participant) entity;
-				RadioButton radioButton = new RadioButton(PARAMETER_PARTICIPANT_ID, participant.getPrimaryKey().toString());
-				radioButton.setMustBeSelected(localize("pledgewizard.runner_must_be_selected", "You must select one runner from the list"));
-				return radioButton;
+				IWBundle marathonBundle = iwc.getIWMainApplication().getBundle("is.idega.idegaweb.marathon");
+				Image forwardImage = marathonBundle.getImage("shared/forward.gif", 12, 12);
+				forwardImage.setToolTip(marathonBundle.getResourceBundle(iwc).getLocalizedString("choose","Choose"));
+				Link forwardLink = new Link(forwardImage);
+				forwardLink.addParameter(PARAMETER_PARTICIPANT_ID, participant.getPrimaryKey().toString());
+				forwardLink.addParameter(PARAMETER_ACTION, ACTION_STEP_PERSONAL_DETAILS);
+				return forwardLink;
 			}
+
 		};
 		
 		EntityToPresentationObjectConverter converterToCharityOrganization = new EntityToPresentationObjectConverter() {
