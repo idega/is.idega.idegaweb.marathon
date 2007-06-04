@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.56 2007/06/04 22:32:45 sigtryggur Exp $
+ * $Id: Registration.java,v 1.57 2007/06/04 23:13:31 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -71,10 +71,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/04 22:32:45 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/04 23:13:31 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.56 $
+ * @version $Revision: 1.57 $
  */
 public class Registration extends RunBlock {
 	
@@ -1624,7 +1624,7 @@ public class Registration extends RunBlock {
 		Layer allowContactDiv = new Layer(Layer.DIV);
 		CheckBox allowContactCheck = getCheckBox(PARAMETER_ALLOW_CONTACT , Boolean.TRUE.toString());
 		Label allowContactLabel = new Label(localize("run_reg.allow_sponsor_contact", "I allow that an employee from the sponsor may contact me"),allowContactCheck);
-		Text footnoteText = new Text(localize("run_reg.footnoteText", ""));
+		Text footnoteText = new Text(localize("run_reg.footnote_text", ""));
 		allowContactDiv.add(allowContactCheck);
 		allowContactDiv.add(allowContactLabel);
 		allowContactDiv.add(new Break());
