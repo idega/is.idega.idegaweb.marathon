@@ -211,8 +211,8 @@ public class RunYearEditor extends RunBlock {
 		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
 		CheckBox charityEnabledCheck = new CheckBox(CreateYearForm.PARAMETER_CHARITY_ENABLED);
 		Label charityEnabledLabel = new Label(localize("run_reg.charity_enabled", "Charity enabled"),charityEnabledCheck);
-		layer.add(charityEnabledCheck);
 		layer.add(charityEnabledLabel);
+		layer.add(charityEnabledCheck);
 		form.add(layer);
 		form.add(new Break());
 		
