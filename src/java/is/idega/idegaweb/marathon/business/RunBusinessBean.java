@@ -1847,4 +1847,19 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		}
 		return this.addressHome;
 	}
+	
+	public Participant getParticipantByPrimaryKey(int participantID) {
+		Participant participant = null;
+		try {
+			ParticipantHome runHome = (ParticipantHome) getIDOHome(Participant.class);
+			participant = runHome.findByPrimaryKey(new Integer(participantID));
+		}
+		catch (RemoteException e1) {
+			e1.printStackTrace();
+		}
+		catch (FinderException e1) {
+			e1.printStackTrace();
+		}
+		return participant;
+	}
 }
