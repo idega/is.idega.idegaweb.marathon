@@ -1,7 +1,6 @@
 package is.idega.idegaweb.marathon.presentation;
 
 import is.idega.idegaweb.marathon.business.CharityBusiness;
-import is.idega.idegaweb.marathon.business.RunBusiness;
 import is.idega.idegaweb.marathon.data.Charity;
 
 import java.util.Collection;
@@ -32,7 +31,7 @@ public class CharitiesForRunDropDownMenu extends DropdownMenu {
 		super.main(iwc);
 		IWResourceBundle iwrb = this.getResourceBundle(iwc);
 		Collection charities = getCharityBusiness(iwc).getCharities();
-		addMenuElement("-1", iwrb.getLocalizedString("run_charity_dd.select_charity", "Select charity..."));
+		addMenuElement("-1", iwrb.getLocalizedString("run_charity_dd.select_charity", "Select Charity Organization..."));
 		if (charities != null) {
 			Iterator iter = charities.iterator();
 			while (iter.hasNext()) {
