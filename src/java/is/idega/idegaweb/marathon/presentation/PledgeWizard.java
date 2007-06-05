@@ -197,13 +197,7 @@ public class PledgeWizard extends RunBlock {
 			charityDropDown.setSelectedElement(pledgeHolder.getCharityFilter());
 
 		}
-		java.util.Enumeration enume = iwc.getParameterNames();
-		while (enume.hasMoreElements()) {
-			String param = enume.nextElement().toString();
-			System.out.println(param + " = " + iwc.getParameter(param));
-		}
 		if (iwc.isParameterSet(PARAMETER_SEARCH) || iwc.isParameterSet(EntityBrowser.BOTTOM_FORM_KEY + EntityBrowser.SHOW_ALL_KEY)) {
-			//search = (SubmitButton) getButton(new SubmitButton(localize("search_again", "Search again"),PARAMETER_SEARCH, PARAMETER_SEARCH));
 			search = new SubmitButton(localize("search_again", "Search again"),PARAMETER_SEARCH, PARAMETER_SEARCH);
 			table.add(search, 1, row);
 			table.setAlignment(1, row++, Table.HORIZONTAL_ALIGN_RIGHT);
@@ -237,9 +231,7 @@ public class PledgeWizard extends RunBlock {
 						}
 					}
 					if (runRegistrations.isEmpty()) {
-						Text text = new Text("&nbsp;&nbsp;&nbsp;&nbsp;"+localize("pledgewizard.no_runners_found", "No runners were found from your search criteria"));
-						text.setFontColor("RED");
-						table.add(text, 1, row++);
+						table.add(getText(localize("pledgewizard.no_runners_found", "No runners were found from your search criteria")), 1, row++);
 						table.setHeight(1, row, 20);
 						
 						
@@ -398,6 +390,7 @@ public class PledgeWizard extends RunBlock {
 			Iterator iterator = images.iterator();
 			while (iterator.hasNext()) {
 				Image image = (Image) iterator.next();
+				//image.setToolTip(getResourceBundle().getLocalizedString("image_tooltip."+image.getName(),image.getName()));
 				creditCardTable.add(image, 3, creditRow);
 				if (iterator.hasNext()) {
 					creditCardTable.add(Text.getNonBrakingSpace(), 3, creditRow);
