@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.57 2007/06/04 23:13:31 sigtryggur Exp $
+ * $Id: Registration.java,v 1.58 2007/06/05 01:02:21 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -43,7 +43,6 @@ import com.idega.idegaweb.help.presentation.Help;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
-import com.idega.presentation.Script;
 import com.idega.presentation.Table;
 import com.idega.presentation.remotescripting.RemoteScriptHandler;
 import com.idega.presentation.text.Break;
@@ -71,10 +70,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/04 23:13:31 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/05 01:02:21 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.57 $
+ * @version $Revision: 1.58 $
  */
 public class Registration extends RunBlock {
 	
@@ -438,7 +437,7 @@ public class Registration extends RunBlock {
 
 		TextInput emailField = (TextInput) getStyledInterface(new TextInput(PARAMETER_EMAIL));
 		emailField.setAsEmail(localize("run_reg.email_err_msg", "Not a valid email address"));
-		emailField.setEmptyConfirm(localize("run_reg.continue_without_email", "Are you sure you want to continue without entering an e-mail?"));
+		emailField.setAsNotEmpty(localize("run_reg.continue_without_email", "You can not continue without entering an e-mail?"));
 		emailField.setWidth(Table.HUNDRED_PERCENT);
 		if (this.runner.getEmail() != null) {
 			emailField.setContent(this.runner.getEmail());
