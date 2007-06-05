@@ -44,7 +44,8 @@ public class CharityBMPBean extends GenericEntity implements Charity {
 	}
 	
 	public Collection ejbFindAllCharities() throws FinderException {
-		SelectQuery query = idoSelectQuery();
+		SelectQuery query = idoSelectPKQuery();
+		query.addOrder(new Table(this), COLUMN_NAME_NAME, true);
 		return idoFindPKsByQuery(query);
 	}
 	
