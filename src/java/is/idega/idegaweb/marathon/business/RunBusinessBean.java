@@ -32,6 +32,7 @@ import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 import javax.ejb.FinderException;
 import javax.transaction.UserTransaction;
+import sun.tools.tree.AddExpression;
 
 import com.idega.block.creditcard.business.CreditCardAuthorizationException;
 import com.idega.block.creditcard.business.CreditCardBusiness;
@@ -46,6 +47,9 @@ import com.idega.business.IBOServiceBean;
 import com.idega.core.contact.data.Email;
 import com.idega.core.location.data.Address;
 import com.idega.core.location.data.AddressHome;
+import com.idega.core.location.data.AddressType;
+import com.idega.core.location.data.AddressTypeBMPBean;
+import com.idega.core.location.data.AddressTypeHome;
 import com.idega.core.location.data.Country;
 import com.idega.core.location.data.CountryHome;
 import com.idega.core.location.data.PostalCode;
@@ -86,7 +90,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 
 	private final static String IW_BUNDLE_IDENTIFIER = IWMarathonConstants.IW_BUNDLE_IDENTIFIER;
 
-	private static String DEFAULT_SMTP_MAILSERVER = "mail.agurait.com";
+	private static String DEFAULT_SMTP_MAILSERVER = "mail.idega.is";
 
 	private static String PROP_SYSTEM_SMTP_MAILSERVER = "messagebox_smtp_mailserver";
 	private static String PROP_CC_ADDRESS = "messagebox_cc_address";
@@ -476,6 +480,9 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 						String body = MessageFormat.format(iwrb.getLocalizedString("registration_received_body_mail", "Your registration has been received."), args);
 						sendMessage(runner.getEmail(), subject, body);
 					}
+					
+
+					sendSponsorEmail(runner,locale);
 				}
 				catch (CreateException ce) {
 					ce.printStackTrace();
@@ -508,6 +515,39 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		return participants;
 	}
 	
+	private void sendSponsorEmail(Runner runner,Locale locale) {
+		
+		if(runner.isMaySponsorContactRunner()){
+			try{
+				String name = runner.getUser().getName();
+				String personalId = runner.getPersonalID();
+				String sAddress = "";
+				Collection addresses = runner.getUser().getAddresses();
+				if(addresses.size()>0){
+					for (Iterator iter = addresses.iterator(); iter.hasNext();) {
+						Address address = (Address) iter.next();
+						sAddress=address.getName()+" "+address.getPostalAddress();
+					}
+					
+				}
+				String phone = runner.getHomePhone();
+				String mobilePhone = runner.getMobilePhone();
+				String runnerEmail = runner.getEmail();
+				String sponsorEmail = getIWApplicationContext().getIWMainApplication().getSettings().getProperty("marathon_sponsor_email");
+				
+				IWResourceBundle iwrb = getIWApplicationContext().getIWMainApplication().getBundle(IWMarathonConstants.IW_BUNDLE_IDENTIFIER).getResourceBundle(locale);
+				Object[] args = { name, personalId, sAddress, phone, mobilePhone,runnerEmail };
+				String subject = iwrb.getLocalizedString("sponsor_mail_subject", "Request for invitiation to be a customer from marathon.is");
+				String body = MessageFormat.format(iwrb.getLocalizedString("sponsor_mail_body", "Name: {0}\nPersonalId: {1}\nAddress: {2}\nPhone: {3}\nMobile Phone: {4}\nE-mail: {5}"), args);
+				sendMessage(sponsorEmail, subject, body);
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+	}
+
 	private int getNextAvailableParticipantNumber(Run run, Distance distance) {
 		int number = distance.getNextAvailableParticipantNumber();
 		int minNumber = getMinParticipantNumber(distance.getName(), run.getName());
