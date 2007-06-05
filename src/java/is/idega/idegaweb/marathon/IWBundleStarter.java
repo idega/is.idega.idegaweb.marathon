@@ -1,5 +1,5 @@
 /*
- * $Id: IWBundleStarter.java,v 1.4 2007/03/28 15:22:51 sigtryggur Exp $
+ * $Id: IWBundleStarter.java,v 1.5 2007/06/05 16:48:11 tryggvil Exp $
  * Created on May 23, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -12,7 +12,7 @@ package is.idega.idegaweb.marathon;
 import java.io.IOException;
 import java.rmi.RemoteException;
 
-import is.idega.idegaweb.marathon.presentation.RunBlock;
+import is.idega.idegaweb.marathon.presentation.StepsBlock;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
 import javax.ejb.CreateException;
@@ -32,10 +32,10 @@ import com.idega.idegaweb.include.GlobalIncludeManager;
 
 
 /**
- * Last modified: $Date: 2007/03/28 15:22:51 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/05 16:48:11 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class IWBundleStarter implements IWBundleStartable {
 	
@@ -101,6 +101,6 @@ public class IWBundleStarter implements IWBundleStartable {
 
 	private void updateData() {
 		GlobalIncludeManager includeManager = GlobalIncludeManager.getInstance();
-		includeManager.addBundleStyleSheet(RunBlock.IW_BUNDLE_IDENTIFIER, "/style/marathon.css");
+		includeManager.addBundleStyleSheet(StepsBlock.IW_BUNDLE_IDENTIFIER, "/style/marathon.css");
 	}
 }

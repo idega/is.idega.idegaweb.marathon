@@ -1,5 +1,5 @@
 /*
- * $Id: GroupRegistration.java,v 1.2 2006/04/12 14:43:32 laddi Exp $
+ * $Id: GroupRegistration.java,v 1.3 2007/06/05 16:48:10 tryggvil Exp $
  * Created on May 30, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -35,10 +35,10 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2006/04/12 14:43:32 $ by $Author: laddi $
+ * Last modified: $Date: 2007/06/05 16:48:10 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class GroupRegistration extends RunBlock {
 
@@ -365,7 +365,7 @@ public class GroupRegistration extends RunBlock {
 		add(table);
 	}
 
-	private int parseAction(IWContext iwc) {
+	protected int parseAction(IWContext iwc) {
 		int action = ACTION_STEP_ONE;
 		
 		if (iwc.isParameterSet(PARAMETER_ACTION)) {

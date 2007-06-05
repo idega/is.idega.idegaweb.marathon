@@ -95,7 +95,7 @@ public class PledgeWizard extends RunBlock {
 		}
 	}
 	
-	private int parseAction(IWContext iwc) {
+	protected int parseAction(IWContext iwc) {
 		collectValues(iwc);
 		
 		int action;

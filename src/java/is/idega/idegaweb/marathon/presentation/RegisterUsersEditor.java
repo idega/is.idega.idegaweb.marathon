@@ -132,7 +132,7 @@ public class RegisterUsersEditor extends RunBlock {
 		
 	}
 	
-	private int parseAction(IWContext iwc) {
+	protected int parseAction(IWContext iwc) {
 		if (iwc.isParameterSet(PARAMETER_ACTION)) {
 			return Integer.parseInt(iwc.getParameter(PARAMETER_ACTION));
 		}

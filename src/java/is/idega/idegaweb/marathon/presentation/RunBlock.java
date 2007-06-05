@@ -1,5 +1,5 @@
 /*
- * $Id: RunBlock.java,v 1.10 2007/06/04 21:35:40 sigtryggur Exp $
+ * $Id: RunBlock.java,v 1.11 2007/06/05 16:48:11 tryggvil Exp $
  * Created on May 17, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -9,129 +9,32 @@
  */
 package is.idega.idegaweb.marathon.presentation;
 
+
+
 import is.idega.idegaweb.marathon.business.CharityBusiness;
 import is.idega.idegaweb.marathon.business.PledgeBusiness;
 import is.idega.idegaweb.marathon.business.RunBusiness;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
-import java.util.HashMap;
-import java.util.Map;
+
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
 import com.idega.business.IBORuntimeException;
 import com.idega.idegaweb.IWApplicationContext;
-import com.idega.idegaweb.IWBundle;
-import com.idega.idegaweb.IWResourceBundle;
-import com.idega.presentation.Block;
-import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;
 import com.idega.presentation.Table;
-import com.idega.presentation.text.Link;
-import com.idega.presentation.text.Text;
-import com.idega.presentation.ui.CheckBox;
-import com.idega.presentation.ui.GenericButton;
-import com.idega.presentation.ui.InterfaceObject;
-import com.idega.presentation.ui.RadioButton;
 import com.idega.user.business.GenderBusiness;
 import com.idega.user.business.GroupBusiness;
 import com.idega.user.business.UserBusiness;
 
 
 /**
- * Last modified: $Date: 2007/06/04 21:35:40 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/05 16:48:11 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
-public class RunBlock extends Block {
-
-	public final static String IW_BUNDLE_IDENTIFIER = "is.idega.idegaweb.marathon";
-
-	public final static String STYLENAME_FORM_ELEMENT = "FormElement";
-	public final static String STYLENAME_HEADER = "Header";
-	public final static String STYLENAME_TEXT = "Text";
-	public final static String STYLENAME_SMALL_TEXT = "SmallText";
-	public final static String STYLENAME_LINK = "Link";
-	public final static String STYLENAME_INTERFACE = "Interface";
-	public final static String STYLENAME_INTERFACE_BUTTON = "InterfaceButton";
-	public final static String STYLENAME_CHECKBOX = "CheckBox";
-
-	private IWResourceBundle iwrb = null;
-	private IWBundle iwb = null;
-
-	public void _main(IWContext iwc)throws Exception{
-		setResourceBundle(getResourceBundle(iwc));
-		setBundle(getBundle(iwc));
-		super._main(iwc);
-	}
+public class RunBlock extends StepsBlock {
 	
-	public Map getStyleNames() {
-		HashMap map = new HashMap();
-		String[] styleNames = { STYLENAME_HEADER, STYLENAME_TEXT, STYLENAME_SMALL_TEXT, STYLENAME_LINK, STYLENAME_LINK + ":hover", STYLENAME_INTERFACE, STYLENAME_CHECKBOX, STYLENAME_INTERFACE_BUTTON,  };
-		String[] styleValues = { "", "", "", "", "", "", "", "" };
-
-		for (int a = 0; a < styleNames.length; a++) {
-			map.put(styleNames[a], styleValues[a]);
-		}
-
-		return map;
-	}
-
-	public String localize(String textKey, String defaultText) {
-		if (this.iwrb == null) {
-			return defaultText;
-		}
-		return this.iwrb.getLocalizedString(textKey, defaultText);
-	}
-	
-	public Text getHeader(String s) {
-		return getStyleText(s, STYLENAME_HEADER);
-	}
-
-	public Text getText(String text) {
-		return getStyleText(text, STYLENAME_TEXT);
-	}
-
-	public Text getSmallText(String text) {
-		return getStyleText(text, STYLENAME_SMALL_TEXT);
-	}
-
-	public Link getLink(String text) {
-		return getStyleLink(new Link(text), STYLENAME_LINK);
-	}
-	
-	public InterfaceObject getStyledInterface(InterfaceObject obj) {
-		return (InterfaceObject) setStyle(obj, STYLENAME_INTERFACE);
-	}
-	
-	protected CheckBox getCheckBox(String name, String value) {
-		return (CheckBox) setStyle(new CheckBox(name,value),STYLENAME_CHECKBOX);
-	}
-	
-	protected RadioButton getRadioButton(String name, String value) {
-		return (RadioButton) setStyle(new RadioButton(name,value),STYLENAME_CHECKBOX);
-	}
-	
-	protected GenericButton getButton(GenericButton button) {
-		button.setHeight("20");
-		return (GenericButton) setStyle(button,STYLENAME_INTERFACE_BUTTON);
-	}
-
-	protected IWBundle getBundle() {
-		return this.iwb;
-	}
-
-	protected void setBundle(IWBundle bundle) {
-		this.iwb = bundle;
-	}
-
-	protected IWResourceBundle getResourceBundle() {
-		return this.iwrb;
-	}
-
-	protected void setResourceBundle(IWResourceBundle resourceBundle) {
-		this.iwrb = resourceBundle;
-	}
-
 	protected RunBusiness getRunBusiness(IWApplicationContext iwac) {
 		try {
 			return (RunBusiness) IBOLookup.getServiceInstance(iwac, RunBusiness.class);
@@ -140,7 +43,7 @@ public class RunBlock extends Block {
 			throw new IBORuntimeException(e);
 		}
 	}
-	
+
 	protected CharityBusiness getCharityBusiness(IWApplicationContext iwac) {
 		try {
 			return (CharityBusiness) IBOLookup.getServiceInstance(iwac, CharityBusiness.class);
@@ -203,7 +106,7 @@ public class RunBlock extends Block {
 		
 		return table;
 	}
-	
+
 	protected Table getInformationTable(String information) {
 		Table table = new Table(1, 1);
 		table.setCellpadding(3);
@@ -216,7 +119,7 @@ public class RunBlock extends Block {
 		
 		return table;
 	}
-	
+
 	/**
 	 * Returns the default edit icon with the tooltip specified.
 	 * @param toolTip	The tooltip to display on mouse over.
@@ -249,8 +152,9 @@ public class RunBlock extends Block {
 		forwardImage.setToolTip(toolTip);
 		return forwardImage;
 	}
-	
+
 	public String getBundleIdentifier() {
 		return IWMarathonConstants.IW_BUNDLE_IDENTIFIER;
 	}
+
 }
