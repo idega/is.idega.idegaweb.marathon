@@ -7,6 +7,9 @@ div.FormElement {
 div.FormElement label {
 	width: 120px;
 	float:left;
+	font-size: 11px;
+    margin-right: 5px;
+	
 }
 
 div.FormElement input, div.FormElement textarea, div.FormElement select {
