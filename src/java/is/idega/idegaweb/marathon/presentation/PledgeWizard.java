@@ -29,14 +29,12 @@ import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
 import com.idega.presentation.PresentationObject;
 import com.idega.presentation.Table;
-import com.idega.presentation.text.Break;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.DropdownMenu;
 import com.idega.presentation.ui.Form;
 import com.idega.presentation.ui.HiddenInput;
 import com.idega.presentation.ui.Label;
-import com.idega.presentation.ui.RadioButton;
 import com.idega.presentation.ui.SubmitButton;
 import com.idega.presentation.ui.TextInput;
 import com.idega.user.data.Group;
@@ -60,8 +58,6 @@ public class PledgeWizard extends RunBlock {
 	private static final String PARAMETER_CHARITY_FILTER = "prm_charity_filter";
 
 	private static final String PARAMETER_PLEDGE_AMOUNT = "prm_pledge_amount";
-	private static final String PARAMETER_AGREE = "prm_agree";
-	
 	private static final String PARAMETER_CARDHOLDER_NAME = "prm_cardholder_name";
 	private static final String PARAMETER_CARD_NUMBER = "prm_card_number";
 	private static final String PARAMETER_EXPIRES_MONTH = "prm_expires_month";
@@ -114,17 +110,23 @@ public class PledgeWizard extends RunBlock {
 	private void stepPersonLookup(IWContext iwc) {
 		Form form = new Form();
 		
-		form.add(getPhasesTable(1, 4, "pledgewizard.make_pledge", "Find runner to make a pledge for"));
-		form.add(localize("pledgewizard.pledge_information_text_step_1", "Information text 1..."));
-		
+		Table table = new Table();
+		table.setCellpadding(0);
+		table.setCellspacing(0);
+		table.setWidth(Table.HUNDRED_PERCENT);
+		form.add(table);
+		int row = 1;
+		table.add(getPhasesTable(1, 4, "pledgewizard.make_pledge", "Find runner to make a pledge for"));
+		table.setHeight(row++, 18);
+
 		TextInput firstNameInput = new TextInput(PARAMETER_FIRST_NAME_FILTER);
-		Layer firstnameLayer = new Layer(Layer.DIV);
-		firstnameLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
+		Layer firstNameLayer = new Layer(Layer.DIV);
+		firstNameLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
 		Label firstnameLabel = new Label(localize("pledgewizard.first_name", "First name") + ":", firstNameInput);
-		firstnameLayer.add(firstnameLabel);
-		firstnameLayer.add(firstNameInput);
-		form.add(firstnameLayer);
-		form.add(new Break());
+		firstNameLayer.add(firstnameLabel);
+		firstNameLayer.add(firstNameInput);
+		//form.add(firstNameLayer);
+		//form.add(new Break());
 		
 		TextInput middleNameInput = new TextInput(PARAMETER_MIDDLE_NAME_FILTER);
 		Layer middleNameLayer = new Layer(Layer.DIV);
@@ -132,8 +134,8 @@ public class PledgeWizard extends RunBlock {
 		Label middleNameLabel = new Label(localize("pledgewizard.middle_name", "Middle name") + ":", middleNameInput);
 		middleNameLayer.add(middleNameLabel);
 		middleNameLayer.add(middleNameInput);
-		form.add(middleNameLayer);
-		form.add(new Break());
+		//form.add(middleNameLayer);
+		//form.add(new Break());
 		
 		TextInput lastNameInput = new TextInput(PARAMETER_LAST_NAME_FILTER);
 		Layer lastNameLayer = new Layer(Layer.DIV);
@@ -141,8 +143,8 @@ public class PledgeWizard extends RunBlock {
 		Label lastNameLabel = new Label(localize("pledgewizard.last_name", "Last name") + ":", lastNameInput);
 		lastNameLayer.add(lastNameLabel);
 		lastNameLayer.add(lastNameInput);
-		form.add(lastNameLayer);
-		form.add(new Break());
+		//form.add(lastNameLayer);
+		//form.add(new Break());
 
 		TextInput personalIDInput = new TextInput(PARAMETER_PERSONAL_ID_FILTER);
 		personalIDInput.setLength(10);
@@ -152,23 +154,33 @@ public class PledgeWizard extends RunBlock {
 		Label personalIDLabel = new Label(localize("pledgewizard.personal_id", "Personal ID") + ":", personalIDInput);
 		personalIDLayer.add(personalIDLabel);
 		personalIDLayer.add(personalIDInput);
-		form.add(personalIDLayer);
-		form.add(new Break());
+		//form.add(personalIDLayer);
+		//form.add(new Break());
 
-		DropdownMenu charityDropDown = new CharitiesForRunDropDownMenu(PARAMETER_CHARITY_FILTER);
-		charityDropDown.setWidth("300");
+		DropdownMenu charityDropDown = (new CharitiesForRunDropDownMenu(PARAMETER_CHARITY_FILTER));
+		charityDropDown.setWidth("200");
 		Layer charityDropDownLayer = new Layer(Layer.DIV);
 		charityDropDownLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
 		Label charityDropDownLabel = new Label(localize("pledgewizard.charity_organization", "Charity Organization") + ":", charityDropDown);
 		charityDropDownLayer.add(charityDropDownLabel);
 		charityDropDownLayer.add(charityDropDown);
-		form.add(charityDropDownLayer);
-		form.add(new Break());
-
+		//form.add(charityDropDownLayer);
+		//form.add(new Break());
+		
+		table.add(getText(localize("pledgewizard.pledge_information_text_step_1", "Information text 1...")), 1, row++);
+		table.setHeight(row++, 6);
+		table.add(firstNameLayer, 1, row);
+		table.setHeight(row++, 6);
+		table.add(middleNameLayer, 1, row);
+		table.setHeight(row++, 6);
+		table.add(lastNameLayer, 1, row);
+		table.setHeight(row++, 6);
+		table.add(personalIDLayer, 1, row);
+		table.setHeight(row++, 6);
+		table.add(charityDropDownLayer, 1, row);
+		table.setHeight(row++, 6);
+		
 		SubmitButton search;
-		if (pledgeHolder.getPersonalIDFilter() != null){
-			personalIDInput.setValue(pledgeHolder.getPersonalIDFilter());
-		}
 		if (pledgeHolder.getFirstNameFilter() != null){
 			firstNameInput.setValue(pledgeHolder.getFirstNameFilter());
 		}
@@ -178,14 +190,24 @@ public class PledgeWizard extends RunBlock {
 		if (pledgeHolder.getLastNameFilter() != null){
 			lastNameInput.setValue(pledgeHolder.getLastNameFilter());
 		}
+		if (pledgeHolder.getPersonalIDFilter() != null){
+			personalIDInput.setValue(pledgeHolder.getPersonalIDFilter());
+		}
 		if (pledgeHolder.getCharityFilter() != null){
 			charityDropDown.setSelectedElement(pledgeHolder.getCharityFilter());
 
 		}
+		java.util.Enumeration enume = iwc.getParameterNames();
+		while (enume.hasMoreElements()) {
+			String param = enume.nextElement().toString();
+			System.out.println(param + " = " + iwc.getParameter(param));
+		}
 		if (iwc.isParameterSet(PARAMETER_SEARCH) || iwc.isParameterSet(EntityBrowser.BOTTOM_FORM_KEY + EntityBrowser.SHOW_ALL_KEY)) {
-			
+			//search = (SubmitButton) getButton(new SubmitButton(localize("search_again", "Search again"),PARAMETER_SEARCH, PARAMETER_SEARCH));
 			search = new SubmitButton(localize("search_again", "Search again"),PARAMETER_SEARCH, PARAMETER_SEARCH);
-			form.add(search);
+			table.add(search, 1, row);
+			table.setAlignment(1, row++, Table.HORIZONTAL_ALIGN_RIGHT);
+			table.setHeight(1, row++, 8);
 			
 			if (this.runGroupID != -1) {
 				try {
@@ -215,10 +237,15 @@ public class PledgeWizard extends RunBlock {
 						}
 					}
 					if (runRegistrations.isEmpty()) {
-						form.add(new Text(localize("pledgewizard.no_runners_found", "No runners were found from your search criteria")));
+						Text text = new Text("&nbsp;&nbsp;&nbsp;&nbsp;"+localize("pledgewizard.no_runners_found", "No runners were found from your search criteria"));
+						text.setFontColor("RED");
+						table.add(text, 1, row++);
+						table.setHeight(1, row, 20);
+						
+						
 					} else {
 						EntityBrowser browser = getRunnersBrowser(runRegistrations, iwc);
-						form.add(browser);
+						table.add(browser, 1, row);
 					}
 				} catch (FinderException e) {
 					e.printStackTrace();
@@ -228,7 +255,10 @@ public class PledgeWizard extends RunBlock {
 			} 
 		} else {
 			search = new SubmitButton(localize("search", "Search"),PARAMETER_SEARCH, PARAMETER_SEARCH);
-			form.add(search);
+			search.setValueOnClick(PARAMETER_SEARCH, PARAMETER_SEARCH);
+			table.add(search, 1, row);
+			table.setAlignment(1, row++, Table.HORIZONTAL_ALIGN_RIGHT);
+			table.setHeight(1, row++, 8);
 		}
 		add(form);
 	} 
@@ -253,37 +283,27 @@ public class PledgeWizard extends RunBlock {
 
 		Participant participant = null;
 		try {
-			participant = getRunBusiness(iwc).getParticipantByPrimaryKey(Integer.parseInt(iwc.getParameter(PARAMETER_PARTICIPANT_ID)));
-			pledgeHolder.setParticipant(participant);
+			if (iwc.isParameterSet(PARAMETER_PARTICIPANT_ID)) {
+				participant = getRunBusiness(iwc).getParticipantByPrimaryKey(Integer.parseInt(iwc.getParameter(PARAMETER_PARTICIPANT_ID)));
+				pledgeHolder.setParticipant(participant);
+			} else {
+				participant = pledgeHolder.getParticipant();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		TextInput nameInput = new TextInput();
+		Text nameText = new Text();
 		Layer nameLayer = new Layer(Layer.DIV);
 		nameLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		Label nameLabel = new Label(localize("pledgewizard.runner_name", "Runner name") + ":", nameInput);
-		nameLayer.add(nameLabel);
-		nameLayer.add(nameInput);
+		Text labelText = new Text(localize("pledgewizard.runner_name", "Runner name") + ": ");
+		labelText.setBold();
+		nameLayer.add(labelText);
+		nameLayer.add(nameText);
 		//form.add(nameLayer);
 		//form.add(new Break());
 		if (participant != null) {
-			nameInput.setValue(participant.getUser().getName());
-			nameInput.setReadOnly(true);
-		}
-		TextInput dobInput = new TextInput();
-		Layer dobLayer = new Layer(Layer.DIV);
-	    dobLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		Label dobLabel = new Label(localize("pledgewizard.date_of_birth", "Date of Birth") + ":", dobInput);
-		dobLayer.add(dobLabel);
-		dobLayer.add(dobInput);
-		//form.add(nameLayer);
-		//form.add(new Break());
-		if (participant != null) {
-			IWTimestamp dobStamp = new IWTimestamp(participant.getUser().getDateOfBirth());
-			String dobString = dobStamp.getDateString("dd. MMM yyyy", iwc.getCurrentLocale());
-			dobInput.setValue(dobString);
-			dobInput.setReadOnly(true);
+			nameText.setText(participant.getUser().getName());
 		}
 		
 		Collection runs = new ArrayList();
@@ -293,9 +313,7 @@ public class PledgeWizard extends RunBlock {
 		table.add(getText(localize("pledgewizard.pledge_information_text_step_2", "Information text 2...")), 1, row++);
 		table.setHeight(row++, 6);
 		table.add(nameLayer, 1, row++);
-		table.setHeight(row++, 6);
-		table.add(dobLayer, 1, row++);
-		table.setHeight(row++, 6);
+		//table.setHeight(row++, 6);
 		table.add(browser, 1, row++);
 	    
 		
@@ -862,17 +880,12 @@ public class PledgeWizard extends RunBlock {
 		} else if (iwc.isParameterSetAsEmpty(PARAMETER_CHARITY_FILTER)) {
 			pledgeHolder.setCharityFilter(null);
 		} 
-		if (iwc.isParameterSet(PARAMETER_FIRST_NAME_FILTER)) {
-			pledgeHolder.setFirstNameFilter(iwc.getParameter(PARAMETER_FIRST_NAME_FILTER));
-		}
+
 		if (iwc.isParameterSet(PARAMETER_PLEDGE_AMOUNT)) {
 			pledgeHolder.setPledgeAmount(Float.parseFloat(iwc.getParameter(PARAMETER_PLEDGE_AMOUNT)));
 		}
 		if (iwc.isParameterSet(PARAMETER_CARDHOLDER_NAME)) {
 			pledgeHolder.setCardholderName(iwc.getParameter(PARAMETER_CARDHOLDER_NAME));
-		}
-		if (iwc.isParameterSet(PARAMETER_AGREE)) {
-			pledgeHolder.setAgreeToTerms(true);
 		}
 	}
 }
