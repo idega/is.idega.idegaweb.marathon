@@ -25,10 +25,10 @@ import com.idega.presentation.ui.RadioButton;
  * <p>
  * Refactoring of the older "RunBlock" to a more generic structure.
  * </p>
- *  Last modified: $Date: 2007/06/05 16:48:10 $ by $Author: tryggvil $
+ *  Last modified: $Date: 2007/06/05 16:48:56 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:tryggvil@idega.com">tryggvil</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class StepsBlock extends Block {
 
@@ -169,7 +169,6 @@ public class StepsBlock extends Block {
 	}
 	
 	protected int getStepByOffset(IWContext iwc, int iCurrentStep, int offset){
-		Map stepsMap = getStepsMap(iwc);
 		Integer currentStep = new Integer(iCurrentStep);
 		
 		List stepsList = getStepsList(iwc);
