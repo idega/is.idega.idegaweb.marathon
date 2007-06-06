@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.60 2007/06/05 16:48:11 tryggvil Exp $
+ * $Id: Registration.java,v 1.61 2007/06/06 11:03:56 tryggvil Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -68,10 +68,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/05 16:48:11 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/06/06 11:03:56 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.60 $
+ * @version $Revision: 1.61 $
  */
 public class Registration extends RunBlock {
 	
@@ -461,7 +461,8 @@ public class Registration extends RunBlock {
 		
 		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_ADDRESS, "Address")), 1, iRow);
 		choiceTable.add(redStar, 1, iRow);
-		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_EMAIL, "Email")), 3, iRow++);
+		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_EMAIL, "Email")), 3, iRow);
+		choiceTable.add(redStar, 3, iRow++);
 		choiceTable.add(addressField, 1, iRow);
 		choiceTable.add(emailField, 3, iRow++);
 		choiceTable.setHeight(iRow++, 3);
