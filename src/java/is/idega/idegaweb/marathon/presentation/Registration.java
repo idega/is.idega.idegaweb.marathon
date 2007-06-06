@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.62 2007/06/06 11:37:15 tryggvil Exp $
+ * $Id: Registration.java,v 1.63 2007/06/06 21:05:23 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -68,10 +68,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/06 11:37:15 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/06/06 21:05:23 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.62 $
+ * @version $Revision: 1.63 $
  */
 public class Registration extends RunBlock {
 	
@@ -1152,8 +1152,7 @@ public class Registration extends RunBlock {
 			double amount = 0;
 			IWTimestamp paymentStamp = new IWTimestamp();
 
-			IWBundle iwb = getBundle(iwc);
-			boolean disablePaymentProcess = "true".equalsIgnoreCase(iwb.getProperty("disable_payment_authorization_process","false"));
+			boolean disablePaymentProcess = "true".equalsIgnoreCase(iwc.getApplicationSettings().getProperty("MARAHTON_DISABLE_PAYMENT_AUTH","false"));
 			if (doPayment && disablePaymentProcess) {
 				doPayment = false;
 			}
@@ -1446,7 +1445,7 @@ public class Registration extends RunBlock {
 				Distance dist = this.runner.getDistance();
 				if(dist!=null){
 					if(dist.isUseChip()){
-						addStep(iwc,ACTION_STEP_CHIP,"run_reg.chip");
+						addStep(iwc,ACTION_STEP_CHIP,"run_reg.time_registration_chip");
 					}
 					if(dist.isTransportOffered()&&!disableTransportStep){
 						addStep(iwc,ACTION_STEP_TRANSPORT,"run_reg.order_transport");
