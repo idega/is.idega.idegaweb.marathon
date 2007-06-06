@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.61 2007/06/06 11:03:56 tryggvil Exp $
+ * $Id: Registration.java,v 1.62 2007/06/06 11:37:15 tryggvil Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -68,10 +68,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/06 11:03:56 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/06/06 11:37:15 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.61 $
+ * @version $Revision: 1.62 $
  */
 public class Registration extends RunBlock {
 	
@@ -723,10 +723,12 @@ public class Registration extends RunBlock {
 		table.add(getHeader(localize("run_reg.not_order_transport_text", "I don't want to order bus trip.")), 1, row);
 		
 		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
-		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_CHIP));
+		//previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_CHIP));
+		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_PREVIOUS));
 		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
-		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_DISCLAIMER));
-
+		//next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_DISCLAIMER));
+		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_NEXT));
+		
 		table.setHeight(row++, 18);
 		table.add(previous, 1, row);
 		table.add(Text.getNonBrakingSpace(), 1, row);
@@ -772,8 +774,8 @@ public class Registration extends RunBlock {
 		
 		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
 		//String fromValue = iwc.getParameter(PARAMETER_FROM_ACTION);
-		String previousActionValue = String.valueOf(ACTION_PREVIOUS);
-		/*Distance distance = this.runner.getDistance();
+		/*String previousActionValue = String.valueOf(ACTION_PREVIOUS);
+		Distance distance = this.runner.getDistance();
 		if(isIcelandic&&distance.getYear().isCharityEnabled()){
 			previousActionValue = String.valueOf(ACTION_STEP_CHARITY);
 		}
