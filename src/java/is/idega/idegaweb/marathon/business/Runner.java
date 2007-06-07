@@ -1,5 +1,5 @@
 /*
- * $Id: Runner.java,v 1.7 2007/06/05 01:45:39 tryggvil Exp $ Created on May 16, 2005
+ * $Id: Runner.java,v 1.8 2007/06/07 23:30:19 tryggvil Exp $ Created on May 16, 2005
  * 
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
  * 
@@ -11,9 +11,9 @@ package is.idega.idegaweb.marathon.business;
 import is.idega.idegaweb.marathon.data.Charity;
 import is.idega.idegaweb.marathon.data.Distance;
 import is.idega.idegaweb.marathon.data.Run;
-
+import is.idega.idegaweb.marathon.data.Year;
 import java.sql.Date;
-
+import javax.ejb.FinderException;
 import com.idega.core.location.data.Country;
 import com.idega.user.data.Gender;
 import com.idega.user.data.User;
@@ -22,10 +22,10 @@ import com.idega.user.data.User;
  * A holder class for information about runners and their selection when
  * registering.
  * 
- * Last modified: $Date: 2007/06/05 01:45:39 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/06/07 23:30:19 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class Runner {
 
@@ -292,5 +292,27 @@ public class Runner {
 
 	public void setParticipateInCharity(boolean participateInCharity) {
 		this.participateInCharity = participateInCharity;
+	}
+	
+	public Year getYear(){
+		Run run = getRun();
+		if(run!=null){
+			return run.getCurrentRegistrationYear();
+		}
+		return null;
+	}
+
+	public void setRunId(String runId) {
+		try {
+			setRun(ConverterUtility.getInstance().convertGroupToRun(new Integer(runId)));
+		}
+		catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (FinderException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

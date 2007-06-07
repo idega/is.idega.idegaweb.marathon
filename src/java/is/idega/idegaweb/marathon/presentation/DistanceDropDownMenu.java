@@ -4,8 +4,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+import is.idega.idegaweb.marathon.business.ConverterUtility;
 import is.idega.idegaweb.marathon.business.RunBusiness;
 import is.idega.idegaweb.marathon.business.Runner;
+import is.idega.idegaweb.marathon.data.Run;
 import is.idega.idegaweb.marathon.data.Year;
 
 import com.idega.business.IBOLookup;
@@ -42,35 +44,20 @@ public class DistanceDropDownMenu extends DropdownMenu {
 		super.main(iwc);
 		IWResourceBundle iwrb = this.getResourceBundle(iwc);
 
-		IWTimestamp thisYearStamp = IWTimestamp.RightNow();
-		String yearString = String.valueOf(thisYearStamp.getYear());
-		IWTimestamp nextYearStamp = IWTimestamp.RightNow();
-		nextYearStamp.addYears(1);
-		String nextYearString = String.valueOf(nextYearStamp.getYear());
+
 
 		addMenuElement("-1", iwrb.getLocalizedString("run_year_ddd.select_distance", "Select distance..."));
-		Group run = null;
+		Run run = null;
 		if (this.runner != null && this.runner.getRun() != null) {
 			run = this.runner.getRun();
 		}
 		else if (iwc.isParameterSet(PARAMETER_MARATHON_PK)) {
-			run = getRunBusiness(iwc).getRunGroupByGroupId(Integer.valueOf(iwc.getParameter(PARAMETER_MARATHON_PK)));
+			Group gRun = getRunBusiness(iwc).getRunGroupByGroupId(Integer.valueOf(iwc.getParameter(PARAMETER_MARATHON_PK)));
+			run = ConverterUtility.getInstance().convertGroupToRun(gRun);
 		}
 		if (run != null) {
-			String runnerYearString = yearString;
-			boolean finished = false;
-			Map yearMap = getRunBusiness(iwc).getYearsMap(run);
-			Year year = (Year) yearMap.get(yearString);
-			if (year != null && year.getLastRegistrationDate() != null) {
-				if (thisYearStamp.isLaterThanOrEquals(new IWTimestamp(year.getLastRegistrationDate()))) {
-					finished = true;
-				}
-			}
-			Year nextYear = (Year) yearMap.get(nextYearString);
-			if (finished && nextYear != null) {
-				runnerYearString = nextYearString;
-			}
-
+			Year year = run.getCurrentRegistrationYear();
+			String runnerYearString = year.getYearString();
 			Collection distances = getRunBusiness(iwc).getDistancesMap(run, runnerYearString);
 			if (distances != null) {
 				Iterator distanceIt = distances.iterator();

@@ -1,5 +1,5 @@
 /*
- * $Id: YearBMPBean.java,v 1.5 2007/06/04 22:00:43 tryggvil Exp $
+ * $Id: YearBMPBean.java,v 1.6 2007/06/07 23:30:19 tryggvil Exp $
  * Created on May 22, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -17,10 +17,10 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2007/06/04 22:00:43 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/06/07 23:30:19 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class YearBMPBean extends GroupBMPBean  implements Year,Group{
 
@@ -83,6 +83,10 @@ public class YearBMPBean extends GroupBMPBean  implements Year,Group{
 
 	public void setPledgedBySponsorPerKilometer(int pledgedBySponsorPerKilometer) {
 		setMetaData(METADATA_PLEDGED_PER_KILOMETER_BY_SPONSOR,String.valueOf(pledgedBySponsorPerKilometer));
+	}
+
+	public String getYearString() {
+		return getName();
 	}
 	
 	

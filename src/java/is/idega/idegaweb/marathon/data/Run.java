@@ -1,5 +1,5 @@
 /*
- * $Id: Run.java,v 1.15 2005/05/24 12:06:29 laddi Exp $
+ * $Id: Run.java,v 1.16 2007/06/07 23:30:19 tryggvil Exp $
  * Created on May 22, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -13,10 +13,10 @@ import com.idega.user.data.Group;
 
 
 /**
- * Last modified: $Date: 2005/05/24 12:06:29 $ by $Author: laddi $
+ * Last modified: $Date: 2007/06/07 23:30:19 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public interface Run extends Group {
 
@@ -29,4 +29,6 @@ public interface Run extends Group {
 	 * @see is.idega.idegaweb.marathon.data.RunBMPBean#setFamilyDiscount
 	 */
 	public void setFamilyDiscount(float discount);
+
+	public Year getCurrentRegistrationYear();
 }

@@ -23,6 +23,7 @@ public class ActiveRunDropDownMenu extends DropdownMenu {
 	private static final String IW_BUNDLE_IDENTIFIER = "is.idega.idegaweb.marathon";
 	private static final String PARAMETER_ACTIVE_RUNS = "prm_active_runs";
 	private Runner runner = null;
+	private String[] constrainedRunIds;
 
 	public ActiveRunDropDownMenu() {
 		this(PARAMETER_ACTIVE_RUNS);
@@ -33,8 +34,13 @@ public class ActiveRunDropDownMenu extends DropdownMenu {
 	}
 
 	public ActiveRunDropDownMenu(String parameterName, Runner runner) {
+		this(parameterName,runner,null);
+	}
+
+	public ActiveRunDropDownMenu(String parameterName, Runner runner, String[] constrainedRunIds) {
 		super(parameterName);
 		this.runner = runner;
+		this.constrainedRunIds=constrainedRunIds;
 	}
 
 	public void main(IWContext iwc) throws Exception {
@@ -54,7 +60,8 @@ public class ActiveRunDropDownMenu extends DropdownMenu {
 			while (iter.hasNext()) {
 				Group run = (Group) iter.next();
 				String runnerYearString = yearString;
-
+				String runId = run.getPrimaryKey().toString();
+				
 				boolean show = false;
 				boolean finished = true;
 				Map yearMap = getRunBusiness(iwc).getYearsMap(run);
@@ -71,15 +78,29 @@ public class ActiveRunDropDownMenu extends DropdownMenu {
 					runnerYearString = nextYearString;
 					show = true;
 				}
-
+				
+				if(constrainedRunIds!=null){
+					boolean match = false;
+					for (int i = 0; i < constrainedRunIds.length; i++) {
+						String constrainedId = constrainedRunIds[i];
+						if(constrainedId.equals(runId)){
+							match=true;
+						}
+					}
+					if(!match){
+						show=false;
+					}
+				}
+				
 				if (show) {
+					
 					if (this.runner != null && this.runner.getUser() != null) {
 						if (!getRunBusiness(iwc).isRegisteredInRun(runnerYearString, run, this.runner.getUser())) {
-							addMenuElement(run.getPrimaryKey().toString(), iwrb.getLocalizedString(run.getName(), run.getName()) + " - " + runnerYearString);
+							addMenuElement(runId, iwrb.getLocalizedString(run.getName(), run.getName()) + " - " + runnerYearString);
 						}
 					}
 					else {
-						addMenuElement(run.getPrimaryKey().toString(), iwrb.getLocalizedString(run.getName(), run.getName()) + " - " + runnerYearString);
+						addMenuElement(runId, iwrb.getLocalizedString(run.getName(), run.getName()) + " - " + runnerYearString);
 					}
 				}
 			}
