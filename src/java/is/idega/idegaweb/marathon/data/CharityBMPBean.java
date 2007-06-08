@@ -12,6 +12,7 @@ import com.idega.data.query.SelectQuery;
 import com.idega.data.query.Table;
 import com.idega.data.query.WildCardColumn;
 import com.idega.user.data.Group;
+import com.idega.user.data.GroupBMPBean;
 
 public class CharityBMPBean extends GenericEntity implements Charity {
 
@@ -68,7 +69,7 @@ public class CharityBMPBean extends GenericEntity implements Charity {
 		Table table = new Table(this);
 		Table runYearTable = new Table(Group.class);
 		Column charityIDColumn = new Column(table, getIDColumnName());
-		Column runYearIDColumn = new Column(runYearTable, YearBMPBean.getColumnNameGroupID());
+		Column runYearIDColumn = new Column(runYearTable, GroupBMPBean.getColumnNameGroupID());
 		
 		SelectQuery query = new SelectQuery(table);
 		query.addManyToManyJoin(table, runYearTable);
