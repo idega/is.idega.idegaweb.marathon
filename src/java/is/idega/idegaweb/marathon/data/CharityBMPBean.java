@@ -5,11 +5,13 @@ import java.util.Collection;
 import javax.ejb.FinderException;
 
 import com.idega.data.GenericEntity;
+import com.idega.data.IDORelationshipException;
 import com.idega.data.query.Column;
 import com.idega.data.query.MatchCriteria;
 import com.idega.data.query.SelectQuery;
 import com.idega.data.query.Table;
 import com.idega.data.query.WildCardColumn;
+import com.idega.user.data.Group;
 
 public class CharityBMPBean extends GenericEntity implements Charity {
 
@@ -25,6 +27,8 @@ public class CharityBMPBean extends GenericEntity implements Charity {
 		addAttribute(getIDColumnName());
 		addAttribute(COLUMN_NAME_NAME, "Name", true, true, String.class);
 		addAttribute(COLUMN_NAME_ORGANIZATIONAL_ID, "Organizational ID", true, true, String.class);
+
+		this.addManyToManyRelationShip(Group.class);
 	}
 
 	public String getName() {
@@ -58,5 +62,19 @@ public class CharityBMPBean extends GenericEntity implements Charity {
 		query.addCriteria(new MatchCriteria(orgId, MatchCriteria.EQUALS, organizationalId));
 		
 		return idoFindOnePKByQuery(query);
+	}
+
+	public Collection ejbFindCharitiesByRunYearID(Integer runYearID) throws IDORelationshipException, FinderException {
+		Table table = new Table(this);
+		Table runYearTable = new Table(Group.class);
+		Column charityIDColumn = new Column(table, getIDColumnName());
+		Column runYearIDColumn = new Column(runYearTable, YearBMPBean.getColumnNameGroupID());
+		
+		SelectQuery query = new SelectQuery(table);
+		query.addManyToManyJoin(table, runYearTable);
+		query.addColumn(charityIDColumn);
+		query.addCriteria(new MatchCriteria(runYearIDColumn, MatchCriteria.EQUALS, runYearID));
+
+		return this.idoFindPKsByQuery(query);
 	}
 }
