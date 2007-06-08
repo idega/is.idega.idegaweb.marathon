@@ -5,6 +5,13 @@
 	</properties>
 	<body>
 
+	<release version="3.1.15" date="2007-06-08">
+		<action dev="sigtryggur" type="update">
+			New filter for run on Registration module and option to save charities per run-year
+			Uppdated dependency to com.idega.block.entity to 3.1.1
+		</action>     
+	</release>
+
 	<release version="3.1.14" date="2007-06-04">
 		<action dev="sigtryggur" type="update">
 			Additions to PledgeWizard
