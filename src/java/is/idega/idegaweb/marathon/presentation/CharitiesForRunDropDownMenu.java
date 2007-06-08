@@ -18,19 +18,30 @@ public class CharitiesForRunDropDownMenu extends DropdownMenu {
 	
 	private static final String IW_BUNDLE_IDENTIFIER = "is.idega.idegaweb.marathon";
 	private static final String PARAMETER_CHARITY_DROPDOWN = "prm_charity_dropdown";
+	private Integer runYearID = null;
 	
 	public CharitiesForRunDropDownMenu() {
 		this(PARAMETER_CHARITY_DROPDOWN);
 	}
 
 	public CharitiesForRunDropDownMenu(String name) {
+		this(name, null);
+	}
+
+	public CharitiesForRunDropDownMenu(String name, Integer runYearID) {
 		super(name);
+		this.runYearID = runYearID;
 	}
 
 	public void main(IWContext iwc) throws Exception {
 		super.main(iwc);
 		IWResourceBundle iwrb = this.getResourceBundle(iwc);
-		Collection charities = getCharityBusiness(iwc).getCharities();
+		Collection charities;
+		if (runYearID == null) {
+			charities = getCharityBusiness(iwc).getAllCharities();
+		} else {
+			charities = getCharityBusiness(iwc).getCharitiesByRunYearID(this.runYearID);
+		}
 		addMenuElement("-1", iwrb.getLocalizedString("run_charity_dd.select_charity", "Select Charity Organization..."));
 		if (charities != null) {
 			Iterator iter = charities.iterator();
