@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.64 2007/06/07 23:30:19 tryggvil Exp $
+ * $Id: Registration.java,v 1.65 2007/06/08 12:04:26 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -36,7 +36,6 @@ import com.idega.core.location.data.Address;
 import com.idega.core.location.data.PostalCode;
 import com.idega.data.IDOCreateException;
 import com.idega.data.IDOLookup;
-import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.help.presentation.Help;
 import com.idega.presentation.IWContext;
@@ -70,10 +69,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/07 23:30:19 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/06/08 12:04:26 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.64 $
+ * @version $Revision: 1.65 $
  */
 public class Registration extends RunBlock {
 	
@@ -1817,7 +1816,8 @@ public class Registration extends RunBlock {
 		
 		table.add(getInformationTable(localize("run_reg.charity_headertext", "Now every runner can run for a good cause for a charity of his/her choice. On marathon.is it is now possible to search for all registered runners and pledge on each.")), 1, row++);
 
-		DropdownMenu charities = (CharitiesForRunDropDownMenu)(getStyledInterface(new CharitiesForRunDropDownMenu(PARAMETER_CHARITY_ID)));
+		Runner runner = getRunner();
+		DropdownMenu charities = (CharitiesForRunDropDownMenu)(getStyledInterface(new CharitiesForRunDropDownMenu(PARAMETER_CHARITY_ID, (Integer)runner.getYear().getPrimaryKey())));
 		charities.setWidth("300");
 		
 		Layer acceptCharityDiv = new Layer(Layer.DIV);
@@ -1837,8 +1837,7 @@ public class Registration extends RunBlock {
 		table.add(acceptCharityDiv,1,row++);
 		
 		table.add(charities,1,row++);
-		
-		Runner runner=getRunner();
+
 		Distance distance = runner.getDistance();
 		Year year = distance.getYear();
 		
