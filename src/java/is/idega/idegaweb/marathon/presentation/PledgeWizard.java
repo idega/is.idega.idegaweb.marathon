@@ -157,7 +157,7 @@ public class PledgeWizard extends RunBlock {
 		//form.add(personalIDLayer);
 		//form.add(new Break());
 
-		DropdownMenu charityDropDown = (new CharitiesForRunDropDownMenu(PARAMETER_CHARITY_FILTER));
+		DropdownMenu charityDropDown = (new CharitiesForRunDropDownMenu(PARAMETER_CHARITY_FILTER,new Integer(runGroupID)));
 		charityDropDown.setWidth("200");
 		Layer charityDropDownLayer = new Layer(Layer.DIV);
 		charityDropDownLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
