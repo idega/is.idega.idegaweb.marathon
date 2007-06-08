@@ -11,12 +11,13 @@ import javax.ejb.FinderException;
 
 import com.idega.business.IBOServiceBean;
 import com.idega.data.IDOLookup;
+import com.idega.data.IDORelationshipException;
 
 public class CharityBusinessBean extends IBOServiceBean implements CharityBusiness {
 	
 	private CharityHome charityHome;
 	
-	public Collection getCharities() throws EJBException {
+	public Collection getAllCharities() throws EJBException {
 		try {
 			return getCharityHome().findAllCharities();
 		}
@@ -33,7 +34,18 @@ public class CharityBusinessBean extends IBOServiceBean implements CharityBusine
 			return null;
 		}
 	}
-	
+
+	public Collection getCharitiesByRunYearID(Integer runYearID) throws EJBException {
+		try {
+			return getCharityHome().findCharitiesByRunYearID(runYearID);
+		}
+		catch (FinderException fe) {
+			return null;
+		} catch (IDORelationshipException e) {
+			return null;
+		}
+	}
+
 	public CharityHome getCharityHome() {
 		if (this.charityHome == null) {
 			try {
