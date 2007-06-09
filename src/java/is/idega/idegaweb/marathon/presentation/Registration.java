@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.65 2007/06/08 12:04:26 sigtryggur Exp $
+ * $Id: Registration.java,v 1.66 2007/06/09 11:34:14 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -69,10 +69,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/08 12:04:26 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/09 11:34:14 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.65 $
+ * @version $Revision: 1.66 $
  */
 public class Registration extends RunBlock {
 	
@@ -199,7 +199,7 @@ public class Registration extends RunBlock {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
 		form.maintainParameter(PARAMETER_LIMIT_RUN_IDS);
-		form.addParameter(PARAMETER_ACTION, ACTION_STEP_PERSONALDETAILS);
+		form.addParameter(PARAMETER_ACTION, ACTION_NEXT);
 		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_PERSONLOOKUP);
 		
 		Table table = new Table();
