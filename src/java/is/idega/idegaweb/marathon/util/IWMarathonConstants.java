@@ -141,6 +141,36 @@ public class IWMarathonConstants {
   public static final String MALE_50_59 = "male_50_59";
   public static final String MALE_60 = "male_60";
   
+  public static final String MALE_18_22 = "male_18_22";
+  public static final String MALE_23_34 = "male_23_34";
+  public static final String MALE_35_39 = "male_35_39";
+  public static final String MALE_40_44 = "male_40_44";
+  public static final String MALE_45_49 = "male_45_49";
+  public static final String MALE_50_54 = "male_50_54";
+  public static final String MALE_55_59 = "male_55_59";
+  public static final String MALE_60_64 = "male_60_64";
+  public static final String MALE_65_69 = "male_65_69";
+  public static final String MALE_70_74 = "male_70_74";
+  public static final String MALE_75_79 = "male_75_79";
+  public static final String MALE_80_84 = "male_80_84";
+  public static final String MALE_85_99 = "male_85_99";
+
+  public static final String FEMALE_18_22 = "female_18_22";
+  public static final String FEMALE_23_34 = "female_23_34";
+  public static final String FEMALE_35_39 = "female_35_39";
+  public static final String FEMALE_40_44 = "female_40_44";
+  public static final String FEMALE_45_49 = "female_45_49";
+  public static final String FEMALE_50_54 = "female_50_54";
+  public static final String FEMALE_55_59 = "female_55_59";
+  public static final String FEMALE_60_64 = "female_60_64";
+  public static final String FEMALE_65_69 = "female_65_69";
+  public static final String FEMALE_70_74 = "female_70_74";
+  public static final String FEMALE_75_79 = "female_75_79";
+  public static final String FEMALE_80_84 = "female_80_84";
+  public static final String FEMALE_85_99 = "female_85_99";
+
+
+  
   public static final int MIN_NUMBER_DISTANCE_55 = 1;
   public static final int MAX_NUMBER_DISTANCE_55 = 499;
   
