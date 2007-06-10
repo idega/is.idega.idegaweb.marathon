@@ -46,9 +46,6 @@ import com.idega.business.IBOServiceBean;
 import com.idega.core.contact.data.Email;
 import com.idega.core.location.data.Address;
 import com.idega.core.location.data.AddressHome;
-import com.idega.core.location.data.AddressType;
-import com.idega.core.location.data.AddressTypeBMPBean;
-import com.idega.core.location.data.AddressTypeHome;
 import com.idega.core.location.data.Country;
 import com.idega.core.location.data.CountryHome;
 import com.idega.core.location.data.PostalCode;
@@ -1466,7 +1463,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		if (runName.equals(RUN_RVK_MARATHON)) {
 			return disForMarathon;
 		}
-		if (runName.equals(RUN_OSLO_MARATHON)) {
+		else if (runName.equals(RUN_OSLO_MARATHON)) {
 			return disForOsloMarathon;
 		}
 		else if (runName.equals(RUN_MIDNIGHT_RUN)) {
@@ -1504,7 +1501,8 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		try{
 			pledgedBySponsor = Integer.parseInt(sPledgedBySponsor);
 		}
-		catch(Exception e){}
+		catch(Exception e){
+		}
 		
 		Group run = null;
 		try {
@@ -1544,7 +1542,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		if (runName.equals(RUN_RVK_MARATHON)) {
 			generateSubGroups(iwc, group, getDistancesForRun(run), grForMarathon, priceISK, priceEUR, useChips, childrenPriceISK, childrenPriceEUR, familyDiscount, allowsGroups, numberOfSplits, offersTransport);
 		}
-		if (runName.equals(RUN_OSLO_MARATHON)) {
+		else if (runName.equals(RUN_OSLO_MARATHON)) {
 			generateSubGroups(iwc, group, getDistancesForRun(run), grForOsloMarathon, priceISK, priceEUR, useChips, childrenPriceISK, childrenPriceEUR, familyDiscount, allowsGroups, numberOfSplits, offersTransport);
 		}
 		else if (runName.equals(RUN_MIDNIGHT_RUN)) {
