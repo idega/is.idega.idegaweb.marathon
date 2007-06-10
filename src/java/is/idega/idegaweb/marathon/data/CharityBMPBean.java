@@ -75,6 +75,7 @@ public class CharityBMPBean extends GenericEntity implements Charity {
 		query.addManyToManyJoin(table, runYearTable);
 		query.addColumn(charityIDColumn);
 		query.addCriteria(new MatchCriteria(runYearIDColumn, MatchCriteria.EQUALS, runYearID));
+		query.addOrder(table, COLUMN_NAME_NAME, true);
 
 		return this.idoFindPKsByQuery(query);
 	}
