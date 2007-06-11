@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.70 2007/06/11 20:08:56 tryggvil Exp $
+ * $Id: Registration.java,v 1.71 2007/06/11 20:40:47 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -69,10 +69,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/11 20:08:56 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/06/11 20:40:47 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.70 $
+ * @version $Revision: 1.71 $
  */
 public class Registration extends RunBlock {
 	
@@ -154,54 +154,53 @@ public class Registration extends RunBlock {
 	private boolean disableChipBuy=false;
 
 	public void main(IWContext iwc) throws Exception {
-		this.isIcelandic = iwc.getCurrentLocale().equals(LocaleUtil.getIcelandicLocale());
-		if (this.isIcelandic) {
-			this.chipPrice = Float.parseFloat(getBundle().getProperty(PROPERTY_CHIP_PRICE_ISK, "2700"));
-			this.chipDiscount = Float.parseFloat(getBundle().getProperty(PROPERTY_CHIP_DISCOUNT_ISK, "300"));
-			this.childDiscount = Float.parseFloat(getBundle().getProperty(PROPERTY_CHILD_DISCOUNT_ISK, "300"));
-		}
-		else {
-			this.chipPrice = Float.parseFloat(getBundle().getProperty(PROPERTY_CHIP_PRICE_EUR, "33"));
-			this.chipDiscount = Float.parseFloat(getBundle().getProperty(PROPERTY_CHIP_DISCOUNT_EUR, "3"));
-		}
-
-		switch (parseAction(iwc)) {
-			case ACTION_STEP_PERSONLOOKUP:
-				stepPersonalLookup(iwc);
-				break;
-			case ACTION_STEP_PERSONALDETAILS:
-				stepPersonalDetails(iwc);
-				break;
-			case ACTION_STEP_CHIP:
-				stepChip(iwc);
-				break;
-			case ACTION_STEP_TRANSPORT:
-				stepTransport(iwc);
-				break;
-			case ACTION_STEP_CHARITY:
-				stepCharity(iwc);
-				break;
-			case ACTION_STEP_DISCLAIMER:
-				stepDisclaimer(iwc);
-				break;
-			case ACTION_STEP_OVERVIEW:
-				stepOverview(iwc);
-				break;
-			case ACTION_STEP_PAYMENT:
-				stepPayment(iwc);
-				break;
-			case ACTION_STEP_RECEIPT:
-				stepReceipt(iwc);
-				break;
-			case ACTION_CANCEL:
-				cancel(iwc);
-				break;
+		if (!iwc.isInEditMode()) {
+			this.isIcelandic = iwc.getCurrentLocale().equals(LocaleUtil.getIcelandicLocale());
+			if (this.isIcelandic) {
+				this.chipPrice = Float.parseFloat(getBundle().getProperty(PROPERTY_CHIP_PRICE_ISK, "2700"));
+				this.chipDiscount = Float.parseFloat(getBundle().getProperty(PROPERTY_CHIP_DISCOUNT_ISK, "300"));
+				this.childDiscount = Float.parseFloat(getBundle().getProperty(PROPERTY_CHILD_DISCOUNT_ISK, "300"));
+			}
+			else {
+				this.chipPrice = Float.parseFloat(getBundle().getProperty(PROPERTY_CHIP_PRICE_EUR, "33"));
+				this.chipDiscount = Float.parseFloat(getBundle().getProperty(PROPERTY_CHIP_DISCOUNT_EUR, "3"));
+			}
+	
+			switch (parseAction(iwc)) {
+				case ACTION_STEP_PERSONLOOKUP:
+					stepPersonalLookup(iwc);
+					break;
+				case ACTION_STEP_PERSONALDETAILS:
+					stepPersonalDetails(iwc);
+					break;
+				case ACTION_STEP_CHIP:
+					stepChip(iwc);
+					break;
+				case ACTION_STEP_TRANSPORT:
+					stepTransport(iwc);
+					break;
+				case ACTION_STEP_CHARITY:
+					stepCharity(iwc);
+					break;
+				case ACTION_STEP_DISCLAIMER:
+					stepDisclaimer(iwc);
+					break;
+				case ACTION_STEP_OVERVIEW:
+					stepOverview(iwc);
+					break;
+				case ACTION_STEP_PAYMENT:
+					stepPayment(iwc);
+					break;
+				case ACTION_STEP_RECEIPT:
+					stepReceipt(iwc);
+					break;
+				case ACTION_CANCEL:
+					cancel(iwc);
+					break;
+			}
 		}
 	}
 
-	
-	
-	
 	private void stepPersonalLookup(IWContext iwc) {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
