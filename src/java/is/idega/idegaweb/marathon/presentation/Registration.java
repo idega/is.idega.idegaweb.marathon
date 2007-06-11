@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.67 2007/06/11 12:42:12 tryggvil Exp $
+ * $Id: Registration.java,v 1.68 2007/06/11 15:07:52 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -66,14 +66,13 @@ import com.idega.util.Age;
 import com.idega.util.IWTimestamp;
 import com.idega.util.ListUtil;
 import com.idega.util.LocaleUtil;
-import com.idega.util.StringHandler;
 
 
 /**
- * Last modified: $Date: 2007/06/11 12:42:12 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/06/11 15:07:52 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.67 $
+ * @version $Revision: 1.68 $
  */
 public class Registration extends RunBlock {
 	
@@ -121,6 +120,7 @@ public class Registration extends RunBlock {
 	private static final String PARAMETER_ACCEPT_CHARITY = "prm_accept_charity";
 	private static final String PARAMETER_NOT_ACCEPT_CHARITY = "prm_not_accept_charity";
 	private static final String PARAMETER_ALLOW_CONTACT = "prm_allow_contact";
+	private static final String PARAMETER_CATEGORY_ID = "prm_category_id";
 	
 	private static final String PARAMETER_LIMIT_RUN_IDS="run_ids";
 	
@@ -150,6 +150,7 @@ public class Registration extends RunBlock {
 	private boolean charityStepEnabledForForeignLocale=false;
 	private boolean hideCharityCheckbox=false;
 	private boolean disableSponsorContactCheck=false;
+	private boolean showCategories = false;
 
 	public void main(IWContext iwc) throws Exception {
 		this.isIcelandic = iwc.getCurrentLocale().equals(LocaleUtil.getIcelandicLocale());
@@ -594,7 +595,23 @@ public class Registration extends RunBlock {
 		choiceTable.add(redStar, 3, iRow++);
 		choiceTable.add(countryField, 1, iRow);
 		choiceTable.add(tShirtField, 3, iRow++);
-
+		Integer runYearID = null;
+		if (runner.getYear() != null) {
+			runYearID = (Integer)runner.getYear().getPrimaryKey();
+		}
+		
+		if (this.showCategories) {
+			DropdownMenu categories = (CategoriesForRunYearDropDownMenu)(getStyledInterface(new CategoriesForRunYearDropDownMenu(PARAMETER_CATEGORY_ID, runYearID)));
+			
+			categories.setAsNotEmpty(localize("run_reg.must_select_category","You must select category"));
+			if(getRunner().getCharity()!=null){
+				categories.setSelectedElement(getRunner().getCategory().getPrimaryKey().toString());
+			}
+			
+			choiceTable.add(getHeader(localize("run_reg.category", "Category")), 1, iRow);
+			choiceTable.add(redStar, 1, iRow++);
+			choiceTable.add(categories, 1, iRow);
+		}
 		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
 		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_NEXT));
 		
@@ -604,9 +621,6 @@ public class Registration extends RunBlock {
 
 		add(form);
 	}
-
-
-
 
 	protected ActiveRunDropDownMenu getRunDropdown(IWContext iwc, Runner runner) {
 		ActiveRunDropDownMenu runDropdown = null;
@@ -2047,33 +2061,28 @@ public class Registration extends RunBlock {
 			return isCharityStepEnabledForForeignLocale();
 		}
 	}
-
 	
 	public boolean isHideCharityCheckbox() {
 		return hideCharityCheckbox;
 	}
-
 	
 	public void setHideCharityCheckbox(boolean hideCharityCheckbox) {
 		this.hideCharityCheckbox = hideCharityCheckbox;
 	}
-
-
-
-
 	
 	public boolean isDisableSponsorContactCheck() {
 		return disableSponsorContactCheck;
 	}
-
-
-
-
 	
 	public void setDisableSponsorContactCheck(boolean disableSponsorCheck) {
 		this.disableSponsorContactCheck = disableSponsorCheck;
 	}
-
 	
+	public boolean isShowCategories() {
+		return this.showCategories;
+	}
 	
+	public void setShowCategories(boolean showCategories) {
+		this.showCategories = showCategories;
+	}
 }
