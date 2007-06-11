@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.71 2007/06/11 20:40:47 sigtryggur Exp $
+ * $Id: Registration.java,v 1.72 2007/06/11 23:56:35 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -69,10 +69,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/11 20:40:47 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/11 23:56:35 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.71 $
+ * @version $Revision: 1.72 $
  */
 public class Registration extends RunBlock {
 	
@@ -601,16 +601,25 @@ public class Registration extends RunBlock {
 		}
 		
 		if (this.showCategories) {
-			DropdownMenu categories = (CategoriesForRunYearDropDownMenu)(getStyledInterface(new CategoriesForRunYearDropDownMenu(PARAMETER_CATEGORY_ID, runYearID)));
-			
-			categories.setAsNotEmpty(localize("run_reg.must_select_category","You must select category"));
-			if(getRunner().getCharity()!=null){
-				categories.setSelectedElement(getRunner().getCategory().getPrimaryKey().toString());
+			DropdownMenu categoriesDropdown = (CategoriesForRunYearDropDownMenu)(getStyledInterface(new CategoriesForRunYearDropDownMenu(PARAMETER_CATEGORY_ID, runYearID)));
+			categoriesDropdown.setAsNotEmpty(localize("run_reg.must_select_category","You must select category"));
+			if(getRunner().getCategory()!=null){
+				categoriesDropdown.setSelectedElement(getRunner().getCategory().getPrimaryKey().toString());
 			}
 			
 			choiceTable.add(getHeader(localize("run_reg.category", "Category")), 1, iRow);
 			choiceTable.add(redStar, 1, iRow++);
-			choiceTable.add(categories, 1, iRow);
+			choiceTable.add(categoriesDropdown, 1, iRow);
+			
+			//RemoteScriptHandler rshCategories = new RemoteScriptHandler(distanceDropdown, categoriesDropdown);
+			//try {
+			//	rshCategories.setRemoteScriptCollectionClass(DistanceMenuCategoriesMenuInputCollectionHandler.class);
+			//} catch (InstantiationException e) {
+			//	e.printStackTrace();
+			//} catch (IllegalAccessException e) {
+			//	e.printStackTrace();
+			//}
+			//add(rshCategories);
 		}
 		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
 		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_NEXT));
