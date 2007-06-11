@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.68 2007/06/11 15:07:52 sigtryggur Exp $
+ * $Id: Registration.java,v 1.69 2007/06/11 16:09:42 tryggvil Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -69,10 +69,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/11 15:07:52 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/11 16:09:42 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.68 $
+ * @version $Revision: 1.69 $
  */
 public class Registration extends RunBlock {
 	
@@ -151,6 +151,7 @@ public class Registration extends RunBlock {
 	private boolean hideCharityCheckbox=false;
 	private boolean disableSponsorContactCheck=false;
 	private boolean showCategories = false;
+	private boolean disableChipBuy=false;
 
 	public void main(IWContext iwc) throws Exception {
 		this.isIcelandic = iwc.getCurrentLocale().equals(LocaleUtil.getIcelandicLocale());
@@ -697,17 +698,20 @@ public class Registration extends RunBlock {
 		table.setBottomCellBorder(1, row, 1, "#D7D7D7", "solid");
 		table.setCellpaddingBottom(1, row++, 6);
 		
-		RadioButton buyChip = getRadioButton(PARAMETER_CHIP, IWMarathonConstants.CHIP_BUY);
-		buyChip.setSelected(getRunner().isBuyChip());
+
+		if(!isDisableChipBuy()){
+			
+			RadioButton buyChip = getRadioButton(PARAMETER_CHIP, IWMarathonConstants.CHIP_BUY);
+			buyChip.setSelected(getRunner().isBuyChip());
 		
-		table.setHeight(row++, 12);
-		table.add(buyChip, 1, row);
-		table.add(Text.getNonBrakingSpace(), 1, row);
-		table.add(getHeader(localize("run_reg.buy_chip", "I want to buy a multi use chip")), 1, row++);
-		table.setHeight(row++, 6);
-		String priceText = formatAmount(iwc.getCurrentLocale(), this.chipPrice);
-		table.add(getText(localize("run_reg.buy_chip_information", "You can buy a multi use chip that you can use in future tournaments.  The price of the chip is ") + priceText), 1, row++);
-		
+			table.setHeight(row++, 12);
+			table.add(buyChip, 1, row);
+			table.add(Text.getNonBrakingSpace(), 1, row);
+			table.add(getHeader(localize("run_reg.buy_chip", "I want to buy a multi use chip")), 1, row++);
+			table.setHeight(row++, 6);
+			String priceText = formatAmount(iwc.getCurrentLocale(), this.chipPrice);
+			table.add(getText(localize("run_reg.buy_chip_information", "You can buy a multi use chip that you can use in future tournaments.  The price of the chip is ") + priceText), 1, row++);
+		}
 		
 		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
 		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_PREVIOUS));
@@ -807,16 +811,26 @@ public class Registration extends RunBlock {
 			next.setDisabled(true);
 		}
 
-		CheckBox agree = getCheckBox(PARAMETER_AGREE, Boolean.TRUE.toString());
-		agree.setToEnableWhenChecked(next);
-		agree.setToDisableWhenUnchecked(next);
-		agree.setChecked(getRunner().isAgree());
-		
+
 		table.add(getText(localize("run_reg.information_text_step_4", "Information text 4...")), 1, row++);
-		table.setHeight(row++, 6);
+
+		Layer disclaimerLayer = new Layer(Layer.DIV);
+		CheckBox agreeCheck = getCheckBox(PARAMETER_AGREE, Boolean.TRUE.toString());
+		agreeCheck.setToEnableWhenChecked(next);
+		agreeCheck.setToDisableWhenUnchecked(next);
+		agreeCheck.setChecked(getRunner().isAgree());
+		
+		Label disclaimerLabel = new Label(localize("run_reg.agree_terms", "Yes, I agree"),agreeCheck);
+		disclaimerLayer.add(agreeCheck);
+		disclaimerLayer.add(disclaimerLabel);
+		
+		table.add(disclaimerLayer, 1, row++);
+		
+		/*table.setHeight(row++, 6);
 		table.add(agree, 1, row);
 		table.add(Text.getNonBrakingSpace(), 1, row);
-		table.add(getHeader(localize("run_reg.agree_terms", "Yes, I agree")), 1, row++);
+		table.add(getHeader(), 1, row++);
+		*/
 		
 		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
 		//String fromValue = iwc.getParameter(PARAMETER_FROM_ACTION);
@@ -2084,5 +2098,21 @@ public class Registration extends RunBlock {
 	
 	public void setShowCategories(boolean showCategories) {
 		this.showCategories = showCategories;
+	}
+
+
+
+
+	
+	public boolean isDisableChipBuy() {
+		return disableChipBuy;
+	}
+
+
+
+
+	
+	public void setDisableChipBuy(boolean disableChipBuy) {
+		this.disableChipBuy = disableChipBuy;
 	}
 }
