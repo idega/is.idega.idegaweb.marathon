@@ -67,6 +67,7 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		
 		addAttribute(getColumnNameCharityId(), "CharityId", true, true, String.class);
 		addAttribute(getColumnNameMaySponsorContact(), "May Sponsor Contact", true, true, Boolean.class);
+		addAttribute(getColumnNameCategoryId(), "CategoryId", true, true, String.class);
 	}
 
 	public static String getEntityTableName() {
@@ -163,6 +164,10 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 
 	public static String getColumnNameCharityId() {
 		return "charity_organizational_id";
+	}
+
+	public static String getColumnNameCategoryId() {
+		return "run_category_id";
 	}
 
 	public static String getColumnNameMaySponsorContact() {
@@ -422,6 +427,14 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 	
 	public boolean getMaySponsorContact() {
 		return getBooleanColumnValue(getColumnNameMaySponsorContact());
+	}
+	
+	public void setCategoryId(int categoryId) {
+		setColumn(getColumnNameCategoryId(),categoryId);
+	}
+	
+	public int getCategoryId() {
+		return getIntColumnValue(getColumnNameCategoryId());
 	}
 	
 	public Collection ejbFindAll() throws FinderException {

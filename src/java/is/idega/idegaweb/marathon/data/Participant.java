@@ -295,4 +295,14 @@ public interface Participant extends IDOEntity {
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getMaySponsorContact
 	 */
 	public boolean getMaySponsorContact();
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setCategoryId
+	 */
+	public void setCategoryId(int categoryId);
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getCategoryId
+	 */
+	public int getCategoryId();
 }

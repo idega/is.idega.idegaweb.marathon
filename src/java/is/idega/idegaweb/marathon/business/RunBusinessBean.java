@@ -444,6 +444,9 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 							participant.setCharityId(charity.getOrganizationalID());
 						}
 					}
+					if (runner.getCategory()!= null) {
+						participant.setCategoryId(((Integer)runner.getCategory().getPrimaryKey()).intValue());
+					}
 					if (runner.getAmount() > 0) {
 						participant.setPayedAmount(String.valueOf(runner.getAmount()));
 					}
