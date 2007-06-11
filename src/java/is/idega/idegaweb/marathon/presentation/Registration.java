@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.69 2007/06/11 16:09:42 tryggvil Exp $
+ * $Id: Registration.java,v 1.70 2007/06/11 20:08:56 tryggvil Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -69,10 +69,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/11 16:09:42 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/06/11 20:08:56 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.69 $
+ * @version $Revision: 1.70 $
  */
 public class Registration extends RunBlock {
 	
@@ -811,9 +811,17 @@ public class Registration extends RunBlock {
 			next.setDisabled(true);
 		}
 
-
-		table.add(getText(localize("run_reg.information_text_step_4", "Information text 4...")), 1, row++);
-
+		
+		String key = "run_reg.information_text_step_4";
+		String runKey = key+"_runid_"+getRunner().getRun().getId();
+		
+		String localizedString = getResourceBundle().getLocalizedString(runKey);
+		if(localizedString!=null){
+			localizedString= getResourceBundle().getLocalizedString(key, "Information text 4...");
+		}
+		//table.add(getText(localize(key, "Information text 4...")), 1, row++);
+		table.add(getText(localizedString),1,row++);
+		
 		Layer disclaimerLayer = new Layer(Layer.DIV);
 		CheckBox agreeCheck = getCheckBox(PARAMETER_AGREE, Boolean.TRUE.toString());
 		agreeCheck.setToEnableWhenChecked(next);
