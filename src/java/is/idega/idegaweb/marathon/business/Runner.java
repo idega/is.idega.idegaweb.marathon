@@ -1,5 +1,5 @@
 /*
- * $Id: Runner.java,v 1.8 2007/06/07 23:30:19 tryggvil Exp $ Created on May 16, 2005
+ * $Id: Runner.java,v 1.9 2007/06/11 15:04:54 sigtryggur Exp $ Created on May 16, 2005
  * 
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
  * 
@@ -11,6 +11,7 @@ package is.idega.idegaweb.marathon.business;
 import is.idega.idegaweb.marathon.data.Charity;
 import is.idega.idegaweb.marathon.data.Distance;
 import is.idega.idegaweb.marathon.data.Run;
+import is.idega.idegaweb.marathon.data.RunCategory;
 import is.idega.idegaweb.marathon.data.Year;
 import java.sql.Date;
 import javax.ejb.FinderException;
@@ -22,10 +23,10 @@ import com.idega.user.data.User;
  * A holder class for information about runners and their selection when
  * registering.
  * 
- * Last modified: $Date: 2007/06/07 23:30:19 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/06/11 15:04:54 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class Runner {
 
@@ -58,6 +59,7 @@ public class Runner {
 	private boolean participateInCharity=true;
 	private boolean maySponsorContactRunner=false;
 	private Charity charity;
+	private RunCategory category;
 	
 
 	public User getUser() {
@@ -292,6 +294,14 @@ public class Runner {
 
 	public void setParticipateInCharity(boolean participateInCharity) {
 		this.participateInCharity = participateInCharity;
+	}
+
+	public RunCategory getCategory() {
+		return category;
+	}
+
+	public void setCategory(RunCategory category) {
+		this.category = category;
 	}
 	
 	public Year getYear(){
