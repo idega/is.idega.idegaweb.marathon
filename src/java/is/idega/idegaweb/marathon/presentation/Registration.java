@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.66 2007/06/09 11:34:14 sigtryggur Exp $
+ * $Id: Registration.java,v 1.67 2007/06/11 12:42:12 tryggvil Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -66,13 +66,14 @@ import com.idega.util.Age;
 import com.idega.util.IWTimestamp;
 import com.idega.util.ListUtil;
 import com.idega.util.LocaleUtil;
+import com.idega.util.StringHandler;
 
 
 /**
- * Last modified: $Date: 2007/06/09 11:34:14 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/11 12:42:12 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.66 $
+ * @version $Revision: 1.67 $
  */
 public class Registration extends RunBlock {
 	
@@ -145,6 +146,10 @@ public class Registration extends RunBlock {
 	private boolean disablePaymentAndOverviewSteps = false;
 	private String runIds;
 	private String constrainedToOneRun;
+	private String presetCountries;
+	private boolean charityStepEnabledForForeignLocale=false;
+	private boolean hideCharityCheckbox=false;
+	private boolean disableSponsorContactCheck=false;
 
 	public void main(IWContext iwc) throws Exception {
 		this.isIcelandic = iwc.getCurrentLocale().equals(LocaleUtil.getIcelandicLocale());
@@ -377,7 +382,7 @@ public class Registration extends RunBlock {
 			ssnField.setDate(getRunner().getDateOfBirth());
 		}
 
-		Collection countries = getRunBusiness(iwc).getCountries();
+		Collection countries = getRunBusiness(iwc).getCountries(getPresetCountriesArray());
 		DropdownMenu nationalityField = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_NATIONALITY));
 		DropdownMenu countryField = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_COUNTRY));
 		nationalityField.addMenuElement("-1", localize("run_reg.select_nationality", "Select nationality..."));
@@ -1539,15 +1544,19 @@ public class Registration extends RunBlock {
 					}
 				}
 			}
-			if(isIcelandic){
-				if(runner!=null){
-					Year year = runner.getYear();
-					if(year!=null){
-						if(year.isCharityEnabled()){
-							addStep(iwc,ACTION_STEP_CHARITY,"run_reg.charity");
+			
+			
+			if(isCharityStepEnabled(iwc.getLocale())){
+				//if(isIcelandic){
+					if(runner!=null){
+						Year year = runner.getYear();
+						if(year!=null){
+							if(year.isCharityEnabled()){
+								addStep(iwc,ACTION_STEP_CHARITY,"run_reg.charity");
+							}
 						}
 					}
-				}
+				//}
 			}
 			addStep(iwc,ACTION_STEP_DISCLAIMER,"run_reg.consent");
 			if(!isDisablePaymentAndOverviewSteps()){
@@ -1558,7 +1567,9 @@ public class Registration extends RunBlock {
 			}
 			addStep(iwc,ACTION_STEP_RECEIPT,"run_reg.receipt");
 	}
-	
+
+
+
 	protected void initializeSetRuns(IWContext iwc){
 
 		if(iwc.isParameterSet(PARAMETER_LIMIT_RUN_IDS)){
@@ -1820,22 +1831,33 @@ public class Registration extends RunBlock {
 		DropdownMenu charities = (CharitiesForRunDropDownMenu)(getStyledInterface(new CharitiesForRunDropDownMenu(PARAMETER_CHARITY_ID, (Integer)runner.getYear().getPrimaryKey())));
 		charities.setWidth("300");
 		
-		Layer acceptCharityDiv = new Layer(Layer.DIV);
-		CheckBox acceptCharityCheck = getCheckBox(PARAMETER_ACCEPT_CHARITY , Boolean.TRUE.toString());
-		acceptCharityCheck.setChecked(true);
-		acceptCharityCheck.setToEnableWhenChecked(charities);
-		acceptCharityCheck.setToDisableWhenUnchecked(charities);
-		
-		HiddenInput notAcceptCharityCheck = new HiddenInput(PARAMETER_NOT_ACCEPT_CHARITY);
-		
-		acceptCharityCheck.setOnClick("toggleCharitySelection();");
-		//acceptCharityCheck.setOnChange(action)
-		Label accepCharityLabel = new Label(localize("run_reg.agree_charity_participation", "I agree to participate in running for a charity and searchable by others in a pledge form"),acceptCharityCheck);
-		acceptCharityDiv.add(acceptCharityCheck);
-		acceptCharityDiv.add(accepCharityLabel);
-		acceptCharityDiv.add(notAcceptCharityCheck);
-		table.add(acceptCharityDiv,1,row++);
-		
+
+		if(isHideCharityCheckbox()){
+			HiddenInput acceptCharityInput = new HiddenInput(PARAMETER_ACCEPT_CHARITY , Boolean.TRUE.toString());
+			HiddenInput notAcceptCharityCheck = new HiddenInput(PARAMETER_NOT_ACCEPT_CHARITY);
+			table.add(acceptCharityInput,1,row);
+			table.add(notAcceptCharityCheck,1,row++);
+		}
+		else{
+			Layer acceptCharityDiv = new Layer(Layer.DIV);
+			CheckBox acceptCharityCheck = getCheckBox(PARAMETER_ACCEPT_CHARITY , Boolean.TRUE.toString());
+			acceptCharityCheck.setChecked(true);
+			acceptCharityCheck.setToEnableWhenChecked(charities);
+			acceptCharityCheck.setToDisableWhenUnchecked(charities);
+			
+			HiddenInput notAcceptCharityCheck = new HiddenInput(PARAMETER_NOT_ACCEPT_CHARITY);
+			
+			acceptCharityCheck.setOnClick("toggleCharitySelection();");
+			//acceptCharityCheck.setOnChange(action)
+			Label accepCharityLabel = new Label(localize("run_reg.agree_charity_participation", "I agree to participate in running for a charity and searchable by others in a pledge form"),acceptCharityCheck);
+			acceptCharityDiv.add(acceptCharityCheck);
+			acceptCharityDiv.add(accepCharityLabel);
+			acceptCharityDiv.add(notAcceptCharityCheck);
+			table.add(acceptCharityDiv,1,row++);
+
+			acceptCharityCheck.setChecked(getRunner().isParticipateInCharity());
+			notAcceptCharityCheck.setValue(new Boolean(!getRunner().isParticipateInCharity()).toString());
+		}
 		table.add(charities,1,row++);
 
 		Distance distance = runner.getDistance();
@@ -1854,16 +1876,20 @@ public class Registration extends RunBlock {
 
 		table.setHeight(row++, 12);
 
-		Layer allowContactDiv = new Layer(Layer.DIV);
-		CheckBox allowContactCheck = getCheckBox(PARAMETER_ALLOW_CONTACT , Boolean.TRUE.toString());
-		Label allowContactLabel = new Label(localize("run_reg.allow_sponsor_contact", "I allow that an employee from the sponsor may contact me"),allowContactCheck);
-		Text footnoteText = new Text(localize("run_reg.footnote_text", ""));
-		allowContactDiv.add(allowContactCheck);
-		allowContactDiv.add(allowContactLabel);
-		allowContactDiv.add(new Break());
-		allowContactDiv.add(new Break());
-		allowContactDiv.add(footnoteText);
-		table.add(allowContactDiv,1,row++);
+		if(!isDisableSponsorContactCheck()){
+			Layer allowContactDiv = new Layer(Layer.DIV);
+			CheckBox allowContactCheck = getCheckBox(PARAMETER_ALLOW_CONTACT , Boolean.TRUE.toString());
+			Label allowContactLabel = new Label(localize("run_reg.allow_sponsor_contact", "I allow that an employee from the sponsor may contact me"),allowContactCheck);
+			Text footnoteText = new Text(localize("run_reg.footnote_text", ""));
+			allowContactDiv.add(allowContactCheck);
+			allowContactDiv.add(allowContactLabel);
+			allowContactDiv.add(new Break());
+			allowContactDiv.add(new Break());
+			allowContactDiv.add(footnoteText);
+			table.add(allowContactDiv,1,row++);
+			
+			allowContactCheck.setChecked(getRunner().isMaySponsorContactRunner());
+		}
 		
 		/*
 		table.add(getInformationTable(localize("run_reg.information_text_step_3_transport", "Bus trip to race starting point and back to Reykjavik after the race is organized by Reykjavik Marathon. Please select if you like to order a seat or not.")), 1, row++);
@@ -1906,8 +1932,6 @@ public class Registration extends RunBlock {
 		String selectCharitiesMessage = localize("run_reg.must_select_charity", "Please select a valid charity");
 		charities.setOnSubmitFunction("checkCharities", "function checkCharities(){ var checkbox = findObj('"+PARAMETER_ACCEPT_CHARITY+"'); var charities = findObj('"+PARAMETER_CHARITY_ID+"');  if(checkbox.checked){if(charities.options[charities.selectedIndex].value=='-1'){ alert('"+selectCharitiesMessage+"'); return false;} } return true;}");
 
-		acceptCharityCheck.setChecked(getRunner().isParticipateInCharity());
-		notAcceptCharityCheck.setValue(new Boolean(!getRunner().isParticipateInCharity()).toString());
 		if(getRunner().isParticipateInCharity()){
 			Charity charity = getRunner().getCharity();
 			if(charity!=null){
@@ -1917,7 +1941,6 @@ public class Registration extends RunBlock {
 		else{
 			charities.setDisabled(true);
 		}
-		allowContactCheck.setChecked(getRunner().isMaySponsorContactRunner());
 		
 	}
 
@@ -1976,6 +1999,81 @@ public class Registration extends RunBlock {
 	protected boolean isConstrainedToOneRun() {
 		return (this.constrainedToOneRun!=null);
 	}
+	
+	
+	public void setPresetCountries(String countryList){
+		this.presetCountries=countryList;
+	}
+	
+	public String getPresetCountries(){
+		return this.presetCountries;
+	}
+
+	public String[] getPresetCountriesArray(){
+		String ids = getPresetCountries();
+		
+		if(ids!=null){
+			if(ids.indexOf(",")!=-1){
+				StringTokenizer tokenizer = new StringTokenizer(ids,",");
+				List list = new ArrayList();
+				while(tokenizer.hasMoreElements()){
+					list.add(tokenizer.nextElement());
+				}
+				return (String[]) list.toArray(new String[0]);
+			}
+			else{
+				String[] array = {ids};
+				return array;
+			}
+		}
+		
+		return null;
+	}
+	
+
+	public void setCharityStepEnabledForForeignLocale(boolean enable){
+		this.charityStepEnabledForForeignLocale=enable;
+	}
+	
+	public boolean isCharityStepEnabledForForeignLocale(){
+		return this.charityStepEnabledForForeignLocale;
+	}
+	
+	protected boolean isCharityStepEnabled(Locale locale) {
+		if(LocaleUtil.getIcelandicLocale().equals(locale)){
+			return true;
+		}
+		else{
+			return isCharityStepEnabledForForeignLocale();
+		}
+	}
+
+	
+	public boolean isHideCharityCheckbox() {
+		return hideCharityCheckbox;
+	}
+
+	
+	public void setHideCharityCheckbox(boolean hideCharityCheckbox) {
+		this.hideCharityCheckbox = hideCharityCheckbox;
+	}
+
+
+
+
+	
+	public boolean isDisableSponsorContactCheck() {
+		return disableSponsorContactCheck;
+	}
+
+
+
+
+	
+	public void setDisableSponsorContactCheck(boolean disableSponsorCheck) {
+		this.disableSponsorContactCheck = disableSponsorCheck;
+	}
+
 	
 	
 }

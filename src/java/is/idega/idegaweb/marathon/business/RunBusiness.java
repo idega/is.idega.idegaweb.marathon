@@ -1,5 +1,5 @@
 /*
- * $Id: RunBusiness.java,v 1.31 2007/06/04 00:37:39 sigtryggur Exp $
+ * $Id: RunBusiness.java,v 1.32 2007/06/11 12:42:11 tryggvil Exp $
  * Created on Aug 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -31,10 +31,10 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2007/06/04 00:37:39 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/11 12:42:11 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  */
 public interface RunBusiness extends IBOService {
 
@@ -265,6 +265,8 @@ public interface RunBusiness extends IBOService {
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getCountries
 	 */
 	public Collection getCountries() throws java.rmi.RemoteException;
+	
+	public Collection getCountries(String[] presetCountries) throws java.rmi.RemoteException;
 
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getUserBiz

@@ -521,27 +521,33 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		
 		if(runner.isMaySponsorContactRunner()){
 			try{
-				String name = runner.getUser().getName();
-				String personalId = runner.getPersonalID();
-				String sAddress = "";
-				Collection addresses = runner.getUser().getAddresses();
-				if(addresses.size()>0){
-					for (Iterator iter = addresses.iterator(); iter.hasNext();) {
-						Address address = (Address) iter.next();
-						sAddress=address.getName()+" "+address.getPostalAddress();
+				User user = runner.getUser();
+				if(user!=null){
+					String name = runner.getUser().getName();
+					String personalId = runner.getPersonalID();
+					String sAddress = "";
+					Collection addresses = runner.getUser().getAddresses();
+					if(addresses.size()>0){
+						for (Iterator iter = addresses.iterator(); iter.hasNext();) {
+							Address address = (Address) iter.next();
+							sAddress=address.getName()+" "+address.getPostalAddress();
+						}
+						
 					}
+					String phone = runner.getHomePhone();
+					String mobilePhone = runner.getMobilePhone();
+					String runnerEmail = runner.getEmail();
+					String sponsorEmail = getIWApplicationContext().getIWMainApplication().getSettings().getProperty("marathon_sponsor_email");
 					
+					IWResourceBundle iwrb = getIWApplicationContext().getIWMainApplication().getBundle(IWMarathonConstants.IW_BUNDLE_IDENTIFIER).getResourceBundle(locale);
+					Object[] args = { name, personalId, sAddress, phone, mobilePhone,runnerEmail };
+					String subject = iwrb.getLocalizedString("sponsor_mail_subject", "Request for invitiation to be a customer from marathon.is");
+					String body = MessageFormat.format(iwrb.getLocalizedString("sponsor_mail_body", "Name: {0}\nPersonalId: {1}\nAddress: {2}\nPhone: {3}\nMobile Phone: {4}\nE-mail: {5}"), args);
+					sendMessage(sponsorEmail, subject, body);
 				}
-				String phone = runner.getHomePhone();
-				String mobilePhone = runner.getMobilePhone();
-				String runnerEmail = runner.getEmail();
-				String sponsorEmail = getIWApplicationContext().getIWMainApplication().getSettings().getProperty("marathon_sponsor_email");
-				
-				IWResourceBundle iwrb = getIWApplicationContext().getIWMainApplication().getBundle(IWMarathonConstants.IW_BUNDLE_IDENTIFIER).getResourceBundle(locale);
-				Object[] args = { name, personalId, sAddress, phone, mobilePhone,runnerEmail };
-				String subject = iwrb.getLocalizedString("sponsor_mail_subject", "Request for invitiation to be a customer from marathon.is");
-				String body = MessageFormat.format(iwrb.getLocalizedString("sponsor_mail_body", "Name: {0}\nPersonalId: {1}\nAddress: {2}\nPhone: {3}\nMobile Phone: {4}\nE-mail: {5}"), args);
-				sendMessage(sponsorEmail, subject, body);
+				else{
+					logWarning("User is null in sendSponsorEmail for runner: "+runner.getName()+", "+runner.getEmail());
+				}
 			}
 			catch(Exception e){
 				e.printStackTrace();
@@ -1893,10 +1899,36 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 	 * @return Colleciton of all countries
 	 */
 	public Collection getCountries() {
-		Collection countries = null;
+		return getCountries(null);
+	}
+	
+	/**
+	 * Gets all countries. This method is for example used when displaying a
+	 * dropdown menu of all countries
+	 * 
+	 * @return Colleciton of all countries
+	 */
+	public Collection getCountries(String[] presetCountries) {
+		List countries = null;
 		try {
 			CountryHome countryHome = (CountryHome) getIDOHome(Country.class);
 			countries = new ArrayList(countryHome.findAll());
+			
+			if(presetCountries!=null){
+				//iterate reverse through the array to get the correct order:
+				for (int i = presetCountries.length-1; i > -1; i--) {
+					String presetCountry = presetCountries[i];
+					List tempList = new ArrayList(countries);
+					for (Iterator iter = tempList.iterator(); iter.hasNext();) {
+						Country country = (Country) iter.next();
+						String countryIsoAbbr = country.getIsoAbbreviation();
+						if(countryIsoAbbr!=null && countryIsoAbbr.equalsIgnoreCase(presetCountry)){
+							countries.remove(country);
+							countries.add(0, country);	
+						}
+					}
+				}
+			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
