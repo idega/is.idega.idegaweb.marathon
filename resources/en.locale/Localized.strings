@@ -34,9 +34,11 @@ registration_received=Hello <b>{0}</b>,\r\n\r\nThank you for registering for <b>
 registration_received_body_mail=Hello {0},\r\n\r\nThank you for registering for {1} - {2}.\r\n\r\nThe shirt size you choose was {3}.\r\nYour participant number is\: {4}\r\n\r\nRace material and T-shirt\r\nInformation about delivery of race material are available on www.marathon.is on the information page for each event\:<br>\r\nGlitnir Reykjavik Marathon (http\://www.marathon.is/pages/english4/glitnirreykjavikmarathon/) \r\nLaugavegur - Ultra Marathon (http\://www.marathon.is/pages/english4/laugavegurultramarathon/) \r\nMidnight Run (http\://www.marathon.is/pages/english4/midnightrun/) \r\n\r\nWelcome again to www.marathon.is\r\n\r\nGood wishes\!\r\nReykjav\u00EDk Marathon\r\nEngjavegur 6, Laugardal,\r\n104 Reykjavik,\r\nIceland.\r\nE-mail\: marathon@marathon.is
 registration_received_subject=Your registration has been received
 registration_received_subject_mail=Your registration has been received
+run_category_dd.select_category=Select department...
 run_reg.agreement=I, by sending this registration form, waive and release any rights and claims for damages I may have against Reykjavik Marathon and Ultra Marathon or any co-sponsor of the events for any injuries or illnesses suffered by me in said events. I also certify that I am fit both physically and mentally for the completion of the race.
 run_reg.amount=Amount
 run_reg.card_number=Card number
+run_reg.category=Department
 run_reg.continue_without_email=Are you sure you want to continue without entering an e-mail?
 run_reg.delivery_of_race_material_body=Information about delivery of race materials are available on www.marathon.is on the information page for each event.<br><a href\="http\://marathon.is/pages/english4/glitnirreykjavikmarathon/?iw_language\=en">Glitnir Reykjavik Marathon</a><br/><a href\="http\://marathon.is/pages/english4/laugavegurultramarathon/?iw_language\=en">Laugavegur - Ultra Marathon</a> <br/><a href\="http\://marathon.is/pages/english4/midnightrun/?iw_language\=en">Midnight Run</a>
 run_reg.group_competition_info=Info about group competition
@@ -50,6 +52,7 @@ run_reg.information_text_step_3=If you own a chip, please select 'I own a chip' 
 run_reg.information_text_step_4=I, by sending this registration form, waive and release any rights and claims for damages I may have against Reykjavik Marathon and Ultra Marathon or any co-sponsor of the events for any injuries or illnesses suffered by me in said events. I also certify that I am fit both physically and mentally for the completion of the race.
 run_reg.information_text_step_5=Below are the persons that you have registered so far.  You can add more by clicking 'Register other participant' or finish the registration by clicking 'Pay entry fee'.
 run_reg.information_text_step_6=<b><font color\="\#FF0000">Your registration will not be completed unless you pay the entry fee online.  Otherwise the registration will be deleted.</font></b><br>\r\nOnly VISA and Mastercard credit cards are accepted.
+run_reg.must_select_category=You must select department
 run_reg.must_select_shirt_size=You must select tee-shirt size
 run_reg.no_runs_available=There are no runs you can register for. The reason is probably that this SSN is already registered to all available runs or that there are no runs currently available to register for. You can email us at marathon@marathon.is for further information.
 run_reg.order_tranport_information_Laugavegur=There is a three hours drive to the starting point of the race (Landmannalaugar) and similar drive back after the race (from Thorsmork to Reykjavik). \r\nWe organize a bus trip from our office, on the morning of the race at 04\:30 and back after the race at 20\:00. You can also choose to stay in Thorsmork over night and take the bus the day after, Sunday July 15th. \r\nSee further information on the website. 
