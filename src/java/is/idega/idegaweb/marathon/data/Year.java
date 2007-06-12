@@ -32,7 +32,7 @@ public interface Year extends IDOEntity, Group {
 	public boolean isCharityEnabled();
 
 	/**
-	 * @see is.idega.idegaweb.marathon.data.YearBMPBean#seCharityEnabled
+	 * @see is.idega.idegaweb.marathon.data.YearBMPBean#setCharityEnabled
 	 */
 	public void setCharityEnabled(boolean charityEnabled);
 
