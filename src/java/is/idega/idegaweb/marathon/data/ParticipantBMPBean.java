@@ -67,7 +67,7 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		
 		addAttribute(getColumnNameCharityId(), "CharityId", true, true, String.class);
 		addAttribute(getColumnNameMaySponsorContact(), "May Sponsor Contact", true, true, Boolean.class);
-		addAttribute(getColumnNameCategoryId(), "CategoryId", true, true, String.class);
+		addAttribute(getColumnNameCategoryId(), "CategoryId", true, true, Integer.class);
 	}
 
 	public static String getEntityTableName() {
