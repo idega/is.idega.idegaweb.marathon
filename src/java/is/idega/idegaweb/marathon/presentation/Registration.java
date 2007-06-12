@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.75 2007/06/12 01:14:28 sigtryggur Exp $
+ * $Id: Registration.java,v 1.76 2007/06/12 09:43:33 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -71,10 +71,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/12 01:14:28 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/12 09:43:33 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.75 $
+ * @version $Revision: 1.76 $
  */
 public class Registration extends RunBlock {
 	
@@ -1310,7 +1310,7 @@ public class Registration extends RunBlock {
 		table.setHeight(row++, 16);
 
 		
-		table.add(getText(localize("run_reg.payment_received", "We have received payment for the following:")), 1, row++);
+		table.add(getText(localize("run_reg.payment_received", "You have been registered to the following:")), 1, row++);
 		table.setHeight(row++, 8);
 
 		Table runnerTable = new Table(5, runners.size() + 3);
@@ -1358,16 +1358,16 @@ public class Registration extends RunBlock {
 		}
 		
 		table.setHeight(row++, 16);
-		table.add(getHeader(localize("run_reg.delivery_of_race_material_headline", "Race material and T-shirt/sweatshirt")), 1, row++);
-		table.add(getText(localize("run_reg.delivery_of_race_material_body", "Participants can collect their race number and the t-shirt/sweatshirt here.")), 1, row++);
+		table.add(getHeader(localizeForRun("run_reg.delivery_of_race_material_headline", "Race material and T-shirt/sweatshirt")), 1, row++);
+		table.add(getText(localizeForRun("run_reg.delivery_of_race_material_body", "Participants can collect their race number and the t-shirt/sweatshirt here.")), 1, row++);
 
 		table.setHeight(row++, 16);
 		table.add(getHeader(localize("run_reg.receipt_info_headline", "Receipt - Please Print It Out")), 1, row++);
-		table.add(getText(localize("run_reg.receipt_info_headline_body", "This document is your receipt, please print this out and bring it with you when you get your race number and T-shirt/sweatshirt.")), 1, row++);
+		table.add(getText(localizeForRun("run_reg.receipt_info_headline_body", "This document is your receipt, please print this out and bring it with you when you get your race number and T-shirt/sweatshirt.")), 1, row++);
 
 		table.setHeight(row++, 16);
 		table.add(getText(localize("run_reg.best_regards", "Best regards,")), 1, row++);
-		table.add(getText(localize("run_reg.reykjavik_marathon", "Reykjavik Marathon")), 1, row++);
+		table.add(getText(localizeForRun("run_reg.reykjavik_marathon", "Reykjavik Marathon")), 1, row++);
 		table.add(getText("www.marathon.is"), 1, row++);
 		
 		table.setHeight(row++, 16);
@@ -2012,6 +2012,14 @@ public class Registration extends RunBlock {
 		
 	}
 
+	private String localizeForRun(String key, String value) {
+		String runKey = key+"_runid_"+getRunner().getRun().getId();
+		String localizedString = getResourceBundle().getLocalizedString(runKey);
+		if(localizedString == null){
+			localizedString = getResourceBundle().getLocalizedString(key, value);
+		}
+		return localizedString;
+	}
 	
 	public boolean isDisablePaymentAndOverviewSteps() {
 		return disablePaymentAndOverviewSteps;
@@ -2140,18 +2148,10 @@ public class Registration extends RunBlock {
 		this.showCategories = showCategories;
 	}
 
-
-
-
-	
 	public boolean isDisableChipBuy() {
 		return disableChipBuy;
 	}
 
-
-
-
-	
 	public void setDisableChipBuy(boolean disableChipBuy) {
 		this.disableChipBuy = disableChipBuy;
 	}
