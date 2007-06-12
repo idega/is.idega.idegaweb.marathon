@@ -36,11 +36,11 @@ public class CategoriesForRunYearDropDownMenu extends DropdownMenu {
 		super.main(iwc);
 		IWResourceBundle iwrb = this.getResourceBundle(iwc);
 		Collection charities;
-		if (runYearID == null) {
+		//if (runYearID == null) {
 			charities = getRunCategoryBusiness(iwc).getAllCategories();
-		} else {
-			charities = getRunCategoryBusiness(iwc).getCategoriesByRunYearID(this.runYearID);
-		}
+		//} else {
+		//	charities = getRunCategoryBusiness(iwc).getCategoriesByRunYearID(this.runYearID);
+		//}
 		addMenuElement("-1", iwrb.getLocalizedString("run_category_dd.select_category", "Select Category ..."));
 		if (charities != null) {
 			Iterator iter = charities.iterator();
