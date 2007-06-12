@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.72 2007/06/11 23:56:35 sigtryggur Exp $
+ * $Id: Registration.java,v 1.73 2007/06/12 00:11:46 tryggvil Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -69,10 +69,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/11 23:56:35 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/12 00:11:46 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.72 $
+ * @version $Revision: 1.73 $
  */
 public class Registration extends RunBlock {
 	
@@ -673,7 +673,15 @@ public class Registration extends RunBlock {
 		table.add(getStepsHeader(iwc, ACTION_STEP_CHIP),1,row++);
 		table.setHeight(row++, 12);
 
-		table.add(getInformationTable(localize("run_reg.information_text_step_3", "Information text 3...")), 1, row++);
+		String key = "run_reg.information_text_step_3";
+		String runKey = key+"_runid_"+getRunner().getRun().getId();
+		
+		String localizedString = getResourceBundle().getLocalizedString(runKey);
+		if(localizedString!=null){
+			localizedString= getResourceBundle().getLocalizedString(key, "Information text 3...");
+		}
+		//table.add(getText(localize(key, "Information text 4...")), 1, row++);
+		table.add(getText(localizedString),1,row++);
 		table.setHeight(row++, 18);
 		
 		RadioButton rentChip = getRadioButton(PARAMETER_CHIP, IWMarathonConstants.CHIP_RENT);
@@ -1299,6 +1307,7 @@ public class Registration extends RunBlock {
 		table.add(getHeader(localize("run_reg.hello_participant", "Hello participant(s)")), 1, row++);
 		table.setHeight(row++, 16);
 
+		
 		table.add(getText(localize("run_reg.payment_received", "We have received payment for the following:")), 1, row++);
 		table.setHeight(row++, 8);
 
