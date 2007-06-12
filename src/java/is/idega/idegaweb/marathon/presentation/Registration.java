@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.73 2007/06/12 00:11:46 tryggvil Exp $
+ * $Id: Registration.java,v 1.74 2007/06/12 00:21:51 tryggvil Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -69,10 +69,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/12 00:11:46 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/06/12 00:21:51 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.73 $
+ * @version $Revision: 1.74 $
  */
 public class Registration extends RunBlock {
 	
@@ -677,7 +677,7 @@ public class Registration extends RunBlock {
 		String runKey = key+"_runid_"+getRunner().getRun().getId();
 		
 		String localizedString = getResourceBundle().getLocalizedString(runKey);
-		if(localizedString!=null){
+		if(localizedString==null){
 			localizedString= getResourceBundle().getLocalizedString(key, "Information text 3...");
 		}
 		//table.add(getText(localize(key, "Information text 4...")), 1, row++);
@@ -832,7 +832,7 @@ public class Registration extends RunBlock {
 		String runKey = key+"_runid_"+getRunner().getRun().getId();
 		
 		String localizedString = getResourceBundle().getLocalizedString(runKey);
-		if(localizedString!=null){
+		if(localizedString==null){
 			localizedString= getResourceBundle().getLocalizedString(key, "Information text 4...");
 		}
 		//table.add(getText(localize(key, "Information text 4...")), 1, row++);
