@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.74 2007/06/12 00:21:51 tryggvil Exp $
+ * $Id: Registration.java,v 1.75 2007/06/12 01:14:28 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -15,6 +15,8 @@ import is.idega.idegaweb.marathon.data.Charity;
 import is.idega.idegaweb.marathon.data.CharityHome;
 import is.idega.idegaweb.marathon.data.Distance;
 import is.idega.idegaweb.marathon.data.Participant;
+import is.idega.idegaweb.marathon.data.RunCategory;
+import is.idega.idegaweb.marathon.data.RunCategoryHome;
 import is.idega.idegaweb.marathon.data.Year;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 import java.rmi.RemoteException;
@@ -69,10 +71,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/12 00:21:51 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/06/12 01:14:28 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.74 $
+ * @version $Revision: 1.75 $
  */
 public class Registration extends RunBlock {
 	
@@ -1566,6 +1568,19 @@ public class Registration extends RunBlock {
 				}
 				else if (allowContact.equals(Boolean.FALSE.toString())){
 					runner.setMaySponsorContactRunner(false);
+				}
+			}
+			if (iwc.isParameterSet(PARAMETER_CATEGORY_ID)) {
+				String runCategorylId = iwc.getParameter(PARAMETER_CATEGORY_ID);
+				try{
+					RunCategoryHome catHome = (RunCategoryHome) IDOLookup.getHome(RunCategory.class);
+					if((runCategorylId!=null)&&(!runCategorylId.equals("-1"))){
+						RunCategory category = catHome.findByPrimaryKey(new Integer(runCategorylId));
+						runner.setCategory(category);
+					}
+				}
+				catch(Exception e){
+					e.printStackTrace();
 				}
 			}
 
