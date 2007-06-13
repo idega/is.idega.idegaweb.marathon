@@ -42,7 +42,7 @@ public class MarathonGroupUsersImportBean extends IBOServiceBean implements Mara
 	Group group;
 	
 	public boolean handleRecords() throws RemoteException {
-		int groupID = Integer.parseInt(getIWMainApplication().getBundle(IWMarathonConstants.IW_BUNDLE_IDENTIFIER).getProperty(IWMarathonConstants.PROPERTY_STAFF_GROUP_ID, "-1"));
+		int groupID = Integer.parseInt(getIWApplicationContext().getApplicationSettings().getProperty(IWMarathonConstants.PROPERTY_SPONSOR_GROUP_ID, "-1"));
 		
 		this.userBusiness = getUserBusiness(getIWApplicationContext());
 		this.groupBusiness = getGroupBusiness(getIWApplicationContext());
