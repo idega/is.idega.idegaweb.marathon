@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.76 2007/06/12 09:43:33 sigtryggur Exp $
+ * $Id: Registration.java,v 1.77 2007/06/13 13:46:07 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -71,10 +71,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/12 09:43:33 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/13 13:46:07 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.76 $
+ * @version $Revision: 1.77 $
  */
 public class Registration extends RunBlock {
 	
@@ -559,7 +559,7 @@ public class Registration extends RunBlock {
 		choiceTable.setHeight(iRow++, 3);
 
 		DropdownMenu tShirtField = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_SHIRT_SIZE));
-		tShirtField.addMenuElement("-1", localize("run_reg.select_tee_shirt_size","Select tee-shirt size"));
+		tShirtField.addMenuElement("-1", localize("run_reg.select_tee_shirt_size","Select shirt size"));
 		if(getRunner().getDistance() != null) {
 			String shirtSizeMetadata = getRunner().getDistance().getMetaData(PARAMETER_SHIRT_SIZES_PER_RUN);
 			List shirtSizes = null;
@@ -577,7 +577,7 @@ public class Registration extends RunBlock {
 				tShirtField.setSelectedElement(getRunner().getShirtSize());
 			}
 		}
-		tShirtField.setAsNotEmpty(localize("run_reg.must_select_shirt_size", "You must select tee-shirt size"));
+		tShirtField.setAsNotEmpty(localize("run_reg.must_select_shirt_size", "You must select shirt size"));
 
 		RemoteScriptHandler rshShirts = new RemoteScriptHandler(distanceDropdown, tShirtField);
 		try {
@@ -692,9 +692,9 @@ public class Registration extends RunBlock {
 		
 		table.add(rentChip, 1, row);
 		table.add(Text.getNonBrakingSpace(), 1, row);
-		table.add(getHeader(localize("run_reg.rent_chip", "I don't own a chip")), 1, row++);
+		table.add(getHeader(localize("run_reg.rent_chip", "Rent a chip")), 1, row++);
 		table.setHeight(row++, 6);
-		table.add(getText(localize("run_reg.rent_chip_information", "A one use chip is included in the entry fee and will be delivered with other tournament stuff.")), 1, row);
+		table.add(getText(localize("run_reg.rent_chip_information", "A disposable chip is included in the entry fee and will be included in your race material.")), 1, row);
 		table.setBottomCellBorder(1, row, 1, "#D7D7D7", "solid");
 		table.setCellpaddingBottom(1, row++, 6);
 		
@@ -710,13 +710,13 @@ public class Registration extends RunBlock {
 		table.setHeight(row++, 12);
 		table.add(ownChip, 1, row);
 		table.add(Text.getNonBrakingSpace(), 1, row);
-		table.add(getHeader(localize("run_reg.own_chip", "I own a chip, number")), 1, row);
+		table.add(getHeader(localize("run_reg.own_chip", "I own a chip - chipnumber")), 1, row);
 		table.add(Text.getNonBrakingSpace(), 1, row);
 		table.add(chipNumber, 1, row);
 		table.setBottomCellBorder(1, row, 1, "#D7D7D7", "solid");
 		table.setCellpaddingBottom(1, row++, 6);
 		
-
+		
 		if(!isDisableChipBuy()){
 			
 			RadioButton buyChip = getRadioButton(PARAMETER_CHIP, IWMarathonConstants.CHIP_BUY);
@@ -728,7 +728,7 @@ public class Registration extends RunBlock {
 			table.add(getHeader(localize("run_reg.buy_chip", "I want to buy a multi use chip")), 1, row++);
 			table.setHeight(row++, 6);
 			String priceText = formatAmount(iwc.getCurrentLocale(), this.chipPrice);
-			table.add(getText(localize("run_reg.buy_chip_information", "You can buy a multi use chip that you can use in future tournaments.  The price of the chip is ") + priceText), 1, row++);
+			table.add(getText(localize("run_reg.buy_chip_information", "You can buy a multi use chip that you can use in future competitions, at a price of ") + priceText), 1, row++);
 		}
 		
 		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
@@ -2013,14 +2013,20 @@ public class Registration extends RunBlock {
 	}
 
 	private String localizeForRun(String key, String value) {
-		String runKey = key+"_runid_"+getRunner().getRun().getId();
-		String localizedString = getResourceBundle().getLocalizedString(runKey);
-		if(localizedString == null){
-			localizedString = getResourceBundle().getLocalizedString(key, value);
+		if (getRunner().getRun() != null) {
+			String runKey = key+"_runid_"+getRunner().getRun().getId();
+			String localizedString = getResourceBundle().getLocalizedString(runKey);
+			if(localizedString == null){
+				localizedString = getResourceBundle().getLocalizedString(key, value);
+			}
+			return localizedString;
+		} 
+		else {
+			return getResourceBundle().getLocalizedString(key, value);
 		}
-		return localizedString;
+		
 	}
-	
+
 	public boolean isDisablePaymentAndOverviewSteps() {
 		return disablePaymentAndOverviewSteps;
 	}
