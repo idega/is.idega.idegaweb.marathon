@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.78 2007/06/13 15:22:54 tryggvil Exp $
+ * $Id: Registration.java,v 1.79 2007/06/13 16:11:18 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -71,10 +71,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/13 15:22:54 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/06/13 16:11:18 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.78 $
+ * @version $Revision: 1.79 $
  */
 public class Registration extends RunBlock {
 	
@@ -281,8 +281,13 @@ public class Registration extends RunBlock {
 		choiceTable.setWidth(3, "50%");
 		choiceTable.setWidth(Table.HUNDRED_PERCENT);
 		table.add(choiceTable, 1, row++);
+		
+		Text redStar = getHeader("*");
+		redStar.setFontColor("#ff0000");
+		
 		int iRow = 1;
 		Runner runner = getRunner();
+		
 		ActiveRunDropDownMenu runDropdown = getRunDropdown(iwc, runner);
 		if (runDropdown.getChildCount() == 1) {
 			getParentPage().setAlertOnLoad(localize("run_reg.no_runs_available", "There are no runs you can register for."));
@@ -293,16 +298,25 @@ public class Registration extends RunBlock {
 			}
 		}
 		runDropdown.clearChildren();
+		
+		if(isConstrainedToOneRun()){
+			choiceTable.add(getHeader(localize(runner.getRun().getName(),runner.getRun().getName())+ " " + runner.getYear().getName()), 1, iRow++);
+			choiceTable.add(getHeader(localize(IWMarathonConstants.RR_SECONDARY_DD, "Distance")), 1, iRow);
+			runDropdown.setVisible(false);
+			choiceTable.add(redStar, 1, iRow);
+			choiceTable.add(runDropdown, 1, iRow++);
+			
+		} else {
+			
+			choiceTable.add(getHeader(localize(IWMarathonConstants.RR_PRIMARY_DD, "Run") + "/" + localize(IWMarathonConstants.RR_SECONDARY_DD, "Distance")), 1, iRow);
+			choiceTable.add(redStar, 1, iRow++);
+			choiceTable.mergeCells(1, iRow, choiceTable.getColumns(), iRow);
+			choiceTable.add(runDropdown, 1, iRow);
+		}
+		
 		DistanceDropDownMenu distanceDropdown = (DistanceDropDownMenu) getStyledInterface(new DistanceDropDownMenu(PARAMETER_DISTANCE, runner));
 		distanceDropdown.setAsNotEmpty(localize("run_reg.must_select_distance", "You have to select a distance"));
 
-		Text redStar = getHeader("*");
-		redStar.setFontColor("#ff0000");
-
-		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_PRIMARY_DD, "Run") + "/" + localize(IWMarathonConstants.RR_SECONDARY_DD, "Distance")), 1, iRow);
-		choiceTable.add(redStar, 1, iRow++);
-		choiceTable.mergeCells(1, iRow, choiceTable.getColumns(), iRow);
-		choiceTable.add(runDropdown, 1, iRow);
 		choiceTable.add(distanceDropdown, 1, iRow++);
 		
 		RemoteScriptHandler rsh = new RemoteScriptHandler(runDropdown, distanceDropdown);
@@ -598,7 +612,7 @@ public class Registration extends RunBlock {
 
 		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_COUNTRY, "Country")), 1, iRow);
 		choiceTable.add(redStar, 1, iRow);
-		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_TSHIRT, "T-Shirt")), 3, iRow);
+		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_TSHIRT, "Shirt size")), 3, iRow);
 		choiceTable.add(redStar, 3, iRow++);
 		choiceTable.add(countryField, 1, iRow);
 		choiceTable.add(tShirtField, 3, iRow++);
@@ -1311,7 +1325,7 @@ public class Registration extends RunBlock {
 
 		table.setHeight(row++, 18);
 		
-		table.add(getHeader(localize("run_reg.hello_participant", "Hello participant(s)")), 1, row++);
+		table.add(getHeader(localize("run_reg.hello_participant", "Hello participant")), 1, row++);
 		table.setHeight(row++, 16);
 
 		
@@ -1961,8 +1975,8 @@ public class Registration extends RunBlock {
 		int kilometersRun = getRunner().getDistance().getDistanceInKms();
 		int totalPledgedISK = pledgePerKilometerISK*kilometersRun;
 		
-		String locStr = localize("run_reg.charity_sponsortext", "The sponsor will pay x kr. to the Charity for each kilometer run. The sponsor will pay {0} ISK to the charity of your choice for your run.");
-		String[] attributes = { String.valueOf(totalPledgedISK)};
+		String locStr = localize("run_reg.charity_sponsortext", "The sponsor will pay {0} ISK to the selected charity organization for each kilometer run. The sponsor will pay total of {1} ISK to the selected charity organization for your participation.");
+		String[] attributes = { String.valueOf(pledgePerKilometerISK), String.valueOf(totalPledgedISK)};
 		//format.setFormat(formatElementIndex, newFormat)
 		
 		String localizedString = MessageFormat.format(locStr, attributes );
