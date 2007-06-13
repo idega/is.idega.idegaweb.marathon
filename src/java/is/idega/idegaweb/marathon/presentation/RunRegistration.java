@@ -321,7 +321,7 @@ public class RunRegistration extends Block {
 		}
 		
 		this.tShirtField = (DropdownMenu) getStyleObject(new DropdownMenu(IWMarathonConstants.PARAMETER_TSHIRT), STYLENAME_INTERFACE);
-		SelectOption empty = new SelectOption(this.iwrb.getLocalizedString("run_reg.select_tee_shirt_size", "Select tee-shirt size"), "-1");
+		SelectOption empty = new SelectOption(this.iwrb.getLocalizedString("run_reg.select_tee_shirt_size", "Select shirt size"), "-1");
 		SelectOption selectAdult = new SelectOption(this.iwrb.getLocalizedString("run_reg.adult_sized", "Adult sizes"), "-1");
 		this.small = new SelectOption("- " + this.iwrb.getLocalizedString("run_reg.small", "Small"), IWMarathonConstants.PARAMETER_TSHIRT_S);
 		this.medium = new SelectOption("- " + this.iwrb.getLocalizedString("run_reg.medium", "Medium"), IWMarathonConstants.PARAMETER_TSHIRT_M);
@@ -349,7 +349,7 @@ public class RunRegistration extends Block {
 		this.tShirtField.addOption(largeKids);
 		this.tShirtField.addOption(xlargeKids);
 
-		this.tShirtField.setAsNotEmpty(this.iwrb.getLocalizedString("run_reg.must_select_shirt_size", "You must select tee-shirt size"), "-1");
+		this.tShirtField.setAsNotEmpty(this.iwrb.getLocalizedString("run_reg.must_select_shirt_size", "You must select shirt size"), "-1");
 
 		//step one fields end
 
