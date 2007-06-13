@@ -33,6 +33,7 @@ import com.idega.user.data.User;
  */
 public class ParticipantBMPBean extends GenericEntity implements Participant {
 
+	
 	public ParticipantBMPBean() {
 		super();
 	}
@@ -68,6 +69,10 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		addAttribute(getColumnNameCharityId(), "CharityId", true, true, String.class);
 		addAttribute(getColumnNameMaySponsorContact(), "May Sponsor Contact", true, true, Boolean.class);
 		addAttribute(getColumnNameCategoryId(), "CategoryId", true, true, Integer.class);
+		
+		addAttribute(getColumnApplyForDomesticTravelSupport(), "Domestic travel support", true, true, Boolean.class);
+		addAttribute(getColumnApplyForInternationalTravelSupport(), "international Travel support", true, true, Boolean.class);
+		
 	}
 
 	public static String getEntityTableName() {
@@ -172,6 +177,14 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 
 	public static String getColumnNameMaySponsorContact() {
 		return "may_sponsor_contact";
+	}
+	
+	public static String getColumnApplyForDomesticTravelSupport() {
+		return "domestic_travel_support";
+	}
+	
+	public static String getColumnApplyForInternationalTravelSupport() {
+		return "international_travel_support";
 	}
 	
 	public String getIDColumnName() {
@@ -579,5 +592,25 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		}
 		
 		return ejbFindAllByRunGroupIdAndYearGroupId(runId,yearId.intValue());
+	}
+
+	
+	public boolean isApplyForDomesticTravelSupport() {
+		return getBooleanColumnValue(getColumnApplyForDomesticTravelSupport());
+	}
+
+	
+	public void setApplyForDomesticTravelSupport(boolean applyForDomesticTravelSupport) {
+		setColumn(getColumnApplyForDomesticTravelSupport(), applyForDomesticTravelSupport);
+	}
+
+	
+	public boolean isApplyForInternationalTravelSupport() {
+		return getBooleanColumnValue(getColumnApplyForInternationalTravelSupport());
+	}
+
+	
+	public void setApplyForInternationalTravelSupport(boolean applyForInternationalTravelSupport) {
+		setColumn(getColumnApplyForInternationalTravelSupport(), applyForInternationalTravelSupport);
 	}
 }

@@ -6,6 +6,7 @@ import com.idega.user.data.User;
 import com.idega.data.IDOEntity;
 
 public interface Participant extends IDOEntity {
+
 	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getRunID
 	 */
@@ -305,4 +306,24 @@ public interface Participant extends IDOEntity {
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getCategoryId
 	 */
 	public int getCategoryId();
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#isApplyForDomesticTravelSupport
+	 */
+	public boolean isApplyForDomesticTravelSupport();
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setApplyForDomesticTravelSupport
+	 */
+	public void setApplyForDomesticTravelSupport(boolean applyForDomesticTravelSupport);
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#isApplyForInternationalTravelSupport
+	 */
+	public boolean isApplyForInternationalTravelSupport();
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setApplyForInternationalTravelSupport
+	 */
+	public void setApplyForInternationalTravelSupport(boolean applyForInternationalTravelSupport);
 }

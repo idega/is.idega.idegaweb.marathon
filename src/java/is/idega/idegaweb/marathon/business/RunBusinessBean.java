@@ -467,6 +467,8 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 						participant.setParticipantNumber(getNextAvailableParticipantNumber(runner.getRun(), runner.getDistance()));
 					}
 					participant.setTransportOrdered(String.valueOf(runner.isTransportOrdered()));
+					participant.setApplyForDomesticTravelSupport(runner.isApplyForDomesticTravelSupport());
+					participant.setApplyForInternationalTravelSupport(runner.isApplyForInternationalTravelSupport());
 					participant.store();
 					participants.add(participant);
 					

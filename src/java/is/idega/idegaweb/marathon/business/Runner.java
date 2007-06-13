@@ -1,5 +1,5 @@
 /*
- * $Id: Runner.java,v 1.9 2007/06/11 15:04:54 sigtryggur Exp $ Created on May 16, 2005
+ * $Id: Runner.java,v 1.10 2007/06/13 15:22:54 tryggvil Exp $ Created on May 16, 2005
  * 
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
  * 
@@ -23,10 +23,10 @@ import com.idega.user.data.User;
  * A holder class for information about runners and their selection when
  * registering.
  * 
- * Last modified: $Date: 2007/06/11 15:04:54 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/13 15:22:54 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class Runner {
 
@@ -60,7 +60,8 @@ public class Runner {
 	private boolean maySponsorContactRunner=false;
 	private Charity charity;
 	private RunCategory category;
-	
+	private boolean applyForDomesticTravelSupport=false;
+	private boolean applyForInternationalTravelSupport=false;
 
 	public User getUser() {
 		return this.user;
@@ -324,5 +325,25 @@ public class Runner {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	
+	public boolean isApplyForDomesticTravelSupport() {
+		return applyForDomesticTravelSupport;
+	}
+
+	
+	public void setApplyForDomesticTravelSupport(boolean applyForDomesticTravelSupport) {
+		this.applyForDomesticTravelSupport = applyForDomesticTravelSupport;
+	}
+
+	
+	public boolean isApplyForInternationalTravelSupport() {
+		return applyForInternationalTravelSupport;
+	}
+
+	
+	public void setApplyForInternationalTravelSupport(boolean applyForInternationalTravelSupport) {
+		this.applyForInternationalTravelSupport = applyForInternationalTravelSupport;
 	}
 }

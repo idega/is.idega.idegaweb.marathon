@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.77 2007/06/13 13:46:07 sigtryggur Exp $
+ * $Id: Registration.java,v 1.78 2007/06/13 15:22:54 tryggvil Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -71,10 +71,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/13 13:46:07 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/13 15:22:54 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.77 $
+ * @version $Revision: 1.78 $
  */
 public class Registration extends RunBlock {
 	
@@ -123,6 +123,8 @@ public class Registration extends RunBlock {
 	private static final String PARAMETER_NOT_ACCEPT_CHARITY = "prm_not_accept_charity";
 	private static final String PARAMETER_ALLOW_CONTACT = "prm_allow_contact";
 	private static final String PARAMETER_CATEGORY_ID = "prm_category_id";
+	private static final String PARAMETER_APPLY_DOMESTIC_TRAVEL_SUPPORT = "prm_apply_domestic_travel_support";
+	private static final String PARAMETER_APPLY_INTERNATIONAL_TRAVEL_SUPPORT = "prm_apply_international_travel_support";
 	
 	private static final String PARAMETER_LIMIT_RUN_IDS="run_ids";
 	
@@ -131,13 +133,12 @@ public class Registration extends RunBlock {
 	private static final int ACTION_STEP_CHIP = 30;
 	private static final int ACTION_STEP_TRANSPORT = 31;
 	private static final int ACTION_STEP_CHARITY = 32;
+	private static final int ACTION_STEP_TRAVELSUPPORT = 33;
 	private static final int ACTION_STEP_DISCLAIMER = 40;
 	private static final int ACTION_STEP_OVERVIEW = 50;
 	private static final int ACTION_STEP_PAYMENT = 60;
 	private static final int ACTION_STEP_RECEIPT = 70;
 	private static final int ACTION_CANCEL = 80;
-	
-
 
 	private boolean isIcelandic = false;
 	private float chipPrice;
@@ -154,6 +155,7 @@ public class Registration extends RunBlock {
 	private boolean disableSponsorContactCheck=false;
 	private boolean showCategories = false;
 	private boolean disableChipBuy=false;
+	private boolean enableTravelSupport=false;
 
 	public void main(IWContext iwc) throws Exception {
 		if (!iwc.isInEditMode()) {
@@ -198,6 +200,9 @@ public class Registration extends RunBlock {
 					break;
 				case ACTION_CANCEL:
 					cancel(iwc);
+					break;
+				case ACTION_STEP_TRAVELSUPPORT:
+					stepTravelsupport(iwc);
 					break;
 			}
 		}
@@ -1583,6 +1588,24 @@ public class Registration extends RunBlock {
 					e.printStackTrace();
 				}
 			}
+			if (iwc.isParameterSet(PARAMETER_APPLY_DOMESTIC_TRAVEL_SUPPORT)) {
+				String apply = iwc.getParameter(PARAMETER_APPLY_DOMESTIC_TRAVEL_SUPPORT);
+				if (apply.equals(Boolean.TRUE.toString())) {
+					runner.setApplyForDomesticTravelSupport(true);
+				}
+				else if (apply.equals(Boolean.FALSE.toString())){
+					runner.setApplyForDomesticTravelSupport(false);
+				}
+			}
+			if (iwc.isParameterSet(PARAMETER_APPLY_INTERNATIONAL_TRAVEL_SUPPORT)) {
+				String apply = iwc.getParameter(PARAMETER_APPLY_INTERNATIONAL_TRAVEL_SUPPORT);
+				if (apply.equals(Boolean.TRUE.toString())) {
+					runner.setApplyForInternationalTravelSupport(true);
+				}
+				else if (apply.equals(Boolean.FALSE.toString())){
+					runner.setApplyForInternationalTravelSupport(false);
+				}
+			}
 
 			addRunner(iwc, personalID, runner);
 			return runner;
@@ -1625,6 +1648,9 @@ public class Registration extends RunBlock {
 						}
 					}
 				//}
+			}
+			if(this.isEnableTravelSupport()){
+				addStep(iwc,ACTION_STEP_TRAVELSUPPORT,"run_reg.travelsupport");
 			}
 			addStep(iwc,ACTION_STEP_DISCLAIMER,"run_reg.consent");
 			if(!isDisablePaymentAndOverviewSteps()){
@@ -2160,5 +2186,72 @@ public class Registration extends RunBlock {
 
 	public void setDisableChipBuy(boolean disableChipBuy) {
 		this.disableChipBuy = disableChipBuy;
+	}
+	
+	protected void stepTravelsupport(IWContext iwc) {
+		Form form = new Form();
+		form.maintainParameter(PARAMETER_PERSONAL_ID);
+		form.addParameter(PARAMETER_ACTION, "-1");
+		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_TRAVELSUPPORT);
+		
+		Table table = new Table();
+		table.setCellpadding(0);
+		table.setCellspacing(0);
+		table.setWidth(Table.HUNDRED_PERCENT);
+		form.add(table);
+		int row = 1;
+		
+		//Script script = new Script();
+		//add(script);
+		//script.addFunction("toggleCharitySelection", "function toggleCharitySelection(){ var checkbox = findObj('"+PARAMETER_ACCEPT_CHARITY+"');  var hiddencheck = findObj('"+PARAMETER_NOT_ACCEPT_CHARITY+"'); if(checkbox.checked){ hiddencheck.value='false';}else if(!checkbox.checked){ hiddencheck.value='true';}  }");
+
+		//table.add(getPhasesTable(this.isIcelandic ? 4 : 3, this.isIcelandic ? 8 : 6, "run_reg.charity", "Charity"), 1, row++);
+		table.add(getStepsHeader(iwc, ACTION_STEP_TRAVELSUPPORT),1,row++);
+		table.setHeight(row++, 12);
+
+		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
+		
+		String previousActionValue = String.valueOf(ACTION_PREVIOUS);
+		previous.setValueOnClick(PARAMETER_ACTION, previousActionValue);
+		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
+		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_NEXT));
+		
+		table.add(getText(localize("run_reg.travelsupport_informationtext", "The sponsor will grant two types of travel support")), 1, row++);
+		
+		Runner runner = getRunner();
+
+		Layer applyDomesticDiv = new Layer(Layer.DIV);
+		CheckBox applyDomesticCheck = getCheckBox(PARAMETER_APPLY_DOMESTIC_TRAVEL_SUPPORT , Boolean.TRUE.toString());
+		Label applyDomesticLabel = new Label(localize("run_reg.travelsupport_apply_domestic", "Apply for domestic travel support"),applyDomesticCheck);
+		applyDomesticDiv.add(applyDomesticCheck);
+		applyDomesticDiv.add(applyDomesticLabel);
+		table.add(applyDomesticDiv,1,row++);
+		applyDomesticCheck.setChecked(runner.isApplyForDomesticTravelSupport());
+
+		Layer applyInternationalDiv = new Layer(Layer.DIV);
+		CheckBox applyInternationalCheck = getCheckBox(PARAMETER_APPLY_INTERNATIONAL_TRAVEL_SUPPORT , Boolean.TRUE.toString());
+		Label applyInternationalLabel = new Label(localize("run_reg.travelsupport_apply_international", "Apply for international travel support"),applyDomesticCheck);
+		applyInternationalDiv.add(applyInternationalCheck);
+		applyInternationalDiv.add(applyInternationalLabel);
+		table.add(applyInternationalDiv,1,row++);
+		applyInternationalCheck.setChecked(runner.isApplyForInternationalTravelSupport());
+
+		table.setHeight(row++, 18);
+		table.add(previous, 1, row);
+		table.add(Text.getNonBrakingSpace(), 1, row);
+		table.add(Text.getNonBrakingSpace(), 1, row);
+		table.add(next, 1, row);
+		table.setAlignment(1, row, Table.HORIZONTAL_ALIGN_RIGHT);
+
+		add(form);
+
+	}
+
+	public void setEnableTravelSupport(boolean enableTravelSupport) {
+		this.enableTravelSupport = enableTravelSupport;
+	}
+
+	public boolean isEnableTravelSupport() {
+		return enableTravelSupport;
 	}
 }

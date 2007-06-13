@@ -11,6 +11,7 @@ import com.idega.data.IDOEntity;
 import com.idega.data.IDOFactory;
 
 public class ParticipantHomeImpl extends IDOFactory implements ParticipantHome {
+
 	public Class getEntityInterfaceClass() {
 		return Participant.class;
 	}

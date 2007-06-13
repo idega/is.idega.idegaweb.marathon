@@ -10,6 +10,7 @@ import javax.ejb.FinderException;
 import com.idega.user.data.User;
 
 public interface ParticipantHome extends IDOHome {
+
 	public Participant create() throws CreateException;
 
 	public Participant findByPrimaryKey(Object pk) throws FinderException;
