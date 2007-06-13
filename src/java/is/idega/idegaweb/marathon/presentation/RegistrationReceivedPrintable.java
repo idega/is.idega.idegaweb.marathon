@@ -58,7 +58,7 @@ public class RegistrationReceivedPrintable extends Window {
 		String cardNumber = (String) iwc.getSessionAttribute(Registration.SESSION_ATTRIBUTE_CARD_NUMBER);
 		IWTimestamp stamp = (IWTimestamp) iwc.getSessionAttribute(Registration.SESSION_ATTRIBUTE_PAYMENT_DATE);
 
-		table.add(getHeader(iwrb.getLocalizedString("run_reg.hello_participant", "Hello participant(s)")), 1, row++);
+		table.add(getHeader(iwrb.getLocalizedString("run_reg.hello_participant", "Hello participant")), 1, row++);
 		table.setHeight(row++, 16);
 
 		table.add(getText(iwrb.getLocalizedString("run_reg.payment received", "We have received payment for the following:")), 1, row++);
