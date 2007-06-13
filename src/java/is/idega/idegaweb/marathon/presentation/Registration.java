@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.80 2007/06/13 16:35:31 sigtryggur Exp $
+ * $Id: Registration.java,v 1.81 2007/06/13 23:57:09 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -71,10 +71,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/13 16:35:31 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/13 23:57:09 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.80 $
+ * @version $Revision: 1.81 $
  */
 public class Registration extends RunBlock {
 	
@@ -1325,7 +1325,7 @@ public class Registration extends RunBlock {
 
 		table.setHeight(row++, 18);
 		
-		table.add(getHeader(localize("run_reg.hello_participant", "Hello participant")), 1, row++);
+		table.add(getHeader(localize("run_reg.hello_participant", "Dear participant")), 1, row++);
 		table.setHeight(row++, 16);
 
 		
