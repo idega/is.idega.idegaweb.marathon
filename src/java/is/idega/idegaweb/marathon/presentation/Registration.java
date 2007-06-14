@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.85 2007/06/14 11:58:02 sigtryggur Exp $
+ * $Id: Registration.java,v 1.86 2007/06/14 12:48:39 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -71,10 +71,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/14 11:58:02 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/14 12:48:39 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.85 $
+ * @version $Revision: 1.86 $
  */
 public class Registration extends RunBlock {
 	
@@ -411,15 +411,15 @@ public class Registration extends RunBlock {
 		if (getRunner().getYear() != null) {
 			minimumAgeForRun = getRunner().getYear().getMinimumAgeForRun();
 		}
-		if (minimumAgeForRun != -1) {
-			minimumAgeStamp.addYears(-minimumAgeForRun);
-			newestYearStamp.addYears(-minimumAgeForRun);
-		} else {
-			minimumAgeStamp.addYears(-3);
+		if (minimumAgeForRun == -1) {
+			minimumAgeForRun = 3;
 		}
+		newestYearStamp.addYears(-minimumAgeForRun);
+		minimumAgeStamp.addYears(-minimumAgeForRun);
 		
+		Object[] args = { String.valueOf(minimumAgeForRun) };
 		ssnField.setYearRange(newestYearStamp.getYear(), earliestYearStamp.getYear());
-		ssnField.setLatestPossibleDate(minimumAgeStamp.getDate(), "Invalid date of birth.  Please check the date you have selected and try again");
+		ssnField.setLatestPossibleDate(minimumAgeStamp.getDate(), MessageFormat.format(localize("run_reg.invalid_date_of_birth","Invalid date of birth.  You have to be {0} years old to register"), args));
 		if (getRunner().getDateOfBirth() != null) {
 			ssnField.setDate(getRunner().getDateOfBirth());
 		}
@@ -1968,32 +1968,29 @@ public class Registration extends RunBlock {
 		charities.setWidth("300");
 		
 
-		if(isHideCharityCheckbox()){
-			HiddenInput acceptCharityInput = new HiddenInput(PARAMETER_ACCEPT_CHARITY , Boolean.TRUE.toString());
-			HiddenInput notAcceptCharityCheck = new HiddenInput(PARAMETER_NOT_ACCEPT_CHARITY);
-			table.add(acceptCharityInput,1,row);
-			table.add(notAcceptCharityCheck,1,row++);
-		}
-		else{
-			Layer acceptCharityDiv = new Layer(Layer.DIV);
-			CheckBox acceptCharityCheck = getCheckBox(PARAMETER_ACCEPT_CHARITY , Boolean.TRUE.toString());
-			acceptCharityCheck.setChecked(true);
-			acceptCharityCheck.setToEnableWhenChecked(charities);
-			acceptCharityCheck.setToDisableWhenUnchecked(charities);
-			
-			HiddenInput notAcceptCharityCheck = new HiddenInput(PARAMETER_NOT_ACCEPT_CHARITY);
-			
-			acceptCharityCheck.setOnClick("toggleCharitySelection();");
-			//acceptCharityCheck.setOnChange(action)
-			Label accepCharityLabel = new Label(localize("run_reg.agree_charity_participation", "I agree to participate in running for a charity and searchable by others in a pledge form"),acceptCharityCheck);
-			acceptCharityDiv.add(acceptCharityCheck);
-			acceptCharityDiv.add(accepCharityLabel);
-			acceptCharityDiv.add(notAcceptCharityCheck);
-			table.add(acceptCharityDiv,1,row++);
+		Layer acceptCharityDiv = new Layer(Layer.DIV);
+		CheckBox acceptCharityCheck = getCheckBox(PARAMETER_ACCEPT_CHARITY , Boolean.TRUE.toString());
+		acceptCharityCheck.setChecked(true);
+		acceptCharityCheck.setToEnableWhenChecked(charities);
+		acceptCharityCheck.setToDisableWhenUnchecked(charities);
+		
+		HiddenInput notAcceptCharityCheck = new HiddenInput(PARAMETER_NOT_ACCEPT_CHARITY);
+		
+		acceptCharityCheck.setOnClick("toggleCharitySelection();");
+		//acceptCharityCheck.setOnChange(action)
+		Label accepCharityLabel = new Label(localize("run_reg.agree_charity_participation", "I agree to participate in running for a charity and searchable by others in a pledge form"),acceptCharityCheck);
+		acceptCharityDiv.add(acceptCharityCheck);
+		acceptCharityDiv.add(accepCharityLabel);
+		acceptCharityDiv.add(notAcceptCharityCheck);
+		table.add(acceptCharityDiv,1,row++);
 
-			acceptCharityCheck.setChecked(getRunner().isParticipateInCharity());
-			notAcceptCharityCheck.setValue(new Boolean(!getRunner().isParticipateInCharity()).toString());
+		acceptCharityCheck.setChecked(getRunner().isParticipateInCharity());
+		notAcceptCharityCheck.setValue(new Boolean(!getRunner().isParticipateInCharity()).toString());
+		
+		if(isHideCharityCheckbox()){
+			acceptCharityDiv.setVisible(true);
 		}
+
 		table.add(charities,1,row++);
 
 		Distance distance = runner.getDistance();
