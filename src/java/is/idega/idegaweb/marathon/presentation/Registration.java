@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.86 2007/06/14 12:48:39 sigtryggur Exp $
+ * $Id: Registration.java,v 1.87 2007/06/14 15:05:19 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -71,10 +71,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/14 12:48:39 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/14 15:05:19 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.86 $
+ * @version $Revision: 1.87 $
  */
 public class Registration extends RunBlock {
 	
@@ -1988,7 +1988,7 @@ public class Registration extends RunBlock {
 		notAcceptCharityCheck.setValue(new Boolean(!getRunner().isParticipateInCharity()).toString());
 		
 		if(isHideCharityCheckbox()){
-			acceptCharityDiv.setVisible(true);
+			acceptCharityDiv.setVisible(false);
 		}
 
 		table.add(charities,1,row++);
@@ -2094,7 +2094,6 @@ public class Registration extends RunBlock {
 		else {
 			return getResourceBundle().getLocalizedString(key, value);
 		}
-		
 	}
 
 	public boolean isDisablePaymentAndOverviewSteps() {
