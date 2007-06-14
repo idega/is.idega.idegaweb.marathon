@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.82 2007/06/14 01:15:31 sigtryggur Exp $
+ * $Id: Registration.java,v 1.83 2007/06/14 02:12:07 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -71,10 +71,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/14 01:15:31 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/14 02:12:07 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.82 $
+ * @version $Revision: 1.83 $
  */
 public class Registration extends RunBlock {
 	
@@ -1337,11 +1337,14 @@ public class Registration extends RunBlock {
 
 		Table runnerTable = new Table(5, runners.size() + 3);
 		runnerTable.setWidth(Table.HUNDRED_PERCENT);
-		runnerTable.add(getHeader(localize("run_reg.runner_name", "Runner name")), 1, 1);
-		runnerTable.add(getHeader(localize("run_reg.run", "Run")), 2, 1);
-		runnerTable.add(getHeader(localize("run_reg.distance", "Distance")), 3, 1);
-		runnerTable.add(getHeader(localize("run_reg.race_number", "Race number")), 4, 1);
-		runnerTable.add(getHeader(localize("run_reg.shirt_size", "Shirt size")), 5, 1);
+		int col = 1;
+		runnerTable.add(getHeader(localize("run_reg.runner_name", "Runner name")), col++, 1);
+		runnerTable.add(getHeader(localize("run_reg.run", "Run")), col++, 1);
+		runnerTable.add(getHeader(localize("run_reg.distance", "Distance")), col++, 1);
+		if (!isHideRaceNumberColumn()) {
+			runnerTable.add(getHeader(localize("run_reg.race_number", "Race number")), col++, 1);
+		}
+		runnerTable.add(getHeader(localize("run_reg.shirt_size", "Shirt size")), col++, 1);
 		table.add(runnerTable, 1, row++);
 		int runRow = 2;
 		int transportToBuy = 0;
@@ -1350,12 +1353,14 @@ public class Registration extends RunBlock {
 			Participant participant = (Participant) iter.next();
 			Group run = participant.getRunTypeGroup();
 			Group distance = participant.getRunDistanceGroup();
-			
-			runnerTable.add(getText(participant.getUser().getName()), 1, runRow);
-			runnerTable.add(getText(localize(run.getName(), run.getName())), 2, runRow);
-			runnerTable.add(getText(localize(distance.getName(), distance.getName())), 3, runRow);
-			runnerTable.add(getText(String.valueOf(participant.getParticipantNumber())), 4, runRow);
-			runnerTable.add(getText(localize("shirt_size." + participant.getShirtSize(), participant.getShirtSize())), 5, runRow++);
+			col =1 ;
+			runnerTable.add(getText(participant.getUser().getName()), col++, runRow);
+			runnerTable.add(getText(localize(run.getName(), run.getName())), col++, runRow);
+			runnerTable.add(getText(localize(distance.getName(), distance.getName())), col++, runRow);
+			if (!isHideRaceNumberColumn()) {
+				runnerTable.add(getText(String.valueOf(participant.getParticipantNumber())), col++, runRow);
+			}
+			runnerTable.add(getText(localize("shirt_size." + participant.getShirtSize(), participant.getShirtSize())), col++, runRow++);
 			if (participant.getTransportOrdered().equalsIgnoreCase(Boolean.TRUE.toString())) {
 				transportToBuy++;
 			}
@@ -1394,9 +1399,12 @@ public class Registration extends RunBlock {
 		
 		table.setHeight(row++, 16);
 		
-		Link print = new Link(localize("print", "Print"));
-		print.setPublicWindowToOpen(RegistrationReceivedPrintable.class);
-		table.add(print, 1, row);
+		if (!isHidePrintviewLink()) {
+			Link print = new Link(localize("print", "Print"));
+			print.setPublicWindowToOpen(RegistrationReceivedPrintable.class);
+			table.add(print, 1, row);
+		}
+		
 		
 		add(table);
 	}
@@ -2289,7 +2297,7 @@ public class Registration extends RunBlock {
 		this.hideRaceNumberColumn = hideRaceNumberColumn;
 	}
 
-	public boolean getHideRaceNumberColumn() {
+	public boolean isHideRaceNumberColumn() {
 		return hideRaceNumberColumn;
 	}
 
@@ -2297,7 +2305,7 @@ public class Registration extends RunBlock {
 		this.hidePrintviewLink = hidePrintviewLink;
 	}
 
-	public boolean getHidePrintviewLink() {
+	public boolean isHidePrintviewLink() {
 		return hidePrintviewLink;
 	}
 }
