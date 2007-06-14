@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.88 2007/06/14 18:12:45 sigtryggur Exp $
+ * $Id: Registration.java,v 1.89 2007/06/14 21:00:42 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -71,10 +71,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/14 18:12:45 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/14 21:00:42 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.88 $
+ * @version $Revision: 1.89 $
  */
 public class Registration extends RunBlock {
 	
@@ -229,7 +229,7 @@ public class Registration extends RunBlock {
 		table.add(getStepsHeader(iwc, ACTION_STEP_PERSONLOOKUP),1,row++);
 		table.setHeight(row++, 12);
 
-		table.add(getInformationTable(localize("run_reg.information_text_step_1", "Information text 1...")), 1, row++);
+		table.add(getInformationTable(localizeForRun("run_reg.information_text_step_1", "Information text 1...")), 1, row++);
 		table.setHeight(row++, 6);
 		
 		table.setCellpadding(1, row, 24);
