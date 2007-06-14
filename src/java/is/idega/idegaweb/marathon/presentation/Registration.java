@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.87 2007/06/14 15:05:19 sigtryggur Exp $
+ * $Id: Registration.java,v 1.88 2007/06/14 18:12:45 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -71,10 +71,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/14 15:05:19 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/14 18:12:45 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.87 $
+ * @version $Revision: 1.88 $
  */
 public class Registration extends RunBlock {
 	
@@ -862,7 +862,12 @@ public class Registration extends RunBlock {
 		table.add(getStepsHeader(iwc, ACTION_STEP_DISCLAIMER),1,row++);
 		table.setHeight(row++, 18);
 
-		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
+		SubmitButton next;
+		if (isDisablePaymentAndOverviewSteps()) {
+			next = (SubmitButton) getButton(new SubmitButton(localize("register", "Register")));
+		} else {
+			next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
+		}
 		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_NEXT));
 		if (!getRunner().isAgree()) {
 			next.setDisabled(true);
