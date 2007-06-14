@@ -236,6 +236,15 @@ public class RunYearEditor extends RunBlock {
 		
 		layer = new Layer(Layer.DIV);
 		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
+		TextInput pledgeCurrencyInput = new TextInput(CreateYearForm.PARAMETER_PLEDGE_CURRENCY);
+		Label pledgeCurrencyLabel = new Label(localize("run_reg.pledge_amount_currency", "Pledge currency"),pledgeCurrencyInput);
+		layer.add(pledgeCurrencyLabel);
+		layer.add(pledgeCurrencyInput);
+		form.add(layer);
+		form.add(new Break());
+		
+		layer = new Layer(Layer.DIV);
+		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
 		DropdownMenu minimumAgeDropDown = new DropdownMenu(CreateYearForm.PARAMETER_MINIMUM_AGE_FOR_RUN);
 		Label minimumAgeDropDownLabel = new Label(localize("run_reg.minimum_age_for_run", "Minimum age for run"),minimumAgeDropDown);
 		layer.add(minimumAgeDropDownLabel);
@@ -278,6 +287,9 @@ public class RunYearEditor extends RunBlock {
 				pledgedBySponsorGroupInput.setValue(pledgedGroup);
 			}
 			
+			String pledgeCurrency = selectedYear.getPledgeCurrency();
+			pledgeCurrencyInput.setValue(pledgeCurrency);
+						
 			int minimumAgeForRun = selectedYear.getMinimumAgeForRun();
 			if(minimumAgeForRun!=-1){
 				minimumAgeDropDown.setSelectedElement(minimumAgeForRun);
@@ -314,6 +326,8 @@ public class RunYearEditor extends RunBlock {
 			}
 			catch(Exception e){}
 		}
+		String pledgeCurrency = iwc.getParameter(CreateYearForm.PARAMETER_PLEDGE_CURRENCY);
+
 		String sMinimumAgeForRun = iwc.getParameter(CreateYearForm.PARAMETER_MINIMUM_AGE_FOR_RUN);
 		int minimumAgeForRun = -1;
 		if(sMinimumAgeForRun!=null){
@@ -341,6 +355,7 @@ public class RunYearEditor extends RunBlock {
 			if(pledgedGroup!=-1){
 				year.setPledgedBySponsorGroupPerKilometer(pledgedGroup);
 			}
+			year.setPledgeCurrency(pledgeCurrency);
 			year.setMinimumAgeForRun(minimumAgeForRun);
 			year.store();
 		}

@@ -30,6 +30,7 @@ public class CreateYearForm extends Block {
 	public static final String PARAMETER_CHARITY_ENABLED = "charity_enabled";
 	public static final String PARAMETER_PLEDGED_BY_SPONSOR = "pledged_by_sponsor";
 	public static final String PARAMETER_PLEDGED_BY_SPONSOR_GROUP = "pledged_by_sponsor_group";
+	public static final String PARAMETER_PLEDGE_CURRENCY = "pledge_currency";
 	public static final String PARAMETER_MINIMUM_AGE_FOR_RUN = "minimum_age_for_run";
 	
 	private static final int ACTION_SAVE = 4;

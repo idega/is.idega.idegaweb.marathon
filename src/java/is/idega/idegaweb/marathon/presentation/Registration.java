@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.90 2007/06/14 22:11:49 sigtryggur Exp $
+ * $Id: Registration.java,v 1.91 2007/06/14 22:44:59 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -71,10 +71,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/14 22:11:49 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/14 22:44:59 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.90 $
+ * @version $Revision: 1.91 $
  */
 public class Registration extends RunBlock {
 	
@@ -2000,7 +2000,6 @@ public class Registration extends RunBlock {
 
 		Distance distance = runner.getDistance();
 		Year year = distance.getYear();
-		
 		int pledgePerKilometerISK;
 		if (isSponsoredRegistration()) {
 			pledgePerKilometerISK = year.getPledgedBySponsorGroupPerKilometer();
@@ -2010,8 +2009,8 @@ public class Registration extends RunBlock {
 		int kilometersRun = getRunner().getDistance().getDistanceInKms();
 		int totalPledgedISK = pledgePerKilometerISK*kilometersRun;
 		
-		String locStr = localize("run_reg.charity_sponsortext", "The sponsor will pay {0} ISK to the selected charity organization for each kilometer run. The sponsor will pay total of {1} ISK to the selected charity organization for your participation.");
-		String[] attributes = { String.valueOf(pledgePerKilometerISK), String.valueOf(totalPledgedISK)};
+		String locStr = localize("run_reg.charity_sponsortext", "The sponsor will pay {0} {2} to the selected charity organization for each kilometer run. The sponsor will pay total of {1} {2} to the selected charity organization for your participation.");
+		String[] attributes = { String.valueOf(pledgePerKilometerISK), String.valueOf(totalPledgedISK), year.getPledgeCurrency()};
 		//format.setFormat(formatElementIndex, newFormat)
 		
 		String localizedString = MessageFormat.format(locStr, attributes );
