@@ -484,7 +484,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 						}
 						Object[] args = { user.getName(), iwrb.getLocalizedString(run.getName(),run.getName()), distanceString, iwrb.getLocalizedString("shirt_size." + runner.getShirtSize(), runner.getShirtSize()), String.valueOf(participant.getParticipantNumber()) };
 						String subject = iwrb.getLocalizedString("registration_received_subject_mail", "Your registration has been received.");
-						String body = MessageFormat.format(iwrb.getLocalizedString("registration_received_body_mail", "Your registration has been received."), args);
+						String body = MessageFormat.format(localizeForRun("registration_received_body_mail", "Your registration has been received.", runner, iwrb), args);
 						sendMessage(runner.getEmail(), subject, body);
 					}
 					
@@ -2093,5 +2093,19 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			e1.printStackTrace();
 		}
 		return participant;
+	}
+
+	private String localizeForRun(String key, String value, Runner runner, IWResourceBundle iwrb) {
+		if (runner.getRun() != null) {
+			String runKey = key+"_runid_"+runner.getRun().getId();
+			String localizedString = iwrb.getLocalizedString(runKey);
+			if(localizedString == null){
+				localizedString = iwrb.getLocalizedString(key, value);
+			}
+			return localizedString;
+		} 
+		else {
+			return iwrb.getLocalizedString(key, value);
+		}
 	}
 }
