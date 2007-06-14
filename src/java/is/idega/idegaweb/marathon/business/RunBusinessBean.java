@@ -409,7 +409,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		}
 	}
 	
-	public Collection saveParticipants(Collection runners, String email, String hiddenCardNumber, double amount, IWTimestamp date, Locale locale) throws IDOCreateException {
+	public Collection saveParticipants(Collection runners, String email, String hiddenCardNumber, double amount, IWTimestamp date, Locale locale, boolean disableSendPaymentConfirmation) throws IDOCreateException {
 		Collection participants = new ArrayList();
 
 		UserTransaction trans = getSessionContext().getUserTransaction();
@@ -499,7 +499,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				}
 			}
 
-			if (email != null) {
+			if (email != null && !disableSendPaymentConfirmation) {
 				IWResourceBundle iwrb = getIWApplicationContext().getIWMainApplication().getBundle(IWMarathonConstants.IW_BUNDLE_IDENTIFIER).getResourceBundle(locale);
 				Object[] args = { hiddenCardNumber, String.valueOf(amount), date.getLocaleDateAndTime(locale, IWTimestamp.SHORT, IWTimestamp.SHORT) };
 				String subject = iwrb.getLocalizedString("receipt_subject_mail", "Your receipt for registration on Marathon.is");

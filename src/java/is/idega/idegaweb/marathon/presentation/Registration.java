@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.83 2007/06/14 02:12:07 sigtryggur Exp $
+ * $Id: Registration.java,v 1.84 2007/06/14 10:53:44 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -71,10 +71,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/14 02:12:07 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/14 10:53:44 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.83 $
+ * @version $Revision: 1.84 $
  */
 public class Registration extends RunBlock {
 	
@@ -1291,7 +1291,7 @@ public class Registration extends RunBlock {
 			if (doPayment) {
 				properties = getRunBusiness(iwc).authorizePayment(nameOnCard, cardNumber, expiresMonth, expiresYear, ccVerifyNumber, amount, this.isIcelandic ? "ISK" : "EUR", referenceNumber);
 			}
-			Collection participants = getRunBusiness(iwc).saveParticipants(runners, email, hiddenCardNumber, amount, paymentStamp, iwc.getCurrentLocale());
+			Collection participants = getRunBusiness(iwc).saveParticipants(runners, email, hiddenCardNumber, amount, paymentStamp, iwc.getCurrentLocale(), isDisablePaymentAndOverviewSteps());
 			if (doPayment) {
 				getRunBusiness(iwc).finishPayment(properties);
 			}
