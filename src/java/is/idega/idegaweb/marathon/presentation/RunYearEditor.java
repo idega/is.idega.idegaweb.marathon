@@ -223,7 +223,16 @@ public class RunYearEditor extends RunBlock {
 		layer.add(pledgedBySponsorLabel);
 		layer.add(pledgedBySponsorInput);
 		form.add(layer);
-		form.add(new Break());		
+		form.add(new Break());
+		
+		layer = new Layer(Layer.DIV);
+		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
+		IntegerInput pledgedBySponsorGroupInput = new IntegerInput(CreateYearForm.PARAMETER_PLEDGED_BY_SPONSOR_GROUP);
+		Label pledgedBySponsorGroupLabel = new Label(localize("run_reg.pledge_amount_from_sponsor_group", "Sponsor pledges per kilometer for sponsored group"),pledgedBySponsorGroupInput);
+		layer.add(pledgedBySponsorGroupLabel);
+		layer.add(pledgedBySponsorGroupInput);
+		form.add(layer);
+		form.add(new Break());
 		
 		SubmitButton save = (SubmitButton) getButton(new SubmitButton(localize("save", "Save"), PARAMETER_ACTION, String.valueOf(ACTION_SAVE_EDIT)));
 		SubmitButton cancel = (SubmitButton) getButton(new SubmitButton(localize("cancel", "Cancel"), PARAMETER_ACTION, String.valueOf(ACTION_VIEW)));
@@ -249,6 +258,11 @@ public class RunYearEditor extends RunBlock {
 			if(pledged!=-1){
 				pledgedBySponsorInput.setValue(pledged);
 			}
+			
+			int pledgedGroup = selectedYear.getPledgedBySponsorGroupPerKilometer();
+			if(pledgedGroup!=-1){
+				pledgedBySponsorGroupInput.setValue(pledgedGroup);
+			}
 		}
 		add(form);
 	}
@@ -273,6 +287,14 @@ public class RunYearEditor extends RunBlock {
 			}
 			catch(Exception e){}
 		}
+		String sPledgedGroup = iwc.getParameter(CreateYearForm.PARAMETER_PLEDGED_BY_SPONSOR_GROUP);
+		int pledgedGroup = -1;
+		if(sPledgedGroup!=null){
+			try{
+				pledgedGroup = Integer.parseInt(sPledgedGroup);
+			}
+			catch(Exception e){}
+		}
 		Year year = null;
 		if (yearID != null) {
 			try {
@@ -288,6 +310,9 @@ public class RunYearEditor extends RunBlock {
 			year.setCharityEnabled(charityEnabled);
 			if(pledged!=-1){
 				year.setPledgedBySponsorPerKilometer(pledged);
+			}
+			if(pledgedGroup!=-1){
+				year.setPledgedBySponsorGroupPerKilometer(pledgedGroup);
 			}
 			year.store();
 		}

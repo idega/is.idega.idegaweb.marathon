@@ -1515,6 +1515,14 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		catch(Exception e){
 		}
 		
+		String sPledgedBySponsorGroup = iwc.getParameter(CreateYearForm.PARAMETER_PLEDGED_BY_SPONSOR_GROUP);
+		int pledgedBySponsorGroup = -1;
+		try{
+			pledgedBySponsorGroup = Integer.parseInt(sPledgedBySponsorGroup);
+		}
+		catch(Exception e){
+		}
+		
 		Group run = null;
 		try {
 			if (runID != null && !runID.equals("")) {
@@ -1532,6 +1540,9 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			group.setMetaData(YearBMPBean.METADATA_ENABLE_CHARITY,new Boolean(charityEnabled).toString());
 			if(pledgedBySponsor!=-1){
 				group.setMetaData(YearBMPBean.METADATA_PLEDGED_PER_KILOMETER_BY_SPONSOR, sPledgedBySponsor);
+			}
+			if(pledgedBySponsorGroup!=-1){
+				group.setMetaData(YearBMPBean.METADATA_PLEDGED_PER_KILOMETER_BY_SPONSOR_GROUP, sPledgedBySponsorGroup);
 			}
 			group.store();
 		}

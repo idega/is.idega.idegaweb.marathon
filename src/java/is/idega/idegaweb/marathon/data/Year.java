@@ -39,5 +39,8 @@ public interface Year extends IDOEntity, Group {
 	public int getPledgedBySponsorPerKilometer();
 	public void setPledgedBySponsorPerKilometer(int amount);
 	
+	public int getPledgedBySponsorGroupPerKilometer();
+	public void setPledgedBySponsorGroupPerKilometer(int amount);
+	
 	public String getYearString();
 }

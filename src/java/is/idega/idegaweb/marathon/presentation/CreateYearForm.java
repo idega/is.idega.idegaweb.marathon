@@ -29,6 +29,7 @@ public class CreateYearForm extends Block {
 	private static final String PARAMETER_GROUP_ID = "ic_group_id";
 	public static final String PARAMETER_CHARITY_ENABLED = "charity_enabled";
 	public static final String PARAMETER_PLEDGED_BY_SPONSOR = "pledged_by_sponsor";
+	public static final String PARAMETER_PLEDGED_BY_SPONSOR_GROUP = "pledged_by_sponsor_group";
 	private static final int ACTION_SAVE = 4;
 
 	private String runID = null;
@@ -148,15 +149,23 @@ public class CreateYearForm extends Block {
 		table.setHeight(row++, 12);
 		table.add(charityDiv, 1, row);
 		
-		Layer SponsorPledgeDiv = new Layer(Layer.DIV);
-		CheckBox SponsorPledgeCheck = new CheckBox(PARAMETER_PLEDGED_BY_SPONSOR);
-		Label SponsorPledgeLabel = new Label(iwrb.getLocalizedString("run_reg.pledge_amount_from_sponsor", "Sponsor pledges per kilometer"),charityEnabledCheck);
-		SponsorPledgeDiv.add(SponsorPledgeLabel);
-		SponsorPledgeDiv.add(SponsorPledgeCheck);
+		Layer sponsorPledgeDiv = new Layer(Layer.DIV);
+		TextInput sponsorPledgeInput = new TextInput(PARAMETER_PLEDGED_BY_SPONSOR);
+		Label sponsorPledgeLabel = new Label(iwrb.getLocalizedString("run_reg.pledge_amount_from_sponsor", "Sponsor pledges per kilometer"),sponsorPledgeInput);
+		sponsorPledgeDiv.add(sponsorPledgeLabel);
+		sponsorPledgeDiv.add(sponsorPledgeInput);
 		
 		table.setHeight(row++, 12);
-		table.add(SponsorPledgeDiv, 1, row);
+		table.add(sponsorPledgeDiv, 1, row);
 		
+		Layer sponsorPledgeGroupDiv = new Layer(Layer.DIV);
+		TextInput sponsorPledgeGroupInput = new TextInput(PARAMETER_PLEDGED_BY_SPONSOR_GROUP);
+		Label sponsorPledgeGroupLabel = new Label(iwrb.getLocalizedString("run_reg.pledge_amount_from_sponsor_group", "Sponsor pledges per kilometer for sponsor group"),sponsorPledgeGroupInput);
+		sponsorPledgeGroupDiv.add(sponsorPledgeGroupLabel);
+		sponsorPledgeGroupDiv.add(sponsorPledgeGroupInput);
+		
+		table.setHeight(row++, 12);
+		table.add(sponsorPledgeGroupDiv, 1, row);
 		
 		SubmitButton create = new SubmitButton(iwrb.getLocalizedString("run_reg.save", "Save"), PARAMETER_ACTION, String.valueOf(ACTION_SAVE));
 		table.setHeight(row++, 12);

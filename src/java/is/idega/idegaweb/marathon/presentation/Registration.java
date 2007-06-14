@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.81 2007/06/13 23:57:09 sigtryggur Exp $
+ * $Id: Registration.java,v 1.82 2007/06/14 01:15:31 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -71,10 +71,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/13 23:57:09 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/14 01:15:31 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.81 $
+ * @version $Revision: 1.82 $
  */
 public class Registration extends RunBlock {
 	
@@ -156,6 +156,9 @@ public class Registration extends RunBlock {
 	private boolean showCategories = false;
 	private boolean disableChipBuy=false;
 	private boolean enableTravelSupport=false;
+	private boolean sponsoredRegistration=false;
+	private boolean hidePrintviewLink=false;
+	private boolean hideRaceNumberColumn=false;
 
 	public void main(IWContext iwc) throws Exception {
 		if (!iwc.isInEditMode()) {
@@ -1971,7 +1974,12 @@ public class Registration extends RunBlock {
 		Distance distance = runner.getDistance();
 		Year year = distance.getYear();
 		
-		int pledgePerKilometerISK = year.getPledgedBySponsorPerKilometer();
+		int pledgePerKilometerISK;
+		if (isSponsoredRegistration()) {
+			pledgePerKilometerISK = year.getPledgedBySponsorGroupPerKilometer();
+		} else {
+			pledgePerKilometerISK = year.getPledgedBySponsorPerKilometer();
+		}
 		int kilometersRun = getRunner().getDistance().getDistanceInKms();
 		int totalPledgedISK = pledgePerKilometerISK*kilometersRun;
 		
@@ -2267,5 +2275,29 @@ public class Registration extends RunBlock {
 
 	public boolean isEnableTravelSupport() {
 		return enableTravelSupport;
+	}
+
+	public void setSponsoredRegistration(boolean sponsoredRegistration) {
+		this.sponsoredRegistration = sponsoredRegistration;
+	}
+
+	public boolean isSponsoredRegistration() {
+		return sponsoredRegistration;
+	}
+
+	public void setHideRaceNumberColumn(boolean hideRaceNumberColumn) {
+		this.hideRaceNumberColumn = hideRaceNumberColumn;
+	}
+
+	public boolean getHideRaceNumberColumn() {
+		return hideRaceNumberColumn;
+	}
+
+	public void setHidePrintviewLink(boolean hidePrintviewLink) {
+		this.hidePrintviewLink = hidePrintviewLink;
+	}
+
+	public boolean getHidePrintviewLink() {
+		return hidePrintviewLink;
 	}
 }
