@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.89 2007/06/14 21:00:42 sigtryggur Exp $
+ * $Id: Registration.java,v 1.90 2007/06/14 22:11:49 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -71,10 +71,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/14 21:00:42 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/14 22:11:49 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.89 $
+ * @version $Revision: 1.90 $
  */
 public class Registration extends RunBlock {
 	
@@ -2264,7 +2264,7 @@ public class Registration extends RunBlock {
 		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
 		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_NEXT));
 		
-		table.add(getText(localize("run_reg.travelsupport_informationtext", "The sponsor will grant two types of travel support")), 1, row++);
+		table.add(getText(localizeForRun("run_reg.travelsupport_informationtext", "The sponsor will grant two types of travel support")), 1, row++);
 		
 		Runner runner = getRunner();
 

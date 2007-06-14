@@ -320,6 +320,7 @@ run_reg.travelsupport=run_reg.travelsupport
 run_reg.travelsupport_apply_domestic=Apply for domestic travel support
 run_reg.travelsupport_apply_international=Apply for international travel support
 run_reg.travelsupport_informationtext=The sponsor will grant two types of travel support
+run_reg.travelsupport_informationtext_runid_4=
 run_reg.user_not_found_for_personal_id=No user found with personal ID.
 run_reg.with_bus_trip=with bus trip
 run_tab.allows_groups=Allows groups
