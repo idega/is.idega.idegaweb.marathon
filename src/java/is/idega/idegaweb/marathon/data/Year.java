@@ -42,5 +42,8 @@ public interface Year extends IDOEntity, Group {
 	public int getPledgedBySponsorGroupPerKilometer();
 	public void setPledgedBySponsorGroupPerKilometer(int amount);
 	
+	public int getMinimumAgeForRun();
+	public void setMinimumAgeForRun(int minimumAgeForRun);
+	
 	public String getYearString();
 }

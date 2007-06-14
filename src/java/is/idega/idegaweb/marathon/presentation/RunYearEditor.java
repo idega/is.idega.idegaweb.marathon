@@ -234,6 +234,20 @@ public class RunYearEditor extends RunBlock {
 		form.add(layer);
 		form.add(new Break());
 		
+		layer = new Layer(Layer.DIV);
+		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
+		DropdownMenu minimumAgeDropDown = new DropdownMenu(CreateYearForm.PARAMETER_MINIMUM_AGE_FOR_RUN);
+		Label minimumAgeDropDownLabel = new Label(localize("run_reg.minimum_age_for_run", "Minimum age for run"),minimumAgeDropDown);
+		layer.add(minimumAgeDropDownLabel);
+		layer.add(minimumAgeDropDown);
+		form.add(layer);
+		form.add(new Break());
+		
+		minimumAgeDropDown.addMenuElement(-1,localize("run_reg.select_age", "Select age..."));
+		for (int i=0; i<60; i++) {
+			minimumAgeDropDown.addMenuElement(i,String.valueOf(i));
+		}
+		
 		SubmitButton save = (SubmitButton) getButton(new SubmitButton(localize("save", "Save"), PARAMETER_ACTION, String.valueOf(ACTION_SAVE_EDIT)));
 		SubmitButton cancel = (SubmitButton) getButton(new SubmitButton(localize("cancel", "Cancel"), PARAMETER_ACTION, String.valueOf(ACTION_VIEW)));
 
@@ -262,6 +276,11 @@ public class RunYearEditor extends RunBlock {
 			int pledgedGroup = selectedYear.getPledgedBySponsorGroupPerKilometer();
 			if(pledgedGroup!=-1){
 				pledgedBySponsorGroupInput.setValue(pledgedGroup);
+			}
+			
+			int minimumAgeForRun = selectedYear.getMinimumAgeForRun();
+			if(minimumAgeForRun!=-1){
+				minimumAgeDropDown.setSelectedElement(minimumAgeForRun);
 			}
 		}
 		add(form);
@@ -295,6 +314,14 @@ public class RunYearEditor extends RunBlock {
 			}
 			catch(Exception e){}
 		}
+		String sMinimumAgeForRun = iwc.getParameter(CreateYearForm.PARAMETER_MINIMUM_AGE_FOR_RUN);
+		int minimumAgeForRun = -1;
+		if(sMinimumAgeForRun!=null){
+			try{
+				minimumAgeForRun = Integer.parseInt(sMinimumAgeForRun);
+			}
+			catch(Exception e){}
+		}
 		Year year = null;
 		if (yearID != null) {
 			try {
@@ -314,6 +341,7 @@ public class RunYearEditor extends RunBlock {
 			if(pledgedGroup!=-1){
 				year.setPledgedBySponsorGroupPerKilometer(pledgedGroup);
 			}
+			year.setMinimumAgeForRun(minimumAgeForRun);
 			year.store();
 		}
 	}

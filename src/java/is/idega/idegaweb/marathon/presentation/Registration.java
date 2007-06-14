@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.84 2007/06/14 10:53:44 sigtryggur Exp $
+ * $Id: Registration.java,v 1.85 2007/06/14 11:58:02 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -71,10 +71,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/14 10:53:44 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/14 11:58:02 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.84 $
+ * @version $Revision: 1.85 $
  */
 public class Registration extends RunBlock {
 	
@@ -395,14 +395,31 @@ public class Registration extends RunBlock {
 			}
 		}
 		
-		IWTimestamp stampNow = new IWTimestamp();
-		stampNow.addYears(-3);
+		
+		
 
-		IWTimestamp birthStamp = new IWTimestamp();
+		
 		DateInput ssnField = (DateInput) getStyledInterface(new DateInput(PARAMETER_PERSONAL_ID));
 		ssnField.setAsNotEmpty("Date of birth can not be empty");
-		ssnField.setYearRange(birthStamp.getYear(), birthStamp.getYear() - 100);
-		ssnField.setLatestPossibleDate(stampNow.getDate(), "Invalid date of birth.  Please check the date you have selected and try again");
+		
+		
+		IWTimestamp minimumAgeStamp = new IWTimestamp();
+		IWTimestamp newestYearStamp = new IWTimestamp();
+		IWTimestamp earliestYearStamp = new IWTimestamp();
+		earliestYearStamp.addYears(-100);
+		int minimumAgeForRun = -1;
+		if (getRunner().getYear() != null) {
+			minimumAgeForRun = getRunner().getYear().getMinimumAgeForRun();
+		}
+		if (minimumAgeForRun != -1) {
+			minimumAgeStamp.addYears(-minimumAgeForRun);
+			newestYearStamp.addYears(-minimumAgeForRun);
+		} else {
+			minimumAgeStamp.addYears(-3);
+		}
+		
+		ssnField.setYearRange(newestYearStamp.getYear(), earliestYearStamp.getYear());
+		ssnField.setLatestPossibleDate(minimumAgeStamp.getDate(), "Invalid date of birth.  Please check the date you have selected and try again");
 		if (getRunner().getDateOfBirth() != null) {
 			ssnField.setDate(getRunner().getDateOfBirth());
 		}
