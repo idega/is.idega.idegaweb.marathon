@@ -41,7 +41,7 @@ run_reg.agreement=I, by sending this registration form, waive and release any ri
 run_reg.amount=Amount
 run_reg.card_number=Card number
 run_reg.category=Department
-run_reg.continue_without_email=Are you sure you want to continue without entering an e-mail?
+run_reg.continue_without_email=You can not continue without entering an e-mail
 run_reg.delivery_of_race_material_body=Information about delivery of race materials are available on www.marathon.is on the information page for each event.<br><a href\="http\://marathon.is/pages/english4/glitnirreykjavikmarathon/?iw_language\=en">Glitnir Reykjavik Marathon</a><br/><a href\="http\://marathon.is/pages/english4/laugavegurultramarathon/?iw_language\=en">Laugavegur - Ultra Marathon</a> <br/><a href\="http\://marathon.is/pages/english4/midnightrun/?iw_language\=en">Midnight Run</a>
 run_reg.delivery_of_race_material_body_runid_381530=Information about the marathon are available on\: <a href\="http\://www.oslomarathon.no">Oslo Marathon</a>
 run_reg.delivery_of_race_material_body_runid_4=Information about delivery of race materials are available on www.marathon.is\:<br><a href\="http\://marathon.is/pages/english4/glitnirreykjavikmarathon/?iw_language\=en">Glitnir Reykjavik Marathon</a>
@@ -66,7 +66,6 @@ run_reg.order_tranport_information_Laugavegur=There is a three hours drive to th
 run_reg.own_chip=I own a chip - chipnumber\:
 run_reg.partipant_nr=BIB-number for participant nr.
 run_reg.pay=Pay entry fee
-run_reg.payment\ received=We have received payment for the following participants\:
 run_reg.payment_received_timestamp=Payment received
 run_reg.printable=Printable version
 run_reg.race_number=Race number

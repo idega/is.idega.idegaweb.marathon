@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.93 2007/06/16 19:26:39 sigtryggur Exp $
+ * $Id: Registration.java,v 1.94 2007/06/16 23:39:58 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -71,10 +71,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/16 19:26:39 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/16 23:39:58 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.93 $
+ * @version $Revision: 1.94 $
  */
 public class Registration extends RunBlock {
 	
@@ -229,7 +229,11 @@ public class Registration extends RunBlock {
 		table.add(getStepsHeader(iwc, ACTION_STEP_PERSONLOOKUP),1,row++);
 		table.setHeight(row++, 12);
 
-		table.add(getInformationTable(localizeForRun("run_reg.information_text_step_1", "Information text 1...")), 1, row++);
+		if(isConstrainedToOneRun()){
+			table.add(getInformationTable(localizeForRun("run_reg.information_text_step_1", "Information text 1...")), 1, row++);
+		} else {
+			table.add(getInformationTable(localize("run_reg.information_text_step_1", "Information text 1...")), 1, row++);
+		}
 		table.setHeight(row++, 6);
 		
 		table.setCellpadding(1, row, 24);
@@ -490,7 +494,7 @@ public class Registration extends RunBlock {
 
 		TextInput emailField = (TextInput) getStyledInterface(new TextInput(PARAMETER_EMAIL));
 		emailField.setAsEmail(localize("run_reg.email_err_msg", "Not a valid email address"));
-		emailField.setAsNotEmpty(localize("run_reg.continue_without_email", "You can not continue without entering an e-mail?"));
+		emailField.setAsNotEmpty(localize("run_reg.continue_without_email", "You can not continue without entering an e-mail"));
 		emailField.setWidth(Table.HUNDRED_PERCENT);
 		if (getRunner().getEmail() != null) {
 			emailField.setContent(getRunner().getEmail());
@@ -598,7 +602,7 @@ public class Registration extends RunBlock {
 		choiceTable.setHeight(iRow++, 3);
 
 		DropdownMenu tShirtField = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_SHIRT_SIZE));
-		tShirtField.addMenuElement("-1", localize("run_reg.select_tee_shirt_size","Select shirt size"));
+		tShirtField.addMenuElement("-1", localize("run_reg.select_tee_shirt_size","Select shirt size..."));
 		if(getRunner().getDistance() != null) {
 			String shirtSizeMetadata = getRunner().getDistance().getMetaData(PARAMETER_SHIRT_SIZES_PER_RUN);
 			List shirtSizes = null;
@@ -764,7 +768,7 @@ public class Registration extends RunBlock {
 			table.setHeight(row++, 12);
 			table.add(buyChip, 1, row);
 			table.add(Text.getNonBrakingSpace(), 1, row);
-			table.add(getHeader(localize("run_reg.buy_chip", "I want to buy a multi use chip")), 1, row++);
+			table.add(getHeader(localize("run_reg.buy_chip", "Buy chip")), 1, row++);
 			table.setHeight(row++, 6);
 			String priceText = formatAmount(iwc.getCurrentLocale(), this.chipPrice);
 			table.add(getText(localize("run_reg.buy_chip_information", "You can buy a multi use chip that you can use in future competitions, at a price of ") + priceText), 1, row++);
@@ -827,7 +831,7 @@ public class Registration extends RunBlock {
 		table.setCellpaddingBottom(1, row++, 6);
 		table.add(notOrderTransport, 1, row);
 		table.add(Text.getNonBrakingSpace(), 1, row);
-		table.add(getHeader(localize("run_reg.not_order_transport_text", "I don't want to order bus trip.")), 1, row);
+		table.add(getHeader(localize("run_reg.not_order_transport_text", "I don't want to order a bus trip.")), 1, row);
 		
 		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
 		//previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_CHIP));
@@ -981,7 +985,7 @@ public class Registration extends RunBlock {
 		registerOther.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_START));
 		//registerOther.setValueOnClick(PARAMETER_ACTION, this.isIcelandic ? String.valueOf(ACTION_STEP_PERSONLOOKUP) : String.valueOf(String.valueOf(ACTION_STEP_PERSONALDETAILS)));
 		registerOther.setValueOnClick(PARAMETER_PERSONAL_ID, "");
-		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("run_reg.pay", "Pay")));
+		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("run_reg.pay", "Pay fee")));
 		//next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_RECEIPT));
 		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_NEXT));
 		
@@ -1235,7 +1239,7 @@ public class Registration extends RunBlock {
 		help.setLinkText(localize("run_reg.terms_and_conditions", "Terms and conditions"));
 		creditCardTable.add(help, 1, creditRow++);
 
-		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("run_reg.pay", "Pay")));
+		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("run_reg.pay", "Pay fee")));
 		//next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_STEP_RECEIPT));
 		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_NEXT));
 		next.setDisabled(true);
@@ -1354,7 +1358,7 @@ public class Registration extends RunBlock {
 		table.setHeight(row++, 16);
 
 		
-		table.add(getText(localize("run_reg.payment_received", "You have been registered to the following:")), 1, row++);
+		table.add(getText(localize("run_reg.payment_received", "We have received payment for the following:")), 1, row++);
 		table.setHeight(row++, 8);
 
 		Table runnerTable = new Table(5, runners.size() + 3);
@@ -1411,7 +1415,7 @@ public class Registration extends RunBlock {
 		table.add(getText(localizeForRun("run_reg.delivery_of_race_material_body", "Participants can collect their race number and the t-shirt/sweatshirt here.")), 1, row++);
 
 		table.setHeight(row++, 16);
-		table.add(getHeader(localize("run_reg.receipt_info_headline", "Receipt - Please Print It Out")), 1, row++);
+		table.add(getHeader(localize("run_reg.receipt_info_headline", "Receipt - Please print it out")), 1, row++);
 		table.add(getText(localizeForRun("run_reg.receipt_info_headline_body", "This document is your receipt, please print this out and bring it with you when you get your race number and T-shirt/sweatshirt.")), 1, row++);
 
 		table.setHeight(row++, 16);
@@ -1966,7 +1970,7 @@ public class Registration extends RunBlock {
 		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
 		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_NEXT));
 		
-		table.add(getInformationTable(localize("run_reg.charity_headertext", "Now every runner can run for a good cause for a charity of his/her choice. On marathon.is it is now possible to search for all registered runners and pledge on each.")), 1, row++);
+		table.add(getInformationTable(localize("run_reg.charity_headertext", "Now every runner can run for a good cause for a charity of his/her choice. It is now possible to search among all the runners that have registered and make a pledge.")), 1, row++);
 
 		Runner runner = getRunner();
 		DropdownMenu charities = (CharitiesForRunDropDownMenu)(getStyledInterface(new CharitiesForRunDropDownMenu(PARAMETER_CHARITY_ID, (Integer)runner.getYear().getPrimaryKey())));

@@ -321,7 +321,7 @@ public class RunRegistration extends Block {
 		}
 		
 		this.tShirtField = (DropdownMenu) getStyleObject(new DropdownMenu(IWMarathonConstants.PARAMETER_TSHIRT), STYLENAME_INTERFACE);
-		SelectOption empty = new SelectOption(this.iwrb.getLocalizedString("run_reg.select_tee_shirt_size", "Select shirt size"), "-1");
+		SelectOption empty = new SelectOption(this.iwrb.getLocalizedString("run_reg.select_tee_shirt_size", "Select shirt size..."), "-1");
 		SelectOption selectAdult = new SelectOption(this.iwrb.getLocalizedString("run_reg.adult_sized", "Adult sizes"), "-1");
 		this.small = new SelectOption("- " + this.iwrb.getLocalizedString("run_reg.small", "Small"), IWMarathonConstants.PARAMETER_TSHIRT_S);
 		this.medium = new SelectOption("- " + this.iwrb.getLocalizedString("run_reg.medium", "Medium"), IWMarathonConstants.PARAMETER_TSHIRT_M);
@@ -355,7 +355,7 @@ public class RunRegistration extends Block {
 
 		//step two fields begin
 		this.ownChipField = (RadioButton) getStyleObject(new RadioButton(IWMarathonConstants.PARAMETER_CHIP, IWMarathonConstants.PARAMETER_OWN_CHIP), STYLENAME_CHECKBOX);
-		this.ownChipField.setMustBeSelected(this.iwrb.getLocalizedString("run_reg.must_select_chip_option", "You have to select one chip option."));
+		this.ownChipField.setMustBeSelected(this.iwrb.getLocalizedString("run_reg.must_select_chip_option", "You have to select a chip option."));
 		
 		this.buyChipField = (RadioButton) getStyleObject(new RadioButton(IWMarathonConstants.PARAMETER_CHIP, IWMarathonConstants.PARAMETER_BUY_CHIP), STYLENAME_CHECKBOX);
 
@@ -505,7 +505,7 @@ public class RunRegistration extends Block {
 		emailValidation.append("function isEmailEntered() {").append("\n\t");
 		emailValidation.append("var email = findObj('"+IWMarathonConstants.PARAMETER_EMAIL+"');").append("\n\t");
 		emailValidation.append("if (email.value == '') {").append("\n\t\t");
-		emailValidation.append("return confirm('"+this.iwrb.getLocalizedString("run_reg.continue_without_email", "Are you sure you want to continue without entering an e-mail?")+"');").append("\n\t");
+		emailValidation.append("return confirm('"+this.iwrb.getLocalizedString("run_reg.continue_without_email", "You can not continue without entering an e-mail")+"');").append("\n\t");
 		emailValidation.append("}").append("\n");
 		emailValidation.append("}");
 		this.emailField.setOnSubmitFunction("isEmailEntered", emailValidation.toString());

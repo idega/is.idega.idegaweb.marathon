@@ -32,7 +32,7 @@ public class ShirtSizeDropdownMenu extends DropdownMenu {
 
 		Collection shirtSizes = shirtSizeHome.findAll();
 		
-		addOption(new SelectOption(iwrb.getLocalizedString("run_reg.select_tee_shirt_size", "Select shirt size"), "-1"));
+		addOption(new SelectOption(iwrb.getLocalizedString("run_reg.select_tee_shirt_size", "Select shirt size..."), "-1"));
 		if (shirtSizes != null) {
 			Iterator iter = shirtSizes.iterator();
 			while (iter.hasNext()) {

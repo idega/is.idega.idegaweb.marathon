@@ -473,7 +473,7 @@ public class PledgeWizard extends RunBlock {
 		//help.setLinkText(localize("run_reg.terms_and_conditions", "Terms and conditions"));
 		//creditCardTable.add(help, 1, creditRow++);
 
-		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("run_reg.pay", "Pay")));
+		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("run_reg.pay", "Pay fee")));
 		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_SAVE));
 		//next.setDisabled(true);
 
@@ -512,7 +512,7 @@ public class PledgeWizard extends RunBlock {
 		table.add(getHeader(localize("pledgewizard.hello_participant", "Thank you for making a pledge")), 1, row++);
 		table.setHeight(row++, 16);
 
-		table.add(getText(localize("run_reg.payment_received", "We have received payment for the following:")), 1, row++);
+		table.add(getText(localize("pledgewizard.payment_received", "We have received payment for the following:")), 1, row++);
 		table.setHeight(row++, 8);
 
 		Table runnerTable = new Table(5, runners.size() + 3);
@@ -552,7 +552,7 @@ public class PledgeWizard extends RunBlock {
 		}
 		
 		table.setHeight(row++, 16);
-		table.add(getHeader(localize("run_reg.receipt_info_headline", "Receipt - Please Print It Out")), 1, row++);
+		table.add(getHeader(localize("run_reg.receipt_info_headline", "Receipt - Please print it out")), 1, row++);
 		table.add(getText(localize("run_reg.receipt_info_headline_body", "This document is your receipt, please print this out and bring it with you when you get your race number and T-shirt/sweatshirt.")), 1, row++);
 
 		table.setHeight(row++, 16);
