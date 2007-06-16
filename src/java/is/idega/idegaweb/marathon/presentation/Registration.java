@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.92 2007/06/16 01:45:31 sigtryggur Exp $
+ * $Id: Registration.java,v 1.93 2007/06/16 19:26:39 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -71,10 +71,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/16 01:45:31 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/16 19:26:39 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.92 $
+ * @version $Revision: 1.93 $
  */
 public class Registration extends RunBlock {
 	
@@ -237,11 +237,11 @@ public class Registration extends RunBlock {
 		table.add(Text.getNonBrakingSpace(), 1, row);
 		
 		TextInput input = (TextInput) getStyledInterface(new TextInput(PARAMETER_PERSONAL_ID));
-		input.setAsIcelandicSSNumber(localize("run_reg.not_valid_personal_id", "The personal ID you've entered is not valid"));
+		input.setAsIcelandicSSNumber(localize("run_reg.not_valid_personal_id", "The personal ID you have entered is not valid"));
 		input.setLength(10);
 		input.setMaxlength(10);
 		input.setInFocusOnPageLoad(true);
-		input.setAsNotEmpty(localize("run_reg.not_valid_personal_id", "The personal ID you've entered is not valid"));
+		input.setAsNotEmpty(localize("run_reg.not_valid_personal_id", "The personal ID you have entered is not valid"));
 		table.add(input, 1, row++);
 		
 		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
