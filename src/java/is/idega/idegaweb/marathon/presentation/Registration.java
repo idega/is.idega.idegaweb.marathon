@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.95 2007/06/17 00:33:41 sigtryggur Exp $
+ * $Id: Registration.java,v 1.96 2007/06/17 12:34:05 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -71,10 +71,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/17 00:33:41 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/17 12:34:05 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.95 $
+ * @version $Revision: 1.96 $
  */
 public class Registration extends RunBlock {
 	
@@ -1674,7 +1674,12 @@ public class Registration extends RunBlock {
 				addStep(iwc,ACTION_STEP_PERSONLOOKUP,"run_reg.registration");
 			}
 			addStep(iwc,ACTION_STEP_PERSONALDETAILS,"run_reg.registration");
-			Runner runner = getRunner();
+			Runner runner = null;
+			try {
+				runner = getRunner(); 
+			} catch (RuntimeException e) {
+				//runner not found by Personal ID
+			}
 			if(runner!=null){
 				Distance dist = runner.getDistance();
 				if(dist!=null){
@@ -1743,6 +1748,7 @@ public class Registration extends RunBlock {
 		catch (RuntimeException fe) {
 			getParentPage().setAlertOnLoad(localize("run_reg.user_not_found_for_personal_id", "No user found with personal ID."));
 			//action = ACTION_STEP_PERSONLOOKUP;
+			initializeSteps(iwc);
 			return ACTION_STEP_PERSONLOOKUP;
 		}
 		
