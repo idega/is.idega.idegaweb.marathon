@@ -1,6 +1,8 @@
 package is.idega.idegaweb.marathon.presentation;
 
 
+import is.idega.idegaweb.marathon.business.ConverterUtility;
+import is.idega.idegaweb.marathon.data.Run;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
 import java.rmi.RemoteException;
@@ -8,6 +10,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import javax.ejb.CreateException;
+import javax.ejb.FinderException;
 
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
@@ -18,6 +21,7 @@ import com.idega.presentation.TableCell2;
 import com.idega.presentation.TableRow;
 import com.idega.presentation.TableRowGroup;
 import com.idega.presentation.text.Break;
+import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.Form;
 import com.idega.presentation.ui.Label;
@@ -28,12 +32,15 @@ import com.idega.user.data.Group;
 
 public class RunEditor extends RunBlock {
 	
-	private static final String PARAMETER_ACTION = "marathon_prm_action";
+	private static final String PARAMETER_MARATHON_PK = "prm_run_pk";
 	private static final String PARAMETER_RUN = "prm_run";
+	private static final String PARAMETER_RUN_HOME_PAGE = "prm_run_home_page";
+	private static final String PARAMETER_RUN_INFORMATION_PAGE = "prm_run_information_page";
 
 	private static final int ACTION_VIEW = 1;
-	private static final int ACTION_NEW = 2;
-	private static final int ACTION_SAVE = 3;
+	private static final int ACTION_EDIT = 2;
+	private static final int ACTION_NEW = 3;
+	private static final int ACTION_SAVE = 4;
 	
 	public void main(IWContext iwc) throws Exception {
 		init(iwc);
@@ -43,6 +50,10 @@ public class RunEditor extends RunBlock {
 		switch (parseAction(iwc)) {
 			case ACTION_VIEW:
 				showList(iwc);
+				break;
+
+			case ACTION_EDIT:
+				showEditor(iwc);
 				break;
 
 			case ACTION_NEW:
@@ -79,8 +90,18 @@ public class RunEditor extends RunBlock {
 			while (iter.hasNext()) {
 				row = group.createRow();
 				run = (Group) iter.next();
-				cell = row.createCell();
-				cell.add(new Text(run.getName()));
+				try {
+					Link edit = new Link(getEditIcon(localize("edit", "Edit")));
+					edit.addParameter(PARAMETER_MARATHON_PK, run.getPrimaryKey().toString());
+					edit.addParameter(PARAMETER_ACTION, ACTION_EDIT);
+								
+					cell = row.createCell();
+					cell.add(new Text(run.getName()));
+					row.createCell().add(edit);
+				}
+				catch (Exception ex) {
+					ex.printStackTrace();
+				}
 				iRow++;
 			}
 		}
@@ -92,29 +113,82 @@ public class RunEditor extends RunBlock {
 	}
 	
 	public void showEditor(IWContext iwc) throws java.rmi.RemoteException {
+		String runID = iwc.getParameter(PARAMETER_MARATHON_PK);
 		Form form = new Form();
-		TextInput run = new TextInput(PARAMETER_RUN);
+		form.maintainParameter(PARAMETER_MARATHON_PK);
+		TextInput runInput = new TextInput(PARAMETER_RUN);
 		
 		Layer layer = new Layer(Layer.DIV);
 		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		Label label = new Label(localize("run_tab.run", "Run"), run);
+		Label label = new Label(localize("run_tab.run", "Run"), runInput);
 		layer.add(label);
-		layer.add(run);
+		layer.add(runInput);
 		form.add(layer);
 		form.add(new Break());
 		
+		layer = new Layer(Layer.DIV);
+		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
+		TextInput runHomePageInput = new TextInput(PARAMETER_RUN_HOME_PAGE);
+		Label runHomePageLabel = new Label(localize("run_tab.run", "Run"), runHomePageInput);
+		layer.add(runHomePageLabel);
+		layer.add(runHomePageInput);
+		form.add(layer);
+		form.add(new Break());
+		
+		layer = new Layer(Layer.DIV);
+		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
+		TextInput runInformationPageInput = new TextInput(PARAMETER_RUN_INFORMATION_PAGE);
+		Label runInformationPageLabel = new Label(localize("run_tab.run", "Run"), runInformationPageInput);
+		layer.add(runInformationPageLabel);
+		layer.add(runInformationPageInput);
+		form.add(layer);
+		form.add(new Break());
+
 		SubmitButton save = (SubmitButton) getButton(new SubmitButton(localize("save", "Save"), PARAMETER_ACTION, String.valueOf(ACTION_SAVE)));
 		SubmitButton cancel = (SubmitButton) getButton(new SubmitButton(localize("cancel", "Cancel"), PARAMETER_ACTION, String.valueOf(ACTION_VIEW)));
 
 		form.add(save);
 		form.add(cancel);
+		
+		if (runID != null) {
+			//Group selectedRun = getRunBusiness(iwc).getRunGroupByGroupId(Integer.valueOf(runID.toString()));
+			Run selectedRun = null;
+			try {
+				selectedRun = ConverterUtility.getInstance().convertGroupToRun(new Integer(runID));
+				runInput.setValue(selectedRun.getName());
+				runInput.setDisabled(true);
+				runHomePageInput.setValue(selectedRun.getRunHomePage());
+				runInformationPageInput.setValue(selectedRun.getRunInformationPage());
+			} catch (FinderException e) {
+				//run not found
+			}
+		}
+		
 		add(form);
 	}
 
 	public void save(IWContext iwc) throws java.rmi.RemoteException, CreateException {
-		String runName = iwc.getParameter(PARAMETER_RUN);
-		getGroupBiz(iwc).createGroup(runName, "", IWMarathonConstants.GROUP_TYPE_RUN);
-		
+		String runID = iwc.getParameter(PARAMETER_MARATHON_PK);
+		Run run = null;
+		if (runID == null) {
+			String runName = iwc.getParameter(PARAMETER_RUN);
+			Group newRun = getGroupBiz(iwc).createGroup(runName, "", IWMarathonConstants.GROUP_TYPE_RUN);
+			runID = newRun.getPrimaryKey().toString();
+		}
+		if (runID != null) {
+			try {
+				run = ConverterUtility.getInstance().convertGroupToRun(new Integer(runID));
+			} 
+			catch (FinderException e){
+				//no distance found, nothing saved
+			}
+			if (run != null) { 
+				run.setRunHomePage(iwc.getParameter(PARAMETER_RUN_HOME_PAGE));
+				run.setRunInformationPage(iwc.getParameter(PARAMETER_RUN_INFORMATION_PAGE));
+				run.store();
+			}
+		}
+			
 	}
 	
 	protected int parseAction(IWContext iwc) {
