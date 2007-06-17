@@ -25,10 +25,10 @@ import com.idega.presentation.ui.RadioButton;
  * <p>
  * Refactoring of the older "RunBlock" to a more generic structure.
  * </p>
- *  Last modified: $Date: 2007/06/05 16:48:56 $ by $Author: tryggvil $
+ *  Last modified: $Date: 2007/06/17 22:44:06 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:tryggvil@idega.com">tryggvil</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class StepsBlock extends Block {
 
@@ -205,7 +205,7 @@ public class StepsBlock extends Block {
 		
 		String key = getStepKey(iwc,stepId);
 		
-		Text stepName = getHeader(localize(key, key));
+		Text stepName = getHeader(key);
 		Layer stepNameSpan = new Layer(Layer.SPAN);
 		stepNameSpan.setStyleClass(STYLENAME_STEPNAME);
 		stepNameSpan.add(stepName);
