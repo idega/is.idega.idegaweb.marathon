@@ -184,7 +184,7 @@ public class RunRegistration extends Block {
 		//step one texts end
 
 		//step two texts begin
-		this.chipText = new Text(this.iwrb.getLocalizedString(IWMarathonConstants.RR_CHIP_TIME, "Championchip timing: "));
+		this.chipText = new Text(this.iwrb.getLocalizedString(IWMarathonConstants.RR_CHIP_TIME, "ChampionChip timing: "));
 		this.ownChipText = new Text(this.iwrb.getLocalizedString(IWMarathonConstants.RR_OWN_CHIP, "Own Chip"));
 		this.buyChipText = new Text(this.iwrb.getLocalizedString(IWMarathonConstants.RR_BUY_CHIP, "Buy Chip"));
 		this.rentChipText = new Text(this.iwrb.getLocalizedString(IWMarathonConstants.RR_RENT_CHIP, "Rent Chip"));
