@@ -91,7 +91,7 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 		this.chipNumberText = new Text(iwrb.getLocalizedString("run_tab.chip_nr", "Chip number"));
 		this.runTimeText = new Text(iwrb.getLocalizedString("run_tab.run_time", "Run time"));
 		this.chipTimeText = new Text(iwrb.getLocalizedString("run_tab.chip_time", "Chip time"));
-		this.tshirtText = new Text(iwrb.getLocalizedString("run_tab.tshirt", "Tshirt size"));
+		this.tshirtText = new Text(iwrb.getLocalizedString("run_tab.tshirt", "Shirt size"));
 		this.payMethodText = new Text(iwrb.getLocalizedString("run_tab.pay_method", "Pay method"));
 		this.payedAmountText = new Text(iwrb.getLocalizedString("run_tab.payed_amount", "Payed amount"));
 		this.teamNameText = new Text(iwrb.getLocalizedString("run_tab.team_name", "Team name"));

@@ -42,7 +42,7 @@ public class CharitiesForRunDropDownMenu extends DropdownMenu {
 		} else {
 			charities = getCharityBusiness(iwc).getCharitiesByRunYearID(this.runYearID);
 		}
-		addMenuElement("-1", iwrb.getLocalizedString("run_charity_dd.select_charity", "Select charity crganization..."));
+		addMenuElement("-1", iwrb.getLocalizedString("run_charity_dd.select_charity", "Select charity organization..."));
 		if (charities != null) {
 			Iterator iter = charities.iterator();
 			while (iter.hasNext()) {

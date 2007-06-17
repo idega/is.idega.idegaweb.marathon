@@ -245,10 +245,10 @@ public class RunDistanceTab extends UserGroupTab{
 		this.childrenPriceEURText = new Text(iwrb.getLocalizedString("run_tab.children_price_EUR", "Children price (EUR)"));
 		this.childrenPriceEURText.setBold();
 		
-		this.priceForTransportISKText = new Text(iwrb.getLocalizedString("run_tab.price_for_transport_ISK", "Price for transport (ISK)"));
+		this.priceForTransportISKText = new Text(iwrb.getLocalizedString("run_tab.price_for_transport_ISK", "Price for bus trip (ISK)"));
 		this.priceForTransportISKText.setBold();
 		
-		this.priceForTransportEURText = new Text(iwrb.getLocalizedString("run_tab.price_for_transport_EUR", "Price for transport (EUR)"));
+		this.priceForTransportEURText = new Text(iwrb.getLocalizedString("run_tab.price_for_transport_EUR", "Price for bus trip (EUR)"));
 		this.priceForTransportEURText.setBold();
 		
 		this.useChipText = new Text(iwrb.getLocalizedString("run_tab.use_chip", "Uses chips"));
@@ -260,7 +260,7 @@ public class RunDistanceTab extends UserGroupTab{
 		this.allowsGroupsText = new Text(iwrb.getLocalizedString("run_tab.allows_groups", "Allows groups"));
 		this.allowsGroupsText.setBold();
 		
-		this.transportOfferedText = new Text(iwrb.getLocalizedString("run_tab.transport_offered", "Transport offered"));
+		this.transportOfferedText = new Text(iwrb.getLocalizedString("run_tab.transport_offered", "Bus trip offered"));
 		this.transportOfferedText.setBold();
 
 		this.numberOfSplitsText = new Text(iwrb.getLocalizedString("run_tab.number_of_splits", "Number of splits"));

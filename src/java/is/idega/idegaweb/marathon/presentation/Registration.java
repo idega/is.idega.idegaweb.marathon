@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.94 2007/06/16 23:39:58 sigtryggur Exp $
+ * $Id: Registration.java,v 1.95 2007/06/17 00:33:41 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -71,10 +71,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/16 23:39:58 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/17 00:33:41 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.94 $
+ * @version $Revision: 1.95 $
  */
 public class Registration extends RunBlock {
 	
@@ -1123,7 +1123,7 @@ public class Registration extends RunBlock {
 			
 			runnerTable.setHeight(runRow++, 12);
 			runnerTable.mergeCells(1, runRow, 3, runRow);
-			runnerTable.add(getText(transportToBuy + " x " + localize("run_reg.transport_to_race_starting_point", "Bus trip to race starting point")), 1, runRow);
+			runnerTable.add(getText(transportToBuy + " x " + localize("run_reg.transport_to_race_starting_point", "Bus trip to race starting point and back again")), 1, runRow);
 			runnerTable.add(getText(formatAmount(iwc.getCurrentLocale(), totalTransport)), 4, runRow++);
 		}
 		
@@ -1394,7 +1394,7 @@ public class Registration extends RunBlock {
 		if (transportToBuy > 0) {
 			runRow++;
 			runnerTable.mergeCells(1, runRow, 5, runRow);
-			runnerTable.add(getText(transportToBuy + " x " + localize("run_reg.transport_to_race_starting_point", "Bus trip to race starting point")), 1, runRow);
+			runnerTable.add(getText(transportToBuy + " x " + localize("run_reg.transport_to_race_starting_point", "Bus trip to race starting point and back again")), 1, runRow);
 		}
 
 		

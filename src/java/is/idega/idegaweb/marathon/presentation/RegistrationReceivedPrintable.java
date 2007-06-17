@@ -92,7 +92,7 @@ public class RegistrationReceivedPrintable extends Window {
 		if (transportToBuy > 0) {
 			runRow++;
 			runnerTable.mergeCells(1, runRow, 5, runRow);
-			runnerTable.add(getText(transportToBuy + " x " + iwrb.getLocalizedString("run_reg.transport_to_race_starting_point", "Bus trip to race starting point")), 1, runRow);
+			runnerTable.add(getText(transportToBuy + " x " + iwrb.getLocalizedString("run_reg.transport_to_race_starting_point", "Bus trip to race starting point and back again")), 1, runRow);
 		}
 		
 		Table creditCardTable = new Table(2, 3);

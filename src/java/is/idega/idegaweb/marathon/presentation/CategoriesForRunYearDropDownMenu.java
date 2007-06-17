@@ -41,7 +41,7 @@ public class CategoriesForRunYearDropDownMenu extends DropdownMenu {
 		//} else {
 		//	charities = getRunCategoryBusiness(iwc).getCategoriesByRunYearID(this.runYearID);
 		//}
-		addMenuElement("-1", iwrb.getLocalizedString("run_category_dd.select_category", "Select Category ..."));
+		addMenuElement("-1", iwrb.getLocalizedString("run_category_dd.select_category", "Select category..."));
 		if (charities != null) {
 			Iterator iter = charities.iterator();
 			while (iter.hasNext()) {

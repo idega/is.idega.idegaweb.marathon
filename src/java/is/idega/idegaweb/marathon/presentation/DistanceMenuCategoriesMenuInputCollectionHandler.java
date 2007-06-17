@@ -50,7 +50,7 @@ public class DistanceMenuCategoriesMenuInputCollectionHandler extends Presentati
 				Iterator catIt = categories.iterator();
 				if (catIt.hasNext()) {
 			    	ids.add("-1");
-			    	names.add(iwrb.getLocalizedString("run_category_dd.select_category", "Select Category ..."));
+			    	names.add(iwrb.getLocalizedString("run_category_dd.select_category", "Select category..."));
 			    }
 			    while (catIt.hasNext()) {
 			    	RunCategory category = (RunCategory) catIt.next();

@@ -102,7 +102,7 @@ public class RunYearEditor extends RunBlock {
 		Collection runs = getRunBusiness(iwc).getRuns();
 		Iterator runIt = runs.iterator();
 		DropdownMenu runDropDown = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_MARATHON_PK)); 
-		runDropDown.addMenuElement("", localize("select_run","Select run"));
+		runDropDown.addMenuElement("", localize("select_run","Select run..."));
 		while (runIt.hasNext()) {
 			Group run = (Group)runIt.next();
 			runDropDown.addMenuElement(run.getPrimaryKey().toString(), localize(run.getName(),run.getName()));

@@ -94,7 +94,7 @@ public class CreateYearForm extends Block {
 		table.add(new Text(iwrb.getLocalizedString("run_tab.use_chip", "Use chip")), col++, row);
 		table.add(new Text(iwrb.getLocalizedString("run_tab.family_discount", "Family discount")), col++, row);
 		table.add(new Text(iwrb.getLocalizedString("run_tab.allows_groups", "Allows groups")), col++, row);
-		table.add(new Text(iwrb.getLocalizedString("run_tab.transport_offered", "Transport offered")), col++, row++);
+		table.add(new Text(iwrb.getLocalizedString("run_tab.transport_offered", "Bus trip offered")), col++, row++);
 		String[] distances = getRunBiz(iwc).getDistancesForRun(run);
 		if (distances != null) {
 			for (int i = 0; i < distances.length; i++) {

@@ -101,7 +101,7 @@ public class RunDistanceEditor extends RunBlock {
 		Collection runs = getRunBusiness(iwc).getRuns();
 		Iterator runIt = runs.iterator();
 		DropdownMenu runDropDown = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_MARATHON_PK)); 
-		runDropDown.addMenuElement("", localize("select_run","Select run"));
+		runDropDown.addMenuElement("", localize("select_run","Select run..."));
 		while (runIt.hasNext()) {
 			Group run = (Group)runIt.next();
 			runDropDown.addMenuElement(run.getPrimaryKey().toString(), localize(run.getName(),run.getName()));
@@ -218,14 +218,14 @@ public class RunDistanceEditor extends RunBlock {
 
 		layer = new Layer(Layer.DIV);
 		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		label = new Label(localize("run_tab.price_ISK", "Price ISK"), priceISK);
+		label = new Label(localize("run_tab.price_ISK", "Price (ISK)"), priceISK);
 		layer.add(label);
 		layer.add(priceISK);
 		form.add(layer);
 
 		layer = new Layer(Layer.DIV);
 		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		label = new Label(localize("run_tab.price_EUR", "Price EUR"), priceEUR);
+		label = new Label(localize("run_tab.price_EUR", "Price (EUR)"), priceEUR);
 		layer.add(label);
 		layer.add(priceEUR);
 		form.add(layer);
@@ -274,21 +274,21 @@ public class RunDistanceEditor extends RunBlock {
 		
 		layer = new Layer(Layer.DIV);
 		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		label = new Label(localize("run_tab.transport_offered", "Transport offered"), transportOffered);
+		label = new Label(localize("run_tab.transport_offered", "Bus trip offered"), transportOffered);
 		layer.add(label);
 		layer.add(transportOffered);
 		form.add(layer);
 		
 		layer = new Layer(Layer.DIV);
 		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		label = new Label(localize("run_tab.price_for_transport_ISK", "Price for transport (ISK)"), priceForTransportISK);
+		label = new Label(localize("run_tab.price_for_transport_ISK", "Price for bus trip (ISK)"), priceForTransportISK);
 		layer.add(label);
 		layer.add(priceForTransportISK);
 		form.add(layer);
 
 		layer = new Layer(Layer.DIV);
 		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		label = new Label(localize("run_tab.price_for_transport_EUR", "Price for transport (EUR)"), priceForTransportEUR);
+		label = new Label(localize("run_tab.price_for_transport_EUR", "Price for bus trip (EUR)"), priceForTransportEUR);
 		layer.add(label);
 		layer.add(priceForTransportEUR);
 		form.add(layer);
