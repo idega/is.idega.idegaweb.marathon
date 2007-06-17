@@ -6,13 +6,17 @@
  */
 package is.idega.idegaweb.marathon.presentation;
 
+import is.idega.idegaweb.marathon.business.ConverterUtility;
 import is.idega.idegaweb.marathon.data.Participant;
+import is.idega.idegaweb.marathon.data.Run;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
 import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
+
+import javax.ejb.FinderException;
 
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
@@ -61,7 +65,7 @@ public class RegistrationReceivedPrintable extends Window {
 		table.add(getHeader(iwrb.getLocalizedString("run_reg.hello_participant", "Hello participant")), 1, row++);
 		table.setHeight(row++, 16);
 
-		table.add(getText(iwrb.getLocalizedString("run_reg.payment_received", "We have received payment for the following:")), 1, row++);
+		table.add(getText(iwrb.getLocalizedString("run_reg.payment_received", "You have registered for the following:")), 1, row++);
 		table.setHeight(row++, 8);
 
 		Table runnerTable = new Table(5, runners.size() + 3);
@@ -75,9 +79,10 @@ public class RegistrationReceivedPrintable extends Window {
 		int runRow = 2;
 		int transportToBuy = 0;
 		Iterator iter = runners.iterator();
+		Group run = null;
 		while (iter.hasNext()) {
 			Participant participant = (Participant) iter.next();
-			Group run = participant.getRunTypeGroup();
+			run = participant.getRunTypeGroup();
 			Group distance = participant.getRunDistanceGroup();
 			
 			runnerTable.add(getText(participant.getUser().getName()), 1, runRow);
@@ -111,12 +116,20 @@ public class RegistrationReceivedPrintable extends Window {
 
 		table.setHeight(row++, 16);
 		table.add(getHeader(iwrb.getLocalizedString("run_reg.receipt_info_headline", "Receipt - Please print it out")), 1, row++);
-		table.add(getText(iwrb.getLocalizedString("run_reg.receipt_info_headline_body", "This document is your receipt, please print this out and bring it with you when you get your race number and T-shirt/sweatshirt.")), 1, row++);
+		table.add(getText(iwrb.getLocalizedString("run_reg.receipt_info_headline_body", "This document is your receipt, please print it out and bring it with you when you collect your race material.")), 1, row++);
 
 		table.setHeight(row++, 16);
 		table.add(getText(iwrb.getLocalizedString("run_reg.best_regards", "Best regards,")), 1, row++);
-		table.add(getText(iwrb.getLocalizedString("run_reg.reykjavik_marathon", "Reykjavik Marathon")), 1, row++);
-		table.add(getText("www.marathon.is"), 1, row++);
+		Run selectedRun = null;
+		try {
+			selectedRun = ConverterUtility.getInstance().convertGroupToRun(run);
+		} catch (FinderException e) {
+			//Run not found
+		}
+		if (selectedRun != null) {
+			table.add(getText(iwrb.getLocalizedString(selectedRun.getName(), selectedRun.getName())), 1, row++);
+			table.add(getText(selectedRun.getRunHomePage()), 1, row++);
+		}
 		
 		table.setHeight(row++, 16);
 		t.add(table, 1, 1);

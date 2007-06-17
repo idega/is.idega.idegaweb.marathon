@@ -1,9 +1,11 @@
 package is.idega.idegaweb.marathon.presentation;
 
+import is.idega.idegaweb.marathon.business.ConverterUtility;
 import is.idega.idegaweb.marathon.business.PledgeHolder;
 import is.idega.idegaweb.marathon.data.Charity;
 import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.data.Pledge;
+import is.idega.idegaweb.marathon.data.Run;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
 import java.rmi.RemoteException;
@@ -525,10 +527,11 @@ public class PledgeWizard extends RunBlock {
 		table.add(runnerTable, 1, row++);
 		int runRow = 2;
 		Iterator iter = runners.iterator();
+		Group run = null;
 		while (iter.hasNext()) {
 			Pledge pledge = (Pledge) iter.next();
 			Participant participant = pledge.getParticipant();
-			Group run = participant.getRunTypeGroup();
+			run = participant.getRunTypeGroup();
 			Group year = participant.getRunYearGroup();
 			Group distance = participant.getRunDistanceGroup();
 			
@@ -553,12 +556,20 @@ public class PledgeWizard extends RunBlock {
 		
 		table.setHeight(row++, 16);
 		table.add(getHeader(localize("run_reg.receipt_info_headline", "Receipt - Please print it out")), 1, row++);
-		table.add(getText(localize("run_reg.receipt_info_headline_body", "This document is your receipt, please print this out and bring it with you when you get your race number and T-shirt/sweatshirt.")), 1, row++);
+		table.add(getText(localize("run_reg.receipt_info_headline_body", "This document is your receipt, please print it out and bring it with you when you collect your race material.")), 1, row++);
 
 		table.setHeight(row++, 16);
 		table.add(getText(localize("run_reg.best_regards", "Best regards,")), 1, row++);
-		table.add(getText(localize("run_reg.reykjavik_marathon", "Reykjavik Marathon")), 1, row++);
-		table.add(getText("www.marathon.is"), 1, row++);
+		Run selectedRun = null;
+		try {
+			selectedRun = ConverterUtility.getInstance().convertGroupToRun(run);
+		} catch (FinderException e) {
+			//Run not found
+		}
+		if (selectedRun != null) {
+			table.add(getText(localize(selectedRun.getName(), selectedRun.getName())), 1, row++);
+			table.add(getText(selectedRun.getRunHomePage()), 1, row++);
+		}
 		
 		table.setHeight(row++, 16);
 		

@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.97 2007/06/17 15:47:31 sigtryggur Exp $
+ * $Id: Registration.java,v 1.98 2007/06/17 22:57:24 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -15,6 +15,7 @@ import is.idega.idegaweb.marathon.data.Charity;
 import is.idega.idegaweb.marathon.data.CharityHome;
 import is.idega.idegaweb.marathon.data.Distance;
 import is.idega.idegaweb.marathon.data.Participant;
+import is.idega.idegaweb.marathon.data.Run;
 import is.idega.idegaweb.marathon.data.RunCategory;
 import is.idega.idegaweb.marathon.data.RunCategoryHome;
 import is.idega.idegaweb.marathon.data.Year;
@@ -71,10 +72,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/17 15:47:31 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/17 22:57:24 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.97 $
+ * @version $Revision: 1.98 $
  */
 public class Registration extends RunBlock {
 	
@@ -1350,8 +1351,6 @@ public class Registration extends RunBlock {
 			loadPreviousStep(iwc);
 		}
 	}
-
-
 	
 	private void showReceipt(IWContext iwc, Collection runners, double amount, String cardNumber, IWTimestamp paymentStamp, boolean doPayment) {
 		Table table = new Table();
@@ -1373,7 +1372,7 @@ public class Registration extends RunBlock {
 		table.setHeight(row++, 16);
 
 		
-		table.add(getText(localize("run_reg.payment_received", "We have received payment for the following:")), 1, row++);
+		table.add(getText(localize("run_reg.payment_received", "You have registered for the following:")), 1, row++);
 		table.setHeight(row++, 8);
 
 		Table runnerTable = new Table(5, runners.size() + 3);
@@ -1390,9 +1389,10 @@ public class Registration extends RunBlock {
 		int runRow = 2;
 		int transportToBuy = 0;
 		Iterator iter = runners.iterator();
+		Group run = null;
 		while (iter.hasNext()) {
 			Participant participant = (Participant) iter.next();
-			Group run = participant.getRunTypeGroup();
+			run = participant.getRunTypeGroup();
 			Group distance = participant.getRunDistanceGroup();
 			col =1 ;
 			runnerTable.add(getText(participant.getUser().getName()), col++, runRow);
@@ -1431,12 +1431,20 @@ public class Registration extends RunBlock {
 
 		table.setHeight(row++, 16);
 		table.add(getHeader(localize("run_reg.receipt_info_headline", "Receipt - Please print it out")), 1, row++);
-		table.add(getText(localizeForRun("run_reg.receipt_info_headline_body", "This document is your receipt, please print this out and bring it with you when you get your race number and T-shirt/sweatshirt.")), 1, row++);
+		table.add(getText(localizeForRun("run_reg.receipt_info_headline_body", "This document is your receipt, please print it out and bring it with you when you collect your race material.")), 1, row++);
 
 		table.setHeight(row++, 16);
 		table.add(getText(localize("run_reg.best_regards", "Best regards,")), 1, row++);
-		table.add(getText(localizeForRun("run_reg.reykjavik_marathon", "Reykjavik Marathon")), 1, row++);
-		table.add(getText(localizeForRun("www.marathon.is","www.marathon.is")), 1, row++);
+		Run selectedRun = null;
+		try {
+			selectedRun = ConverterUtility.getInstance().convertGroupToRun(run);
+		} catch (FinderException e) {
+			//Run not found
+		}
+		if (selectedRun != null) {
+			table.add(getText(localize(selectedRun.getName(), selectedRun.getName())), 1, row++);
+			table.add(getText(selectedRun.getRunHomePage()), 1, row++);
+		}
 		
 		table.setHeight(row++, 16);
 		
@@ -1686,9 +1694,9 @@ public class Registration extends RunBlock {
 	protected void initializeSteps(IWContext iwc){
 		
 			if(isIcelandic){
-				addStep(iwc,ACTION_STEP_PERSONLOOKUP,"run_reg.registration");
+				addStep(iwc,ACTION_STEP_PERSONLOOKUP,localize("run_reg.registration", "Registration"));
 			}
-			addStep(iwc,ACTION_STEP_PERSONALDETAILS,"run_reg.registration");
+			addStep(iwc,ACTION_STEP_PERSONALDETAILS,localize("run_reg.registration", "Registration"));
 			Runner runner = null;
 			try {
 				runner = getRunner(); 
@@ -1699,10 +1707,10 @@ public class Registration extends RunBlock {
 				Distance dist = runner.getDistance();
 				if(dist!=null){
 					if(dist.isUseChip()){
-						addStep(iwc,ACTION_STEP_CHIP,"run_reg.time_registration_chip");
+						addStep(iwc,ACTION_STEP_CHIP,localize("run_reg.time_registration_chip", "Time registration chip"));
 					}
 					if(dist.isTransportOffered()&&!disableTransportStep){
-						addStep(iwc,ACTION_STEP_TRANSPORT,"run_reg.order_transport");
+						addStep(iwc,ACTION_STEP_TRANSPORT,localize("run_reg.order_transport", "Order bus trip"));
 					}
 				}
 			}
@@ -1714,23 +1722,23 @@ public class Registration extends RunBlock {
 						Year year = runner.getYear();
 						if(year!=null){
 							if(year.isCharityEnabled()){
-								addStep(iwc,ACTION_STEP_CHARITY,"run_reg.charity");
+								addStep(iwc,ACTION_STEP_CHARITY,localize("run_reg.charity", "Charity"));
 							}
 						}
 					}
 				//}
 			}
 			if(this.isEnableTravelSupport()){
-				addStep(iwc,ACTION_STEP_TRAVELSUPPORT,"run_reg.travelsupport");
+				addStep(iwc,ACTION_STEP_TRAVELSUPPORT,localize("run_reg.travelsupport", "Travel support"));
 			}
-			addStep(iwc,ACTION_STEP_DISCLAIMER,"run_reg.consent");
+			addStep(iwc,ACTION_STEP_DISCLAIMER,localize("run_reg.consent", "Concent"));
 			if(!isDisablePaymentAndOverviewSteps()){
-				addStep(iwc,ACTION_STEP_OVERVIEW,"run_reg.overview");
+				addStep(iwc,ACTION_STEP_OVERVIEW,localize("run_reg.overview", "Overview"));
 			}
 			if(!isDisablePaymentAndOverviewSteps()){
-				addStep(iwc,ACTION_STEP_PAYMENT,"run_reg.payment_info");
+				addStep(iwc,ACTION_STEP_PAYMENT,localize("run_reg.payment_info", "Payment info"));
 			}
-			addStep(iwc,ACTION_STEP_RECEIPT,"run_reg.receipt");
+			addStep(iwc,ACTION_STEP_RECEIPT,localize("run_reg.receipt", "Receipt"));
 	}
 
 
