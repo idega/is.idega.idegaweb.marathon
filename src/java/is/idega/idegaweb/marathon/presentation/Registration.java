@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.96 2007/06/17 12:34:05 sigtryggur Exp $
+ * $Id: Registration.java,v 1.97 2007/06/17 15:47:31 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -71,10 +71,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/17 12:34:05 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/17 15:47:31 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.96 $
+ * @version $Revision: 1.97 $
  */
 public class Registration extends RunBlock {
 	
@@ -172,44 +172,57 @@ public class Registration extends RunBlock {
 				this.chipPrice = Float.parseFloat(getBundle().getProperty(PROPERTY_CHIP_PRICE_EUR, "33"));
 				this.chipDiscount = Float.parseFloat(getBundle().getProperty(PROPERTY_CHIP_DISCOUNT_EUR, "3"));
 			}
-	
-			switch (parseAction(iwc)) {
-				case ACTION_STEP_PERSONLOOKUP:
-					stepPersonalLookup(iwc);
-					break;
-				case ACTION_STEP_PERSONALDETAILS:
-					stepPersonalDetails(iwc);
-					break;
-				case ACTION_STEP_CHIP:
-					stepChip(iwc);
-					break;
-				case ACTION_STEP_TRANSPORT:
-					stepTransport(iwc);
-					break;
-				case ACTION_STEP_CHARITY:
-					stepCharity(iwc);
-					break;
-				case ACTION_STEP_DISCLAIMER:
-					stepDisclaimer(iwc);
-					break;
-				case ACTION_STEP_OVERVIEW:
-					stepOverview(iwc);
-					break;
-				case ACTION_STEP_PAYMENT:
-					stepPayment(iwc);
-					break;
-				case ACTION_STEP_RECEIPT:
-					stepReceipt(iwc);
-					break;
-				case ACTION_CANCEL:
-					cancel(iwc);
-					break;
-				case ACTION_STEP_TRAVELSUPPORT:
-					stepTravelsupport(iwc);
-					break;
-			}
+			loadCurrentStep(iwc, parseAction(iwc));
 		}
 	}
+
+	private void loadCurrentStep(IWContext iwc, int action) throws RemoteException {
+		switch (action) {
+			case ACTION_STEP_PERSONLOOKUP:
+				stepPersonalLookup(iwc);
+				break;
+			case ACTION_STEP_PERSONALDETAILS:
+				stepPersonalDetails(iwc);
+				break;
+			case ACTION_STEP_CHIP:
+				stepChip(iwc);
+				break;
+			case ACTION_STEP_TRANSPORT:
+				stepTransport(iwc);
+				break;
+			case ACTION_STEP_CHARITY:
+				stepCharity(iwc);
+				break;
+			case ACTION_STEP_DISCLAIMER:
+				stepDisclaimer(iwc);
+				break;
+			case ACTION_STEP_OVERVIEW:
+				stepOverview(iwc);
+				break;
+			case ACTION_STEP_PAYMENT:
+				stepPayment(iwc);
+				break;
+			case ACTION_STEP_RECEIPT:
+				stepReceipt(iwc);
+				break;
+			case ACTION_CANCEL:
+				cancel(iwc);
+				break;
+			case ACTION_STEP_TRAVELSUPPORT:
+				stepTravelsupport(iwc);
+				break;
+		}
+	}
+
+	private void loadPreviousStep(IWContext iwc) throws RemoteException {
+		//Convenient to use when Exception is caught in one step, and user is sent to the previous step 
+		loadCurrentStep(iwc,Integer.parseInt(iwc.getParameter(PARAMETER_FROM_ACTION)));
+	}
+	
+	//private void loadPreviousStep(IWContext iwc, int action) throws RemoteException {
+		//Convenient to use when Exception is caught in one step, and user is sent to the previous step 
+		//loadCurrentStep(iwc,getPreviousStep(iwc, action));
+	//}
 
 	private void stepPersonalLookup(IWContext iwc) {
 		Form form = new Form();
@@ -289,7 +302,7 @@ public class Registration extends RunBlock {
 		choiceTable.setWidth(Table.HUNDRED_PERCENT);
 		table.add(choiceTable, 1, row++);
 		
-		Text redStar = getHeader("*");
+		Text redStar = getHeader(" *");
 		redStar.setFontColor("#ff0000");
 		
 		int iRow = 1;
@@ -1328,15 +1341,17 @@ public class Registration extends RunBlock {
 		catch (IDOCreateException ice) {
 			getParentPage().setAlertOnLoad(localize("run_reg.save_failed", "There was an error when trying to finish registration.  Please contact the marathon.is office."));
 			ice.printStackTrace();
-			stepPayment(iwc);
+			loadPreviousStep(iwc);
 		}
 		catch (CreditCardAuthorizationException ccae) {
 			IWResourceBundle creditCardBundle = iwc.getIWMainApplication().getBundle("com.idega.block.creditcard").getResourceBundle(iwc.getCurrentLocale());
 			getParentPage().setAlertOnLoad(ccae.getLocalizedMessage(creditCardBundle));
 			ccae.printStackTrace();
-			stepPayment(iwc);
+			loadPreviousStep(iwc);
 		}
 	}
+
+
 	
 	private void showReceipt(IWContext iwc, Collection runners, double amount, String cardNumber, IWTimestamp paymentStamp, boolean doPayment) {
 		Table table = new Table();
