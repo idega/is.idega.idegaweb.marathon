@@ -626,7 +626,7 @@ public class PledgeWizard extends RunBlock {
 			showReceipt(iwc, pledges, amount, hiddenCardNumber, paymentStamp, doPayment);
 		}
 		catch (IDOCreateException ice) {
-			getParentPage().setAlertOnLoad(localize("run_reg.save_failed", "There was an error when trying to finish registration.  Please contact the marathon.is office."));
+			getParentPage().setAlertOnLoad(localize("run_reg.save_failed", "There was an error when trying to finish registration."));
 			ice.printStackTrace();
 			stepPayment(iwc);
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.98 2007/06/17 22:57:24 sigtryggur Exp $
+ * $Id: Registration.java,v 1.99 2007/06/17 23:27:56 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -72,10 +72,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/17 22:57:24 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/17 23:27:56 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.98 $
+ * @version $Revision: 1.99 $
  */
 public class Registration extends RunBlock {
 	
@@ -1340,7 +1340,7 @@ public class Registration extends RunBlock {
 			showReceipt(iwc, participants, amount, hiddenCardNumber, paymentStamp, doPayment);
 		}
 		catch (IDOCreateException ice) {
-			getParentPage().setAlertOnLoad(localize("run_reg.save_failed", "There was an error when trying to finish registration.  Please contact the marathon.is office."));
+			getParentPage().setAlertOnLoad(localize("run_reg.save_failed", "There was an error when trying to finish registration."));
 			ice.printStackTrace();
 			loadPreviousStep(iwc);
 		}

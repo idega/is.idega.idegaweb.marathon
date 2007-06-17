@@ -502,7 +502,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			if (email != null && !disableSendPaymentConfirmation) {
 				IWResourceBundle iwrb = getIWApplicationContext().getIWMainApplication().getBundle(IWMarathonConstants.IW_BUNDLE_IDENTIFIER).getResourceBundle(locale);
 				Object[] args = { hiddenCardNumber, String.valueOf(amount), date.getLocaleDateAndTime(locale, IWTimestamp.SHORT, IWTimestamp.SHORT) };
-				String subject = iwrb.getLocalizedString("receipt_subject_mail", "Your receipt for registration on Marathon.is");
+				String subject = iwrb.getLocalizedString("receipt_subject_mail", "Your receipt for registration");
 				String body = MessageFormat.format(iwrb.getLocalizedString("receipt_body_mail", "Your registration has been received."), args);
 				sendMessage(email, subject, body);
 			}

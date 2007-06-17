@@ -129,7 +129,7 @@ public class RunEditor extends RunBlock {
 		layer = new Layer(Layer.DIV);
 		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
 		TextInput runHomePageInput = new TextInput(PARAMETER_RUN_HOME_PAGE);
-		Label runHomePageLabel = new Label(localize("run_tab.run", "Run"), runHomePageInput);
+		Label runHomePageLabel = new Label(localize("run_tab.run_home_page", "Home page"), runHomePageInput);
 		layer.add(runHomePageLabel);
 		layer.add(runHomePageInput);
 		form.add(layer);
@@ -138,7 +138,7 @@ public class RunEditor extends RunBlock {
 		layer = new Layer(Layer.DIV);
 		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
 		TextInput runInformationPageInput = new TextInput(PARAMETER_RUN_INFORMATION_PAGE);
-		Label runInformationPageLabel = new Label(localize("run_tab.run", "Run"), runInformationPageInput);
+		Label runInformationPageLabel = new Label(localize("run_tab.run_information_page", "Information page"), runInformationPageInput);
 		layer.add(runInformationPageLabel);
 		layer.add(runInformationPageInput);
 		form.add(layer);
