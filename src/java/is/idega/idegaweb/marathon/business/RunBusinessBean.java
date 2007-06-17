@@ -82,7 +82,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 	private static final String RUN_ROLLER_SKATE = "Roller Skate";
 	private static final String RUN_MIDNIGHT_RUN = "Midnight Run";
 	private static final String RUN_LAUGAVEGUR = "Laugavegur";
-	private static final String RUN_RVK_MARATHON = "Rvk Marathon";
+	private static final String RUN_RVK_MARATHON = "Reykjavik Marathon";
 	private static final String RUN_OSLO_MARATHON = "Oslo Marathon";
 
 	/**
