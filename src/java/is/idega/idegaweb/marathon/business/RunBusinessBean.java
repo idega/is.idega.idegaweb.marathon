@@ -546,8 +546,8 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					
 					IWResourceBundle iwrb = getIWApplicationContext().getIWMainApplication().getBundle(IWMarathonConstants.IW_BUNDLE_IDENTIFIER).getResourceBundle(locale);
 					Object[] args = { name, personalId, sAddress, phone, mobilePhone,runnerEmail };
-					String subject = iwrb.getLocalizedString("sponsor_mail_subject", "Request for invitiation to be a customer from marathon.is");
-					String body = MessageFormat.format(iwrb.getLocalizedString("sponsor_mail_body", "Name: {0}\nPersonalId: {1}\nAddress: {2}\nPhone: {3}\nMobile Phone: {4}\nE-mail: {5}"), args);
+					String subject = iwrb.getLocalizedString("sponsor_mail_subject", "Request for invitation to be a customer from marathon.is");
+					String body = MessageFormat.format(iwrb.getLocalizedString("sponsor_mail_body", "Name: {0}\nPersonal ID: {1}\nAddress: {2}\nPhone: {3}\nMobile Phone: {4}\nE-mail: {5}"), args);
 					sendMessage(sponsorEmail, subject, body);
 				}
 				else{
