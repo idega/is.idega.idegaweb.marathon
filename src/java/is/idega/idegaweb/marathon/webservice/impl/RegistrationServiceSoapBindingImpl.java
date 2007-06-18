@@ -8,9 +8,7 @@
 package is.idega.idegaweb.marathon.webservice.impl;
 
 import is.idega.idegaweb.marathon.data.Participant;
-import is.idega.idegaweb.marathon.data.ParticipantBMPBean;
 import is.idega.idegaweb.marathon.data.ParticipantHome;
-import is.idega.idegaweb.marathon.presentation.RunRegistration;
 
 import java.util.ArrayList;
 import java.util.Collection;
