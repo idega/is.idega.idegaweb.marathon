@@ -1209,6 +1209,9 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			catch (javax.mail.MessagingException me) {
 				System.err.println("Error sending mail to address: " + email + " Message was: " + me.getMessage());
 			}
+			catch (Exception e) {
+				System.err.println("Error sending mail to address: " + email + " Message was: " + e.getMessage());
+			}
 		}
 	}
 
