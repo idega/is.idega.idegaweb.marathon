@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.100 2007/06/18 02:02:24 sigtryggur Exp $
+ * $Id: Registration.java,v 1.101 2007/06/18 23:03:20 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -72,10 +72,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/18 02:02:24 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/18 23:03:20 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.100 $
+ * @version $Revision: 1.101 $
  */
 public class Registration extends RunBlock {
 	
@@ -1999,7 +1999,7 @@ public class Registration extends RunBlock {
 		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
 		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_NEXT));
 		
-		table.add(getInformationTable(localize("run_reg.charity_headertext", "Now every runner can run for a good cause for a charity of his/her choice. It is now possible to search among all the runners that have registered and make a pledge.")), 1, row++);
+		table.add(new Text(localize("run_reg.charity_headertext", "Now every runner can run for a good cause for a charity of his/her choice. It is now possible to search among all the runners that have registered and make a pledge.")), 1, row++);
 
 		Runner runner = getRunner();
 		DropdownMenu charities = (CharitiesForRunDropDownMenu)(getStyledInterface(new CharitiesForRunDropDownMenu(PARAMETER_CHARITY_ID, (Integer)runner.getYear().getPrimaryKey())));
@@ -2052,7 +2052,7 @@ public class Registration extends RunBlock {
 		//format.setFormat(formatElementIndex, newFormat)
 		
 		String localizedString = MessageFormat.format(locStr, attributes );
-		table.add(getInformationTable(localizedString), 1, row++);
+		table.add(new Text(localizedString), 1, row++);
 
 		table.setHeight(row++, 12);
 
@@ -2067,10 +2067,16 @@ public class Registration extends RunBlock {
 			allowContactDiv.add(new Break());
 			allowContactDiv.add(footnoteText);
 			table.add(allowContactDiv,1,row++);
+			allowContactDiv.add(new Break());
+			allowContactDiv.add(new Break());
 			
 			allowContactCheck.setChecked(getRunner().isMaySponsorContactRunner());
 		}
 		
+		Layer charityEnquiryDiv = new Layer(Layer.DIV);
+		Text charityEnquiryText = new Text(localize("run_reg.charity_enquiry","If you charity organization is not on the list, please send enquiry to godgerdarmal@glitnir.is")); 
+		charityEnquiryDiv.add(charityEnquiryText);
+		table.add(charityEnquiryDiv,1,row++);
 		/*
 		table.add(getInformationTable(localize("run_reg.information_text_step_3_transport", "Bus trip to race starting point and back to Reykjavik after the race is organized by Reykjavik Marathon. Please select if you like to order a seat or not.")), 1, row++);
 		table.setHeight(row++, 18);
