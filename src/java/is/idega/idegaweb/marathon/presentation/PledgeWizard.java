@@ -534,11 +534,19 @@ public class PledgeWizard extends RunBlock {
 			run = participant.getRunTypeGroup();
 			Group year = participant.getRunYearGroup();
 			Group distance = participant.getRunDistanceGroup();
+			String charityString = "";
+			try {
+				Charity charity = getCharityBusiness(iwc).getCharityByOrganisationalID(pledge.getOrganizationalID());
+				charityString = charity.getName();
+			} catch (Exception e) {
+				//charity not found
+				System.err.println(e.getMessage());
+			}
 			
 			runnerTable.add(getText(participant.getUser().getName()), 1, runRow);
 			runnerTable.add(getText(localize(run.getName(), run.getName()) + " " + localize(year.getName(), year.getName())), 2, runRow);
 			runnerTable.add(getText(localize(distance.getName()+"_short_name", distance.getName())), 3, runRow);
-			runnerTable.add(getText(pledge.getOrganizationalID()), 4, runRow);
+			runnerTable.add(getText(charityString), 4, runRow);
 			runnerTable.add(getText(pledge.getAmountPayed()), 5, runRow++);
 		}
 		
