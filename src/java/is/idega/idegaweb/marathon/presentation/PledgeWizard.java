@@ -290,15 +290,15 @@ public class PledgeWizard extends RunBlock {
 		Text nameText = new Text();
 		Layer nameLayer = new Layer(Layer.DIV);
 		nameLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		Text labelText = new Text(localize("pledgewizard.runner_name", "Runner name") + ": ");
+		Text labelText = getText(localize("pledgewizard.runner_name", "Runner name") + ": ");
 		labelText.setBold();
 		nameLayer.add(labelText);
+		if (participant != null) {
+			nameText = getText(participant.getUser().getName());
+		}
 		nameLayer.add(nameText);
 		//form.add(nameLayer);
 		//form.add(new Break());
-		if (participant != null) {
-			nameText.setText(participant.getUser().getName());
-		}
 		
 		Collection runs = new ArrayList();
 		runs.add(participant);
@@ -307,7 +307,7 @@ public class PledgeWizard extends RunBlock {
 		table.add(getText(localize("pledgewizard.pledge_information_text_step_2", "Information text 2...")), 1, row++);
 		table.setHeight(row++, 6);
 		table.add(nameLayer, 1, row++);
-		//table.setHeight(row++, 6);
+		table.setHeight(row++, 6);
 		table.add(browser, 1, row++);
 	    
 		
