@@ -71,15 +71,12 @@ public class IWMarathonConstants {
 	public static final String CHIP_OWN = "chip_own";
 	
   //localized strings
-  public static final String RR_INFO_RED_STAR = "run_reg.info_red_star";
   public static final String RR_PRIMARY_DD = "run_reg.primary_dd_lable";
   public static final String RR_SECONDARY_DD = "run_reg.secondary_dd_label";
   public static final String RR_NAME = "run_reg.name";
   public static final String RR_NATIONALITY = "run_reg.nationality";
   public static final String RR_SSN = "run_reg.ssn";
   public static final String RR_GENDER = "run_reg.gender";
-  public static final String RR_FEMALE = "run_reg.female";
-  public static final String RR_MALE = "run_reg.male";
   public static final String RR_ADDRESS = "run_reg.address";
   public static final String RR_POSTAL = "run_reg.postal";
   public static final String RR_CITY = "run_reg.city";
@@ -88,18 +85,12 @@ public class IWMarathonConstants {
   public static final String RR_MOBILE = "run_reg.mobile";
   public static final String RR_EMAIL = "run_reg.email";
   public static final String RR_TSHIRT = "run_reg.t_shirt";
-  public static final String RR_CHIP_TIME = "run_reg.champion_chip_timing";
-  public static final String RR_CHIP_LINK = "run_reg.champion_chip_link";
   public static final String RR_OWN_CHIP = "run_reg.own_chip";
   public static final String RR_BUY_CHIP = "run_reg.buy_chip";
   public static final String RR_RENT_CHIP = "run_reg.rent_chip";
-  public static final String RR_GROUP_COMP = "run_reg.group_competition";
   public static final String RR_GROUP_NAME = "run_reg.group_name";
   public static final String RR_BEST_TIME = "run_reg.best_time";
-  public static final String RR_GOAL_TIME = "run_reg.goal_time";
   public static final String RR_AGREEMENT = "run_reg.agreement";
-	public static final String RR_AGREE = "run_reg.agree";
-	public static final String RR_DISAGREE = "run_reg.disagree";
   public static final int RYSDD_TOTAL = 1;
   public static final int RYSDD_GROUPS = 2;
   public static final int RYSDD_GROUPS_COMP = 3;

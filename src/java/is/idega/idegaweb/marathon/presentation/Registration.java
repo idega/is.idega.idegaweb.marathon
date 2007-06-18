@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.99 2007/06/17 23:27:56 sigtryggur Exp $
+ * $Id: Registration.java,v 1.100 2007/06/18 02:02:24 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -72,10 +72,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/17 23:27:56 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/18 02:02:24 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.99 $
+ * @version $Revision: 1.100 $
  */
 public class Registration extends RunBlock {
 	
@@ -661,12 +661,12 @@ public class Registration extends RunBlock {
 		
 		if (this.showCategories) {
 			DropdownMenu categoriesDropdown = (CategoriesForRunYearDropDownMenu)(getStyledInterface(new CategoriesForRunYearDropDownMenu(PARAMETER_CATEGORY_ID, runYearID)));
-			categoriesDropdown.setAsNotEmpty(localize("run_reg.must_select_category","You must select category"));
+			categoriesDropdown.setAsNotEmpty(localize("run_reg.must_select_category","You must select department"));
 			if(getRunner().getCategory()!=null){
 				categoriesDropdown.setSelectedElement(getRunner().getCategory().getPrimaryKey().toString());
 			}
 			
-			choiceTable.add(getHeader(localize("run_reg.category", "Category")), 1, iRow);
+			choiceTable.add(getHeader(localize("run_reg.category", "Department")), 1, iRow);
 			choiceTable.add(redStar, 1, iRow++);
 			choiceTable.add(categoriesDropdown, 1, iRow);
 			
@@ -1426,7 +1426,7 @@ public class Registration extends RunBlock {
 		}
 		
 		table.setHeight(row++, 16);
-		table.add(getHeader(localizeForRun("run_reg.delivery_of_race_material_headline", "Race material and T-shirt/sweatshirt")), 1, row++);
+		table.add(getHeader(localizeForRun("run_reg.delivery_of_race_material_headline", "Further information about the run is available on:")), 1, row++);
 		table.add(getText(localizeForRun("run_reg.delivery_of_race_material_body", "Participants can collect their race number and the t-shirt/sweatshirt here.")), 1, row++);
 
 		table.setHeight(row++, 16);
@@ -1449,7 +1449,7 @@ public class Registration extends RunBlock {
 		table.setHeight(row++, 16);
 		
 		if (!isHidePrintviewLink()) {
-			Link print = new Link(localize("print", "Print"));
+			Link print = new Link(localize("print", "Print receipt"));
 			print.setPublicWindowToOpen(RegistrationReceivedPrintable.class);
 			table.add(print, 1, row);
 		}
@@ -1710,7 +1710,7 @@ public class Registration extends RunBlock {
 						addStep(iwc,ACTION_STEP_CHIP,localize("run_reg.time_registration_chip", "Time registration chip"));
 					}
 					if(dist.isTransportOffered()&&!disableTransportStep){
-						addStep(iwc,ACTION_STEP_TRANSPORT,localize("run_reg.order_transport", "Order bus trip"));
+						addStep(iwc,ACTION_STEP_TRANSPORT,localize("run_reg.order_transport", "Order a bus trip"));
 					}
 				}
 			}
@@ -1722,7 +1722,7 @@ public class Registration extends RunBlock {
 						Year year = runner.getYear();
 						if(year!=null){
 							if(year.isCharityEnabled()){
-								addStep(iwc,ACTION_STEP_CHARITY,localize("run_reg.charity", "Charity"));
+								addStep(iwc,ACTION_STEP_CHARITY,localize("run_reg.charity", "Select charity"));
 							}
 						}
 					}
@@ -1731,7 +1731,7 @@ public class Registration extends RunBlock {
 			if(this.isEnableTravelSupport()){
 				addStep(iwc,ACTION_STEP_TRAVELSUPPORT,localize("run_reg.travelsupport", "Travel support"));
 			}
-			addStep(iwc,ACTION_STEP_DISCLAIMER,localize("run_reg.consent", "Concent"));
+			addStep(iwc,ACTION_STEP_DISCLAIMER,localize("run_reg.consent", "Consent"));
 			if(!isDisablePaymentAndOverviewSteps()){
 				addStep(iwc,ACTION_STEP_OVERVIEW,localize("run_reg.overview", "Overview"));
 			}

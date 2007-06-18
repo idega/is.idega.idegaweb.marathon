@@ -111,8 +111,8 @@ public class RegistrationReceivedPrintable extends Window {
 		table.add(creditCardTable, 1, row++);
 		
 		table.setHeight(row++, 16);
-		table.add(getHeader(iwrb.getLocalizedString("run_reg.delivery_of_race_material_headline", "Race material and T-shirt/sweatshirt")), 1, row++);
-		table.add(getText(iwrb.getLocalizedString("run_reg.delivery_of_race_material_body", "Participants can collect their race number and the t-shirt/sweatshirt here.")), 1, row++);
+		table.add(getHeader(iwrb.getLocalizedString("run_reg.delivery_of_race_material_headline", "Further information about the run is available on:")), 1, row++);
+		table.add(getText(iwrb.getLocalizedString("run_reg.delivery_of_race_material_body", "Participants can collect their race material here.")), 1, row++);
 
 		table.setHeight(row++, 16);
 		table.add(getHeader(iwrb.getLocalizedString("run_reg.receipt_info_headline", "Receipt - Please print it out")), 1, row++);
@@ -134,7 +134,7 @@ public class RegistrationReceivedPrintable extends Window {
 		table.setHeight(row++, 16);
 		t.add(table, 1, 1);
 		
-		PrintButton print = new PrintButton(iwrb.getLocalizedString("print", "Print"));
+		PrintButton print = new PrintButton(iwrb.getLocalizedString("print", "Print receipt"));
 		t.add(print, 1, 2);
 		
 		add(t);

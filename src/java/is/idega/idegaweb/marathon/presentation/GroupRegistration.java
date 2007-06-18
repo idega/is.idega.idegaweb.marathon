@@ -1,5 +1,5 @@
 /*
- * $Id: GroupRegistration.java,v 1.3 2007/06/05 16:48:10 tryggvil Exp $
+ * $Id: GroupRegistration.java,v 1.4 2007/06/18 02:02:24 sigtryggur Exp $
  * Created on May 30, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -35,10 +35,10 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2007/06/05 16:48:10 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/06/18 02:02:24 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class GroupRegistration extends RunBlock {
 
@@ -228,7 +228,7 @@ public class GroupRegistration extends RunBlock {
 			}
 			
 			choiceTable.add(getHeader(localize("run_reg.partipant_nr", "Participant nr.") + " " + String.valueOf(a)), 1, iRow);
-			choiceTable.add(getHeader(localize("run_reg.best_time", "Best time in distance")), 3, iRow);
+			choiceTable.add(getHeader(localize("run_reg.best_time", "Your best time running this distance")), 3, iRow);
 			choiceTable.add(getHeader(localize("run_reg.estimated_time", "Estimated time in distance")), 5, iRow++);
 			choiceTable.add(participant, 1, iRow);
 			choiceTable.add(bestTime, 3, iRow);
