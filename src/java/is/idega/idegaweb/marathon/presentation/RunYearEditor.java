@@ -209,6 +209,15 @@ public class RunYearEditor extends RunBlock {
 
 		layer = new Layer(Layer.DIV);
 		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
+		CheckBox sponsoredRunCheck = new CheckBox(CreateYearForm.PARAMETER_SPONSORED_RUN);
+		Label sponsoredRunLabel = new Label(localize("run_reg.sponsored_run", "Sponsored run"),sponsoredRunCheck);
+		layer.add(sponsoredRunLabel);
+		layer.add(sponsoredRunCheck);
+		form.add(layer);
+		form.add(new Break());
+		
+		layer = new Layer(Layer.DIV);
+		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
 		CheckBox charityEnabledCheck = new CheckBox(CreateYearForm.PARAMETER_CHARITY_ENABLED);
 		Label charityEnabledLabel = new Label(localize("run_reg.charity_enabled", "Charity enabled"),charityEnabledCheck);
 		layer.add(charityEnabledLabel);
@@ -276,6 +285,7 @@ public class RunYearEditor extends RunBlock {
 			if (lastRegistrationString != null) { 
 				lastRegistrationDate.setTimestamp(new IWTimestamp(lastRegistrationString).getTimestamp());
 			}
+			sponsoredRunCheck.setChecked(selectedYear.isSponsoredRun());
 			charityEnabledCheck.setChecked(selectedYear.isCharityEnabled());
 			int pledged = selectedYear.getPledgedBySponsorPerKilometer();
 			if(pledged!=-1){
@@ -305,6 +315,11 @@ public class RunYearEditor extends RunBlock {
 	
 	private void saveEdit(IWContext iwc) throws java.rmi.RemoteException {
 		String yearID = iwc.getParameter(PARAMETER_MARATHON_YEAR_PK);
+		String sSponsoredRun = iwc.getParameter(CreateYearForm.PARAMETER_SPONSORED_RUN);
+		boolean sponsoredRun = false;
+		if(sSponsoredRun!=null){
+			sponsoredRun=true;
+		}
 		String sCharityEnabled = iwc.getParameter(CreateYearForm.PARAMETER_CHARITY_ENABLED);
 		boolean charityEnabled = false;
 		if(sCharityEnabled!=null){
@@ -348,6 +363,7 @@ public class RunYearEditor extends RunBlock {
 		if (year != null) {
 			year.setRunDate(new IWTimestamp(iwc.getParameter(PARAMETER_RUN_DATE)).getTimestamp());
 			year.setLastRegistrationDate(new IWTimestamp(iwc.getParameter(PARAMETER_LAST_REGISTRATION_DATE)).getTimestamp());
+			year.setSponsoredRun(sponsoredRun);
 			year.setCharityEnabled(charityEnabled);
 			if(pledged!=-1){
 				year.setPledgedBySponsorPerKilometer(pledged);
