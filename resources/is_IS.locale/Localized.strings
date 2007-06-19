@@ -99,7 +99,7 @@ pledgewizard.hello_participant=Takk fyrir a\u00F0 gera \u00E1heit \u00ED \u00FE\
 pledgewizard.last_name=Eftirnafn
 pledgewizard.make_pledge=Heita \u00E1 hlaupara
 pledgewizard.middle_name=Mi\u00F0nafn
-pledgewizard.no_runners_found=Engir hlauparar fundust \u00FAt fr\u00E1 leitarskilyr\u00F0unum sem \u00FE\u00FA settir inn
+pledgewizard.no_runners_found=<font color\="\#FF0000">Engir hlauparar fundust \u00FAt fr\u00E1 leitarskilyr\u00F0unum sem \u00FE\u00FA settir inn</font>
 pledgewizard.only_put_digits_in_amount_field=Vinsamlegast sl\u00E1i\u00F0 einungis t\u00F6lur \u00ED upph\u00E6\u00F0arreitinn
 pledgewizard.payment_received=Okkur hefur borist grei\u00F0sla fyrir eftirfarandi\:
 pledgewizard.personal_id=Kennitala
