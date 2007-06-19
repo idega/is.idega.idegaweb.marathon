@@ -1,5 +1,5 @@
 /*
- * $Id: YearBMPBean.java,v 1.9 2007/06/14 22:44:59 sigtryggur Exp $
+ * $Id: YearBMPBean.java,v 1.10 2007/06/19 11:49:41 sigtryggur Exp $
  * Created on May 22, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -17,15 +17,16 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2007/06/14 22:44:59 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/19 11:49:41 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class YearBMPBean extends GroupBMPBean  implements Year,Group{
 
 	public static final String METADATA_RUN_DATE = "run_date";
 	public static final String METADATA_LAST_REGISTRATION_DATE = "last_registration_date";
+	public static final String METADATA_SPONSORED_RUN = "sponsored_run";
 	public static final String METADATA_ENABLE_CHARITY = "enable_charity";
 	public static final String METADATA_PLEDGED_PER_KILOMETER_BY_SPONSOR = "sponsor_pledge_amount";
 	public static final String METADATA_PLEDGED_PER_KILOMETER_BY_SPONSOR_GROUP = "sponsor_pledge_amount_group";
@@ -62,6 +63,18 @@ public class YearBMPBean extends GroupBMPBean  implements Year,Group{
 		setMetaData(METADATA_LAST_REGISTRATION_DATE, stamp.toSQLString(), "java.sql.Timestamp");
 	}
 	
+	public boolean isSponsoredRun() {
+		String sponsoredRun = this.getMetaData(METADATA_SPONSORED_RUN);
+		if (sponsoredRun != null) {
+			return new Boolean(sponsoredRun).booleanValue();
+		}
+		return false;
+	}
+
+	public void setSponsoredRun(boolean sponsoredRun) {
+		setMetaData(METADATA_SPONSORED_RUN, String.valueOf(sponsoredRun), "java.lang.Boolean");
+	}
+
 	public boolean isCharityEnabled() {
 		String enable = this.getMetaData(METADATA_ENABLE_CHARITY);
 		if (enable != null) {

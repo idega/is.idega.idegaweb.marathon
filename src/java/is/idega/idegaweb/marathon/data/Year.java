@@ -36,6 +36,16 @@ public interface Year extends IDOEntity, Group {
 	 */
 	public void setCharityEnabled(boolean charityEnabled);
 
+	/**
+	 * @see is.idega.idegaweb.marathon.data.YearBMPBean#isSponsoredRun
+	 */
+	public boolean isSponsoredRun();
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.YearBMPBean#setSponsoredRun
+	 */
+	public void setSponsoredRun(boolean sponsoredRun);
+
 	public int getPledgedBySponsorPerKilometer();
 	public void setPledgedBySponsorPerKilometer(int amount);
 	

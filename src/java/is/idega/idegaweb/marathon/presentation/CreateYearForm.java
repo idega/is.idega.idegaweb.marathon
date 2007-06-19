@@ -27,6 +27,7 @@ public class CreateYearForm extends Block {
 	private static final String PARAMETER_ACTION = "marathon_prm_action";
 	private static final String PARAMETER_MARATHON_PK = "prm_run_pk";
 	private static final String PARAMETER_GROUP_ID = "ic_group_id";
+	public static final String PARAMETER_SPONSORED_RUN = "sponsored_run";
 	public static final String PARAMETER_CHARITY_ENABLED = "charity_enabled";
 	public static final String PARAMETER_PLEDGED_BY_SPONSOR = "pledged_by_sponsor";
 	public static final String PARAMETER_PLEDGED_BY_SPONSOR_GROUP = "pledged_by_sponsor_group";
