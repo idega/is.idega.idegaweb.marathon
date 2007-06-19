@@ -689,7 +689,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		Age age = null;
 		if (runner.getUser() != null) {
 			int groupID = Integer.parseInt(getIWApplicationContext().getApplicationSettings().getProperty(IWMarathonConstants.PROPERTY_SPONSOR_GROUP_ID, "-1"));
-			if (groupID != -1) {
+			if (groupID != -1 && runner.getYear().isSponsoredRun()) {
 				try {
 					if (getUserBiz().isMemberOfGroup(groupID, runner.getUser())) {
 						return 0;
