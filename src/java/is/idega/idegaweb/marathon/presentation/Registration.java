@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.102 2007/06/19 14:15:02 sigtryggur Exp $
+ * $Id: Registration.java,v 1.103 2007/06/20 00:27:47 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -72,10 +72,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/19 14:15:02 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/20 00:27:47 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.102 $
+ * @version $Revision: 1.103 $
  */
 public class Registration extends RunBlock {
 	
@@ -2077,10 +2077,12 @@ public class Registration extends RunBlock {
 			allowContactCheck.setChecked(getRunner().isMaySponsorContactRunner());
 		}
 		
-		Layer charityEnquiryDiv = new Layer(Layer.DIV);
-		Text charityEnquiryText = new Text(localize("run_reg.charity_enquiry","If you charity organization is not on the list, please send enquiry to godgerdarmal@glitnir.is")); 
-		charityEnquiryDiv.add(charityEnquiryText);
-		table.add(charityEnquiryDiv,1,row++);
+		if (year.isSponsoredRun()) {
+			Layer charityEnquiryDiv = new Layer(Layer.DIV);
+			Text charityEnquiryText = new Text(localize("run_reg.charity_enquiry","If you charity organization is not on the list, please send enquiry to godgerdarmal@glitnir.is")); 
+			charityEnquiryDiv.add(charityEnquiryText);
+			table.add(charityEnquiryDiv,1,row++);
+		}
 		/*
 		table.add(getInformationTable(localize("run_reg.information_text_step_3_transport", "Bus trip to race starting point and back to Reykjavik after the race is organized by Reykjavik Marathon. Please select if you like to order a seat or not.")), 1, row++);
 		table.setHeight(row++, 18);
