@@ -3,11 +3,7 @@
  */
 package is.idega.idegaweb.marathon.presentation;
 
-import is.idega.idegaweb.marathon.business.RunBusiness;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
-
-import com.idega.business.IBOLookup;
-import com.idega.business.IBOLookupException;
 import com.idega.idegaweb.presentation.StyledIWAdminWindow;
 import com.idega.presentation.IWContext;
 
@@ -21,8 +17,8 @@ import com.idega.presentation.IWContext;
 public class CreateYearWindow extends StyledIWAdminWindow {
 	
 	private static final String PARAMETER_GROUP_ID = "ic_group_id";
-	private static final String PARAMETER_ACTION = "marathon_prm_action";
-	private static final int ACTION_SAVE = 4; //The action has the value 4 so it is compatable with logic in RunYearEditor
+	//private static final String PARAMETER_ACTION = "marathon_prm_action";
+	//private static final int ACTION_SAVE = 4; //The action has the value 4 so it is compatable with logic in RunYearEditor
 	
 	public CreateYearWindow() {
 		super();
@@ -42,7 +38,7 @@ public class CreateYearWindow extends StyledIWAdminWindow {
 		}*/
 	}
 
-	private int parseAction(IWContext iwc) {
+	/*private int parseAction(IWContext iwc) {
 		if (iwc.isParameterSet(PARAMETER_ACTION)) {
 			return Integer.parseInt(iwc.getParameter(PARAMETER_ACTION));
 		} else {
@@ -58,7 +54,7 @@ public class CreateYearWindow extends StyledIWAdminWindow {
 			business = null;
 		}
 		return business;
-	}
+	}*/
 
 	public String getBundleIdentifier() {
 		return IWMarathonConstants.IW_BUNDLE_IDENTIFIER;

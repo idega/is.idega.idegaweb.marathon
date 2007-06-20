@@ -20,15 +20,16 @@ import com.idega.presentation.ui.CheckBox;
 import com.idega.presentation.ui.GenericButton;
 import com.idega.presentation.ui.InterfaceObject;
 import com.idega.presentation.ui.RadioButton;
+import com.idega.presentation.ui.SubmitButton;
 
 /**
  * <p>
  * Refactoring of the older "RunBlock" to a more generic structure.
  * </p>
- *  Last modified: $Date: 2007/06/17 22:44:06 $ by $Author: sigtryggur $
+ *  Last modified: $Date: 2007/06/20 10:32:23 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:tryggvil@idega.com">tryggvil</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class StepsBlock extends Block {
 
@@ -45,7 +46,8 @@ public class StepsBlock extends Block {
 	public static final String STYLENAME_STEPSHEADER= "stepsHeader";
 	public static final String STYLENAME_STEPNAME= "stepName";
 	public static final String STYLENAME_STEPCURRENT= "stepCurrent";
-		
+	public static final String STYLENAME_STEPSFOOTER = "stepsFooter";
+	
 	protected IWResourceBundle iwrb = null;
 	protected IWBundle iwb = null;
 	
@@ -135,8 +137,8 @@ public class StepsBlock extends Block {
 	protected void setResourceBundle(IWResourceBundle resourceBundle) {
 		this.iwrb = resourceBundle;
 	}
-	
-	
+		
+		
 	protected Map getStepsMap(IWContext iwc){
 		if(stepsMap==null){
 			stepsMap=new TreeMap();
@@ -220,6 +222,38 @@ public class StepsBlock extends Block {
 		layer.add(stepCurrentSpan);
 		
 		return layer;
+	}
+	
+	protected PresentationObject getButtonsFooter(IWContext iwc){
+		return getButtonsFooter(iwc,true,true);
+	}
+	
+	protected PresentationObject getButtonsFooter(IWContext iwc,boolean addPreviousButton,boolean addNextButton){
+		
+		Layer layer = new Layer(Layer.DIV);
+		layer.setStyleClass(STYLENAME_STEPSFOOTER);
+		
+		if(addPreviousButton){
+			layer.add(getPreviousButton());
+		}
+		
+		if(addNextButton){
+			layer.add(getNextButton());
+		}
+		
+		return layer;
+	}
+	
+	protected SubmitButton getNextButton(){
+		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize("next", "Next")));
+		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_NEXT));
+		return next;
+	}
+	
+	protected SubmitButton getPreviousButton(){
+		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(localize("previous", "Previous")));
+		previous.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_PREVIOUS));
+		return previous;
 	}
 	
 	protected int parseAction(IWContext iwc) throws RemoteException {

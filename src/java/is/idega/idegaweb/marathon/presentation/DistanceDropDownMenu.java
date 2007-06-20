@@ -1,15 +1,12 @@
 package is.idega.idegaweb.marathon.presentation;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-
 import is.idega.idegaweb.marathon.business.ConverterUtility;
 import is.idega.idegaweb.marathon.business.RunBusiness;
 import is.idega.idegaweb.marathon.business.Runner;
 import is.idega.idegaweb.marathon.data.Run;
 import is.idega.idegaweb.marathon.data.Year;
-
+import java.util.Collection;
+import java.util.Iterator;
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
 import com.idega.business.IBORuntimeException;
@@ -18,7 +15,6 @@ import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.ui.DropdownMenu;
 import com.idega.user.data.Group;
-import com.idega.util.IWTimestamp;
 
 public class DistanceDropDownMenu extends DropdownMenu {
 

@@ -17,7 +17,7 @@ import com.idega.presentation.ui.DropdownMenu;
 public class CategoriesForRunYearDropDownMenu extends DropdownMenu {
 	private static final String IW_BUNDLE_IDENTIFIER = "is.idega.idegaweb.marathon";
 	private static final String PARAMETER_CATEGORY_DROPDOWN = "prm_category_dropdown";
-	private Integer runYearID = null;
+	//private Integer runYearID = null;
 	
 	public CategoriesForRunYearDropDownMenu() {
 		this(PARAMETER_CATEGORY_DROPDOWN);
@@ -29,7 +29,7 @@ public class CategoriesForRunYearDropDownMenu extends DropdownMenu {
 
 	public CategoriesForRunYearDropDownMenu(String name, Integer runYearID) {
 		super(name);
-		this.runYearID = runYearID;
+		//this.runYearID = runYearID;
 	}
 
 	public void main(IWContext iwc) throws Exception {

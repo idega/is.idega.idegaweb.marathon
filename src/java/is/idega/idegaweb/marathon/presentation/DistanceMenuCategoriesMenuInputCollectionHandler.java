@@ -1,14 +1,11 @@
 package is.idega.idegaweb.marathon.presentation;
 
-import is.idega.idegaweb.marathon.business.RunBusiness;
 import is.idega.idegaweb.marathon.business.RunCategoryBusiness;
 import is.idega.idegaweb.marathon.data.RunCategory;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
-
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
-
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
 import com.idega.idegaweb.IWResourceBundle;
@@ -17,7 +14,6 @@ import com.idega.presentation.PresentationObject;
 import com.idega.presentation.remotescripting.RemoteScriptCollection;
 import com.idega.presentation.remotescripting.RemoteScriptHandler;
 import com.idega.presentation.remotescripting.RemoteScriptingResults;
-import com.idega.user.data.Group;
 
 public class DistanceMenuCategoriesMenuInputCollectionHandler extends PresentationObject implements RemoteScriptCollection {
 	
@@ -34,16 +30,16 @@ public class DistanceMenuCategoriesMenuInputCollectionHandler extends Presentati
 	private RemoteScriptingResults handleCategoriesUpdate(IWContext iwc, String sourceName, String distanceIdString) {
 		IWResourceBundle iwrb = getResourceBundle(iwc);
 		if (distanceIdString != null) {
-			Integer distanceID = Integer.valueOf(distanceIdString);
-		    RunBusiness runBiz = getRunBiz(iwc);
+			//Integer distanceID = Integer.valueOf(distanceIdString);
+			//RunBusiness runBiz = getRunBiz(iwc);
 		    RunCategoryBusiness runCategoryBiz = getRunCategoryBiz(iwc);
 		 
 			try {
 				Vector ids = new Vector();
 			    Vector names = new Vector();
 				
-				Group runDistance = runBiz.getRunGroupByGroupId(distanceID);
-				Group runYear = (Group)runDistance.getParentGroups().iterator().next();
+				//Group runDistance = runBiz.getRunGroupByGroupId(distanceID);
+				//Group runYear = (Group)runDistance.getParentGroups().iterator().next();
 			    //Collection categories = runCategoryBiz.getCategoriesByRunYearID((Integer)runYear.getPrimaryKey());
 				Collection categories = runCategoryBiz.getAllCategories();
 				
@@ -74,7 +70,7 @@ public class DistanceMenuCategoriesMenuInputCollectionHandler extends Presentati
 			return null;
 	}
 	
-	private RunBusiness getRunBiz(IWContext iwc) {
+	/*private RunBusiness getRunBiz(IWContext iwc) {
 		RunBusiness business = null;
 		try {
 			business = (RunBusiness) IBOLookup.getServiceInstance(iwc, RunBusiness.class);
@@ -83,7 +79,7 @@ public class DistanceMenuCategoriesMenuInputCollectionHandler extends Presentati
 			e.printStackTrace();
 		}
 		return business;
-	}
+	}*/
 	
 	private RunCategoryBusiness getRunCategoryBiz(IWContext iwc) {
 		RunCategoryBusiness business = null;

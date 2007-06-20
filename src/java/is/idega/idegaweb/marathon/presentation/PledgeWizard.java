@@ -603,7 +603,7 @@ public class PledgeWizard extends RunBlock {
 			double amount = 0;
 			IWTimestamp paymentStamp = new IWTimestamp();
 
-			IWBundle iwb = getBundle(iwc);
+			//IWBundle iwb = getBundle(iwc);
 			boolean disablePaymentProcess = "true".equalsIgnoreCase(iwc.getApplicationSettings().getProperty("MARAHTON_DISABLE_PAYMENT_AUTH","false"));
 			if (doPayment && disablePaymentProcess) {
 				doPayment = false;
