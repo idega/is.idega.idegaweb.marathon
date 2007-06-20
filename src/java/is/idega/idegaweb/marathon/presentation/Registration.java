@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.104 2007/06/20 10:32:02 tryggvil Exp $
+ * $Id: Registration.java,v 1.105 2007/06/20 13:35:40 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -73,10 +73,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/20 10:32:02 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/06/20 13:35:40 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.104 $
+ * @version $Revision: 1.105 $
  */
 public class Registration extends RunBlock {
 	
@@ -305,7 +305,7 @@ public class Registration extends RunBlock {
 		choiceTable.setWidth(Table.HUNDRED_PERCENT);
 		table.add(choiceTable, 1, row++);
 		
-		Text redStar = getHeader("*");
+		Text redStar = getHeader(" *");
 		redStar.setFontColor("#ff0000");
 		
 		int iRow = 1;
