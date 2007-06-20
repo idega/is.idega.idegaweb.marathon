@@ -110,22 +110,26 @@ public class RegistrationReceivedPrintable extends Window {
 		table.setHeight(row++, 16);
 		table.add(creditCardTable, 1, row++);
 		
-		table.setHeight(row++, 16);
-		table.add(getHeader(iwrb.getLocalizedString("run_reg.delivery_of_race_material_headline", "Further information about the run is available on:")), 1, row++);
-		table.add(getText(iwrb.getLocalizedString("run_reg.delivery_of_race_material_body", "Participants can collect their race material here.")), 1, row++);
-
-		table.setHeight(row++, 16);
-		table.add(getHeader(iwrb.getLocalizedString("run_reg.receipt_info_headline", "Receipt - Please print it out")), 1, row++);
-		table.add(getText(iwrb.getLocalizedString("run_reg.receipt_info_headline_body", "This document is your receipt, please print it out and bring it with you when you collect your race material.")), 1, row++);
-
-		table.setHeight(row++, 16);
-		table.add(getText(iwrb.getLocalizedString("run_reg.best_regards", "Best regards,")), 1, row++);
 		Run selectedRun = null;
 		try {
 			selectedRun = ConverterUtility.getInstance().convertGroupToRun(run);
 		} catch (FinderException e) {
 			//Run not found
 		}
+
+		if (selectedRun != null) {
+		table.setHeight(row++, 16);
+		table.add(getHeader(iwrb.getLocalizedString("run_reg.delivery_of_race_material_headline", "Further information about the run is available on:")), 1, row++);
+			table.add(getText("<a href=" + selectedRun.getRunInformationPage() + ">" + iwrb.getLocalizedString(selectedRun.getName(),selectedRun.getName()) + "</a>"), 1, row++);
+		}
+		
+		table.setHeight(row++, 16);
+		table.add(getHeader(iwrb.getLocalizedString("run_reg.receipt_info_headline", "Receipt - Please print it out")), 1, row++);
+		table.add(getText(iwrb.getLocalizedString("run_reg.receipt_info_headline_body", "This document is your receipt, please print it out and bring it with you when you collect your race material.")), 1, row++);
+
+		table.setHeight(row++, 16);
+		table.add(getText(iwrb.getLocalizedString("run_reg.best_regards", "Best regards,")), 1, row++);
+
 		if (selectedRun != null) {
 			table.add(getText(iwrb.getLocalizedString(selectedRun.getName(), selectedRun.getName())), 1, row++);
 			table.add(getText(selectedRun.getRunHomePage()), 1, row++);
