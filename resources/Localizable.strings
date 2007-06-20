@@ -162,9 +162,6 @@ run_reg.consent=Consent
 run_reg.continue_without_email=You can not continue without entering an e-mail
 run_reg.country=Country
 run_reg.credit_card_information=Credit card information
-run_reg.delivery_of_race_material_body=Information about delivery of race materials are available on www.marathon.is on the information page for each event.<br><a href\="http\://marathon.is/pages/english4/glitnirreykjavikmarathon/?iw_language\=en">Glitnir Reykjavik Marathon</a><br/><a href\="http\://marathon.is/pages/english4/laugavegurultramarathon/?iw_language\=en">Laugavegur - Ultra Marathon</a> <br/><a href\="http\://marathon.is/pages/english4/midnightrun/?iw_language\=en">Midnight Run</a>
-run_reg.delivery_of_race_material_body_runid_381530=
-run_reg.delivery_of_race_material_body_runid_4=
 run_reg.delivery_of_race_material_headline=Further information about the run is available on\:
 run_reg.delivery_of_race_material_headline_runid_381530=
 run_reg.distance=Distance
