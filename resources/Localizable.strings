@@ -294,6 +294,7 @@ run_tab.credit=Credit
 run_tab.debet=Debit
 run_tab.distance=Distance
 run_tab.distance_name=Distance info
+run_tab.english_run_information_page=English information page
 run_tab.family_discount=Uses family discount
 run_tab.goal_time=Goal time
 run_tab.group=Group
