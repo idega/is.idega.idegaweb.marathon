@@ -1,5 +1,5 @@
 /*
- * $Id: Run.java,v 1.17 2007/06/17 22:30:23 sigtryggur Exp $
+ * $Id: Run.java,v 1.18 2007/06/21 09:44:42 sigtryggur Exp $
  * Created on May 22, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -13,10 +13,10 @@ import com.idega.user.data.Group;
 
 
 /**
- * Last modified: $Date: 2007/06/17 22:30:23 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/21 09:44:42 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public interface Run extends Group {
 
@@ -51,4 +51,14 @@ public interface Run extends Group {
 	 * @see is.idega.idegaweb.marathon.data.RunBMPBean#setRunInformationPage
 	 */
 	public void setRunInformationPage(String runInformationPage);
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.RunBMPBean#getEnglishRunInformationPage
+	 */
+	public String getEnglishRunInformationPage();
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.RunBMPBean#setEnglishRunInformationPage
+	 */
+	public void setEnglishRunInformationPage(String englishRunInformationPage);
 }

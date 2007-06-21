@@ -36,6 +36,7 @@ public class RunEditor extends RunBlock {
 	private static final String PARAMETER_RUN = "prm_run";
 	private static final String PARAMETER_RUN_HOME_PAGE = "prm_run_home_page";
 	private static final String PARAMETER_RUN_INFORMATION_PAGE = "prm_run_information_page";
+	private static final String PARAMETER_ENGLISH_RUN_INFORMATION_PAGE = "prm_english_run_information_page";
 
 	private static final int ACTION_VIEW = 1;
 	private static final int ACTION_EDIT = 2;
@@ -143,6 +144,16 @@ public class RunEditor extends RunBlock {
 		layer.add(runInformationPageInput);
 		form.add(layer);
 		form.add(new Break());
+		
+		layer = new Layer(Layer.DIV);
+		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
+		TextInput englishRunInformationPageInput = new TextInput(PARAMETER_ENGLISH_RUN_INFORMATION_PAGE);
+		Label englishRunInformationPageLabel = new Label(localize("run_tab.english_run_information_page", "English information page"), englishRunInformationPageInput);
+		layer.add(englishRunInformationPageLabel);
+		layer.add(englishRunInformationPageInput);
+		form.add(layer);
+		form.add(new Break());
+
 
 		SubmitButton save = (SubmitButton) getButton(new SubmitButton(localize("save", "Save"), PARAMETER_ACTION, String.valueOf(ACTION_SAVE)));
 		SubmitButton cancel = (SubmitButton) getButton(new SubmitButton(localize("cancel", "Cancel"), PARAMETER_ACTION, String.valueOf(ACTION_VIEW)));
@@ -159,6 +170,7 @@ public class RunEditor extends RunBlock {
 				runInput.setDisabled(true);
 				runHomePageInput.setValue(selectedRun.getRunHomePage());
 				runInformationPageInput.setValue(selectedRun.getRunInformationPage());
+				englishRunInformationPageInput.setValue(selectedRun.getEnglishRunInformationPage());
 			} catch (FinderException e) {
 				//run not found
 			}
@@ -185,6 +197,7 @@ public class RunEditor extends RunBlock {
 			if (run != null) { 
 				run.setRunHomePage(iwc.getParameter(PARAMETER_RUN_HOME_PAGE));
 				run.setRunInformationPage(iwc.getParameter(PARAMETER_RUN_INFORMATION_PAGE));
+				run.setEnglishRunInformationPage(iwc.getParameter(PARAMETER_ENGLISH_RUN_INFORMATION_PAGE));
 				run.store();
 			}
 		}

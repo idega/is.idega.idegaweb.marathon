@@ -1,5 +1,5 @@
 /*
- * $Id: RunBMPBean.java,v 1.29 2007/06/17 22:30:23 sigtryggur Exp $
+ * $Id: RunBMPBean.java,v 1.30 2007/06/21 09:44:42 sigtryggur Exp $
  * Created on May 22, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -20,16 +20,17 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2007/06/17 22:30:23 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/21 09:44:42 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  */
 public class RunBMPBean extends GroupBMPBean  implements Run{
 
 	private static final String METADATA_FAMILY_DISCOUNT = "family_discount";
 	private static final String METADATA_RUN_HOME_PAGE = "run_home_page";
 	private static final String METADATA_RUN_INFORMATION_PAGE = "run_information_page";
+	private static final String METADATA_ENGLISH_RUN_INFORMATION_PAGE = "english_run_information_page";
 
 	public float getFamilyDiscount() {
 		String discount = this.getMetaData(METADATA_FAMILY_DISCOUNT);
@@ -57,6 +58,14 @@ public class RunBMPBean extends GroupBMPBean  implements Run{
 
 	public void setRunInformationPage(String runInformationPage) {
 		setMetaData(METADATA_RUN_INFORMATION_PAGE, runInformationPage);
+	}
+
+	public String getEnglishRunInformationPage() {
+		return this.getMetaData(METADATA_ENGLISH_RUN_INFORMATION_PAGE);
+	}
+
+	public void setEnglishRunInformationPage(String englishRunInformationPage) {
+		setMetaData(METADATA_ENGLISH_RUN_INFORMATION_PAGE, englishRunInformationPage);
 	}
 
 	public Year getCurrentRegistrationYear() {
