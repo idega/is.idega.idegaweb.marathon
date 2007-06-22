@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.106 2007/06/22 00:53:18 sigtryggur Exp $
+ * $Id: Registration.java,v 1.107 2007/06/22 01:31:06 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -73,10 +73,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/22 00:53:18 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/22 01:31:06 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.106 $
+ * @version $Revision: 1.107 $
  */
 public class Registration extends RunBlock {
 	
@@ -872,7 +872,8 @@ public class Registration extends RunBlock {
 		}
 
 		//table.add(getText(localize(key, "Information text 4...")), 1, row++);
-		table.add(getText(localizeForRun("run_reg.information_text_step_4", "Information text 4...")),1,row++);
+		String[] attributes = { localize(getRunner().getRun().getName(),getRunner().getRun().getName()) };
+		table.add(getText(MessageFormat.format(localizeForRun("run_reg.information_text_step_4", "Information text 4..."),attributes)),1,row++);
 		
 		Layer disclaimerLayer = new Layer(Layer.DIV);
 		CheckBox agreeCheck = getCheckBox(PARAMETER_AGREE, Boolean.TRUE.toString());
@@ -1219,10 +1220,10 @@ public class Registration extends RunBlock {
 		creditCardTable.add(Text.getNonBrakingSpace(), 1, creditRow);
 		creditCardTable.add(getHeader(localize("run_reg.agree_terms_and_conditions", "I agree to the terms and conditions")), 1, creditRow++);
 
-		SubmitButton previous = getPreviousButton();
+//		SubmitButton previous = getPreviousButton();
 		
-		UIComponent buttonsContainer = getButtonsFooter(iwc);
-		buttonsContainer.getChildren().add(previous);
+		UIComponent buttonsContainer = getButtonsFooter(iwc,true,false);
+//		buttonsContainer.getChildren().add(previous);
 		buttonsContainer.getChildren().add(next);
 		form.add(buttonsContainer);
 
