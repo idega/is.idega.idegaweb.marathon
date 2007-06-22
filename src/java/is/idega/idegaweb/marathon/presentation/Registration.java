@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.105 2007/06/20 13:35:40 sigtryggur Exp $
+ * $Id: Registration.java,v 1.106 2007/06/22 00:53:18 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -73,10 +73,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/20 13:35:40 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/22 00:53:18 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.105 $
+ * @version $Revision: 1.106 $
  */
 public class Registration extends RunBlock {
 	
@@ -734,15 +734,9 @@ public class Registration extends RunBlock {
 		//table.add(getStepsHeader(iwc, ACTION_STEP_CHIP),1,row++);
 		table.setHeight(row++, 12);
 
-		String key = "run_reg.information_text_step_3";
-		String runKey = key+"_runid_"+getRunner().getRun().getId();
-		
-		String localizedString = getResourceBundle().getLocalizedString(runKey);
-		if(localizedString==null){
-			localizedString= getResourceBundle().getLocalizedString(key, "Information text 3...");
-		}
 		//table.add(getText(localize(key, "Information text 4...")), 1, row++);
-		table.add(getText(localizedString),1,row++);
+		String[] attributes = { localize(getRunner().getRun().getName(),getRunner().getRun().getName()) };
+		table.add(getText(MessageFormat.format(localizeForRun("run_reg.information_text_step_3", "Information text 3..."), attributes)),1,row++);
 		table.setHeight(row++, 18);
 		
 		RadioButton rentChip = getRadioButton(PARAMETER_CHIP, IWMarathonConstants.CHIP_RENT);
@@ -877,16 +871,8 @@ public class Registration extends RunBlock {
 			next.setDisabled(true);
 		}
 
-		
-		String key = "run_reg.information_text_step_4";
-		String runKey = key+"_runid_"+getRunner().getRun().getId();
-		
-		String localizedString = getResourceBundle().getLocalizedString(runKey);
-		if(localizedString==null){
-			localizedString= getResourceBundle().getLocalizedString(key, "Information text 4...");
-		}
 		//table.add(getText(localize(key, "Information text 4...")), 1, row++);
-		table.add(getText(localizedString),1,row++);
+		table.add(getText(localizeForRun("run_reg.information_text_step_4", "Information text 4...")),1,row++);
 		
 		Layer disclaimerLayer = new Layer(Layer.DIV);
 		CheckBox agreeCheck = getCheckBox(PARAMETER_AGREE, Boolean.TRUE.toString());
@@ -1400,9 +1386,15 @@ public class Registration extends RunBlock {
 		}
 
 		if (selectedRun != null) {
-		table.setHeight(row++, 16);
-		table.add(getHeader(localizeForRun("run_reg.delivery_of_race_material_headline", "Further information about the run is available on:")), 1, row++);
-			table.add(getText("<a href=" + selectedRun.getRunInformationPage() + ">" + localize(selectedRun.getName(),selectedRun.getName()) + "</a>"), 1, row++);
+			table.setHeight(row++, 16);
+			table.add(getHeader(localizeForRun("run_reg.delivery_of_race_material_headline", "Further information about the run is available on:")), 1, row++);
+			String informationPage;
+			if (this.isIcelandic) {	
+				informationPage= selectedRun.getRunInformationPage();
+			} else {
+				informationPage = selectedRun.getEnglishRunInformationPage();
+			}
+			table.add(getText("<a href=" + informationPage + ">" + localize(selectedRun.getName(),selectedRun.getName()) + "</a>"), 1, row++);
 		}
 
 		table.setHeight(row++, 16);
@@ -2020,17 +2012,14 @@ public class Registration extends RunBlock {
 		int kilometersRun = getRunner().getDistance().getDistanceInKms();
 		int totalPledgedISK = pledgePerKilometerISK*kilometersRun;
 		
-		String locStr;
+		String localizedString;
 		if (isSponsoredRegistration()) {
-			locStr = localize("run_reg.charity_sponsortext_staff", "The sponsor will pay {0} {2} to the selected charity organization for each kilometer run. The sponsor will pay total of {1} {2} to the selected charity organization for your participation.");
+			localizedString = localize("run_reg.charity_sponsortext_staff", "The sponsor will pay {0} {2} to the selected charity organization for each kilometer run. The sponsor will pay total of {1} {2} to the selected charity organization for your participation.");
 		} else {
-			locStr = localize("run_reg.charity_sponsortext_general", "The sponsor will pay {0} {2} to the selected charity organization for each kilometer run. The sponsor will pay total of {1} {2} to the selected charity organization for your participation.");
+			localizedString = localize("run_reg.charity_sponsortext_general", "The sponsor will pay {0} {2} to the selected charity organization for each kilometer run. The sponsor will pay total of {1} {2} to the selected charity organization for your participation.");
 		}
 		String[] attributes = { String.valueOf(pledgePerKilometerISK), String.valueOf(totalPledgedISK), year.getPledgeCurrency()};
-		//format.setFormat(formatElementIndex, newFormat)
-		
-		String localizedString = MessageFormat.format(locStr, attributes );
-		table.add(new Text(localizedString), 1, row++);
+		table.add(new Text(MessageFormat.format(localizedString, attributes)), 1, row++);
 
 		table.setHeight(row++, 12);
 

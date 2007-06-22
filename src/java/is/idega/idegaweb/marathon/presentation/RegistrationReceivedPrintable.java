@@ -118,9 +118,15 @@ public class RegistrationReceivedPrintable extends Window {
 		}
 
 		if (selectedRun != null) {
-		table.setHeight(row++, 16);
-		table.add(getHeader(iwrb.getLocalizedString("run_reg.delivery_of_race_material_headline", "Further information about the run is available on:")), 1, row++);
-			table.add(getText("<a href=" + selectedRun.getRunInformationPage() + ">" + iwrb.getLocalizedString(selectedRun.getName(),selectedRun.getName()) + "</a>"), 1, row++);
+			table.setHeight(row++, 16);
+			table.add(getHeader(iwrb.getLocalizedString("run_reg.delivery_of_race_material_headline", "Further information about the run is available on:")), 1, row++);
+			String informationPage;
+			if (iwc.getCurrentLocale().equals(LocaleUtil.getIcelandicLocale())) {	
+				informationPage= selectedRun.getRunInformationPage();
+			} else {
+				informationPage = selectedRun.getEnglishRunInformationPage();
+			}
+			table.add(getText("<a href=" + informationPage + ">" + iwrb.getLocalizedString(selectedRun.getName(),selectedRun.getName()) + "</a>"), 1, row++);
 		}
 		
 		table.setHeight(row++, 16);
