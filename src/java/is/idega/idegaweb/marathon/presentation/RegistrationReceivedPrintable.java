@@ -126,7 +126,7 @@ public class RegistrationReceivedPrintable extends Window {
 			} else {
 				informationPage = selectedRun.getEnglishRunInformationPage();
 			}
-			table.add(getText("<a href=" + informationPage + ">" + iwrb.getLocalizedString(selectedRun.getName(),selectedRun.getName()) + "</a>"), 1, row++);
+			table.add(getText("<a href=" + informationPage + ">" + iwrb.getLocalizedString(selectedRun.getName(),selectedRun.getName()) + "</a> (" + informationPage + ")"), 1, row++);
 		}
 		
 		table.setHeight(row++, 16);

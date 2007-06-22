@@ -68,6 +68,7 @@ import com.idega.user.data.GroupHome;
 import com.idega.user.data.User;
 import com.idega.util.Age;
 import com.idega.util.IWTimestamp;
+import com.idega.util.LocaleUtil;
 import com.idega.util.text.Name;
 
 /**
@@ -416,6 +417,9 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		try {
 			trans.begin();
 			Iterator iter = runners.iterator();
+			Group run = null;
+			Group distance = null;
+			Run selectedRun = null;
 			while (iter.hasNext()) {
 				Runner runner = (Runner) iter.next();
 				User user = runner.getUser();
@@ -426,8 +430,14 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				Group ageGenderGroup = getAgeGroup(user, runner.getRun(), runner.getDistance());
 				ageGenderGroup.addGroup(user);
 				Group yearGroup = (Group) runner.getDistance().getParentNode();
-				Group run = runner.getRun();
-				Group distance = runner.getDistance();
+				run = runner.getRun();
+				distance = runner.getDistance();
+				selectedRun = null;
+				try {
+					selectedRun = ConverterUtility.getInstance().convertGroupToRun(run);
+				} catch (FinderException e) {
+					//Run not found
+				}
 				
 				try {
 					ParticipantHome runHome = (ParticipantHome) getIDOHome(Participant.class);
@@ -482,7 +492,17 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 						if (runner.isTransportOrdered()) {
 							distanceString = distanceString + " (" + iwrb.getLocalizedString("run_reg.with_bus_trip","with bus trip") + ")";
 						}
-						Object[] args = { user.getName(), iwrb.getLocalizedString(run.getName(),run.getName()), distanceString, iwrb.getLocalizedString("shirt_size." + runner.getShirtSize(), runner.getShirtSize()), String.valueOf(participant.getParticipantNumber()) };
+						String informationPageString = "";
+						String runHomePageString = "";
+						if (selectedRun != null) {
+							runHomePageString = selectedRun.getRunHomePage();
+							if (locale.equals(LocaleUtil.getIcelandicLocale())) {
+								informationPageString = selectedRun.getRunInformationPage();
+							} else {
+								informationPageString = selectedRun.getEnglishRunInformationPage();
+							}
+						}
+						Object[] args = { user.getName(), iwrb.getLocalizedString(run.getName(),run.getName()), distanceString, iwrb.getLocalizedString("shirt_size." + runner.getShirtSize(), runner.getShirtSize()), String.valueOf(participant.getParticipantNumber()), runHomePageString, informationPageString };
 						String subject = iwrb.getLocalizedString("registration_received_subject_mail", "Your registration has been received.");
 						String body = MessageFormat.format(localizeForRun("registration_received_body_mail", "Your registration has been received.", runner, iwrb), args);
 						sendMessage(runner.getEmail(), subject, body);
@@ -501,7 +521,14 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 
 			if (email != null && !disableSendPaymentConfirmation) {
 				IWResourceBundle iwrb = getIWApplicationContext().getIWMainApplication().getBundle(IWMarathonConstants.IW_BUNDLE_IDENTIFIER).getResourceBundle(locale);
-				Object[] args = { hiddenCardNumber, String.valueOf(amount), date.getLocaleDateAndTime(locale, IWTimestamp.SHORT, IWTimestamp.SHORT) };
+				String runName = "";
+				String runHomePage = "";
+				if (selectedRun != null) {
+					runName = iwrb.getLocalizedString(selectedRun.getName(), selectedRun.getName());
+					runHomePage = selectedRun.getRunHomePage();
+				}
+				
+				Object[] args = { hiddenCardNumber, String.valueOf(amount), date.getLocaleDateAndTime(locale, IWTimestamp.SHORT, IWTimestamp.SHORT), runName, runHomePage };
 				String subject = iwrb.getLocalizedString("receipt_subject_mail", "Your receipt for registration");
 				String body = MessageFormat.format(iwrb.getLocalizedString("receipt_body_mail", "Your registration has been received."), args);
 				sendMessage(email, subject, body);
