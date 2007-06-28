@@ -1,5 +1,5 @@
 /*
- * $Id: DistanceBMPBean.java,v 1.9 2007/06/04 13:48:19 tryggvil Exp $
+ * $Id: DistanceBMPBean.java,v 1.10 2007/06/28 13:33:42 tryggvil Exp $
  * Created on May 22, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -12,18 +12,16 @@ package is.idega.idegaweb.marathon.data;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-
-import com.idega.data.IDOLookupException;
 import com.idega.user.data.Group;
 import com.idega.user.data.GroupBMPBean;
 import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/04 13:48:19 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/06/28 13:33:42 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class DistanceBMPBean extends GroupBMPBean  implements Group, Distance{
 
