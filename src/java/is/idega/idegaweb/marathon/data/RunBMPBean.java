@@ -1,5 +1,5 @@
 /*
- * $Id: RunBMPBean.java,v 1.30 2007/06/21 09:44:42 sigtryggur Exp $
+ * $Id: RunBMPBean.java,v 1.31 2007/06/28 11:39:40 gimmi Exp $
  * Created on May 22, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -20,10 +20,10 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2007/06/21 09:44:42 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/28 11:39:40 $ by $Author: gimmi $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  */
 public class RunBMPBean extends GroupBMPBean  implements Run{
 
@@ -75,7 +75,7 @@ public class RunBMPBean extends GroupBMPBean  implements Run{
 		nextYearStamp.addYears(1);
 		String nextYearString = String.valueOf(nextYearStamp.getYear());
 		
-		String runnerYearString = yearString;
+//		String runnerYearString = yearString;
 		boolean finished = false;
 		IWContext iwc = IWContext.getInstance();
 		Map yearMap;
@@ -91,7 +91,7 @@ public class RunBMPBean extends GroupBMPBean  implements Run{
 			}
 			Year nextYear = (Year) yearMap.get(nextYearString);
 			if (finished && nextYear != null) {
-				runnerYearString = nextYearString;
+//				runnerYearString = nextYearString;
 				theReturn=nextYear;
 			}
 
