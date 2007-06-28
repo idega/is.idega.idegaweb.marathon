@@ -34,6 +34,12 @@ import com.idega.user.data.User;
 public class ParticipantBMPBean extends GenericEntity implements Participant {
 
 	
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = -3580829766912725507L;
+
+
 	public ParticipantBMPBean() {
 		super();
 	}

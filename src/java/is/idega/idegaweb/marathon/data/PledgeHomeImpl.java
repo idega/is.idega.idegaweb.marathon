@@ -10,6 +10,11 @@ import com.idega.data.IDOEntity;
 import com.idega.data.IDOFactory;
 
 public class PledgeHomeImpl extends IDOFactory implements PledgeHome {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 4783053685751346998L;
+
 	public Class getEntityInterfaceClass() {
 		return Pledge.class;
 	}

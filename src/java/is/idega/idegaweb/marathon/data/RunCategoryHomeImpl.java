@@ -11,6 +11,11 @@ import com.idega.data.IDOFactory;
 import com.idega.data.IDORelationshipException;
 
 public class RunCategoryHomeImpl extends IDOFactory implements RunCategoryHome {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = -1703247746553392051L;
+
 	public Class getEntityInterfaceClass() {
 		return RunCategory.class;
 	}

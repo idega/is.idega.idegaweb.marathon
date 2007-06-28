@@ -16,6 +16,10 @@ import com.idega.user.data.GroupBMPBean;
 
 public class CharityBMPBean extends GenericEntity implements Charity {
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 6827105404436456030L;
 	protected static final String ENTITY_NAME = "run_charity_organization";
 	protected static final String COLUMN_NAME_NAME = "name";
 	protected static final String COLUMN_NAME_ORGANIZATIONAL_ID = "organizational_id";

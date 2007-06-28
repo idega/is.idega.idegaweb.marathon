@@ -9,7 +9,12 @@ package is.idega.idegaweb.marathon.webservice.impl;
 
 public class MarathonRegistrationServiceServiceLocator extends org.apache.axis.client.Service implements is.idega.idegaweb.marathon.webservice.impl.MarathonRegistrationServiceService {
 
-    public MarathonRegistrationServiceServiceLocator() {
+    /**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = -7033008741372845086L;
+
+	public MarathonRegistrationServiceServiceLocator() {
     }
 
 

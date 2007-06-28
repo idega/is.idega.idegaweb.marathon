@@ -8,6 +8,11 @@ import javax.ejb.FinderException;
 import com.idega.data.IDOFactory;
 
 public class ShirtSizeHomeImpl extends IDOFactory implements ShirtSizeHome {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = -7317477786728257124L;
+
 	public Class getEntityInterfaceClass() {
 		return ShirtSize.class;
 	}

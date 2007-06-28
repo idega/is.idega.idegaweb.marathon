@@ -15,6 +15,10 @@ import com.idega.data.IDORelationshipException;
 
 public class RunCategoryBusinessBean extends IBOServiceBean implements RunCategoryBusiness {
 	
+/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 3461778147719948691L;
 private RunCategoryHome runCategoryHome;
 	
 	public Collection getAllCategories() throws EJBException {

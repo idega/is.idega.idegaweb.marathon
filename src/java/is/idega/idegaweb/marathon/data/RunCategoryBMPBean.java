@@ -15,6 +15,10 @@ import com.idega.user.data.GroupBMPBean;
 
 public class RunCategoryBMPBean extends GenericEntity implements RunCategory {
 	
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 7473226664231171011L;
 	protected static final String ENTITY_NAME = "run_category";
 	protected static final String COLUMN_NAME_NAME = "name";
 	

@@ -26,6 +26,10 @@ import com.idega.presentation.IWContext;
  */
 public class ParticipantNumberSetter extends IBOServiceBean{
 	
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = -3862245703597732556L;
 	public void main(IWContext iwc)throws Exception{}
 
 	public void run() {

@@ -15,6 +15,10 @@ import com.idega.data.IDORelationshipException;
 
 public class CharityBusinessBean extends IBOServiceBean implements CharityBusiness {
 	
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = -830967498524130211L;
 	private CharityHome charityHome;
 	
 	public Collection getAllCharities() throws EJBException {

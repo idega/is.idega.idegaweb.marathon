@@ -8,7 +8,11 @@
 package is.idega.idegaweb.marathon.webservice.impl;
 
 public class Registrations  implements java.io.Serializable {
-    private is.idega.idegaweb.marathon.webservice.impl.Registration[] registrations;
+    /**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 2485124883428963446L;
+	private is.idega.idegaweb.marathon.webservice.impl.Registration[] registrations;
 
     public Registrations() {
     }

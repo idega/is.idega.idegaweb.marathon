@@ -21,6 +21,10 @@ import com.idega.util.IWTimestamp;
 
 public class PledgeBusinessBean extends IBOServiceBean implements PledgeBusiness {
 	
+/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = -5126037977109694680L;
 private PledgeHome PledgeHome;
 	
 	public Collection getCharities() throws EJBException {

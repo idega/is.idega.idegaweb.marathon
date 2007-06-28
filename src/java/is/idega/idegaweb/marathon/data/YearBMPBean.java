@@ -1,5 +1,5 @@
 /*
- * $Id: YearBMPBean.java,v 1.10 2007/06/19 11:49:41 sigtryggur Exp $
+ * $Id: YearBMPBean.java,v 1.11 2007/06/28 13:34:57 tryggvil Exp $
  * Created on May 22, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -17,13 +17,17 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2007/06/19 11:49:41 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/28 13:34:57 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class YearBMPBean extends GroupBMPBean  implements Year,Group{
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 187432696291773052L;
 	public static final String METADATA_RUN_DATE = "run_date";
 	public static final String METADATA_LAST_REGISTRATION_DATE = "last_registration_date";
 	public static final String METADATA_SPONSORED_RUN = "sponsored_run";

@@ -9,6 +9,10 @@ import com.idega.data.query.SelectQuery;
 
 public class PledgeBMPBean extends GenericEntity implements Pledge {
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 5020328074040406111L;
 	protected static final String ENTITY_NAME = "run_pledge";
 	protected static final String COLUMN_NAME_PARTICIPANT_ID = "participant_id";
 	protected static final String COLUMN_NAME_ORGANIZATIONAL_ID = "organizational_id";

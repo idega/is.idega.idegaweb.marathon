@@ -8,7 +8,12 @@
 package is.idega.idegaweb.marathon.webservice.impl;
 
 public class Registration  implements java.io.Serializable {
-    private java.lang.String charityId;
+    /**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = -3741502365399929445L;
+
+	private java.lang.String charityId;
 
     private int distance;
 

@@ -1,5 +1,5 @@
 /*
- * $Id: DistanceBMPBean.java,v 1.10 2007/06/28 13:33:42 tryggvil Exp $
+ * $Id: DistanceBMPBean.java,v 1.11 2007/06/28 13:34:57 tryggvil Exp $
  * Created on May 22, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -18,13 +18,17 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/28 13:33:42 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/06/28 13:34:57 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class DistanceBMPBean extends GroupBMPBean  implements Group, Distance{
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = -2348766615544079846L;
 	private static final String METADATA_USE_CHIP = "use_chip";
 	private static final String METADATA_TRANSPORT_OFFERED = "transport_offered";
 	

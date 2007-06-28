@@ -12,6 +12,11 @@ import com.idega.data.IDOFactory;
 
 public class ParticipantHomeImpl extends IDOFactory implements ParticipantHome {
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 6690853790390881396L;
+
 	public Class getEntityInterfaceClass() {
 		return Participant.class;
 	}

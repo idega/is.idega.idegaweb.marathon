@@ -1,5 +1,5 @@
 /*
- * $Id: RunBMPBean.java,v 1.31 2007/06/28 11:39:40 gimmi Exp $
+ * $Id: RunBMPBean.java,v 1.32 2007/06/28 13:34:57 tryggvil Exp $
  * Created on May 22, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -20,13 +20,17 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2007/06/28 11:39:40 $ by $Author: gimmi $
+ * Last modified: $Date: 2007/06/28 13:34:57 $ by $Author: tryggvil $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  */
 public class RunBMPBean extends GroupBMPBean  implements Run{
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = -8363802419171254109L;
 	private static final String METADATA_FAMILY_DISCOUNT = "family_discount";
 	private static final String METADATA_RUN_HOME_PAGE = "run_home_page";
 	private static final String METADATA_RUN_INFORMATION_PAGE = "run_information_page";

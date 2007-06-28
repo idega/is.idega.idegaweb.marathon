@@ -12,6 +12,10 @@ import com.idega.data.query.WildCardColumn;
 
 public class ShirtSizeBMPBean extends GenericEntity implements ShirtSize {
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = -690527264263221825L;
 	private static final String ENTITY_NAME = "run_shirt_size";
 	private static String COLUMN_NAME = "name";
 	private static String COLUMN_DESCRIPTION = "description";

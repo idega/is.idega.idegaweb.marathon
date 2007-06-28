@@ -9,6 +9,11 @@ import com.idega.data.IDOFactory;
 import com.idega.data.IDORelationshipException;
 
 public class CharityHomeImpl extends IDOFactory implements CharityHome {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 1726548105282724018L;
+
 	public Class getEntityInterfaceClass() {
 		return Charity.class;
 	}
