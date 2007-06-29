@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.108 2007/06/22 14:10:33 sigtryggur Exp $
+ * $Id: Registration.java,v 1.109 2007/06/29 13:01:48 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -73,10 +73,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/22 14:10:33 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/29 13:01:48 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.108 $
+ * @version $Revision: 1.109 $
  */
 public class Registration extends RunBlock {
 	
@@ -159,6 +159,7 @@ public class Registration extends RunBlock {
 	private boolean disableChipBuy=false;
 	private boolean enableTravelSupport=false;
 	private boolean sponsoredRegistration=false;
+	private boolean hideShirtSize=false;
 	private boolean hidePrintviewLink=false;
 	private boolean hideRaceNumberColumn=false;
 
@@ -617,45 +618,54 @@ public class Registration extends RunBlock {
 		choiceTable.add(mobileField, 3, iRow++);
 		choiceTable.setHeight(iRow++, 3);
 
-		DropdownMenu tShirtField = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_SHIRT_SIZE));
-		tShirtField.addMenuElement("-1", localize("run_reg.select_tee_shirt_size","Select shirt size..."));
-		if(getRunner().getDistance() != null) {
-			String shirtSizeMetadata = getRunner().getDistance().getMetaData(PARAMETER_SHIRT_SIZES_PER_RUN);
-			List shirtSizes = null;
-			if (shirtSizeMetadata != null) {
-				shirtSizes = ListUtil. convertCommaSeparatedStringToList(shirtSizeMetadata);
+		DropdownMenu tShirtField = null;
+		if (!isHideShirtSize()) {
+			tShirtField = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_SHIRT_SIZE));
+			tShirtField.addMenuElement("-1", localize("run_reg.select_tee_shirt_size","Select shirt size..."));
+			if(getRunner().getDistance() != null) {
+				String shirtSizeMetadata = getRunner().getDistance().getMetaData(PARAMETER_SHIRT_SIZES_PER_RUN);
+				List shirtSizes = null;
+				if (shirtSizeMetadata != null) {
+					shirtSizes = ListUtil. convertCommaSeparatedStringToList(shirtSizeMetadata);
+				}
+				if(shirtSizes != null) {
+					Iterator shirtIt = shirtSizes.iterator();
+					while (shirtIt.hasNext()) {
+						String shirtSizeKey = (String) shirtIt.next();
+						tShirtField.addMenuElement(shirtSizeKey, localize("shirt_size."+shirtSizeKey,shirtSizeKey));
+				    }
+				}
+				if (getRunner().getDistance() != null) {
+					tShirtField.setSelectedElement(getRunner().getShirtSize());
+				}
 			}
-			if(shirtSizes != null) {
-				Iterator shirtIt = shirtSizes.iterator();
-				while (shirtIt.hasNext()) {
-					String shirtSizeKey = (String) shirtIt.next();
-					tShirtField.addMenuElement(shirtSizeKey, localize("shirt_size."+shirtSizeKey,shirtSizeKey));
-			    }
+			tShirtField.setAsNotEmpty(localize("run_reg.must_select_shirt_size", "You must select shirt size"));
+	
+			RemoteScriptHandler rshShirts = new RemoteScriptHandler(distanceDropdown, tShirtField);
+			try {
+				rshShirts.setRemoteScriptCollectionClass(DistanceMenuShirtSizeMenuInputCollectionHandler.class);
 			}
-			if (getRunner().getDistance() != null) {
-				tShirtField.setSelectedElement(getRunner().getShirtSize());
+			catch (InstantiationException e) {
+				e.printStackTrace();
 			}
+			catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			add(rshShirts);
 		}
-		tShirtField.setAsNotEmpty(localize("run_reg.must_select_shirt_size", "You must select shirt size"));
-
-		RemoteScriptHandler rshShirts = new RemoteScriptHandler(distanceDropdown, tShirtField);
-		try {
-			rshShirts.setRemoteScriptCollectionClass(DistanceMenuShirtSizeMenuInputCollectionHandler.class);
-		}
-		catch (InstantiationException e) {
-			e.printStackTrace();
-		}
-		catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
-		add(rshShirts);
 
 		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_COUNTRY, "Country")), 1, iRow);
 		choiceTable.add(redStar, 1, iRow);
-		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_TSHIRT, "Shirt size")), 3, iRow);
-		choiceTable.add(redStar, 3, iRow++);
+		if (!isHideShirtSize()) {
+			choiceTable.add(getHeader(localize(IWMarathonConstants.RR_TSHIRT, "Shirt size")), 3, iRow);
+			choiceTable.add(redStar, 3, iRow);
+		}
+		iRow++;
 		choiceTable.add(countryField, 1, iRow);
-		choiceTable.add(tShirtField, 3, iRow++);
+		if (!isHideShirtSize()) {
+			choiceTable.add(tShirtField, 3, iRow);
+		}
+		iRow++;
 		Integer runYearID = null;
 		if (runner.getYear() != null) {
 			runYearID = (Integer)runner.getYear().getPrimaryKey();
@@ -667,10 +677,15 @@ public class Registration extends RunBlock {
 			if(getRunner().getCategory()!=null){
 				categoriesDropdown.setSelectedElement(getRunner().getCategory().getPrimaryKey().toString());
 			}
+			int iCol = 1;
+			if (isHideShirtSize()) {
+				iRow = iRow-2;
+				iCol = 3;
+			}
 			
-			choiceTable.add(getHeader(localize("run_reg.category", "Department")), 1, iRow);
-			choiceTable.add(redStar, 1, iRow++);
-			choiceTable.add(categoriesDropdown, 1, iRow);
+			choiceTable.add(getHeader(localize("run_reg.category", "Department")), iCol, iRow);
+			choiceTable.add(redStar, iCol, iRow++);
+			choiceTable.add(categoriesDropdown, iCol, iRow);
 			
 			//RemoteScriptHandler rshCategories = new RemoteScriptHandler(distanceDropdown, categoriesDropdown);
 			//try {
@@ -1338,7 +1353,9 @@ public class Registration extends RunBlock {
 		if (!isHideRaceNumberColumn()) {
 			runnerTable.add(getHeader(localize("run_reg.race_number", "Race number")), col++, 1);
 		}
-		runnerTable.add(getHeader(localize("run_reg.shirt_size", "Shirt size")), col++, 1);
+		if (!isHideShirtSize()) {
+			runnerTable.add(getHeader(localize("run_reg.shirt_size", "Shirt size")), col++, 1);
+		}
 		table.add(runnerTable, 1, row++);
 		int runRow = 2;
 		int transportToBuy = 0;
@@ -1355,7 +1372,9 @@ public class Registration extends RunBlock {
 			if (!isHideRaceNumberColumn()) {
 				runnerTable.add(getText(String.valueOf(participant.getParticipantNumber())), col++, runRow);
 			}
-			runnerTable.add(getText(localize("shirt_size." + participant.getShirtSize(), participant.getShirtSize())), col++, runRow++);
+			if (!isHideShirtSize()) {
+				runnerTable.add(getText(localize("shirt_size." + participant.getShirtSize(), participant.getShirtSize())), col++, runRow++);
+			}
 			if (participant.getTransportOrdered().equalsIgnoreCase(Boolean.TRUE.toString())) {
 				transportToBuy++;
 			}
@@ -2286,6 +2305,14 @@ public class Registration extends RunBlock {
 
 	public boolean isSponsoredRegistration() {
 		return sponsoredRegistration;
+	}
+	
+	public void setHideShirtSize(boolean hideShirtSize) {
+		this.hideShirtSize = hideShirtSize;
+	}
+
+	public boolean isHideShirtSize() {
+		return hideShirtSize;
 	}
 
 	public void setHideRaceNumberColumn(boolean hideRaceNumberColumn) {
