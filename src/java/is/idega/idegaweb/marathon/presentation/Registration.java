@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.109 2007/06/29 13:01:48 sigtryggur Exp $
+ * $Id: Registration.java,v 1.110 2007/06/29 20:23:14 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -73,10 +73,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/29 13:01:48 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/06/29 20:23:14 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.109 $
+ * @version $Revision: 1.110 $
  */
 public class Registration extends RunBlock {
 	
@@ -322,26 +322,27 @@ public class Registration extends RunBlock {
 			}
 		}
 		runDropdown.clearChildren();
-		
-		if(isConstrainedToOneRun()){
-			choiceTable.add(getHeader(localize(runner.getRun().getName(),runner.getRun().getName())+ " " + runner.getYear().getName()), 1, iRow++);
-			choiceTable.add(getHeader(localize(IWMarathonConstants.RR_SECONDARY_DD, "Distance")), 1, iRow);
-			runDropdown.setVisible(false);
+
+
+		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_PRIMARY_DD, "Run")), 1, iRow);
+		if (!isConstrainedToOneRun()){
 			choiceTable.add(redStar, 1, iRow);
-			choiceTable.add(runDropdown, 1, iRow++);
-			
+		}
+		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_SECONDARY_DD, "Distance")), 3, iRow);
+		choiceTable.add(redStar, 3, iRow++);
+
+		if (isConstrainedToOneRun()){
+			choiceTable.add(getHeader(localize(runner.getRun().getName(),runner.getRun().getName())+ " " + runner.getYear().getName()), 1, iRow);
+			choiceTable.add(runDropdown, 1, 0);
+			runDropdown.setVisible(false);
 		} else {
-			
-			choiceTable.add(getHeader(localize(IWMarathonConstants.RR_PRIMARY_DD, "Run") + "/" + localize(IWMarathonConstants.RR_SECONDARY_DD, "Distance")), 1, iRow);
-			choiceTable.add(redStar, 1, iRow++);
-			choiceTable.mergeCells(1, iRow, choiceTable.getColumns(), iRow);
 			choiceTable.add(runDropdown, 1, iRow);
 		}
-		
+
 		DistanceDropDownMenu distanceDropdown = (DistanceDropDownMenu) getStyledInterface(new DistanceDropDownMenu(PARAMETER_DISTANCE, runner));
 		distanceDropdown.setAsNotEmpty(localize("run_reg.must_select_distance", "You have to select a distance"));
 
-		choiceTable.add(distanceDropdown, 1, iRow++);
+		choiceTable.add(distanceDropdown, 3, iRow++);
 		
 		RemoteScriptHandler rsh = new RemoteScriptHandler(runDropdown, distanceDropdown);
 		try {
@@ -358,7 +359,7 @@ public class Registration extends RunBlock {
 		}
 		add(rsh);
 
-		choiceTable.setHeight(iRow++, 12);
+		choiceTable.setHeight(iRow++, 3);
 		
 		TextInput nameField = (TextInput) getStyledInterface(new TextInput(PARAMETER_NAME));
 		//nameField.setWidth(Table.HUNDRED_PERCENT);
