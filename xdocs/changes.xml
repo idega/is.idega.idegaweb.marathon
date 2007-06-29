@@ -1,14 +1,21 @@
 <document>
 	<properties>
-		<title>Travel Changes</title>
+		<title>Marathon Changes</title>
 		<author email="gimmi@idega.com">Grimur Jonsson</author>
 	</properties>
 	<body>
 
+	<release version="3.1.16" date="2007-06-29">
+		<action dev="sigtryggur" type="update">
+			Various new config options for the Registration module
+			Refactor on localization. Norwegian translations added to the registration and the pledge wizard.
+			Removed dependency for the websearch bundle
+		</action>     
+	</release>
+
 	<release version="3.1.15" date="2007-06-08">
 		<action dev="sigtryggur" type="update">
 			New filter for run on Registration module and option to save charities per run-year
-			Uppdated dependency to com.idega.block.entity to 3.1.1
 		</action>     
 	</release>
 
