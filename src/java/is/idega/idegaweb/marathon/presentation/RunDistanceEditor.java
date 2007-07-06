@@ -409,7 +409,7 @@ public class RunDistanceEditor extends RunBlock {
 			} else {
 				distance.setPriceForTransportInISK(0);
 			}
-			String priceForTransportInEUR = iwc.getParameter(PARAMETER_PRICE_FOR_TRANSPORT_ISK);
+			String priceForTransportInEUR = iwc.getParameter(PARAMETER_PRICE_FOR_TRANSPORT_EUR);
 			if (priceForTransportInEUR != null && priceForTransportInEUR.length() > 0) {
 				distance.setPriceForTransportInEUR(new Float(priceForTransportInEUR).floatValue());
 			} else {
