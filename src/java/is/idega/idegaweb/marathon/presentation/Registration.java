@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.110 2007/06/29 20:23:14 sigtryggur Exp $
+ * $Id: Registration.java,v 1.111 2007/07/11 18:21:13 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -73,10 +73,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/29 20:23:14 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/07/11 18:21:13 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.110 $
+ * @version $Revision: 1.111 $
  */
 public class Registration extends RunBlock {
 	
@@ -2024,6 +2024,13 @@ public class Registration extends RunBlock {
 		Distance distance = runner.getDistance();
 		Year year = distance.getYear();
 		
+		if (year.isSponsoredRun()) {
+			Layer charityEnquiryDiv = new Layer(Layer.DIV);
+			Text charityEnquiryText = new Text(localize("run_reg.charity_enquiry","If you charity organization is not on the list, please send enquiry to godgerdarmal@glitnir.is")); 
+			charityEnquiryDiv.add(charityEnquiryText);
+			table.add(charityEnquiryDiv,1,row++);
+		}
+
 		int pledgePerKilometerISK;
 		if (isSponsoredRegistration()) {
 			pledgePerKilometerISK = year.getPledgedBySponsorGroupPerKilometer();
@@ -2040,6 +2047,7 @@ public class Registration extends RunBlock {
 			localizedString = localize("run_reg.charity_sponsortext_general", "The sponsor will pay {0} {2} to the selected charity organization for each kilometer run. The sponsor will pay total of {1} {2} to the selected charity organization for your participation.");
 		}
 		String[] attributes = { String.valueOf(pledgePerKilometerISK), String.valueOf(totalPledgedISK), year.getPledgeCurrency()};
+		table.setHeight(row++, 12);
 		table.add(new Text(MessageFormat.format(localizedString, attributes)), 1, row++);
 
 		table.setHeight(row++, 12);
@@ -2059,13 +2067,6 @@ public class Registration extends RunBlock {
 			allowContactDiv.add(new Break());
 			
 			allowContactCheck.setChecked(getRunner().isMaySponsorContactRunner());
-		}
-
-		if (year.isSponsoredRun()) {
-			Layer charityEnquiryDiv = new Layer(Layer.DIV);
-			Text charityEnquiryText = new Text(localize("run_reg.charity_enquiry","If you charity organization is not on the list, please send enquiry to godgerdarmal@glitnir.is")); 
-			charityEnquiryDiv.add(charityEnquiryText);
-			table.add(charityEnquiryDiv,1,row++);
 		}
 
 		UIComponent buttonsContainer = getButtonsFooter(iwc);
