@@ -1,5 +1,5 @@
 /*
- * $Id: Runner.java,v 1.10 2007/06/13 15:22:54 tryggvil Exp $ Created on May 16, 2005
+ * $Id: Runner.java,v 1.11 2007/07/12 22:51:54 sigtryggur Exp $ Created on May 16, 2005
  * 
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
  * 
@@ -23,10 +23,10 @@ import com.idega.user.data.User;
  * A holder class for information about runners and their selection when
  * registering.
  * 
- * Last modified: $Date: 2007/06/13 15:22:54 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/07/12 22:51:54 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class Runner {
 
@@ -62,6 +62,7 @@ public class Runner {
 	private RunCategory category;
 	private boolean applyForDomesticTravelSupport=false;
 	private boolean applyForInternationalTravelSupport=false;
+	private boolean sponsoredRunner=false;
 
 	public User getUser() {
 		return this.user;
@@ -342,8 +343,15 @@ public class Runner {
 		return applyForInternationalTravelSupport;
 	}
 
-	
 	public void setApplyForInternationalTravelSupport(boolean applyForInternationalTravelSupport) {
 		this.applyForInternationalTravelSupport = applyForInternationalTravelSupport;
+	}
+
+	public boolean isSponsoredRunner() {
+		return this.sponsoredRunner;
+	}
+
+	public void setSponsoredRunner(boolean sponsoredRunner) {
+		this.sponsoredRunner = sponsoredRunner;
 	}
 }

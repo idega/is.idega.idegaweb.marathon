@@ -78,6 +78,7 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		
 		addAttribute(getColumnApplyForDomesticTravelSupport(), "Domestic travel support", true, true, Boolean.class);
 		addAttribute(getColumnApplyForInternationalTravelSupport(), "international Travel support", true, true, Boolean.class);
+		addAttribute(getColumnSponsoredRunner(), "Sponsored runner", true, true, Boolean.class);
 		
 	}
 
@@ -192,7 +193,11 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 	public static String getColumnApplyForInternationalTravelSupport() {
 		return "international_travel_support";
 	}
-	
+
+	public static String getColumnSponsoredRunner() {
+		return "sponsored_runner";
+	}
+
 	public String getIDColumnName() {
 		return getColumnNameRunID();
 	}
@@ -615,8 +620,15 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		return getBooleanColumnValue(getColumnApplyForInternationalTravelSupport());
 	}
 
-	
 	public void setApplyForInternationalTravelSupport(boolean applyForInternationalTravelSupport) {
 		setColumn(getColumnApplyForInternationalTravelSupport(), applyForInternationalTravelSupport);
+	}
+
+	public boolean isSponsoredRunner() {
+		return getBooleanColumnValue(getColumnSponsoredRunner());
+	}
+
+	public void setSponsoredRunner(boolean sponsoredRunner) {
+		setColumn(getColumnSponsoredRunner(), sponsoredRunner);
 	}
 }

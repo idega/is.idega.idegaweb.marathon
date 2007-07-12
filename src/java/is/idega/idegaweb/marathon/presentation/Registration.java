@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.111 2007/07/11 18:21:13 sigtryggur Exp $
+ * $Id: Registration.java,v 1.112 2007/07/12 22:51:54 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -73,10 +73,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/07/11 18:21:13 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/07/12 22:51:54 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.111 $
+ * @version $Revision: 1.112 $
  */
 public class Registration extends RunBlock {
 	
@@ -2033,6 +2033,7 @@ public class Registration extends RunBlock {
 
 		int pledgePerKilometerISK;
 		if (isSponsoredRegistration()) {
+			runner.setSponsoredRunner(true);
 			pledgePerKilometerISK = year.getPledgedBySponsorGroupPerKilometer();
 		} else {
 			pledgePerKilometerISK = year.getPledgedBySponsorPerKilometer();

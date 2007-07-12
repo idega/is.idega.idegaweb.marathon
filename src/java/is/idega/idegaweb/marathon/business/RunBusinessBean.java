@@ -479,6 +479,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					participant.setTransportOrdered(String.valueOf(runner.isTransportOrdered()));
 					participant.setApplyForDomesticTravelSupport(runner.isApplyForDomesticTravelSupport());
 					participant.setApplyForInternationalTravelSupport(runner.isApplyForInternationalTravelSupport());
+					participant.setSponsoredRunner(runner.isSponsoredRunner());
 					participant.store();
 					participants.add(participant);
 					
@@ -719,6 +720,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			if (groupID != -1 && runner.getYear().isSponsoredRun()) {
 				try {
 					if (getUserBiz().isMemberOfGroup(groupID, runner.getUser())) {
+						runner.setSponsoredRunner(true);
 						return 0;
 					}
 				}
