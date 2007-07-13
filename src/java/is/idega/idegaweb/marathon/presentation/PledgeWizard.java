@@ -98,7 +98,7 @@ public class PledgeWizard extends RunBlock {
 	}
 	
 	protected int parseAction(IWContext iwc) {
-		collectValues(iwc);
+		initializePledgeHolder(iwc);
 		
 		int action;
 		if (iwc.isParameterSet(PARAMETER_ACTION)) {
@@ -183,20 +183,20 @@ public class PledgeWizard extends RunBlock {
 		table.setHeight(row++, 6);
 		
 		SubmitButton search;
-		if (getPledgeHolder().getFirstNameFilter() != null){
-			firstNameInput.setValue(getPledgeHolder().getFirstNameFilter());
+		if (getPledgeHolder(iwc).getFirstNameFilter() != null){
+			firstNameInput.setValue(getPledgeHolder(iwc).getFirstNameFilter());
 		}
-		if (getPledgeHolder().getMiddleNameFilter() != null){
-			middleNameInput.setValue(getPledgeHolder().getMiddleNameFilter());
+		if (getPledgeHolder(iwc).getMiddleNameFilter() != null){
+			middleNameInput.setValue(getPledgeHolder(iwc).getMiddleNameFilter());
 		}
-		if (getPledgeHolder().getLastNameFilter() != null){
-			lastNameInput.setValue(getPledgeHolder().getLastNameFilter());
+		if (getPledgeHolder(iwc).getLastNameFilter() != null){
+			lastNameInput.setValue(getPledgeHolder(iwc).getLastNameFilter());
 		}
-		if (getPledgeHolder().getPersonalIDFilter() != null){
-			personalIDInput.setValue(getPledgeHolder().getPersonalIDFilter());
+		if (getPledgeHolder(iwc).getPersonalIDFilter() != null){
+			personalIDInput.setValue(getPledgeHolder(iwc).getPersonalIDFilter());
 		}
-		if (getPledgeHolder().getCharityFilter() != null){
-			charityDropDown.setSelectedElement(getPledgeHolder().getCharityFilter());
+		if (getPledgeHolder(iwc).getCharityFilter() != null){
+			charityDropDown.setSelectedElement(getPledgeHolder(iwc).getCharityFilter());
 
 		}
 		if (iwc.isParameterSet(PARAMETER_SEARCH) || iwc.isParameterSet(EntityBrowser.BOTTOM_FORM_KEY + EntityBrowser.SHOW_ALL_KEY)) {
@@ -219,14 +219,14 @@ public class PledgeWizard extends RunBlock {
 						group_ids[i] = group.getPrimaryKey().toString();
 					}
 					UserHome userHome = (UserHome) IDOLookup.getHome(User.class);
-					Collection usersFound = userHome.findUsersByConditions(getPledgeHolder().getFirstNameFilter(), getPledgeHolder().getMiddleNameFilter(), getPledgeHolder().getLastNameFilter(), getPledgeHolder().getPersonalIDFilter(), null, null, -1, -1, -1, -1, group_ids, null, true, false);
+					Collection usersFound = userHome.findUsersByConditions(getPledgeHolder(iwc).getFirstNameFilter(), getPledgeHolder(iwc).getMiddleNameFilter(), getPledgeHolder(iwc).getLastNameFilter(), getPledgeHolder(iwc).getPersonalIDFilter(), null, null, -1, -1, -1, -1, group_ids, null, true, false);
 					Collection runRegistrations = new ArrayList();
 					Iterator userIt = usersFound.iterator();
 					while (userIt.hasNext()) {
 						User user = (User)userIt.next();
 						Participant runRegistration = getRunBusiness(iwc).getParticipantByRunAndYear(user, run, runYear);
 						
-						if (getPledgeHolder().getCharityFilter().equals("-1") || (runRegistration.getCharityId() != null && runRegistration.getCharityId().equals(getPledgeHolder().getCharityFilter()))) {
+						if (getPledgeHolder(iwc).getCharityFilter().equals("-1") || (runRegistration.getCharityId() != null && runRegistration.getCharityId().equals(getPledgeHolder(iwc).getCharityFilter()))) {
 							if (runRegistration.getCharityId() != null && runRegistration.getCharityId() != "-1") {
 								runRegistrations.add(runRegistration);
 							}
@@ -279,9 +279,9 @@ public class PledgeWizard extends RunBlock {
 		try {
 			if (iwc.isParameterSet(PARAMETER_PARTICIPANT_ID)) {
 				participant = getRunBusiness(iwc).getParticipantByPrimaryKey(Integer.parseInt(iwc.getParameter(PARAMETER_PARTICIPANT_ID)));
-				getPledgeHolder().setParticipant(participant);
+				getPledgeHolder(iwc).setParticipant(participant);
 			} else {
-				participant = getPledgeHolder().getParticipant();
+				participant = getPledgeHolder(iwc).getParticipant();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -353,16 +353,16 @@ public class PledgeWizard extends RunBlock {
 		
 		float totalAmount = 0;
 
-		if (getPledgeHolder().getParticipant() != null && getPledgeHolder().getParticipant().getUser() != null) {
-			runnerTable.add(getText(getPledgeHolder().getParticipant().getUser().getName()), 1, runRow);
-			runnerTable.add(getText(localize(getPledgeHolder().getParticipant().getRunTypeGroup().getName(), getPledgeHolder().getParticipant().getRunTypeGroup().getName())+ " " + localize(getPledgeHolder().getParticipant().getRunYearGroup().getName(), getPledgeHolder().getParticipant().getRunYearGroup().getName())), 2, runRow);
-			runnerTable.add(getText(localize(getPledgeHolder().getParticipant().getRunDistanceGroup().getName()+"_short_name", getPledgeHolder().getParticipant().getRunDistanceGroup().getName())), 3, runRow);
+		if (getPledgeHolder(iwc).getParticipant() != null && getPledgeHolder(iwc).getParticipant().getUser() != null) {
+			runnerTable.add(getText(getPledgeHolder(iwc).getParticipant().getUser().getName()), 1, runRow);
+			runnerTable.add(getText(localize(getPledgeHolder(iwc).getParticipant().getRunTypeGroup().getName(), getPledgeHolder(iwc).getParticipant().getRunTypeGroup().getName())+ " " + localize(getPledgeHolder(iwc).getParticipant().getRunYearGroup().getName(), getPledgeHolder(iwc).getParticipant().getRunYearGroup().getName())), 2, runRow);
+			runnerTable.add(getText(localize(getPledgeHolder(iwc).getParticipant().getRunDistanceGroup().getName()+"_short_name", getPledgeHolder(iwc).getParticipant().getRunDistanceGroup().getName())), 3, runRow);
 		}
-		float pledgeAmount = getPledgeHolder().getPledgeAmount();
+		float pledgeAmount = getPledgeHolder(iwc).getPledgeAmount();
 		totalAmount += pledgeAmount;
 		runnerTable.add(getText(formatAmount(iwc.getCurrentLocale(), pledgeAmount)), 4, runRow++);
 		
-		getPledgeHolder().setPledgeAmount(pledgeAmount);
+		getPledgeHolder(iwc).setPledgeAmount(pledgeAmount);
 		
 		if (totalAmount == 0) {
 			//save(iwc, false);
@@ -591,7 +591,7 @@ public class PledgeWizard extends RunBlock {
 	private void save(IWContext iwc, boolean doPayment) throws RemoteException {
 		try {
 			Collection pledgeHolders = new ArrayList();
-			pledgeHolders.add(getPledgeHolder());
+			pledgeHolders.add(getPledgeHolder(iwc));
 
 			String nameOnCard = null;
 			String cardNumber = null;
@@ -866,48 +866,47 @@ public class PledgeWizard extends RunBlock {
 		return NumberFormat.getInstance(locale).format(amount) + " " + (this.isIcelandic ? "ISK" : "EUR");
 	}
 	
-	private void collectValues(IWContext iwc) {
+	private void initializePledgeHolder(IWContext iwc) {
+		if (this.pledgeHolder == null) {
+			this.pledgeHolder = new PledgeHolder();
+		}
 		if (iwc.isParameterSet(PARAMETER_PERSONAL_ID_FILTER)) {
-			getPledgeHolder().setPersonalIDFilter(iwc.getParameter(PARAMETER_PERSONAL_ID_FILTER));
+			this.pledgeHolder.setPersonalIDFilter(iwc.getParameter(PARAMETER_PERSONAL_ID_FILTER));
 		} else if (iwc.isParameterSetAsEmpty(PARAMETER_PERSONAL_ID_FILTER)) {
-			getPledgeHolder().setPersonalIDFilter(null);
+			this.pledgeHolder.setPersonalIDFilter(null);
 		}
 		if (iwc.isParameterSet(PARAMETER_FIRST_NAME_FILTER)) {
-			getPledgeHolder().setFirstNameFilter(iwc.getParameter(PARAMETER_FIRST_NAME_FILTER));
+			this.pledgeHolder.setFirstNameFilter(iwc.getParameter(PARAMETER_FIRST_NAME_FILTER));
 		} else if (iwc.isParameterSetAsEmpty(PARAMETER_FIRST_NAME_FILTER)) {
-			getPledgeHolder().setFirstNameFilter(null);
+			this.pledgeHolder.setFirstNameFilter(null);
 		}
 		if (iwc.isParameterSet(PARAMETER_MIDDLE_NAME_FILTER)) {
-			getPledgeHolder().setMiddleNameFilter(iwc.getParameter(PARAMETER_MIDDLE_NAME_FILTER));
+			this.pledgeHolder.setMiddleNameFilter(iwc.getParameter(PARAMETER_MIDDLE_NAME_FILTER));
 		} else if (iwc.isParameterSetAsEmpty(PARAMETER_MIDDLE_NAME_FILTER)) {
-			getPledgeHolder().setMiddleNameFilter(null);
+			this.pledgeHolder.setMiddleNameFilter(null);
 		} 
 		if (iwc.isParameterSet(PARAMETER_LAST_NAME_FILTER)) {
-			getPledgeHolder().setLastNameFilter(iwc.getParameter(PARAMETER_LAST_NAME_FILTER));
+			this.pledgeHolder.setLastNameFilter(iwc.getParameter(PARAMETER_LAST_NAME_FILTER));
 		} else if (iwc.isParameterSetAsEmpty(PARAMETER_LAST_NAME_FILTER)) {
-			getPledgeHolder().setLastNameFilter(null);
+			this.pledgeHolder.setLastNameFilter(null);
 		} 
 		if (iwc.isParameterSet(PARAMETER_CHARITY_FILTER)) {
-			getPledgeHolder().setCharityFilter(iwc.getParameter(PARAMETER_CHARITY_FILTER));
+			this.pledgeHolder.setCharityFilter(iwc.getParameter(PARAMETER_CHARITY_FILTER));
 		} else if (iwc.isParameterSetAsEmpty(PARAMETER_CHARITY_FILTER)) {
-			getPledgeHolder().setCharityFilter(null);
+			this.pledgeHolder.setCharityFilter(null);
 		} 
 
 		if (iwc.isParameterSet(PARAMETER_PLEDGE_AMOUNT)) {
-			getPledgeHolder().setPledgeAmount(Float.parseFloat(iwc.getParameter(PARAMETER_PLEDGE_AMOUNT)));
+			this.pledgeHolder.setPledgeAmount(Float.parseFloat(iwc.getParameter(PARAMETER_PLEDGE_AMOUNT)));
 		}
 		if (iwc.isParameterSet(PARAMETER_CARDHOLDER_NAME)) {
-			getPledgeHolder().setCardholderName(iwc.getParameter(PARAMETER_CARDHOLDER_NAME));
+			this.pledgeHolder.setCardholderName(iwc.getParameter(PARAMETER_CARDHOLDER_NAME));
 		}
 	}
 
-	protected void setPledgeHolder(PledgeHolder pledgeHolder) {
-		this.pledgeHolder = pledgeHolder;
-	}
-
-	protected PledgeHolder getPledgeHolder() {
+	protected PledgeHolder getPledgeHolder(IWContext iwc) {
 		if(this.pledgeHolder==null){
-			this.pledgeHolder= new PledgeHolder();
+			initializePledgeHolder(iwc);
 		}
 		return this.pledgeHolder;
 	}
