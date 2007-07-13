@@ -48,6 +48,7 @@ import com.idega.util.LocaleUtil;
 
 public class PledgeWizard extends RunBlock {
 	
+	private static final String SESSION_ATTRIBUTE_PLEDGE_HOLDER = "sa_pledge_holder";
 	private static final String PARAMETER_ACTION = "prm_action";
 	private static final String PARAMETER_FROM_ACTION = "prm_from_action";
 	private static final String PARAMETER_SEARCH = "prm_search";
@@ -224,12 +225,16 @@ public class PledgeWizard extends RunBlock {
 					Iterator userIt = usersFound.iterator();
 					while (userIt.hasNext()) {
 						User user = (User)userIt.next();
-						Participant runRegistration = getRunBusiness(iwc).getParticipantByRunAndYear(user, run, runYear);
-						
-						if (getPledgeHolder(iwc).getCharityFilter().equals("-1") || (runRegistration.getCharityId() != null && runRegistration.getCharityId().equals(getPledgeHolder(iwc).getCharityFilter()))) {
-							if (runRegistration.getCharityId() != null && runRegistration.getCharityId() != "-1") {
-								runRegistrations.add(runRegistration);
+						Participant runRegistration = null;
+						try {
+							runRegistration = getRunBusiness(iwc).getParticipantByRunAndYear(user, run, runYear);
+							if (getPledgeHolder(iwc).getCharityFilter().equals("-1") || (runRegistration.getCharityId() != null && runRegistration.getCharityId().equals(getPledgeHolder(iwc).getCharityFilter()))) {
+								if (runRegistration.getCharityId() != null && runRegistration.getCharityId() != "-1") {
+									runRegistrations.add(runRegistration);
+								}
 							}
+						} catch (FinderException e) {
+							//runner not found. Probably still existing in the UserApplication, but has been deleted from the run table
 						}
 					}
 					if (runRegistrations.isEmpty()) {
@@ -868,6 +873,9 @@ public class PledgeWizard extends RunBlock {
 	
 	private void initializePledgeHolder(IWContext iwc) {
 		if (this.pledgeHolder == null) {
+			this.pledgeHolder = (PledgeHolder)iwc.getSessionAttribute(SESSION_ATTRIBUTE_PLEDGE_HOLDER);
+		}
+		if (this.pledgeHolder == null) {
 			this.pledgeHolder = new PledgeHolder();
 		}
 		if (iwc.isParameterSet(PARAMETER_PERSONAL_ID_FILTER)) {
@@ -902,6 +910,7 @@ public class PledgeWizard extends RunBlock {
 		if (iwc.isParameterSet(PARAMETER_CARDHOLDER_NAME)) {
 			this.pledgeHolder.setCardholderName(iwc.getParameter(PARAMETER_CARDHOLDER_NAME));
 		}
+		iwc.setSessionAttribute(SESSION_ATTRIBUTE_PLEDGE_HOLDER, this.pledgeHolder);
 	}
 
 	protected PledgeHolder getPledgeHolder(IWContext iwc) {
