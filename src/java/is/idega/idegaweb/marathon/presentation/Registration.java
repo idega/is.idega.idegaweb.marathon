@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.112 2007/07/12 22:51:54 sigtryggur Exp $
+ * $Id: Registration.java,v 1.113 2007/07/19 14:36:17 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -73,10 +73,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/07/12 22:51:54 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/07/19 14:36:17 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.112 $
+ * @version $Revision: 1.113 $
  */
 public class Registration extends RunBlock {
 	
@@ -1170,7 +1170,7 @@ public class Registration extends RunBlock {
 		creditCardTable.add(getHeader(localize("run_reg.card_number", "Card number")), 3, creditRow++);
 		creditCardTable.add(nameField, 1, creditRow);
 		for (int a = 1; a <= 4; a++) {
-			TextInput cardNumber = (TextInput) getStyledInterface(new TextInput(PARAMETER_CARD_NUMBER + "_" + a));
+			TextInput cardNumber = (TextInput) getStyledInterfaceCreditcard(new TextInput(PARAMETER_CARD_NUMBER + "_" + a));
 			if (a < 4) {
 				cardNumber.setLength(4);
 				cardNumber.setMaxlength(4);
@@ -1314,7 +1314,8 @@ public class Registration extends RunBlock {
 		catch (CreditCardAuthorizationException ccae) {
 			IWResourceBundle creditCardBundle = iwc.getIWMainApplication().getBundle("com.idega.block.creditcard").getResourceBundle(iwc.getCurrentLocale());
 			getParentPage().setAlertOnLoad(ccae.getLocalizedMessage(creditCardBundle));
-			ccae.printStackTrace();
+			//ccae.printStackTrace();
+			System.out.println("CreditCardAuthorizationException in Registration.stepReceipt");
 			loadPreviousStep(iwc);
 		}
 	}
