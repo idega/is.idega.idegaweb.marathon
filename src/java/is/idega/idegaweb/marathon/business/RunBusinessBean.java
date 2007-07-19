@@ -691,6 +691,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			client.finishTransaction(properties);
 		}
 		catch (CreditCardAuthorizationException ccae) {
+			System.out.println("CreditCardAuthorizationException in RunBusinessBean.finishPayment");
 			throw ccae;
 		}
 		catch (Exception e) {
@@ -705,6 +706,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			return client.creditcardAuthorization(nameOnCard, cardNumber, monthExpires, yearExpires, ccVerifyNumber, amount, currency, referenceNumber);
 		}
 		catch (CreditCardAuthorizationException ccae) {
+			System.out.println("CreditCardAuthorizationException in RunBusinessBean.authorizePayment");
 			throw ccae;
 		}
 		catch (Exception e) {

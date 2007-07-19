@@ -646,7 +646,8 @@ public class PledgeWizard extends RunBlock {
 		catch (CreditCardAuthorizationException ccae) {
 			IWResourceBundle creditCardBundle = iwc.getIWMainApplication().getBundle("com.idega.block.creditcard").getResourceBundle(iwc.getCurrentLocale());
 			getParentPage().setAlertOnLoad(ccae.getLocalizedMessage(creditCardBundle));
-			ccae.printStackTrace();
+			System.out.println("CreditCardAuthorizationException in PledgeWizard.save");
+			//ccae.printStackTrace();
 			stepPayment(iwc);
 		}
 	}
