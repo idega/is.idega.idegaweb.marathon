@@ -73,10 +73,12 @@ public class RunPluginBusinessBean extends IBOServiceBean implements RunPluginBu
 		}
 
 		try {
-			Participant runEntry = getRunBiz(iwc).getParticipantByRunAndYear(user, run, year);
-			runEntry.setRunGroupGroup(parentGroup);
-			runEntry.setRunDistanceGroup((Group) parentGroup.getParentNode());
-			runEntry.store();
+			if (run != null) {
+				Participant runEntry = getRunBiz(iwc).getParticipantByRunAndYear(user, run, year);
+				runEntry.setRunGroupGroup(parentGroup);
+				runEntry.setRunDistanceGroup((Group) parentGroup.getParentNode());
+				runEntry.store();
+			}
 		}
 		catch (FinderException e) {
 			e.printStackTrace();
