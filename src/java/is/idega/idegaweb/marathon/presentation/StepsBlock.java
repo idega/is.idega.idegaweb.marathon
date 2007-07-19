@@ -26,10 +26,10 @@ import com.idega.presentation.ui.SubmitButton;
  * <p>
  * Refactoring of the older "RunBlock" to a more generic structure.
  * </p>
- *  Last modified: $Date: 2007/06/20 10:32:23 $ by $Author: tryggvil $
+ *  Last modified: $Date: 2007/07/19 17:05:29 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:tryggvil@idega.com">tryggvil</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class StepsBlock extends Block {
 
@@ -40,6 +40,7 @@ public class StepsBlock extends Block {
 	public static final String STYLENAME_SMALL_TEXT = "SmallText";
 	public static final String STYLENAME_LINK = "Link";
 	public static final String STYLENAME_INTERFACE = "Interface";
+	public static final String STYLENAME_INTERFACE_CREDITCARD = "InterfaceCreditcard";
 	public static final String STYLENAME_INTERFACE_BUTTON = "InterfaceButton";
 	public static final String STYLENAME_CHECKBOX = "CheckBox";
 	
@@ -107,6 +108,10 @@ public class StepsBlock extends Block {
 
 	public InterfaceObject getStyledInterface(InterfaceObject obj) {
 		return (InterfaceObject) setStyle(obj, STYLENAME_INTERFACE);
+	}
+
+	public InterfaceObject getStyledInterfaceCreditcard(InterfaceObject obj) {
+		return (InterfaceObject) setStyle(obj, STYLENAME_INTERFACE_CREDITCARD);
 	}
 
 	protected CheckBox getCheckBox(String name, String value) {
