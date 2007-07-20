@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.115 2007/07/20 12:36:35 sigtryggur Exp $
+ * $Id: Registration.java,v 1.116 2007/07/20 15:53:36 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -73,10 +73,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/07/20 12:36:35 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/07/20 15:53:36 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.115 $
+ * @version $Revision: 1.116 $
  */
 public class Registration extends RunBlock {
 	
@@ -2275,7 +2275,7 @@ public class Registration extends RunBlock {
 		//table.add(getStepsHeader(iwc, ACTION_STEP_TRAVELSUPPORT),1,row++);
 		table.setHeight(row++, 12);
 		
-		table.add(getText(localize("run_reg.travelsupport_informationtext", "The sponsor will grant two types of travel support")), 1, row++);
+		table.add(getText(localizeForRun("run_reg.travelsupport_informationtext", "The sponsor will grant two types of travel support")), 1, row++);
 		
 		Runner runner = getRunner();
 
