@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.114 2007/07/19 17:33:45 sigtryggur Exp $
+ * $Id: Registration.java,v 1.115 2007/07/20 12:36:35 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -73,10 +73,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/07/19 17:33:45 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/07/20 12:36:35 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.114 $
+ * @version $Revision: 1.115 $
  */
 public class Registration extends RunBlock {
 	
@@ -1180,6 +1180,7 @@ public class Registration extends RunBlock {
 			if (a < 4) {
 				cardNumber.setLength(4);
 				cardNumber.setMaxlength(4);
+				cardNumber.setNextInput(PARAMETER_CARD_NUMBER + "_" + (a+1));
 			}
 			else {
 				cardNumber.setLength(4);
