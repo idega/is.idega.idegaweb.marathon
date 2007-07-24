@@ -58,6 +58,10 @@ public class RegistrationReceivedPrintable extends Window {
 		int row = 1;
 		
 		Collection runners = (Collection) iwc.getSessionAttribute(Registration.SESSION_ATTRIBUTE_PARTICIPANTS);
+		if (runners == null) {
+			add(new Text(iwrb.getLocalizedString("session_has_expired", "The session has expired")));
+			return;
+		}
 		double amount = ((Double) iwc.getSessionAttribute(Registration.SESSION_ATTRIBUTE_AMOUNT)).doubleValue();
 		String cardNumber = (String) iwc.getSessionAttribute(Registration.SESSION_ATTRIBUTE_CARD_NUMBER);
 		IWTimestamp stamp = (IWTimestamp) iwc.getSessionAttribute(Registration.SESSION_ATTRIBUTE_PAYMENT_DATE);
