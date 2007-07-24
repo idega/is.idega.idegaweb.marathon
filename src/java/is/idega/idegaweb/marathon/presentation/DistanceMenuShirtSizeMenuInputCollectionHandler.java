@@ -42,8 +42,11 @@ public class DistanceMenuShirtSizeMenuInputCollectionHandler extends Presentatio
 				Vector ids = new Vector();
 			    Vector names = new Vector();
 				
-				Group runDistance = runBiz.getRunGroupByGroupId(distanceID);
-				String shirtSizeMetadata = runDistance.getMetaData(PARAMETER_SHIRT_SIZES_PER_RUN);
+			    String shirtSizeMetadata = null;
+			    if (distanceID.intValue() != -1) {
+			    	Group runDistance = runBiz.getRunGroupByGroupId(distanceID);
+			    	shirtSizeMetadata = runDistance.getMetaData(PARAMETER_SHIRT_SIZES_PER_RUN);
+			    }
 				List shirtSizes = null;
 				if (shirtSizeMetadata != null) {
 					shirtSizes = ListUtil. convertCommaSeparatedStringToList(shirtSizeMetadata);

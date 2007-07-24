@@ -1,5 +1,5 @@
 /*
- * $Id: RunInputCollectionHandler.java,v 1.10 2007/02/05 19:03:05 idegaweb Exp $
+ * $Id: RunInputCollectionHandler.java,v 1.11 2007/07/24 12:48:36 sigtryggur Exp $
  * Created on Feb 14, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -33,10 +33,10 @@ import com.idega.util.IWTimestamp;
 
 /**
  * 
- *  Last modified: $Date: 2007/02/05 19:03:05 $ by $Author: idegaweb $
+ *  Last modified: $Date: 2007/07/24 12:48:36 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:birna@idega.com">birna</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class RunInputCollectionHandler extends PresentationObject implements RemoteScriptCollection {
 
@@ -68,22 +68,25 @@ public class RunInputCollectionHandler extends PresentationObject implements Rem
 		    String nextYearString = String.valueOf(stamp.getYear());
 		 
 				try {
-					Group run = runBiz.getRunGroupByGroupId(runId);
-
-					String runnerYearString = yearString;
-					boolean finished = false;
-					Map yearMap = runBiz.getYearsMap(run);
-					Year year = (Year) yearMap.get(yearString);
-					if (year != null && year.getLastRegistrationDate() != null) {
-						if (ts.isLaterThanOrEquals(stamp)) {
-							finished = true;
+					Collection distances = null;
+					if (runId.intValue() != -1) {
+						Group run = runBiz.getRunGroupByGroupId(runId);
+	
+						String runnerYearString = yearString;
+						boolean finished = false;
+						Map yearMap = runBiz.getYearsMap(run);
+						Year year = (Year) yearMap.get(yearString);
+						if (year != null && year.getLastRegistrationDate() != null) {
+							if (ts.isLaterThanOrEquals(stamp)) {
+								finished = true;
+							}
 						}
+						Year nextYear = (Year) yearMap.get(nextYearString);
+						if (finished && nextYear != null) {
+							runnerYearString = nextYearString;
+						}
+						distances = runBiz.getDistancesMap(run, runnerYearString);
 					}
-					Year nextYear = (Year) yearMap.get(nextYearString);
-					if (finished && nextYear != null) {
-						runnerYearString = nextYearString;
-					}
-					Collection distances = runBiz.getDistancesMap(run, runnerYearString);
 		
 			    Vector ids = new Vector();
 			    Vector names = new Vector();
