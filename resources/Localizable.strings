@@ -329,6 +329,7 @@ search=Search
 search_again=Search again
 select_run=Select run...
 select_year=Select year...
+session_has_expired=The session has expired
 shirt_size.large=Large
 shirt_size.large_adult=Large Adult
 shirt_size.large_female=Large Female
