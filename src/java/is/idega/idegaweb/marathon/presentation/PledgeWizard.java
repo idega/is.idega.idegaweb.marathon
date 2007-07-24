@@ -435,10 +435,11 @@ public class PledgeWizard extends RunBlock {
 		creditCardTable.add(getHeader(localize("run_reg.card_number", "Card number")), 3, creditRow++);
 		creditCardTable.add(nameField, 1, creditRow);
 		for (int a = 1; a <= 4; a++) {
-			TextInput cardNumber = (TextInput) getStyledInterface(new TextInput(PARAMETER_CARD_NUMBER + "_" + a));
+			TextInput cardNumber = (TextInput) getStyledInterfaceCreditcard(new TextInput(PARAMETER_CARD_NUMBER + "_" + a));
 			if (a < 4) {
 				cardNumber.setLength(4);
 				cardNumber.setMaxlength(4);
+				cardNumber.setNextInput(PARAMETER_CARD_NUMBER + "_" + (a+1));
 			}
 			else {
 				cardNumber.setLength(4);
