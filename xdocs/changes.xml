@@ -5,6 +5,12 @@
 	</properties>
 	<body>
 
+	<release version="3.1.17" date="2007-07-25">
+		<action dev="sigtryggur" type="update">
+			New code for "my-pages" modules
+		</action>     
+	</release>
+
 	<release version="3.1.16" date="2007-06-29">
 		<action dev="sigtryggur" type="update">
 			Various new config options for the Registration module
