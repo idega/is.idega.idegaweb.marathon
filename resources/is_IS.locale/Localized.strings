@@ -286,6 +286,7 @@ run_reg.select_gender=Veldu kyn...
 run_reg.select_nationality=Veldu land
 run_reg.select_run_and_distance=\u00DE\u00FA ver\u00F0ur a\u00F0 velja hlaup og vegalengd
 run_reg.select_tee_shirt_size=Veldu bolast\u00E6r\u00F0...
+run_reg.session_has_expired_payment=Tenging \u00FE\u00EDn vi\u00F0 marathon.is er \u00FAtrunnin og uppl\u00FDsingar \u00FAr fyrri skrefum eru ekki lengur til sta\u00F0ar. \\n\u00DE\u00FA ver\u00F0ur a\u00F0 sl\u00E1 uppl\u00FDsingarnar inn aftur. \\nEkkert gjald hefur veri\u00F0 skuldf\u00E6rt af kreditkortinu \u00FE\u00EDnu.
 run_reg.shirt_size=Bolast\u00E6r\u00F0
 run_reg.small=S
 run_reg.small_adult=S Fullor\u00F0inna
