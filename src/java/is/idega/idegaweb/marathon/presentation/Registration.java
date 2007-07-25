@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.116 2007/07/20 15:53:36 sigtryggur Exp $
+ * $Id: Registration.java,v 1.117 2007/07/25 09:47:27 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -73,10 +73,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/07/20 15:53:36 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/07/25 09:47:27 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.116 $
+ * @version $Revision: 1.117 $
  */
 public class Registration extends RunBlock {
 	
@@ -181,6 +181,7 @@ public class Registration extends RunBlock {
 	
 	private void loadCurrentStep(IWContext iwc, int action) throws RemoteException {
 		switch (action) {
+		
 				case ACTION_STEP_PERSONLOOKUP:
 					stepPersonalLookup(iwc);
 					break;
@@ -1151,6 +1152,11 @@ public class Registration extends RunBlock {
 		TextInput nameField = (TextInput) getStyledInterface(new TextInput(PARAMETER_NAME_ON_CARD));
 		nameField.setAsNotEmpty(localize("run_reg.must_supply_card_holder_name", "You must supply card holder name"));
 		nameField.keepStatusOnAction(true);
+		if (getRunner().getUser() != null) {
+			nameField.setContent(getRunner().getUser().getName());
+		} else {
+			nameField.setContent(getRunner().getName());
+		}
 		
 		TextInput ccv = (TextInput) getStyledInterface(new TextInput(PARAMETER_CCV));
 		ccv.setLength(3);
@@ -1210,6 +1216,7 @@ public class Registration extends RunBlock {
 		emailField.setAsEmail(localize("run_reg.email_err_msg", "Not a valid email address"));
 		emailField.setWidth(Table.HUNDRED_PERCENT);
 		emailField.keepStatusOnAction(true);
+		emailField.setContent(getRunner().getEmail());
 		
 		creditCardTable.setHeight(creditRow++, 3);
 		creditCardTable.mergeCells(3, creditRow, 3, creditRow+1);
@@ -1255,6 +1262,10 @@ public class Registration extends RunBlock {
 		add(form);
 	}
 	
+	private String formatAmount(IWContext iwc, float amount) {
+		return NumberFormat.getInstance(iwc.getCurrentLocale()).format(amount);
+	}
+
 	private String formatAmount(Locale locale, float amount) {
 		return NumberFormat.getInstance(locale).format(amount) + " " + (this.isIcelandic ? "ISK" : "EUR");
 	}
@@ -1273,8 +1284,13 @@ public class Registration extends RunBlock {
 	
 	private void stepReceipt(IWContext iwc, boolean doPayment) throws RemoteException {
 		try {
+			if (getRunner().getRun() == null) {
+				getParentPage().setAlertOnLoad(localize("run_reg.session_has_expired_payment", "Session has expired and information from earlier steps is lost. \\nYou will have to enter the information again. \\nYour credit card has not been charged."));
+				stepPersonalDetails(iwc);
+				return;
+			}
 			Collection runners = ((Map) iwc.getSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP)).values();
-
+			
 			String nameOnCard = null;
 			String cardNumber = null;
 			String hiddenCardNumber = "XXXX-XXXX-XXXX-XXXX";
@@ -1285,6 +1301,8 @@ public class Registration extends RunBlock {
 			String referenceNumber = null;
 			double amount = 0;
 			IWTimestamp paymentStamp = new IWTimestamp();
+			
+			
 
 			if (doPayment) {
 				nameOnCard = iwc.getParameter(PARAMETER_NAME_ON_CARD);
@@ -2055,7 +2073,7 @@ public class Registration extends RunBlock {
 		} else {
 			localizedString = localize("run_reg.charity_sponsortext_general", "The sponsor will pay {0} {2} to the selected charity organization for each kilometer run. The sponsor will pay total of {1} {2} to the selected charity organization for your participation.");
 		}
-		String[] attributes = { String.valueOf(pledgePerKilometerISK), String.valueOf(totalPledgedISK), year.getPledgeCurrency()};
+		String[] attributes = { formatAmount(iwc, pledgePerKilometerISK), formatAmount(iwc, totalPledgedISK), year.getPledgeCurrency()};
 		table.setHeight(row++, 12);
 		table.add(new Text(MessageFormat.format(localizedString, attributes)), 1, row++);
 
