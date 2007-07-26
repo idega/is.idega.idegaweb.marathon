@@ -49,6 +49,8 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 	private Text payMethodText;
 	private Text payedAmountText;
 	private Text teamNameText;
+	private Text categoryText;
+	private Text charityText;
 
 	// fields
 	private Text userNameField;
@@ -72,6 +74,8 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 	private TextInput payedAmountField;
 
 	private TextInput teamNameField;
+	private DropdownMenu categoryField;
+	private DropdownMenu charityField;
 
 	private Form f;
 
@@ -95,6 +99,8 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 		this.payMethodText = new Text(iwrb.getLocalizedString("run_tab.pay_method", "Pay method"));
 		this.payedAmountText = new Text(iwrb.getLocalizedString("run_tab.payed_amount", "Payed amount"));
 		this.teamNameText = new Text(iwrb.getLocalizedString("run_tab.team_name", "Team name"));
+		this.categoryText = new Text(iwrb.getLocalizedString("run_tab.category", "Category"));
+		this.charityText = new Text(iwrb.getLocalizedString("run_tab.charity", "Charity"));
 	}
 
 	public void initializeFields() {
@@ -154,7 +160,10 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 		}
 
 		this.participantNumberField = new TextInput(IWMarathonConstants.PARAMETER_PARTICIPANT_NUMBER);
+		this.participantNumberField.setAsIntegers(iwrb.getLocalizedString("run_tab.partitionnumber_must_be_digits", "You can only enter digits in the partition number field"));
+		this.participantNumberField.setMaxlength(4);
 		this.chipNumberField = new TextInput(IWMarathonConstants.PARAMETER_CHIP_NUMBER);
+		this.chipNumberField.setMaxlength(7);
 		this.tShirtField = new ShirtSizeDropdownMenu(IWMarathonConstants.PARAMETER_TSHIRT);
 		this.payMethodField = new DropdownMenu(IWMarathonConstants.PARAMETER_PAY_METHOD);
 		this.notPayed = new SelectOption(iwrb.getLocalizedString("run_tab.not_payed", "Not payed"), "not_payed");
@@ -173,6 +182,11 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 
 		this.runTimeField = new TextInput(IWMarathonConstants.PARAMETER_RUN_TIME);
 		this.chipTimeField = new TextInput(IWMarathonConstants.PARAMETER_CHIP_TIME);
+		
+		this.categoryField = new CategoriesForRunYearDropDownMenu(IWMarathonConstants.PARAMETER_CATEGORY);
+		this.categoryField.setWidth("170");
+		this.charityField = new CharitiesForRunDropDownMenu(IWMarathonConstants.PARAMETER_CHARITY);
+		this.charityField.setWidth("170");
 
 		if (run != null) {
 			int disID = run.getRunDistanceGroupID();
@@ -214,7 +228,9 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 			this.teamNameField.setContent(run.getRunGroupName());
 			this.runTimeField.setContent(String.valueOf(run.getRunTime()));
 			this.chipTimeField.setContent(String.valueOf(run.getChipTime()));
-
+			
+			this.categoryField.setSelectedElement(run.getCategoryId());
+			this.charityField.setSelectedElement(run.getCharityId());
 		}
 		this.submitButton = new SubmitButton(iwrb.getLocalizedString("run_tab.save", "Save"), PARAMETER_ACTION, Integer.toString(ACTION_SAVE));
 		this.submitButton.setAsImageButton(true);
@@ -222,6 +238,8 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 	}
 
 	public boolean store(IWContext iwc) {
+		Table t = new Table();
+		
 		String payMethod = iwc.getParameter(IWMarathonConstants.PARAMETER_PAY_METHOD);
 		String payedAmount = iwc.getParameter(IWMarathonConstants.PARAMETER_AMOUNT);
 		String participantNr = iwc.getParameter(IWMarathonConstants.PARAMETER_PARTICIPANT_NUMBER);
@@ -230,43 +248,33 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 		String shirtSize = iwc.getParameter(IWMarathonConstants.PARAMETER_TSHIRT);
 		String runTime = iwc.getParameter(IWMarathonConstants.PARAMETER_RUN_TIME);
 		String chipTime = iwc.getParameter(IWMarathonConstants.PARAMETER_CHIP_TIME);
+		String categoryID = iwc.getParameter(IWMarathonConstants.PARAMETER_CATEGORY);
+		String charityID = iwc.getParameter(IWMarathonConstants.PARAMETER_CHARITY);
 		String userIDString = iwc.getParameter("ic_user_id");
 		String groupIDString = iwc.getParameter("selected_ic_group_id");
-		User user = null;
-		if (userIDString != null && !userIDString.equals("")) {
-			try {
-				user = getUserBiz().getUser(Integer.parseInt(userIDString));
-			}
-			catch (NumberFormatException e1) {
-				e1.printStackTrace();
-			}
-			catch (RemoteException e1) {
-				e1.printStackTrace();
-			}
-		}
-
-		int userID = -1;
-		if (user != null) {
-			userID = Integer.parseInt(user.getPrimaryKey().toString());
-		}
-		int groupID = -1;
-		if (groupIDString != null && !groupIDString.equals("")) {
-			groupID = Integer.parseInt(groupIDString);
-		}
+		
 		try {
-			getRunBiz(iwc).savePaymentByUserID(userID, payMethod, payedAmount);
-			getRunBiz(iwc).updateParticipantAndChip(userID, participantNr, chipNr);
-			getRunBiz(iwc).updateTeamName(userID, groupID, teamName);
-			getRunBiz(iwc).updateShirtSize(userID, groupID, shirtSize);
-			getRunBiz(iwc).updateRunAndChipTimes(userID, groupID, runTime, chipTime);
-
+			Participant participant = getRunBiz(iwc).getRunObjByUserAndGroup(Integer.parseInt(userIDString), Integer.parseInt(groupIDString));
+			participant.setPayMethod(payMethod);
+			participant.setPayedAmount(payedAmount);
+			participant.setParticipantNumber(Integer.parseInt(participantNr));
+			participant.setChipNumber(chipNr);
+			participant.setRunGroupName(teamName);
+			participant.setShirtSize(shirtSize);
+			participant.setRunTime(Integer.parseInt(runTime));
+			participant.setChipTime(Integer.parseInt(chipTime));
+			participant.setCategoryId(Integer.parseInt(categoryID));
+			participant.setCharityId(charityID);
+			participant.store();
+			t.add(getResourceBundle(iwc).getLocalizedString("update.successful", "Update successful"));
+			this.f.add(t);
 		}
 		catch (Exception e) {
+			t.add("Error: "+ e.getMessage());
+			this.f.add(t);
 			e.printStackTrace();
 		}
-		Table t = new Table();
-		t.add(getResourceBundle(iwc).getLocalizedString("update.successful", "Update successful"));
-		this.f.add(t);
+
 
 		return true;
 	}
@@ -296,7 +304,7 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 			return ACTION_DISPLAY;
 		}
 	}
-
+	
 	public void lineUp(IWContext iwc) {
 		Table t = new Table();
 		t.setCellpadding(0);
@@ -336,8 +344,16 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 		t.add(this.runTimeField, 1, 17);
 		t.add(this.chipTimeText + ": ", 2, 16);
 		t.add(this.chipTimeField, 2, 17);
-		t.setAlignment(2, 18, Table.HORIZONTAL_ALIGN_RIGHT);
-		t.add(this.submitButton, 2, 18);
+		t.setHeight(1, 18, 8);
+		t.setHeight(2, 18, 8);
+		t.add(this.categoryText + ": ", 1, 19);
+		t.add(this.categoryField, 1, 20);
+		t.add(this.charityText + ": ", 2, 19);
+		t.add(this.charityField, 2, 20);
+		t.setHeight(1, 21, 8);
+		t.setHeight(2, 21, 8);
+		t.setAlignment(2, 22, Table.HORIZONTAL_ALIGN_RIGHT);
+		t.add(this.submitButton, 2, 22);
 		this.f.add(t);
 	}
 
