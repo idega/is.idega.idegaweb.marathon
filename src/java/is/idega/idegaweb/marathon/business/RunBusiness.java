@@ -1,5 +1,5 @@
 /*
- * $Id: RunBusiness.java,v 1.33 2007/06/14 10:53:44 sigtryggur Exp $
+ * $Id: RunBusiness.java,v 1.34 2007/07/26 16:55:50 sigtryggur Exp $
  * Created on Aug 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -31,10 +31,10 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2007/06/14 10:53:44 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/07/26 16:55:50 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  */
 public interface RunBusiness extends IBOService {
 
@@ -121,32 +121,6 @@ public interface RunBusiness extends IBOService {
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#savePayment
 	 */
 	public void savePayment(int userID, int distanceID, String payMethod, String amount) throws java.rmi.RemoteException;
-
-	/**
-	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#savePaymentByUserID
-	 */
-	public void savePaymentByUserID(int userID, String payMethod, String amount) throws java.rmi.RemoteException;
-
-	/**
-	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#updateParticipantAndChip
-	 */
-	public void updateParticipantAndChip(int userID, String partiNr, String chipNr) throws java.rmi.RemoteException;
-
-	/**
-	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#updateTeamName
-	 */
-	public void updateTeamName(int userID, int groupID, String teamName) throws java.rmi.RemoteException;
-
-	/**
-	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#updateShritSize
-	 */
-	public void updateShirtSize(int userID, int groupID, String shirtSize) throws java.rmi.RemoteException;
-
-	/**
-	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#updateRunAndChipTimes
-	 */
-	public void updateRunAndChipTimes(int userID, int groupID, String runTime, String chipTime)
-			throws java.rmi.RemoteException;
 
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#updateRunForParticipant
