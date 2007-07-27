@@ -96,11 +96,11 @@ public class ActiveRunDropDownMenu extends DropdownMenu {
 					
 					if (this.runner != null && this.runner.getUser() != null) {
 						if (!getRunBusiness(iwc).isRegisteredInRun(runnerYearString, run, this.runner.getUser())) {
-							addMenuElement(runId, iwrb.getLocalizedString(run.getName(), run.getName()) + " - " + runnerYearString);
+							addMenuElement(runId, iwrb.getLocalizedString(run.getName(), run.getName()));
 						}
 					}
 					else {
-						addMenuElement(runId, iwrb.getLocalizedString(run.getName(), run.getName()) + " - " + runnerYearString);
+						addMenuElement(runId, iwrb.getLocalizedString(run.getName(), run.getName()));
 					}
 				}
 			}
