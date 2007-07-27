@@ -1,5 +1,5 @@
 /*
- * $Id: GroupRegistration.java,v 1.4 2007/06/18 02:02:24 sigtryggur Exp $
+ * $Id: GroupRegistration.java,v 1.5 2007/07/27 09:55:02 sigtryggur Exp $
  * Created on May 30, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -15,10 +15,12 @@ import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.data.Run;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 import java.rmi.RemoteException;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
+
 import javax.ejb.FinderException;
 import com.idega.business.IBORuntimeException;
 import com.idega.presentation.IWContext;
@@ -30,15 +32,13 @@ import com.idega.presentation.ui.Form;
 import com.idega.presentation.ui.HiddenInput;
 import com.idega.presentation.ui.SubmitButton;
 import com.idega.presentation.ui.TextInput;
-import com.idega.user.data.Group;
-import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2007/06/18 02:02:24 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/07/27 09:55:02 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class GroupRegistration extends RunBlock {
 
@@ -50,6 +50,7 @@ public class GroupRegistration extends RunBlock {
 	private static final String PARAMETER_BEST_TIME = "prm_best_time";
 	private static final String PARAMETER_ESTIMATED_TIME = "prm_estimated_time";
 	private static final String PARAMETER_PARTICIPANT = "prm_participant";
+	private static final String PARAMETER_LIMIT_RUN_IDS="run_ids";
 
 	private static final int ACTION_STEP_ONE = 1;
 	private static final int ACTION_STEP_TWO = 2;
@@ -63,21 +64,24 @@ public class GroupRegistration extends RunBlock {
 	private String[] bestTimes;
 	private String[] estimatedTimes;
 	private Map participantMap;
+	private String runIds;
 
 	public void main(IWContext iwc) throws Exception {
-		switch (parseAction(iwc)) {
-			case ACTION_STEP_ONE:
-				stepOne(iwc);
-				break;
-			case ACTION_STEP_TWO:
-				stepTwo(iwc);
-				break;
-			case ACTION_STEP_THREE:
-				stepThree(iwc);
-				break;
-			case ACTION_SAVE:
-				save(iwc);
-				break;
+		if (!iwc.isInEditMode()) {
+			switch (parseAction(iwc)) {
+				case ACTION_STEP_ONE:
+					stepOne(iwc);
+					break;
+				case ACTION_STEP_TWO:
+					stepTwo(iwc);
+					break;
+				case ACTION_STEP_THREE:
+					stepThree(iwc);
+					break;
+				case ACTION_SAVE:
+					save(iwc);
+					break;
+			}
 		}
 	}
 	
@@ -101,41 +105,11 @@ public class GroupRegistration extends RunBlock {
 		table.add(getInformationTable(localize("run_reg.group_information_text_step_1", "Information text 1...")), 1, row++);
 		table.setHeight(row++, 6);
 		
-		IWTimestamp ts = IWTimestamp.RightNow();
-    Integer y = new Integer(ts.getYear());
-    String yearString = y.toString();
-    
-		DropdownMenu runDropdown = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_RUN));
-		Collection runs = getRunBusiness(iwc).getRuns();
-		runDropdown.addMenuElement("-1", localize("run_year_ddd.select_run","Select run..."));
-		if(runs != null) {
-			Iterator iter = runs.iterator();
-			while (iter.hasNext()) {
-				Group run = (Group) iter.next();
-				runDropdown.addMenuElement(run.getPrimaryKey().toString(), localize(run.getName(), run.getName()));
-			}
-		}
-		if (this.run != null) {
-			runDropdown.setSelectedElement(this.run.getPrimaryKey().toString());
-		}
-
-		DropdownMenu distanceDropdown = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_DISTANCE));
-		distanceDropdown.addMenuElement("", localize("run_year_ddd.select_distance","Select distance..."));
-		distanceDropdown.setAsNotEmpty(localize("run_reg.must_select_distance", "You have to select a distance"), "");
-		if(this.run != null) {
-			Collection distances = getRunBusiness(iwc).getDistancesMap(this.run, yearString);
-			if(distances != null) {
-				Iterator iter = distances.iterator();
-				while (iter.hasNext()) {
-					Group element = (Group) iter.next();
-					distanceDropdown.addMenuElement(element.getPrimaryKey().toString(), localize(element.getName(), element.getName()));
-				}
-			}
-			if (this.distance != null) {
-				distanceDropdown.setSelectedElement(this.distance.getPrimaryKey().toString());
-			}
-		}
-
+		DropdownMenu runDropdown = getRunDropdown(iwc);
+		DropdownMenu distanceDropdown = (DistanceDropDownMenu) getStyledInterface(new DistanceDropDownMenu(PARAMETER_DISTANCE));
+		distanceDropdown.setAsNotEmpty(localize("run_reg.must_select_distance", "You have to select a distance"));
+		distanceDropdown.setWidth("130");
+		
 		Table choiceTable = new Table();
 		choiceTable.setColumns(2);
 		choiceTable.setCellpadding(2);
@@ -427,7 +401,52 @@ public class GroupRegistration extends RunBlock {
 			action = ACTION_STEP_TWO;
 			getParentPage().setAlertOnLoad(localize("run_reg.must_select_three", "You have to select a minimum of three to form a team."));
 		}
-
+		if(iwc.isParameterSet(PARAMETER_LIMIT_RUN_IDS)){
+			String runIds = iwc.getParameter(PARAMETER_LIMIT_RUN_IDS);
+			setRunIds(runIds);	
+		}
 		return action;
+	}
+
+	protected ActiveRunDropDownMenu getRunDropdown(IWContext iwc) {
+		ActiveRunDropDownMenu runDropdown = null;
+		String[] constrainedRunIds = getRunIdsArray();
+		if(constrainedRunIds==null){
+			runDropdown = (ActiveRunDropDownMenu) getStyledInterface(new ActiveRunDropDownMenu(PARAMETER_RUN));
+		}
+		else{
+			runDropdown = (ActiveRunDropDownMenu) getStyledInterface(new ActiveRunDropDownMenu(PARAMETER_RUN, null, constrainedRunIds));
+		}
+		
+		runDropdown.setAsNotEmpty(localize("run_reg.must_select_run", "You have to select a run"));
+		return runDropdown;
+	}
+	
+	public String getRunIds() {
+		return runIds;
+	}
+
+	public void setRunIds(String runIds) {
+		this.runIds = runIds;
+	}
+	
+	public String[] getRunIdsArray(){
+		String runIds = getRunIds();
+		if(runIds!=null){
+			if(runIds.indexOf(",")!=-1){
+				StringTokenizer tokenizer = new StringTokenizer(runIds,",");
+				List list = new ArrayList();
+				while(tokenizer.hasMoreElements()){
+					list.add(tokenizer.nextElement());
+				}
+				return (String[]) list.toArray(new String[0]);
+			}
+			else{
+				String[] array = {runIds};
+				return array;
+			}
+		}
+		
+		return null;
 	}
 }
