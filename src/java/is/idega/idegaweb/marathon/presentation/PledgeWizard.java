@@ -699,7 +699,10 @@ public class PledgeWizard extends RunBlock {
 
 			public PresentationObject getPresentationObject(Object entity, EntityPath path, EntityBrowser browser, IWContext iwc) {
 				Participant participant = (Participant) entity;
-				return  new Text(participant.getUser().getName());
+				Link forwardLink = new Link(participant.getUser().getName());
+				forwardLink.addParameter(PARAMETER_PARTICIPANT_ID, participant.getPrimaryKey().toString());
+				forwardLink.addParameter(PARAMETER_ACTION, ACTION_STEP_PERSONAL_DETAILS);
+				return forwardLink;
 			}
 		};
 		
