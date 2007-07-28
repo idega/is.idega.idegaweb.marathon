@@ -589,7 +589,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		
 	}
 
-	private int getNextAvailableParticipantNumber(Run run, Distance distance) {
+	public int getNextAvailableParticipantNumber(Group run, Distance distance) {
 		int number = distance.getNextAvailableParticipantNumber();
 		int minNumber = getMinParticipantNumber(distance.getName(), run.getName());
 		int maxNumber = getMaxParticipantNumber(distance.getName(), run.getName());

@@ -1,5 +1,5 @@
 /*
- * $Id: RunBusiness.java,v 1.34 2007/07/26 16:55:50 sigtryggur Exp $
+ * $Id: RunBusiness.java,v 1.35 2007/07/28 16:03:08 sigtryggur Exp $
  * Created on Aug 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -9,6 +9,7 @@
  */
 package is.idega.idegaweb.marathon.business;
 
+import is.idega.idegaweb.marathon.data.Distance;
 import is.idega.idegaweb.marathon.data.Participant;
 
 import java.rmi.RemoteException;
@@ -31,10 +32,10 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2007/07/26 16:55:50 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/07/28 16:03:08 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  */
 public interface RunBusiness extends IBOService {
 
@@ -256,4 +257,9 @@ public interface RunBusiness extends IBOService {
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getParticipantByPrimaryKey
 	 */
 	public Participant getParticipantByPrimaryKey(int participantID) throws java.rmi.RemoteException;
+
+	/**
+	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getNextAvailableParticipantNumber
+	 */
+	public int getNextAvailableParticipantNumber(Group run, Distance distance) throws java.rmi.RemoteException;
 }

@@ -4,6 +4,7 @@
  */
 package is.idega.idegaweb.marathon.business;
 
+import is.idega.idegaweb.marathon.data.Distance;
 import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.presentation.CreateYearWindowPlugin;
 import is.idega.idegaweb.marathon.presentation.RunDistanceTab;
@@ -71,12 +72,27 @@ public class RunPluginBusinessBean extends IBOServiceBean implements RunPluginBu
 		catch (RemoteException e) {
 			e.printStackTrace();
 		}
+		Group distanceGroup = null;
+		Distance distance = null;
+		try {
+			distanceGroup = runBiz.getRunGroupOfTypeForGroup(parentGroup, IWMarathonConstants.GROUP_TYPE_RUN_DISTANCE);
+			distance = ConverterUtility.getInstance().convertGroupToDistance(distanceGroup);
+		}
+		catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		catch (FinderException e) {
+			e.printStackTrace();
+		}
 
 		try {
 			if (run != null) {
 				Participant runEntry = getRunBiz(iwc).getParticipantByRunAndYear(user, run, year);
 				runEntry.setRunGroupGroup(parentGroup);
 				runEntry.setRunDistanceGroup((Group) parentGroup.getParentNode());
+				if (distance != null) {
+					runEntry.setParticipantNumber(runBiz.getNextAvailableParticipantNumber(run, distance));
+				}
 				runEntry.store();
 			}
 		}
