@@ -1,5 +1,5 @@
 /*
- * $Id: RunBusiness.java,v 1.35 2007/07/28 16:03:08 sigtryggur Exp $
+ * $Id: RunBusiness.java,v 1.36 2007/07/30 13:15:10 sigtryggur Exp $
  * Created on Aug 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -32,10 +32,10 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2007/07/28 16:03:08 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/07/30 13:15:10 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  */
 public interface RunBusiness extends IBOService {
 
@@ -86,8 +86,7 @@ public interface RunBusiness extends IBOService {
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#addParticipantsToGroup
 	 */
-	public void addParticipantsToGroup(String[] participants, String[] bestTimes, String[] estimatedTimes,
-			String groupName) throws java.rmi.RemoteException;
+	public void addParticipantsToGroup(String[] participants, String groupName) throws java.rmi.RemoteException;
 
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#finishPayment
@@ -139,6 +138,11 @@ public interface RunBusiness extends IBOService {
 	 */
 	public Participant getParticipantByDistanceAndParticipantNumber(Object distancePK, int participantNumber)
 			throws FinderException, java.rmi.RemoteException;
+
+	/**
+	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getParticipantsByYearAndTeamName
+	 */
+	public Collection getParticipantsByYearAndTeamName(Object yearPrimaryKey, String teamName) throws FinderException;
 
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getParticipantByRunAndYear

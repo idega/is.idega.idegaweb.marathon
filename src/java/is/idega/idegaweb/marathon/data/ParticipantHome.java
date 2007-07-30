@@ -29,7 +29,9 @@ public interface ParticipantHome extends IDOHome {
 
 	public Participant findByUserIDandDistanceID(int userID, int distanceID) throws FinderException;
 
-	public Participant findByDistanceAndParticpantNumber(Object distancePK, int participantNumber) throws FinderException;
+	public Participant findByDistanceAndParticipantNumber(Object distancePK, int participantNumber) throws FinderException;
+
+	public Collection findByYearAndTeamName(Object yearPK, String teamName) throws FinderException;
 
 	public Participant findByUserAndRun(User user, Group run, Group year) throws FinderException;
 

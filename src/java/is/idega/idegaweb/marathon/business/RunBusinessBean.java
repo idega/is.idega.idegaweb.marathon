@@ -622,15 +622,13 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		return minNumber;
 	}
 	
-	public void addParticipantsToGroup(String[] participants, String[] bestTimes, String[] estimatedTimes, String groupName) {
+	public void addParticipantsToGroup(String[] participants, String groupName) {
 		try {
 			ParticipantHome runHome = (ParticipantHome) getIDOHome(Participant.class);
 			
 			for (int i = 0; i < participants.length; i++) {
 				try {
 					Participant participant = runHome.findByPrimaryKey(new Integer(participants[i]));
-					participant.setBestTime(bestTimes[i]);
-					participant.setGoalTime(estimatedTimes[i]);
 					participant.setRunGroupName(groupName);
 					participant.store();
 				}
@@ -960,13 +958,23 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 	public Participant getParticipantByDistanceAndParticipantNumber(Object distancePK, int participantNumber) throws FinderException {
 		try {
 			ParticipantHome runHome = (ParticipantHome) getIDOHome(Participant.class);
-			return runHome.findByDistanceAndParticpantNumber(distancePK, participantNumber);
+			return runHome.findByDistanceAndParticipantNumber(distancePK, participantNumber);
 		}
 		catch (RemoteException e) {
 			throw new IBORuntimeException(e);
 		}
 	}
 	
+	public Collection getParticipantsByYearAndTeamName(Object yearPK, String teamName) throws FinderException {
+		try {
+			ParticipantHome runHome = (ParticipantHome) getIDOHome(Participant.class);
+			return runHome.findByYearAndTeamName(yearPK, teamName);
+		}
+		catch (RemoteException e) {
+			throw new IBORuntimeException(e);
+		}
+	}
+
 	public Participant getParticipantByRunAndYear(User user, Group run, Group year) throws FinderException {
 		try {
 			ParticipantHome runHome = (ParticipantHome) getIDOHome(Participant.class);

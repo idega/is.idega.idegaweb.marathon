@@ -537,13 +537,20 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		return (Integer) super.idoFindOnePKByQuery(query);
 	}
 	
-	public Integer ejbFindByDistanceAndParticpantNumber(Object distancePK, int participantNumber) throws FinderException{
+	public Integer ejbFindByDistanceAndParticipantNumber(Object distancePK, int participantNumber) throws FinderException{
 		IDOQuery query = idoQueryGetSelect();
 		query.appendWhereEquals(getColumnNameRunDistanceGroupID(), distancePK);
 		query.appendAndEquals(getColumnNameParticipantNumber(), participantNumber);
 		return (Integer) super.idoFindOnePKByQuery(query);
 	}
-	
+
+	public Collection ejbFindByYearAndTeamName(Object yearPK, String teamName) throws FinderException{
+		IDOQuery query = idoQueryGetSelect();
+		query.appendWhereEquals(getColumnNameRunYearGroupID(), yearPK);
+		query.appendAndEquals(getColumnNameRunGroupName(), teamName);
+		return super.idoFindPKsByQuery(query);
+	}
+
 	public Integer ejbFindByUserAndRun(User user, Group run, Group year) throws FinderException{
 		IDOQuery query = idoQueryGetSelect();
 		query.appendWhereEquals(getColumnNameUserID(),user);
