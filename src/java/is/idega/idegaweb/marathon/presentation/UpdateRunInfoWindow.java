@@ -263,11 +263,7 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 			participant.setShirtSize(shirtSize);
 			participant.setRunTime(Integer.parseInt(runTime));
 			participant.setChipTime(Integer.parseInt(chipTime));
-			if (categoryID != null && !categoryID.equals("-1")) {
-				participant.setCategoryId(Integer.parseInt(categoryID));
-			} else {
-				participant.setCategoryId(Integer.parseInt(null));
-			}
+			participant.setCategoryId(Integer.parseInt(categoryID));
 			if (charityID != null && !charityID.equals("-1")) {
 				participant.setCharityId(charityID);
 			} else {
