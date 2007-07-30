@@ -271,6 +271,7 @@ run_reg.shirt_size=Shirt size
 run_reg.sponsored_run=Sponsored run
 run_reg.ssn=Date of birth
 run_reg.t_shirt=Shirt size
+run_reg.teamname_already_exists=This teamname already exists in this run\: 
 run_reg.tel=Telephone
 run_reg.terms_and_conditions=Terms and conditions
 run_reg.time_registration_chip=Time registration chip

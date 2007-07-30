@@ -302,6 +302,7 @@ run_reg.ssn_is_err_msg=Ver\u00F0ur a\u00F0 vera gild 10 t\u00F6lustafa kennitala
 run_reg.submit_step_one=N\u00E6sta skref
 run_reg.submit_step_two=Skr\u00E1
 run_reg.t_shirt=Bolur
+run_reg.teamname_already_exists=Nafni\u00F0 \u00E1 sveitinni er \u00FEegar til \u00ED \u00FEessu hlaupi\:\r\n 
 run_reg.tel=S\u00EDman\u00FAmer
 run_reg.tel_err_msg=S\u00EDman\u00FAmer ver\u00F0ur a\u00F0 vera einungis t\u00F6lustafir\!
 run_reg.terms_and_conditions=Skilm\u00E1lar
