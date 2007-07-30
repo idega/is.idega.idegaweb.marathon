@@ -218,7 +218,7 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 			}
 
 			this.participantNumberField.setContent(String.valueOf(run.getParticipantNumber()));
-			this.chipNumberField.setContent(String.valueOf(run.getChipNumber()));
+			this.chipNumberField.setContent(run.getChipNumber());
 			this.tShirtField.setSelectedElement(run.getShirtSize());
 			this.payMethodField.setSelectedElement(run.getPayMethod());
 			this.payedAmountField.setContent(run.getPayedAmount());
@@ -226,9 +226,14 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 				this.payMethodField.setSelectedElement("credit");
 			}
 			this.teamNameField.setContent(run.getRunGroupName());
-			this.runTimeField.setContent(String.valueOf(run.getRunTime()));
-			this.chipTimeField.setContent(String.valueOf(run.getChipTime()));
-			
+			String runTimeString = String.valueOf(run.getRunTime());
+			if (runTimeString != null && !runTimeString.equals("-1")) {
+				this.runTimeField.setContent(runTimeString);
+			}
+			String chipTimeString = String.valueOf(run.getChipTime());
+			if (chipTimeString != null && !chipTimeString.equals("-1")) {
+				this.chipTimeField.setContent(chipTimeString);
+			}
 			this.categoryField.setSelectedElement(run.getCategoryId());
 			this.charityField.setSelectedElement(run.getCharityId());
 		}
@@ -258,11 +263,27 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 			participant.setPayMethod(payMethod);
 			participant.setPayedAmount(payedAmount);
 			participant.setParticipantNumber(Integer.parseInt(participantNr));
-			participant.setChipNumber(chipNr);
-			participant.setRunGroupName(teamName);
+			if (chipNr != null && chipNr.equals("")) {
+				participant.setChipNumber(null);
+			} else {
+				participant.setChipNumber(chipNr);
+			}
+			if (teamName != null && teamName.equals("")) {
+				participant.setRunGroupName(null);
+			} else {
+				participant.setRunGroupName(teamName);
+			}
 			participant.setShirtSize(shirtSize);
-			participant.setRunTime(Integer.parseInt(runTime));
-			participant.setChipTime(Integer.parseInt(chipTime));
+			int runTimeInt = -1;
+			if (runTime != null && !runTime.equals("")) {
+				runTimeInt = Integer.parseInt(runTime);
+			}
+			participant.setRunTime(runTimeInt);
+			int chipTimeInt = -1;
+			if (chipTime != null && !chipTime.equals("")) {
+				chipTimeInt = Integer.parseInt(chipTime);
+			}
+			participant.setChipTime(chipTimeInt);
 			participant.setCategoryId(Integer.parseInt(categoryID));
 			if (charityID != null && !charityID.equals("-1")) {
 				participant.setCharityId(charityID);
