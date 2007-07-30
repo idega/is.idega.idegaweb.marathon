@@ -1,5 +1,5 @@
 /*
- * $Id: GroupRegistration.java,v 1.5 2007/07/27 09:55:02 sigtryggur Exp $
+ * $Id: GroupRegistration.java,v 1.6 2007/07/30 13:49:50 sigtryggur Exp $
  * Created on May 30, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -16,6 +16,7 @@ import is.idega.idegaweb.marathon.data.Run;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,23 +33,21 @@ import com.idega.presentation.ui.Form;
 import com.idega.presentation.ui.HiddenInput;
 import com.idega.presentation.ui.SubmitButton;
 import com.idega.presentation.ui.TextInput;
+import com.idega.user.data.Group;
 
 
 /**
- * Last modified: $Date: 2007/07/27 09:55:02 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/07/30 13:49:50 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class GroupRegistration extends RunBlock {
 
-	private static final String PARAMETER_ACTION = "prm_action";
 	private static final String PARAMETER_RUN = "prm_run";
 	private static final String PARAMETER_DISTANCE = "prm_distance";
 	private static final String PARAMETER_GROUP_NAME = "prm_group_name";
 	private static final String PARAMETER_PARTICIPANT_NUMBER = "prm_participant_number";
-	private static final String PARAMETER_BEST_TIME = "prm_best_time";
-	private static final String PARAMETER_ESTIMATED_TIME = "prm_estimated_time";
 	private static final String PARAMETER_PARTICIPANT = "prm_participant";
 	private static final String PARAMETER_LIMIT_RUN_IDS="run_ids";
 
@@ -61,8 +60,6 @@ public class GroupRegistration extends RunBlock {
 	private Distance distance;
 	private String groupName;
 	private String[] participants;
-	private String[] bestTimes;
-	private String[] estimatedTimes;
 	private Map participantMap;
 	private String runIds;
 
@@ -85,12 +82,10 @@ public class GroupRegistration extends RunBlock {
 		}
 	}
 	
-	private void stepOne(IWContext iwc) throws RemoteException {
+	private void stepOne(IWContext iwc) {
 		Form form = new Form();
 		form.addParameter(PARAMETER_ACTION, ACTION_STEP_TWO);
 		form.maintainParameter(PARAMETER_PARTICIPANT_NUMBER);
-		form.maintainParameter(PARAMETER_BEST_TIME);
-		form.maintainParameter(PARAMETER_ESTIMATED_TIME);
 		
 		Table table = new Table();
 		table.setCellpadding(0);
@@ -188,25 +183,9 @@ public class GroupRegistration extends RunBlock {
 			if (this.participants != null && this.participants.length >= a) {
 				participant.setContent(this.participants[a - 1]);
 			}
-			
-			TextInput bestTime = (TextInput) getStyledInterface(new TextInput(PARAMETER_BEST_TIME));
-			bestTime.setWidth(Table.HUNDRED_PERCENT);
-			if (this.bestTimes != null && this.bestTimes.length >= a) {
-				bestTime.setContent(this.bestTimes[a - 1]);
-			}
-			
-			TextInput estimatedTime = (TextInput) getStyledInterface(new TextInput(PARAMETER_ESTIMATED_TIME));
-			estimatedTime.setWidth(Table.HUNDRED_PERCENT);
-			if (this.estimatedTimes != null && this.estimatedTimes.length >= a) {
-				estimatedTime.setContent(this.estimatedTimes[a - 1]);
-			}
-			
+
 			choiceTable.add(getHeader(localize("run_reg.partipant_nr", "Participant nr.") + " " + String.valueOf(a)), 1, iRow);
-			choiceTable.add(getHeader(localize("run_reg.best_time", "Your best time running this distance")), 3, iRow);
-			choiceTable.add(getHeader(localize("run_reg.estimated_time", "Estimated time in distance")), 5, iRow++);
 			choiceTable.add(participant, 1, iRow);
-			choiceTable.add(bestTime, 3, iRow);
-			choiceTable.add(estimatedTime, 5, iRow++);
 			
 			if (a != 5) {
 				choiceTable.setHeight(iRow++, 3);
@@ -268,8 +247,6 @@ public class GroupRegistration extends RunBlock {
 				
 				if (participant != null) {
 					runnerTable.add(new HiddenInput(PARAMETER_PARTICIPANT_NUMBER, runner), 1, runRow);
-					runnerTable.add(new HiddenInput(PARAMETER_BEST_TIME, this.bestTimes[a]), 1, runRow);
-					runnerTable.add(new HiddenInput(PARAMETER_ESTIMATED_TIME, this.estimatedTimes[a]), 1, runRow);
 					runnerTable.add(new HiddenInput(PARAMETER_PARTICIPANT, participant.getPrimaryKey().toString()), 1, runRow);
 					runnerTable.add(getText(participant.getUser().getName()), 1, runRow);
 					runnerTable.add(getText(localize(this.run.getName(), this.run.getName())), 2, runRow);
@@ -300,7 +277,7 @@ public class GroupRegistration extends RunBlock {
 		
 		try {
 			String[] runners = iwc.getParameterValues(PARAMETER_PARTICIPANT);
-			getRunBusiness(iwc).addParticipantsToGroup(runners, this.bestTimes, this.estimatedTimes, this.groupName);
+			getRunBusiness(iwc).addParticipantsToGroup(runners, this.groupName);
 		}
 		catch (RemoteException re) {
 			throw new IBORuntimeException(re);
@@ -366,10 +343,25 @@ public class GroupRegistration extends RunBlock {
 			this.groupName = iwc.getParameter(PARAMETER_GROUP_NAME);
 		}
 		this.participants = iwc.getParameterValues(PARAMETER_PARTICIPANT_NUMBER);
-		this.bestTimes = iwc.getParameterValues(PARAMETER_BEST_TIME);
-		this.estimatedTimes = iwc.getParameterValues(PARAMETER_ESTIMATED_TIME);
 		
 		int numberOfParticipants = 0;
+		if (action == ACTION_STEP_TWO || action == ACTION_SAVE) {
+			try {
+				Group year = getRunBusiness(iwc).getRunGroupOfTypeForGroup(distance, IWMarathonConstants.GROUP_TYPE_RUN_YEAR);
+				Collection participantsByYearAndTeamName = getRunBusiness(iwc).getParticipantsByYearAndTeamName(year.getPrimaryKey(), groupName);
+				if (participantsByYearAndTeamName != null && !participantsByYearAndTeamName.isEmpty()) {
+					action = ACTION_STEP_ONE;
+					getParentPage().setAlertOnLoad(localize("run_reg.teamname_already_exists", "This teamname already exists in this run: ") + groupName);
+					return action;
+				}
+			}
+			catch (FinderException e) {
+				//No participants found with this teamname in this year of the run, so it is OK to create new team with this name
+			}
+			catch (RemoteException e) {
+				e.printStackTrace();
+			}
+		}
 		if (action == ACTION_STEP_THREE || action == ACTION_SAVE) {
 			this.participantMap = new HashMap();
 			for (int i = 0; i < this.participants.length; i++) {
