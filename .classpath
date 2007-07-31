@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <classpath>
   <classpathentry excluding="" kind="src" path="src/java">
   </classpathentry>
@@ -20,11 +21,17 @@
   </classpathentry>
   <classpathentry kind="src" path="/is.idega.block.family">
   </classpathentry>
+  <classpathentry kind="src" path="/com.idega.block.entity">
+  </classpathentry>
   <classpathentry kind="src" path="/org.apache.axis">
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/axis/jars/axis-1.3.jar">
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/axis/jars/axis-jaxrpc-1.3.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/wss4j/jars/wss4j-1.5.1.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/xml-security/jars/xmlsec-1.3.0.jar">
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/jdom/jars/jdom-1.0.jar">
   </classpathentry>
@@ -52,9 +59,7 @@
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/jta/jars/jta-spec1_0_1.jar">
   </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/bundles/jars/com.idega.block.web2.0-3.1.5.jar">
-  </classpathentry>
-  <classpathentry kind="src" path="/com.idega.block.entity">
+  <classpathentry kind="var" path="MAVEN_REPO/bundles/jars/com.idega.block.web2.0-3.1.6.jar">
   </classpathentry>
   <classpathentry kind="output" path="target/classes">
   </classpathentry>

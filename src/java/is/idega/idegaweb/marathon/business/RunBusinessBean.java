@@ -12,6 +12,7 @@ import is.idega.idegaweb.marathon.data.ParticipantHome;
 import is.idega.idegaweb.marathon.data.Run;
 import is.idega.idegaweb.marathon.data.Year;
 import is.idega.idegaweb.marathon.data.YearBMPBean;
+import is.idega.idegaweb.marathon.glitnirws.MarathonWS2Client;
 import is.idega.idegaweb.marathon.presentation.CreateYearForm;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
@@ -423,8 +424,10 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			while (iter.hasNext()) {
 				Runner runner = (Runner) iter.next();
 				User user = runner.getUser();
+				String personalId = null;
 				if (user == null) {
-					user = saveUser(runner.getName(), runner.getPersonalID(), new IWTimestamp(runner.getDateOfBirth()), runner.getGender(), runner.getAddress(), runner.getPostalCode(), runner.getCity(), runner.getCountry());
+					personalId = runner.getPersonalID();
+					user = saveUser(runner.getName(), personalId, new IWTimestamp(runner.getDateOfBirth()), runner.getGender(), runner.getAddress(), runner.getPostalCode(), runner.getCity(), runner.getCountry());
 				}
 				
 				Group ageGenderGroup = getAgeGroup(user, runner.getRun(), runner.getDistance());
@@ -480,6 +483,19 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					participant.setApplyForDomesticTravelSupport(runner.isApplyForDomesticTravelSupport());
 					participant.setApplyForInternationalTravelSupport(runner.isApplyForInternationalTravelSupport());
 					participant.setSponsoredRunner(runner.isSponsoredRunner());
+					//check customer:
+					try{
+						MarathonWS2Client wsClient = new MarathonWS2Client(getIWMainApplication());
+						if(wsClient.erIVidskiptumVidGlitni(personalId)){
+							participant.setCustomer(true);
+						}
+						else{
+							participant.setCustomer(false);
+						}
+					}
+					catch(Exception e){
+						e.printStackTrace();
+					}
 					participant.store();
 					participants.add(participant);
 					
@@ -510,6 +526,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					}
 					
 
+					
 					sendSponsorEmail(runner,locale);
 				}
 				catch (CreateException ce) {

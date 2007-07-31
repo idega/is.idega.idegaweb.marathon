@@ -5,6 +5,12 @@
 	</properties>
 	<body>
 
+	<release version="3.1.18" date="2007-07-31">
+		<action dev="tryggvil" type="update">
+			New code to call Glitnir webservice for customer registration
+		</action>     
+	</release>
+
 	<release version="3.1.17" date="2007-07-25">
 		<action dev="sigtryggur" type="update">
 			New code for "my-pages" modules
