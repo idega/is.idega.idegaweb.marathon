@@ -58,31 +58,35 @@ public class RunPluginBusinessBean extends IBOServiceBean implements RunPluginBu
 		RunBusiness runBiz = getRunBiz(iwc);
 		
 		Group run = null;
-		try {
-			run = runBiz.getRunGroupOfTypeForGroup(parentGroup, IWMarathonConstants.GROUP_TYPE_RUN);
-		}
-		catch (RemoteException e) {
-			e.printStackTrace();
-		}
-		
 		Group year = null;
-		try {
-			year = runBiz.getRunGroupOfTypeForGroup(parentGroup, IWMarathonConstants.GROUP_TYPE_RUN_YEAR);
-		}
-		catch (RemoteException e) {
-			e.printStackTrace();
-		}
 		Group distanceGroup = null;
 		Distance distance = null;
-		try {
-			distanceGroup = runBiz.getRunGroupOfTypeForGroup(parentGroup, IWMarathonConstants.GROUP_TYPE_RUN_DISTANCE);
-			distance = ConverterUtility.getInstance().convertGroupToDistance(distanceGroup);
-		}
-		catch (RemoteException e) {
-			e.printStackTrace();
-		}
-		catch (FinderException e) {
-			e.printStackTrace();
+		
+		if (parentGroup != null) {
+			try {
+				run = runBiz.getRunGroupOfTypeForGroup(parentGroup, IWMarathonConstants.GROUP_TYPE_RUN);
+			}
+			catch (RemoteException e) {
+				e.printStackTrace();
+			}
+
+			try {
+				year = runBiz.getRunGroupOfTypeForGroup(parentGroup, IWMarathonConstants.GROUP_TYPE_RUN_YEAR);
+			}
+			catch (RemoteException e) {
+				e.printStackTrace();
+			}
+			
+			try {
+				distanceGroup = runBiz.getRunGroupOfTypeForGroup(parentGroup, IWMarathonConstants.GROUP_TYPE_RUN_DISTANCE);
+				distance = ConverterUtility.getInstance().convertGroupToDistance(distanceGroup);
+			}
+			catch (RemoteException e) {
+				e.printStackTrace();
+			}
+			catch (FinderException e) {
+				e.printStackTrace();
+			}
 		}
 
 		try {
