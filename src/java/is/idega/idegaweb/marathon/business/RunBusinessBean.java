@@ -428,6 +428,8 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				if (user == null) {
 					personalId = runner.getPersonalID();
 					user = saveUser(runner.getName(), personalId, new IWTimestamp(runner.getDateOfBirth()), runner.getGender(), runner.getAddress(), runner.getPostalCode(), runner.getCity(), runner.getCountry());
+				} else {
+					personalId = user.getPersonalID();
 				}
 				
 				Group ageGenderGroup = getAgeGroup(user, runner.getRun(), runner.getDistance());
