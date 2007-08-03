@@ -44,6 +44,7 @@ import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
 import com.idega.business.IBORuntimeException;
 import com.idega.business.IBOServiceBean;
+import com.idega.core.accesscontrol.business.LoginDBHandler;
 import com.idega.core.contact.data.Email;
 import com.idega.core.location.data.Address;
 import com.idega.core.location.data.AddressHome;
@@ -431,6 +432,22 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				} else {
 					personalId = user.getPersonalID();
 				}
+				String passwordString = LoginDBHandler.getGeneratedPasswordForUser();
+				String userNameString = runner.getEmail();
+				boolean loginInUse = true;
+				if (!LoginDBHandler.isLoginInUse(userNameString)) {
+					LoginDBHandler.createLogin(user, userNameString, passwordString);
+					loginInUse = false;
+				}
+				int i = 1;
+				while (loginInUse) {
+					if (!LoginDBHandler.isLoginInUse(userNameString+"_"+i)) {
+						userNameString = userNameString+"_"+i;
+						LoginDBHandler.createLogin(user, userNameString, passwordString);
+						loginInUse = false;
+					}
+					i++;
+				}
 				
 				Group ageGenderGroup = getAgeGroup(user, runner.getRun(), runner.getDistance());
 				ageGenderGroup.addGroup(user);
@@ -486,17 +503,21 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					participant.setApplyForInternationalTravelSupport(runner.isApplyForInternationalTravelSupport());
 					participant.setSponsoredRunner(runner.isSponsoredRunner());
 					//check customer:
-					try{
-						MarathonWS2Client wsClient = new MarathonWS2Client(getIWMainApplication());
-						if(wsClient.erIVidskiptumVidGlitni(personalId)){
-							participant.setCustomer(true);
+					if (personalId != null) {
+						try{
+							MarathonWS2Client wsClient = new MarathonWS2Client(getIWMainApplication());
+							if(wsClient.erIVidskiptumVidGlitni(personalId)){
+								participant.setCustomer(true);
+							}
+							else{
+								participant.setCustomer(false);
+							}
 						}
-						else{
-							participant.setCustomer(false);
+						catch(Exception e){
+							System.out.println("Lookup to the GlitnirCustomerWebService failed");
+							System.out.println(e.getMessage());
+							//e.printStackTrace();
 						}
-					}
-					catch(Exception e){
-						e.printStackTrace();
 					}
 					participant.store();
 					participants.add(participant);
@@ -521,7 +542,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 								informationPageString = selectedRun.getEnglishRunInformationPage();
 							}
 						}
-						Object[] args = { user.getName(), iwrb.getLocalizedString(run.getName(),run.getName()), distanceString, iwrb.getLocalizedString("shirt_size." + runner.getShirtSize(), runner.getShirtSize()), String.valueOf(participant.getParticipantNumber()), runHomePageString, informationPageString };
+						Object[] args = { user.getName(), iwrb.getLocalizedString(run.getName(),run.getName()), distanceString, iwrb.getLocalizedString("shirt_size." + runner.getShirtSize(), runner.getShirtSize()), String.valueOf(participant.getParticipantNumber()), runHomePageString, informationPageString, userNameString, passwordString };
 						String subject = iwrb.getLocalizedString("registration_received_subject_mail", "Your registration has been received.");
 						String body = MessageFormat.format(localizeForRun("registration_received_body_mail", "Your registration has been received.", runner, iwrb), args);
 						sendMessage(runner.getEmail(), subject, body);
@@ -538,8 +559,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					throw new IBORuntimeException(re);
 				}
 			}
-
-			if (email != null && !disableSendPaymentConfirmation) {
+			if (email != null && !disableSendPaymentConfirmation && amount > 0) {
 				IWResourceBundle iwrb = getIWApplicationContext().getIWMainApplication().getBundle(IWMarathonConstants.IW_BUNDLE_IDENTIFIER).getResourceBundle(locale);
 				String runName = "";
 				String runHomePage = "";
