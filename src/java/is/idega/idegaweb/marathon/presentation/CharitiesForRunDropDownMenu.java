@@ -64,4 +64,8 @@ public class CharitiesForRunDropDownMenu extends DropdownMenu {
 	public String getBundleIdentifier() {
 		return IW_BUNDLE_IDENTIFIER;
 	}
+
+	public void setRunYearID(Integer runYearID) {
+		this.runYearID = runYearID;
+	}
 }
