@@ -1,5 +1,5 @@
 /*
- * $Id: RunBlock.java,v 1.11 2007/06/05 16:48:11 tryggvil Exp $
+ * $Id: RunBlock.java,v 1.12 2007/08/04 13:23:37 sigtryggur Exp $
  * Created on May 17, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -11,6 +11,9 @@ package is.idega.idegaweb.marathon.presentation;
 
 
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import is.idega.idegaweb.marathon.business.CharityBusiness;
 import is.idega.idegaweb.marathon.business.PledgeBusiness;
 import is.idega.idegaweb.marathon.business.RunBusiness;
@@ -20,18 +23,24 @@ import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
 import com.idega.business.IBORuntimeException;
 import com.idega.idegaweb.IWApplicationContext;
+import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;
+import com.idega.presentation.Layer;
 import com.idega.presentation.Table;
+import com.idega.presentation.text.Heading1;
+import com.idega.presentation.text.ListItem;
+import com.idega.presentation.text.Lists;
+import com.idega.presentation.text.Text;
 import com.idega.user.business.GenderBusiness;
 import com.idega.user.business.GroupBusiness;
 import com.idega.user.business.UserBusiness;
 
 
 /**
- * Last modified: $Date: 2007/06/05 16:48:11 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/08/04 13:23:37 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class RunBlock extends StepsBlock {
 	
@@ -151,6 +160,32 @@ public class RunBlock extends StepsBlock {
 		Image forwardImage = this.iwb.getImage("shared/forward.gif", 12, 12);
 		forwardImage.setToolTip(toolTip);
 		return forwardImage;
+	}
+
+	protected void showErrors(IWContext iwc, Collection errors) {
+		Layer layer = new Layer(Layer.DIV);
+		layer.setStyleClass("errorLayer");
+		
+		Layer image = new Layer(Layer.DIV);
+		image.setStyleClass("errorImage");
+		layer.add(image);
+		
+		Heading1 heading = new Heading1(getResourceBundle(iwc).getLocalizedString("application_errors_occured", "There was a problem with the following items"));
+		layer.add(heading);
+		
+		Lists list = new Lists();
+		layer.add(list);
+		
+		Iterator iter = errors.iterator();
+		while (iter.hasNext()) {
+			String element = (String) iter.next();
+			ListItem item = new ListItem();
+			item.add(new Text(element));
+			
+			list.add(item);
+		}
+		
+		add(layer);
 	}
 
 	public String getBundleIdentifier() {
