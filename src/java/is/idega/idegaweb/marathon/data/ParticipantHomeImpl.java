@@ -71,6 +71,13 @@ public class ParticipantHomeImpl extends IDOFactory implements ParticipantHome {
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	public Participant findByUserIDandYearID(int userID, int yearID) throws FinderException {
+		IDOEntity entity = this.idoCheckOutPooledEntity();
+		Object pk = ((ParticipantBMPBean) entity).ejbFindByUserIDandYearID(userID, yearID);
+		this.idoCheckInPooledEntity(entity);
+		return this.findByPrimaryKey(pk);
+	}
+
 	public Participant findByUserIDandDistanceID(int userID, int distanceID) throws FinderException {
 		IDOEntity entity = this.idoCheckOutPooledEntity();
 		Object pk = ((ParticipantBMPBean) entity).ejbFindByUserIDandDistanceID(userID, distanceID);

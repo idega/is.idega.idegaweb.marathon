@@ -1,5 +1,5 @@
 /*
- * $Id: RunBusiness.java,v 1.36 2007/07/30 13:15:10 sigtryggur Exp $
+ * $Id: RunBusiness.java,v 1.37 2007/08/04 13:26:27 sigtryggur Exp $
  * Created on Aug 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -32,10 +32,10 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2007/07/30 13:15:10 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/08/04 13:26:27 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.36 $
+ * @version $Revision: 1.37 $
  */
 public interface RunBusiness extends IBOService {
 
@@ -129,6 +129,11 @@ public interface RunBusiness extends IBOService {
 			String splitTime1, String splitTime2) throws java.rmi.RemoteException;
 
 	/**
+	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getRunObjByUserIDandYearID
+	 */
+	public Participant getRunObjByUserIDandYearID(int userID, int yearID) throws java.rmi.RemoteException;
+
+	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getRunObjByUserIDandDistanceID
 	 */
 	public Participant getRunObjByUserIDandDistanceID(int userID, int distanceID) throws java.rmi.RemoteException;
@@ -199,6 +204,11 @@ public interface RunBusiness extends IBOService {
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getRunGroupsForUser
 	 */
 	public Collection getRunGroupsForUser(User user) throws java.rmi.RemoteException;
+
+	/**
+	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getRunGroupsForUser
+	 */
+	public Collection getRunGroupOfTypeForUser(User user, String type) throws java.rmi.RemoteException;
 	
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getRunGroupOfTypeForGroup

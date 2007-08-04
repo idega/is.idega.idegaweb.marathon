@@ -979,6 +979,21 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		return seconds;
 	}
 	
+	public Participant getRunObjByUserIDandYearID(int userID, int yearID) {
+		try {
+			ParticipantHome runHome = (ParticipantHome) getIDOHome(Participant.class);
+			return runHome.findByUserIDandYearID(userID,yearID);
+		}
+		catch (RemoteException e) {
+			log(e);
+		}
+		catch (FinderException e) {
+			log(e);
+		}
+		 
+		return null;
+	}
+	
 	public Participant getRunObjByUserIDandDistanceID(int userID, int distanceID) {
 		try {
 			ParticipantHome runHome = (ParticipantHome) getIDOHome(Participant.class);
@@ -1681,6 +1696,54 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		
 	}
 	
+	public Collection getRunGroupOfTypeForUser(User user, String type) {
+		Collection typeGroups = null;
+		Collection runs = new ArrayList();
+		String[] typeRun = { type };
+		String[] typeGroup = { IWMarathonConstants.GROUP_TYPE_RUN_GROUP };
+		try {
+			typeGroups = getUserBiz().getUserGroups(user,typeGroup,true);
+		}
+		catch (IBOLookupException e) {
+			e.printStackTrace();
+			typeGroups = null;
+		}
+		catch (RemoteException e) {
+			e.printStackTrace();
+			typeGroups = null;
+		}
+		if(typeGroups != null) {
+			Iterator groupsIter = typeGroups.iterator();
+			while(groupsIter.hasNext()) {
+				Group group = (Group) groupsIter.next();
+				Collection r = null;
+				try {
+					r = getGroupBiz().getParentGroupsRecursive(group,typeRun,true);
+				}
+				catch (IBOLookupException e1) {
+					e1.printStackTrace();
+				}
+				catch (EJBException e1) {
+					e1.printStackTrace();
+				}
+				catch (RemoteException e1) {
+					e1.printStackTrace();
+				}
+				if(r != null) {
+					Iterator rIter = r.iterator();
+					while(rIter.hasNext()) {
+						Group run = (Group) rIter.next();
+						if(run != null) {
+							runs.add(run);
+						}
+					}
+				}
+			}
+		}
+		return runs;
+		
+	}
+
 	public Group getRunGroupOfTypeForGroup(Group group, String type) {
 		
 		String[] types = {type};
