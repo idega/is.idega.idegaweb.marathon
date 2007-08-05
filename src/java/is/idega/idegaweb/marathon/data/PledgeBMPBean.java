@@ -5,7 +5,11 @@ import java.util.Collection;
 import javax.ejb.FinderException;
 
 import com.idega.data.GenericEntity;
+import com.idega.data.IDORelationshipException;
+import com.idega.data.query.Column;
+import com.idega.data.query.MatchCriteria;
 import com.idega.data.query.SelectQuery;
+import com.idega.data.query.Table;
 
 public class PledgeBMPBean extends GenericEntity implements Pledge {
 
@@ -85,5 +89,19 @@ public class PledgeBMPBean extends GenericEntity implements Pledge {
 	public Collection ejbFindAllPledges() throws FinderException {
 		SelectQuery query = idoSelectQuery();
 		return idoFindPKsByQuery(query);
+	}
+
+	public Collection ejbFindAllPledgesForUser(Integer userID) throws IDORelationshipException, FinderException {
+		Table table = new Table(this);
+		Table runTable = new Table(Participant.class);
+		Column pledgesIDColumn = new Column(table, getIDColumnName());
+		Column userIDColumn = new Column(runTable, ParticipantBMPBean.getColumnNameUserID());
+		
+		SelectQuery query = new SelectQuery(table);
+		query.addManyToManyJoin(table, runTable);
+		query.addColumn(pledgesIDColumn);
+		query.addCriteria(new MatchCriteria(userIDColumn, MatchCriteria.EQUALS, userID));
+		//query.addOrder(table, COLUMN_NAME_PAYMENT_TIMESTAMP, true);
+		return this.idoFindPKsByQuery(query);
 	}
 }

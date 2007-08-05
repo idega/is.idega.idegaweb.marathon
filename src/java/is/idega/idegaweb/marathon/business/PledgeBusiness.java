@@ -11,7 +11,12 @@ public interface PledgeBusiness extends IBOService {
 	/**
 	 * @see is.idega.idegaweb.marathon.business.PledgeBusinessBean#getCharities
 	 */
-	public Collection getCharities() throws EJBException, RemoteException;
+	public Collection getPledges() throws EJBException, RemoteException;
+
+	/**
+	 * @see is.idega.idegaweb.marathon.business.PledgeBusinessBean#getCharities
+	 */
+	public Collection getPledgesForUser(Integer userID) throws EJBException, RemoteException;
 
 	/**
 	 * @see is.idega.idegaweb.marathon.business.PledgeBusinessBean#saveParticipants

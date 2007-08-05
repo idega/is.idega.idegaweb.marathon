@@ -17,6 +17,7 @@ import com.idega.business.IBORuntimeException;
 import com.idega.business.IBOServiceBean;
 import com.idega.data.IDOCreateException;
 import com.idega.data.IDOLookup;
+import com.idega.data.IDORelationshipException;
 import com.idega.util.IWTimestamp;
 
 public class PledgeBusinessBean extends IBOServiceBean implements PledgeBusiness {
@@ -27,9 +28,21 @@ public class PledgeBusinessBean extends IBOServiceBean implements PledgeBusiness
 	private static final long serialVersionUID = -5126037977109694680L;
 private PledgeHome PledgeHome;
 	
-	public Collection getCharities() throws EJBException {
+	public Collection getPledges() throws EJBException {
 		try {
 			return getPledgeHome().findAllPledges();
+		}
+		catch (FinderException fe) {
+			return null;
+		}
+	}
+
+	public Collection getPledgesForUser(Integer userID) throws EJBException {
+		try {
+			return getPledgeHome().findAllPledgesForUser(userID);
+		}
+		catch (IDORelationshipException e) {
+			return null;
 		}
 		catch (FinderException fe) {
 			return null;

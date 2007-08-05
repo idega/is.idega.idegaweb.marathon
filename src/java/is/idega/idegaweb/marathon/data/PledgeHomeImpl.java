@@ -8,6 +8,7 @@ import javax.ejb.FinderException;
 
 import com.idega.data.IDOEntity;
 import com.idega.data.IDOFactory;
+import com.idega.data.IDORelationshipException;
 
 public class PledgeHomeImpl extends IDOFactory implements PledgeHome {
 	/**
@@ -30,6 +31,13 @@ public class PledgeHomeImpl extends IDOFactory implements PledgeHome {
 	public Collection findAllPledges() throws FinderException {
 		IDOEntity entity = this.idoCheckOutPooledEntity();
 		Collection ids = ((PledgeBMPBean) entity).ejbFindAllPledges();
+		this.idoCheckInPooledEntity(entity);
+		return this.getEntityCollectionForPrimaryKeys(ids);
+	}
+	
+	public Collection findAllPledgesForUser(Integer userID) throws IDORelationshipException, FinderException {
+		IDOEntity entity = this.idoCheckOutPooledEntity();
+		Collection ids = ((PledgeBMPBean) entity).ejbFindAllPledgesForUser(userID);
 		this.idoCheckInPooledEntity(entity);
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
