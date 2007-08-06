@@ -1,7 +1,11 @@
 package is.idega.idegaweb.marathon.presentation;
 
+import is.idega.idegaweb.marathon.business.ConverterUtility;
 import is.idega.idegaweb.marathon.data.Charity;
+import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.data.Pledge;
+import is.idega.idegaweb.marathon.data.PledgeHome;
+import is.idega.idegaweb.marathon.data.Year;
 
 import java.rmi.RemoteException;
 import java.text.NumberFormat;
@@ -9,6 +13,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import javax.ejb.FinderException;
+
+import com.idega.data.IDOLookup;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
 import com.idega.presentation.Table2;
@@ -17,6 +24,7 @@ import com.idega.presentation.TableRow;
 import com.idega.presentation.TableRowGroup;
 import com.idega.presentation.text.Heading1;
 import com.idega.presentation.text.Text;
+import com.idega.user.data.Group;
 import com.idega.util.IWTimestamp;
 
 public class UserPledges extends RunBlock {
@@ -53,6 +61,39 @@ public class UserPledges extends RunBlock {
 		table.setCellspacing(0);
 		
 		Collection pledges = getPledges(iwc);
+		Collection runRegistrations = null;
+		try {
+			runRegistrations = getRunBusiness(iwc).getParticipantsByUser(iwc.getCurrentUser());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (runRegistrations != null && !runRegistrations.isEmpty()) {
+			Iterator regIt = runRegistrations.iterator();
+			while (regIt.hasNext()) {
+				Participant participant = (Participant)regIt.next();
+				Group yearGroup = participant.getRunYearGroup();
+				Year year = null;
+				try {
+					year = ConverterUtility.getInstance().convertGroupToYear(yearGroup);
+				} catch (FinderException e) {
+					//Run not found
+				}
+				if (year != null && year.isSponsoredRun() && (participant.isSponsoredRunner() || participant.isCustomer())) {
+					Pledge pledge = createPledge();
+					if (pledge != null) {
+						pledge.setCardholderName(getResourceBundle().getLocalizedString(KEY_PREFIX + "sponsor", "Sponsor"));
+						int distanceInKms = participant.getRunDistanceGroup().getDistanceInKms();
+						if (participant.isSponsoredRunner()) {
+							pledge.setAmountPayed(String.valueOf(year.getPledgedBySponsorGroupPerKilometer()*distanceInKms));
+						} else if (participant.isCustomer()) {
+							pledge.setAmountPayed(String.valueOf(year.getPledgedBySponsorPerKilometer()*distanceInKms));
+						}
+						pledge.setOrganizationalID(participant.getCharityId());
+						pledges.add(pledge);
+					}
+				}
+			}
+		}
 
 		TableRowGroup group = table.createHeaderRowGroup();
 		TableRow row = group.createRow();
@@ -88,8 +129,6 @@ public class UserPledges extends RunBlock {
 				row.setStyleClass("lastRow");
 			}
 
-			IWTimestamp created = new IWTimestamp(userPledge.getPaymentTimestamp());
-			
 			cell = row.createCell();
 			cell.setStyleClass("firstColumn");
 			cell.setStyleClass("pledgesPledger");
@@ -108,9 +147,15 @@ public class UserPledges extends RunBlock {
 			cell.setStyleClass("pledgesCharity");
 			cell.add(new Text(charityString));
 			
+			String timeStampString = "";
+			if (userPledge.getPaymentTimestamp() != null) {
+				IWTimestamp created = new IWTimestamp(userPledge.getPaymentTimestamp());
+				timeStampString = created.getLocaleDate(iwc.getCurrentLocale(), IWTimestamp.SHORT);
+			}
+			
 			cell = row.createCell();
 			cell.setStyleClass("pledgesDate");
-			cell.add(new Text(created.getLocaleDate(iwc.getCurrentLocale(), IWTimestamp.SHORT)));
+			cell.add(new Text(timeStampString));
 			
 			cell = row.createCell();
 			cell.setStyleClass("lastColumn");
@@ -134,9 +179,24 @@ public class UserPledges extends RunBlock {
 		return table;
 	}
 
+	private Pledge createPledge() {
+		Pledge pledge = null;
+		try {
+			PledgeHome pledgeHome = (PledgeHome) IDOLookup.getHome(Pledge.class);
+			pledge = pledgeHome.create();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pledge;
+	}
+
 	protected Collection getPledges(IWContext iwc) {
 		try {
-			return getPledgeBusiness(iwc).getPledges();
+			Collection pledges = getPledgeBusiness(iwc).getPledgesForUser(iwc.getCurrentUserId());
+			if (pledges == null)  {
+				pledges = new ArrayList();
+			}
+			return pledges;
 		}
 		catch (RemoteException re) {
 			log(re);
