@@ -37,7 +37,7 @@ private PledgeHome PledgeHome;
 		}
 	}
 
-	public Collection getPledgesForUser(Integer userID) throws EJBException {
+	public Collection getPledgesForUser(int userID) throws EJBException {
 		try {
 			return getPledgeHome().findAllPledgesForUser(userID);
 		}

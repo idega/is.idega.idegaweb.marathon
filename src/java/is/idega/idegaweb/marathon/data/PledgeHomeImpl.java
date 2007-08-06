@@ -35,7 +35,7 @@ public class PledgeHomeImpl extends IDOFactory implements PledgeHome {
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 	
-	public Collection findAllPledgesForUser(Integer userID) throws IDORelationshipException, FinderException {
+	public Collection findAllPledgesForUser(int userID) throws IDORelationshipException, FinderException {
 		IDOEntity entity = this.idoCheckOutPooledEntity();
 		Collection ids = ((PledgeBMPBean) entity).ejbFindAllPledgesForUser(userID);
 		this.idoCheckInPooledEntity(entity);

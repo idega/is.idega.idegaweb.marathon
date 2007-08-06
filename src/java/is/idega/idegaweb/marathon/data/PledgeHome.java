@@ -16,5 +16,5 @@ public interface PledgeHome extends IDOHome {
 	
 	public Collection findAllPledges() throws FinderException;
 	
-	public Collection findAllPledgesForUser(Integer userID) throws IDORelationshipException, FinderException;
+	public Collection findAllPledgesForUser(int userID) throws IDORelationshipException, FinderException;
 }

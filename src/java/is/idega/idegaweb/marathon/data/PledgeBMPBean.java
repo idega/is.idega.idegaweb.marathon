@@ -91,7 +91,7 @@ public class PledgeBMPBean extends GenericEntity implements Pledge {
 		return idoFindPKsByQuery(query);
 	}
 
-	public Collection ejbFindAllPledgesForUser(Integer userID) throws IDORelationshipException, FinderException {
+	public Collection ejbFindAllPledgesForUser(int userID) throws IDORelationshipException, FinderException {
 		Table table = new Table(this);
 		Table runTable = new Table(Participant.class);
 		Column pledgesIDColumn = new Column(table, getIDColumnName());
