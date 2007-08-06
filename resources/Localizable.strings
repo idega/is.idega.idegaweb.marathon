@@ -389,4 +389,5 @@ userPledges.amount=Amount
 userPledges.charity=Charity
 userPledges.date=Date
 userPledges.pledger=Pledger
+userPledges.sponsor=Sponsor
 userPledges.user_pledges=User pledges
