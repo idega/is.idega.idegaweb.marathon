@@ -57,7 +57,6 @@ import com.idega.data.IDOCreateException;
 import com.idega.data.IDOException;
 import com.idega.data.IDOLookup;
 import com.idega.data.IDOLookupException;
-import com.idega.data.IDOStoreException;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.UnavailableIWContext;
@@ -1023,6 +1022,16 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		try {
 			ParticipantHome runHome = (ParticipantHome) getIDOHome(Participant.class);
 			return runHome.findByYearAndTeamName(yearPK, teamName);
+		}
+		catch (RemoteException e) {
+			throw new IBORuntimeException(e);
+		}
+	}
+	
+	public Collection getParticipantsByUser(User user) throws FinderException {
+		try {
+			ParticipantHome runHome = (ParticipantHome) getIDOHome(Participant.class);
+			return runHome.findByUserID(((Integer)user.getPrimaryKey()).intValue());
 		}
 		catch (RemoteException e) {
 			throw new IBORuntimeException(e);
