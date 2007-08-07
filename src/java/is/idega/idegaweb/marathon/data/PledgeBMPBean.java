@@ -98,7 +98,7 @@ public class PledgeBMPBean extends GenericEntity implements Pledge {
 		Column userIDColumn = new Column(runTable, ParticipantBMPBean.getColumnNameUserID());
 		
 		SelectQuery query = new SelectQuery(table);
-		query.addManyToManyJoin(table, runTable);
+		query.addJoin(table, runTable);
 		query.addColumn(pledgesIDColumn);
 		query.addCriteria(new MatchCriteria(userIDColumn, MatchCriteria.EQUALS, userID));
 		//query.addOrder(table, COLUMN_NAME_PAYMENT_TIMESTAMP, true);

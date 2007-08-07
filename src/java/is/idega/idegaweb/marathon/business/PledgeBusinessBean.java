@@ -42,6 +42,7 @@ private PledgeHome PledgeHome;
 			return getPledgeHome().findAllPledgesForUser(userID);
 		}
 		catch (IDORelationshipException e) {
+			e.printStackTrace();
 			return null;
 		}
 		catch (FinderException fe) {
