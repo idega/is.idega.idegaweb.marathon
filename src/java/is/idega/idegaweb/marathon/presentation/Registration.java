@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.118 2007/08/08 01:11:51 sigtryggur Exp $
+ * $Id: Registration.java,v 1.119 2007/08/08 02:05:24 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -76,10 +76,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/08/08 01:11:51 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/08/08 02:05:24 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.118 $
+ * @version $Revision: 1.119 $
  */
 public class Registration extends RunBlock {
 	
@@ -1808,7 +1808,7 @@ public class Registration extends RunBlock {
 				int age = ageObject.intValue();
 				if (runner.getYear() != null) {
 					int maximumAgeForRun = runner.getYear().getMaximumAgeForRun();
-					if (age > maximumAgeForRun) {
+					if (maximumAgeForRun != -1 && age > maximumAgeForRun) {
 						Object[] args = { String.valueOf(maximumAgeForRun) };
 						getParentPage().setAlertOnLoad(MessageFormat.format(localize("run_reg.invalid_date_of_birth_exeeding","Invalid date of birth.  You have to be {0} or younger to register"), args));
 						//initializeSteps(iwc);
