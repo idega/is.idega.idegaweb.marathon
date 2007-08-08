@@ -106,7 +106,7 @@ public class IWMarathonConstants {
   public static final String DISTANCE_7 = "7_km";
   public static final String DISTANCE_5 = "5_km";
   public static final String DISTANCE_3 = "3_km";
-  public static final String DISTANCE_1_5 = "1_5_km";
+  public static final String DISTANCE_1_5 = "1.5_km";
   public static final String DISTANCE_CHARITY_42 = "42_km_charity";
   
   public static final String FEMALE_11 = "female_11";
