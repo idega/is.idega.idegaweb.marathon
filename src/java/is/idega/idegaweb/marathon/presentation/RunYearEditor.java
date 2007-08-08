@@ -262,7 +262,7 @@ public class RunYearEditor extends RunBlock {
 		form.add(new Break());
 		
 		minimumAgeDropDown.addMenuElement(-1,localize("run_reg.select_age", "Select age..."));
-		for (int i=0; i<60; i++) {
+		for (int i=0; i<100; i++) {
 			minimumAgeDropDown.addMenuElement(i,String.valueOf(i));
 		}
 		
@@ -276,7 +276,7 @@ public class RunYearEditor extends RunBlock {
 		form.add(new Break());
 		
 		maximumAgeDropDown.addMenuElement(-1,localize("run_reg.select_age", "Select age..."));
-		for (int i=0; i<60; i++) {
+		for (int i=0; i<100; i++) {
 			maximumAgeDropDown.addMenuElement(i,String.valueOf(i));
 		}
 		
