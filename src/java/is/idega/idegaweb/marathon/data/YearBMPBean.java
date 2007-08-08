@@ -1,5 +1,5 @@
 /*
- * $Id: YearBMPBean.java,v 1.11 2007/06/28 13:34:57 tryggvil Exp $
+ * $Id: YearBMPBean.java,v 1.12 2007/08/08 01:04:05 sigtryggur Exp $
  * Created on May 22, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -17,10 +17,10 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2007/06/28 13:34:57 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/08/08 01:04:05 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class YearBMPBean extends GroupBMPBean  implements Year,Group{
 
@@ -36,6 +36,7 @@ public class YearBMPBean extends GroupBMPBean  implements Year,Group{
 	public static final String METADATA_PLEDGED_PER_KILOMETER_BY_SPONSOR_GROUP = "sponsor_pledge_amount_group";
 	public static final String METADATA_PLEDGE_CURRENCY = "pledge_currency";
 	public static final String METADATA_MINIMUM_AGE_FOR_RUN = "minimum_age_for_run";
+	public static final String METADATA_MAXIMUM_AGE_FOR_RUN = "maximum_age_for_run";
 
 	//private int pledgedBySponsorPerKilometer;
 	
@@ -140,6 +141,20 @@ public class YearBMPBean extends GroupBMPBean  implements Year,Group{
 
 	public void setMinimumAgeForRun(int minimumAgeForRun) {
 		setMetaData(METADATA_MINIMUM_AGE_FOR_RUN, String.valueOf(minimumAgeForRun));
+	}
+
+	public int getMaximumAgeForRun() {
+		String sMaximumAge = getMetaData(METADATA_MAXIMUM_AGE_FOR_RUN);
+		int maximumAge=-1;
+		try{
+			maximumAge = Integer.parseInt(sMaximumAge);
+		}
+		catch(Exception e){}
+		return maximumAge;
+	}
+
+	public void setMaximumAgeForRun(int maximumAgeForRun) {
+		setMetaData(METADATA_MAXIMUM_AGE_FOR_RUN, String.valueOf(maximumAgeForRun));
 	}
 
 	public String getYearString() {

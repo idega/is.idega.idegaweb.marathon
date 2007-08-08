@@ -266,6 +266,20 @@ public class RunYearEditor extends RunBlock {
 			minimumAgeDropDown.addMenuElement(i,String.valueOf(i));
 		}
 		
+		layer = new Layer(Layer.DIV);
+		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
+		DropdownMenu maximumAgeDropDown = new DropdownMenu(CreateYearForm.PARAMETER_MAXIMUM_AGE_FOR_RUN);
+		Label maximumAgeDropDownLabel = new Label(localize("run_reg.maximum_age_for_run", "Maximum age for run"),maximumAgeDropDown);
+		layer.add(maximumAgeDropDownLabel);
+		layer.add(maximumAgeDropDown);
+		form.add(layer);
+		form.add(new Break());
+		
+		maximumAgeDropDown.addMenuElement(-1,localize("run_reg.select_age", "Select age..."));
+		for (int i=0; i<60; i++) {
+			maximumAgeDropDown.addMenuElement(i,String.valueOf(i));
+		}
+		
 		SubmitButton save = (SubmitButton) getButton(new SubmitButton(localize("save", "Save"), PARAMETER_ACTION, String.valueOf(ACTION_SAVE_EDIT)));
 		SubmitButton cancel = (SubmitButton) getButton(new SubmitButton(localize("cancel", "Cancel"), PARAMETER_ACTION, String.valueOf(ACTION_VIEW)));
 
@@ -303,6 +317,10 @@ public class RunYearEditor extends RunBlock {
 			int minimumAgeForRun = selectedYear.getMinimumAgeForRun();
 			if(minimumAgeForRun!=-1){
 				minimumAgeDropDown.setSelectedElement(minimumAgeForRun);
+			}
+			int maximumAgeForRun = selectedYear.getMaximumAgeForRun();
+			if(maximumAgeForRun!=-1){
+				maximumAgeDropDown.setSelectedElement(maximumAgeForRun);
 			}
 		}
 		add(form);
@@ -351,6 +369,14 @@ public class RunYearEditor extends RunBlock {
 			}
 			catch(Exception e){}
 		}
+		String sMaximumAgeForRun = iwc.getParameter(CreateYearForm.PARAMETER_MAXIMUM_AGE_FOR_RUN);
+		int maximumAgeForRun = -1;
+		if(sMaximumAgeForRun!=null){
+			try{
+				maximumAgeForRun = Integer.parseInt(sMaximumAgeForRun);
+			}
+			catch(Exception e){}
+		}
 		Year year = null;
 		if (yearID != null) {
 			try {
@@ -373,6 +399,7 @@ public class RunYearEditor extends RunBlock {
 			}
 			year.setPledgeCurrency(pledgeCurrency);
 			year.setMinimumAgeForRun(minimumAgeForRun);
+			year.setMaximumAgeForRun(maximumAgeForRun);
 			year.store();
 		}
 	}

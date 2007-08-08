@@ -57,6 +57,8 @@ public interface Year extends IDOEntity, Group {
 
 	public int getMinimumAgeForRun();
 	public void setMinimumAgeForRun(int minimumAgeForRun);
+	public int getMaximumAgeForRun();
+	public void setMaximumAgeForRun(int maximumAgeForRun);
 	
 	public String getYearString();
 }
