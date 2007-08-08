@@ -21,6 +21,7 @@
 7_km=7 km
 Distances=Distances
 Laugavegur=Ultra Marathon (Laugavegur)
+Lazy\ Town\ Run=Lazy Town Run
 Marathon=Marathon
 Midnight\ Run=Midnight Run
 Oslo\ Marathon=Glitnir Oslo Marathon
@@ -208,7 +209,9 @@ run_reg.information_text_step_4=I, by sending this registration form, waive and 
 run_reg.information_text_step_5=Below are the persons that you have registered so far.  You can add more by clicking 'Register other participant' or finish the registration by clicking 'Pay entry fee'.
 run_reg.information_text_step_6=<b><font color\="\#FF0000">Your registration will not be completed unless you pay the entry fee online.  Otherwise the registration will be deleted.</font></b><br>\r\nOnly VISA and MasterCard credit cards are accepted.
 run_reg.invalid_date_of_birth=Invalid date of birth.  You have to be {0} years old to register
+run_reg.invalid_date_of_birth_exeeding=Invalid date of birth.  You have to be {0} or younger to register
 run_reg.invalid_participant_number=Invalid participant number
+run_reg.maximum_age_for_run=Maximum age for run
 run_reg.minimum_age_for_run=Minimum age for run
 run_reg.mobile=Mobile Phone
 run_reg.multi_use_chips=Multi use chips

@@ -21,6 +21,7 @@
 7_km=7 km (T\u00EDmataka)
 Distances=Vegalengdir
 Laugavegur=Laugavegurinn
+Lazy\ Town\ Run=Latab\u00E6jarhlaup
 Marathon=Mara\u00FEon
 Midnight\ Run=Mi\u00F0n\u00E6turhlaup
 Oslo\ Marathon=Osl\u00F3ar Mara\u00FEon Glitnis
@@ -221,9 +222,11 @@ run_reg.information_text_step_4=\u00C9g, me\u00F0 \u00FEv\u00ED a\u00F0 senda \u
 run_reg.information_text_step_5=Fyrir ne\u00F0an eru einstaklingarnir sem \u00FE\u00FA ert b\u00FAin/n a\u00F0 skr\u00E1. \u00DE\u00FA getur b\u00E6tt fleirum vi\u00F0 me\u00F0 \u00FEv\u00ED a\u00F0 smella \u00E1 'Skr\u00E1 annan keppanda' e\u00F0a loki\u00F0 skr\u00E1ningunni me\u00F0 \u00FEv\u00ED a\u00F0 smella \u00E1 'Borga keppnisgjald'
 run_reg.information_text_step_6=<b><font color\="\#FF0000">Skr\u00E1ningu \u00FE\u00EDn mun ekki kl\u00E1rast nema \u00FE\u00FA grei\u00F0ir keppnisgjaldi\u00F0 \u00E1 netinu. Annars mun skr\u00E1ningunni ver\u00F0a eytt.</font></b><br>\r\nEing\u00F6ngu er h\u00E6gt a\u00F0 grei\u00F0a me\u00F0 VISA og MasterCard kreditkortum.
 run_reg.invalid_date_of_birth=Ekki gildur f\u00E6\u00F0ingardagur. \u00DE\u00FA ver\u00F0ur a\u00F0 vera {0} \u00E1ra til a\u00F0 geta skr\u00E1\u00F0 \u00FEig.
+run_reg.invalid_date_of_birth_exeeding=Ekki gildur f\u00E6\u00F0ingardagur. \u00DE\u00FA ver\u00F0ur a\u00F0 vera {0} \u00E1ra e\u00F0a yngri til a\u00F0 geta skr\u00E1\u00F0 \u00FEig.
 run_reg.invalid_participant_number=Ekki gilt keppnisn\u00FAmer
 run_reg.kids_sized=Barnast\u00E6r\u00F0ir
 run_reg.male=Karl
+run_reg.maximum_age_for_run=H\u00E1marksaldur \u00ED hlaupi\u00F0
 run_reg.minimum_age_for_run=L\u00E1gmarksaldur \u00ED hlaupi\u00F0
 run_reg.mob_err_msg=Fars\u00EDman\u00FAmer ver\u00F0ur a\u00F0 vera t\u00F6lustafir eing\u00F6ngu\!
 run_reg.mobile=Fars\u00EDmi
