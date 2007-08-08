@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.117 2007/07/25 09:47:27 sigtryggur Exp $
+ * $Id: Registration.java,v 1.118 2007/08/08 01:11:51 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -20,7 +20,10 @@ import is.idega.idegaweb.marathon.data.RunCategory;
 import is.idega.idegaweb.marathon.data.RunCategoryHome;
 import is.idega.idegaweb.marathon.data.Year;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
+
+import java.math.BigDecimal;
 import java.rmi.RemoteException;
+import java.sql.Date;
 import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -73,10 +76,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/07/25 09:47:27 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/08/08 01:11:51 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.117 $
+ * @version $Revision: 1.118 $
  */
 public class Registration extends RunBlock {
 	
@@ -141,6 +144,8 @@ public class Registration extends RunBlock {
 	private static final int ACTION_STEP_PAYMENT = 60;
 	private static final int ACTION_STEP_RECEIPT = 70;
 	private static final int ACTION_CANCEL = 80;
+	
+	private static final double MILLISECONDS_IN_YEAR = 31557600000d;
 
 	private boolean isIcelandic = false;
 	private float chipPrice;
@@ -425,11 +430,19 @@ public class Registration extends RunBlock {
 		DateInput ssnField = (DateInput) getStyledInterface(new DateInput(PARAMETER_PERSONAL_ID));
 		ssnField.setAsNotEmpty("Date of birth can not be empty");
 		
-		
+		IWTimestamp maximumAgeStamp = new IWTimestamp();
+		IWTimestamp earliestYearStamp = new IWTimestamp();
 		IWTimestamp minimumAgeStamp = new IWTimestamp();
 		IWTimestamp newestYearStamp = new IWTimestamp();
-		IWTimestamp earliestYearStamp = new IWTimestamp();
-		earliestYearStamp.addYears(-100);
+		int maximumAgeForRun = -1;
+		if (getRunner().getYear() != null) {
+			maximumAgeForRun = getRunner().getYear().getMaximumAgeForRun();
+		}
+		if (maximumAgeForRun == -1) {
+			maximumAgeForRun = 100;
+		}
+		earliestYearStamp.addYears(-maximumAgeForRun);
+		maximumAgeStamp.addYears(-maximumAgeForRun);
 		int minimumAgeForRun = -1;
 		if (getRunner().getYear() != null) {
 			minimumAgeForRun = getRunner().getYear().getMinimumAgeForRun();
@@ -440,9 +453,12 @@ public class Registration extends RunBlock {
 		newestYearStamp.addYears(-minimumAgeForRun);
 		minimumAgeStamp.addYears(-minimumAgeForRun);
 		
-		Object[] args = { String.valueOf(minimumAgeForRun) };
 		ssnField.setYearRange(newestYearStamp.getYear(), earliestYearStamp.getYear());
-		ssnField.setLatestPossibleDate(minimumAgeStamp.getDate(), MessageFormat.format(localize("run_reg.invalid_date_of_birth","Invalid date of birth.  You have to be {0} years old to register"), args));
+		Object[] maximumArgs = { String.valueOf(maximumAgeForRun) };
+		ssnField.setEarliestPossibleDate(maximumAgeStamp.getDate(), MessageFormat.format(localize("run_reg.invalid_date_of_birth_exeeding","Invalid date of birth.  You have to be {0} or younger to register"), maximumArgs));
+		Object[] minimumArgs = { String.valueOf(minimumAgeForRun) };
+		ssnField.setLatestPossibleDate(minimumAgeStamp.getDate(), MessageFormat.format(localize("run_reg.invalid_date_of_birth","Invalid date of birth.  You have to be {0} years old to register"), minimumArgs));
+		
 		if (getRunner().getDateOfBirth() != null) {
 			ssnField.setDate(getRunner().getDateOfBirth());
 		}
@@ -1780,7 +1796,26 @@ public class Registration extends RunBlock {
 
 		try {
 			Runner runner = getRunner();
-			if(runner!=null){}
+			if(runner != null && runner.getDateOfBirth() != null || runner != null && runner.getUser() != null && runner.getUser().getDateOfBirth() != null){
+				Date dateOfBirth;
+				if (runner.getDateOfBirth() != null) {
+					dateOfBirth = runner.getDateOfBirth();
+				} else {
+					dateOfBirth = runner.getUser().getDateOfBirth();
+				}
+				long ageInMillisecs = IWTimestamp.getMilliSecondsBetween(new IWTimestamp(dateOfBirth),new IWTimestamp());
+				BigDecimal ageObject = new BigDecimal(ageInMillisecs/MILLISECONDS_IN_YEAR);
+				int age = ageObject.intValue();
+				if (runner.getYear() != null) {
+					int maximumAgeForRun = runner.getYear().getMaximumAgeForRun();
+					if (age > maximumAgeForRun) {
+						Object[] args = { String.valueOf(maximumAgeForRun) };
+						getParentPage().setAlertOnLoad(MessageFormat.format(localize("run_reg.invalid_date_of_birth_exeeding","Invalid date of birth.  You have to be {0} or younger to register"), args));
+						//initializeSteps(iwc);
+						return ACTION_STEP_PERSONALDETAILS;
+					}
+				}
+			}
 		}
 		catch (RuntimeException fe) {
 			getParentPage().setAlertOnLoad(localize("run_reg.user_not_found_for_personal_id", "No user found with personal ID."));
