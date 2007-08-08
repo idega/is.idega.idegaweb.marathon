@@ -1,5 +1,5 @@
 /*
- * $Id: RunInputCollectionHandler.java,v 1.11 2007/07/24 12:48:36 sigtryggur Exp $
+ * $Id: RunInputCollectionHandler.java,v 1.12 2007/08/08 01:03:18 sigtryggur Exp $
  * Created on Feb 14, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -33,10 +33,10 @@ import com.idega.util.IWTimestamp;
 
 /**
  * 
- *  Last modified: $Date: 2007/07/24 12:48:36 $ by $Author: sigtryggur $
+ *  Last modified: $Date: 2007/08/08 01:03:18 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:birna@idega.com">birna</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class RunInputCollectionHandler extends PresentationObject implements RemoteScriptCollection {
 
@@ -103,18 +103,9 @@ public class RunInputCollectionHandler extends PresentationObject implements Rem
 				    }
 				    while (disIter.hasNext()) {
 				    		Group distance = (Group) disIter.next();
-				    		boolean add = true;
-				    		if (user != null && distance.getName().equals(IWMarathonConstants.DISTANCE_1_5)) {
-				    			int age = getRunBiz(iwc).getAgeFromPersonalID(user.getPersonalID());
-				    			if (age > 11) {
-				    				add = false;
-				    			}
-				    		}
-				    		if (add) {
-	 				    		String s = iwrb.getLocalizedString(distance.getName(),distance.getName());
-					    		ids.add(distance.getPrimaryKey().toString());
-					    		names.add(s);
-				    		}
+	 				    	String s = iwrb.getLocalizedString(distance.getName(),distance.getName());
+					    	ids.add(distance.getPrimaryKey().toString());
+					    	names.add(s);
 				    }
 				    if (distances.isEmpty()) {
 				    		ids.add("-1");
