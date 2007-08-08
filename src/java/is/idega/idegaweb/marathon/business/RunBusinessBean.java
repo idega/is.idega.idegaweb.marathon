@@ -86,6 +86,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 	private static final String RUN_LAUGAVEGUR = "Laugavegur";
 	private static final String RUN_RVK_MARATHON = "Reykjavik Marathon";
 	private static final String RUN_OSLO_MARATHON = "Oslo Marathon";
+	private static final String RUN_LAZY_TOWN_RUN = "Lazy Town Run";
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -1268,6 +1269,15 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					else {
 						nameOfGroup = IWMarathonConstants.MALE_60;
 					}
+				}
+			}
+		}
+		if (runName.equals(RUN_LAZY_TOWN_RUN)) {
+			if (distance.getName().equals(IWMarathonConstants.DISTANCE_1_5)) {
+				if (genderID == 2) {
+					nameOfGroup = IWMarathonConstants.FEMALE_9;
+				} else {
+					nameOfGroup = IWMarathonConstants.MALE_9;
 				}
 			}
 		}
