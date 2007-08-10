@@ -196,8 +196,8 @@ public class SendPledgeLink extends RunBlock {
 			try {
 				MessagingSettings messagingSetting = getIWApplicationContext().getIWMainApplication().getMessagingSettings();
 				Participant participant = getRunBusiness(iwc).getRunObjByUserIDandYearID(iwc.getCurrentUserId(), Integer.parseInt(runYear));
-				Object[] args = { String.valueOf(participant.getUser().getName()), localize(participant.getRunDistanceGroup().getName(), participant.getRunDistanceGroup().getName()), getCharityBusiness(iwc).getCharityByOrganisationalID(participant.getCharityId()).getName() };
-				String emailBodyString =  MessageFormat.format(localize(KEY_PREFIX + "email_body_string","Dear recipient\r\n{0} has decided to send you this pledgelink.\r\nTo select the runner you can press the following link:\r\nhttp://www.marathon.is/pages/aheit/?prm_participant_id=" + participant.getRunID() + "&prm_action=2\r\n\r\nBest regards,\r\n{1}"), args);
+				Object[] args = { String.valueOf(participant.getUser().getName()), localize(participant.getRunDistanceGroup().getName(), participant.getRunDistanceGroup().getName()), getCharityBusiness(iwc).getCharityByOrganisationalID(participant.getCharityId()).getName(), participant.getPrimaryKey().toString() };
+				String emailBodyString =  MessageFormat.format(localize(KEY_PREFIX + "email_body_string","Dear recipient\r\n{0} has decided to send you this pledgelink.\r\nTo select the runner you can press the following link:\r\nhttp://www.marathon.is/pages/aheit/?prm_participant_id={3}&prm_action=2\r\n\r\nBest regards,\r\n{1}"), args);
 				com.idega.util.SendMail.send(messagingSetting.getFromMailAddress(),toAddresses,"","",messagingSetting.getSMTPMailServer(),MessageFormat.format(localize(KEY_PREFIX + "pledgelink", "Pledgelink"),args),emailBodyString);
 			}
 			catch (Exception e) {
