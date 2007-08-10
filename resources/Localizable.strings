@@ -351,8 +351,10 @@ search=Search
 search_again=Search again
 select_run=Select run...
 select_year=Select year...
+sendPledgeLink.email_body_string=Dear recipient\r\n{0} has decided to send you this pledgelink.\r\nTo select the runner you can press the following link\:\r\nhttp\://www.marathon.is/pages/aheit/?prm_participant_id\=12430&prm_action\=2\r\n\r\nBest regards,\r\n{1}
 sendPledgeLink.pledge_link_sent=Pledgelink sent
 sendPledgeLink.pledge_link_sent_text=Your pledgelink has been sent.
+sendPledgeLink.pledgelink=Pledgelink
 sendPledgeLink.run=Run
 sendPledgeLink.send_pledgelink=Send pledgelink
 sendPledgeLink.sending_pledgelink_failed=Sending pledgelink failed

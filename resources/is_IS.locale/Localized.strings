@@ -387,8 +387,10 @@ search=Leita
 search_again=Leita aftur
 select_run=Veldu hlaup
 select_year=Veldu \u00E1r
+sendPledgeLink.email_body_string=K\u00E6ri vi\u00F0takandi\r\n{0} hefur vali\u00F0 a\u00F0 senda \u00FE\u00E9r \u00E1heitatengilinn sinn.\r\nEf \u00FE\u00FA vilt heita \u00E1 vi\u00F0komandi getur \u00FE\u00FA vali\u00F0 hann me\u00F0 \u00FEv\u00ED a\u00F0 smella \u00E1 eftirfarandi tengil\:\r\nhttp\://www.marathon.is/pages/aheit/?prm_participant_id\=12430&prm_action\=2\r\n\r\nBestu kve\u00F0jur,\r\n{1}
 sendPledgeLink.pledge_link_sent=\u00C1heitatengill sendur
-sendPledgeLink.pledge_link_sent_text=\u00C1heitatengillinn \u00FEinn hefur veri\u00F0 sendur \u00E1 valda vi\u00F0takendur
+sendPledgeLink.pledge_link_sent_text=\u00C1heitatengillinn hefur veri\u00F0 sendur \u00E1 valda vi\u00F0takendur
+sendPledgeLink.pledgelink=\u00C1heitatengill
 sendPledgeLink.run=Hlaup
 sendPledgeLink.send_pledgelink=Senda \u00E1heitatengil
 sendPledgeLink.sending_pledgelink_failed=Sending \u00E1 \u00E1heitatengli mist\u00F3kst
