@@ -171,8 +171,9 @@ public class PledgeWizard extends RunBlock {
 		//form.add(charityDropDownLayer);
 		//form.add(new Break());
 		
-		String[] args = { localize(getPledgeHolder(iwc).getParticipant().getRunTypeGroup().getName(),getPledgeHolder(iwc).getParticipant().getRunTypeGroup().getName()) };
-		table.add(getText(MessageFormat.format(localize("pledgewizard.pledge_information_text_step_1", "Information text 1..."), args)),1,row++);
+		//String[] args = { localize(getPledgeHolder(iwc).getParticipant().getRunTypeGroup().getName(),getPledgeHolder(iwc).getParticipant().getRunTypeGroup().getName()) };
+		//table.add(getText(MessageFormat.format(localize("pledgewizard.pledge_information_text_step_1", "Information text 1..."), args)),1,row++);
+		table.add(getText(localize("pledgewizard.pledge_information_text_step_1", "Information text 1...")), 1, row++);
 		table.setHeight(row++, 6);
 		table.add(firstNameLayer, 1, row);
 		table.setHeight(row++, 6);
