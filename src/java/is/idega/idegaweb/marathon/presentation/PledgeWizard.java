@@ -9,6 +9,7 @@ import is.idega.idegaweb.marathon.data.Run;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
 import java.rmi.RemoteException;
+import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -170,7 +171,8 @@ public class PledgeWizard extends RunBlock {
 		//form.add(charityDropDownLayer);
 		//form.add(new Break());
 		
-		table.add(getText(localize("pledgewizard.pledge_information_text_step_1", "Information text 1...")), 1, row++);
+		String[] args = { localize(getPledgeHolder(iwc).getParticipant().getRunTypeGroup().getName(),getPledgeHolder(iwc).getParticipant().getRunTypeGroup().getName()) };
+		table.add(getText(MessageFormat.format(localize("pledgewizard.pledge_information_text_step_1", "Information text 1..."), args)),1,row++);
 		table.setHeight(row++, 6);
 		table.add(firstNameLayer, 1, row);
 		table.setHeight(row++, 6);
