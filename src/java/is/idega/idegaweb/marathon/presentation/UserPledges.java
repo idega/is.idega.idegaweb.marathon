@@ -38,7 +38,7 @@ public class UserPledges extends RunBlock {
 		}
 
 		Layer layer = new Layer(Layer.DIV);
-		layer.setStyleClass("pledgeElement");
+		layer.setStyleClass("listElement");
 		layer.setID("userPledges");
 		
 		Layer headerLayer = new Layer(Layer.DIV);
@@ -54,7 +54,7 @@ public class UserPledges extends RunBlock {
 	
 	private Table2 getPledgeTable(IWContext iwc) {
 		Table2 table = new Table2();
-		table.setStyleClass("pledgeTable");
+		table.setStyleClass("listTable");
 		table.setStyleClass("ruler");
 		table.setWidth("100%");
 		table.setCellpadding(0);
