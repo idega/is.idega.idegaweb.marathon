@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.119 2007/08/08 02:05:24 sigtryggur Exp $
+ * $Id: Registration.java,v 1.120 2007/08/13 22:17:12 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -76,10 +76,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/08/08 02:05:24 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/08/13 22:17:12 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.119 $
+ * @version $Revision: 1.120 $
  */
 public class Registration extends RunBlock {
 	
@@ -1059,7 +1059,7 @@ public class Registration extends RunBlock {
 			if (numberOfChildren > 1 && childNumber > 1 && runPrice > 0) {
 				runPrice -= this.childDiscount;
 			}
-			if (runner.getDistance().getName().equals(IWMarathonConstants.DISTANCE_1_5)) {
+			if (runner.getDistance().getName().equals(IWMarathonConstants.DISTANCE_1_5) || runner.getDistance().getName().equals(IWMarathonConstants.DISTANCE_1)) {
 				useSiblingDiscount = true;
 				if (numberOfSiblings > 2 && childNumber > 2 && runPrice > 0) {
 					runPrice -= this.childDiscount;

@@ -1273,7 +1273,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			}
 		}
 		if (runName.equals(RUN_LAZY_TOWN_RUN)) {
-			if (distance.getName().equals(IWMarathonConstants.DISTANCE_1_5)) {
+			if (distance.getName().equals(IWMarathonConstants.DISTANCE_1)) {
 				if (genderID == 2) {
 					nameOfGroup = IWMarathonConstants.FEMALE_9;
 				} else {
