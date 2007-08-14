@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.120 2007/08/13 22:17:12 sigtryggur Exp $
+ * $Id: Registration.java,v 1.121 2007/08/14 16:17:32 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -76,10 +76,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/08/13 22:17:12 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/08/14 16:17:32 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.120 $
+ * @version $Revision: 1.121 $
  */
 public class Registration extends RunBlock {
 	
@@ -2106,7 +2106,7 @@ public class Registration extends RunBlock {
 		if (isSponsoredRegistration()) {
 			localizedString = localize("run_reg.charity_sponsortext_staff", "The sponsor will pay {0} {2} to the selected charity organization for each kilometer run. The sponsor will pay total of {1} {2} to the selected charity organization for your participation.");
 		} else {
-			localizedString = localize("run_reg.charity_sponsortext_general", "The sponsor will pay {0} {2} to the selected charity organization for each kilometer run. The sponsor will pay total of {1} {2} to the selected charity organization for your participation.");
+			localizedString = localizeForRun("run_reg.charity_sponsortext_general", "The sponsor will pay {0} {2} to the selected charity organization for each kilometer run. The sponsor will pay total of {1} {2} to the selected charity organization for your participation.");
 		}
 		String[] attributes = { formatAmount(iwc, pledgePerKilometerISK), formatAmount(iwc, totalPledgedISK), year.getPledgeCurrency()};
 		table.setHeight(row++, 12);
