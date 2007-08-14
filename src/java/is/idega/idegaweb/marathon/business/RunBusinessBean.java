@@ -506,16 +506,19 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					if (personalId != null) {
 						try{
 							MarathonWS2Client wsClient = new MarathonWS2Client(getIWMainApplication());
-							if(wsClient.erIVidskiptumVidGlitni(personalId)){
-								participant.setCustomer(true);
-							}
-							else{
+							if (getUserBiz().hasValidIcelandicSSN(user)) {
+								if(wsClient.erIVidskiptumVidGlitni(user.getPersonalID())){
+									participant.setCustomer(true);
+								}
+								else{
+									participant.setCustomer(false);
+								}
+							} else {
 								participant.setCustomer(false);
 							}
 						}
 						catch(Exception e){
-							System.out.println("Lookup to the GlitnirCustomerWebService failed");
-							System.out.println(e.getMessage());
+							System.out.println("Lookup to the GlitnirCustomerWebService failed: " + e.getMessage());
 							//e.printStackTrace();
 						}
 					}
