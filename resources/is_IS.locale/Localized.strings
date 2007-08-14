@@ -181,6 +181,7 @@ run_reg.charity_enabled=\u00C1heitaskref virkt
 run_reg.charity_enquiry=Ef \u00FEitt l\u00EDknar- e\u00F0a g\u00F3\u00F0ger\u00F0arf\u00E9lag er ekki \u00E1 listanum \u00FE\u00E1 vinsamlegast sendu fyrirspurn \u00E1 <a href\="mailto\:godgerdarmal@glitnir.is">godgerdarmal@glitnir.is</a>
 run_reg.charity_headertext=N\u00FA geta allir hlaupi\u00F0 til g\u00F3\u00F0s og safna\u00F0 \u00E1heitum fyrir g\u00F3\u00F0ger\u00F0arf\u00E9lag a\u00F0 eigin vali. \u00C1 marathon.is ver\u00F0ur h\u00E6gt a\u00F0 finna alla skr\u00E1\u00F0a hlaupara og heita \u00E1 \u00FE\u00E1.
 run_reg.charity_sponsortext_general=<b>Glitnir heitir \u00E1 vi\u00F0skiptavini s\u00EDna</b><br>Glitnir heitir \u00E1 vi\u00F0skiptavini s\u00EDna** {0} {2} fyrir hvern hlaupinn km. Ef \u00FE\u00FA ert vi\u00F0skiptavinur Glitnis f\u00E6r \u00FEitt g\u00F3\u00F0ger\u00F0arf\u00E9lag {1} {2}.
+run_reg.charity_sponsortext_general_runid_383348=\u00DE\u00E1ttt\u00F6kugjaldi\u00F0 (sem er 800 kr) rennur \u00F3skipt til UNICEF\u2013Barnahj\u00E1lpar Sameinu\u00F0u \u00FEj\u00F3\u00F0anna. 
 run_reg.charity_sponsortext_staff=Glitnir heitir \u00E1 starfsmenn s\u00EDna {0} {2} fyrir hvern hlaupinn km. G\u00F3\u00F0ger\u00F0arf\u00E9lagi\u00F0 sem \u00FE\u00FA velur f\u00E6r {1} {2} ef \u00FE\u00FA tekur \u00FE\u00E1tt \u00ED hlaupinu.
 run_reg.city=Borg
 run_reg.consent=Sam\u00FEykki

@@ -176,6 +176,7 @@ run_reg.charity_enabled=Charity enabled
 run_reg.charity_enquiry=If you charity organization is not on the list, please send enquiry to godgerdarmal@glitnir.is
 run_reg.charity_headertext=Now every runner can run for a good cause for a charity of his/her choice. It is now possible to search among all the runners that have registered and make a pledge.
 run_reg.charity_sponsortext_general=Glitnir will pay {0} {2} to the selected charity organization for each kilometer run. Glitnir will therefore pay total of {1} {2} to the selected charity organization for your participation.
+run_reg.charity_sponsortext_general_runid_383348=
 run_reg.charity_sponsortext_staff=Glitnir will pay {0} {2} to the selected charity organization for each kilometer run. Glitnir will therefore pay total of {1} {2} to the selected charity organization for your participation.
 run_reg.city=City
 run_reg.consent=Consent
