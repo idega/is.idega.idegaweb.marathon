@@ -9,7 +9,6 @@ import is.idega.idegaweb.marathon.data.Run;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
 import java.rmi.RemoteException;
-import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,12 +49,10 @@ import com.idega.util.LocaleUtil;
 public class PledgeWizard extends RunBlock {
 	
 	private static final String SESSION_ATTRIBUTE_PLEDGE_HOLDER = "sa_pledge_holder";
-	private static final String PARAMETER_ACTION = "prm_action";
-	private static final String PARAMETER_FROM_ACTION = "prm_from_action";
 	private static final String PARAMETER_SEARCH = "prm_search";
 	
 	private static final String PARAMETER_PARTICIPANT_ID = "prm_participant_id";
-	private static final String PARAMETER_PERSONAL_ID_FILTER = "prm_personal_id_filter";
+//	private static final String PARAMETER_PERSONAL_ID_FILTER = "prm_personal_id_filter";
 	private static final String PARAMETER_FIRST_NAME_FILTER = "prm_first_name_filter";
 	private static final String PARAMETER_MIDDLE_NAME_FILTER = "prm_middle_name_filter";
 	private static final String PARAMETER_LAST_NAME_FILTER = "prm_last_name_filter";
@@ -150,14 +147,14 @@ public class PledgeWizard extends RunBlock {
 		//form.add(lastNameLayer);
 		//form.add(new Break());
 
-		TextInput personalIDInput = new TextInput(PARAMETER_PERSONAL_ID_FILTER);
-		personalIDInput.setLength(10);
-		personalIDInput.setMaxlength(10);
-		Layer personalIDLayer = new Layer(Layer.DIV);
-		personalIDLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		Label personalIDLabel = new Label(localize("pledgewizard.personal_id", "Personal ID") + ":", personalIDInput);
-		personalIDLayer.add(personalIDLabel);
-		personalIDLayer.add(personalIDInput);
+//		TextInput personalIDInput = new TextInput(PARAMETER_PERSONAL_ID_FILTER);
+//		personalIDInput.setLength(10);
+//		personalIDInput.setMaxlength(10);
+//		Layer personalIDLayer = new Layer(Layer.DIV);
+//		personalIDLayer.setStyleClass(STYLENAME_FORM_ELEMENT);
+//		Label personalIDLabel = new Label(localize("pledgewizard.personal_id", "Personal ID") + ":", personalIDInput);
+//		personalIDLayer.add(personalIDLabel);
+//		personalIDLayer.add(personalIDInput);
 		//form.add(personalIDLayer);
 		//form.add(new Break());
 
@@ -181,8 +178,8 @@ public class PledgeWizard extends RunBlock {
 		table.setHeight(row++, 6);
 		table.add(lastNameLayer, 1, row);
 		table.setHeight(row++, 6);
-		table.add(personalIDLayer, 1, row);
-		table.setHeight(row++, 6);
+//		table.add(personalIDLayer, 1, row);
+//		table.setHeight(row++, 6);
 		table.add(charityDropDownLayer, 1, row);
 		table.setHeight(row++, 6);
 		
@@ -196,9 +193,9 @@ public class PledgeWizard extends RunBlock {
 		if (getPledgeHolder(iwc).getLastNameFilter() != null){
 			lastNameInput.setValue(getPledgeHolder(iwc).getLastNameFilter());
 		}
-		if (getPledgeHolder(iwc).getPersonalIDFilter() != null){
-			personalIDInput.setValue(getPledgeHolder(iwc).getPersonalIDFilter());
-		}
+//		if (getPledgeHolder(iwc).getPersonalIDFilter() != null){
+//			personalIDInput.setValue(getPledgeHolder(iwc).getPersonalIDFilter());
+//		}
 		if (getPledgeHolder(iwc).getCharityFilter() != null){
 			charityDropDown.setSelectedElement(getPledgeHolder(iwc).getCharityFilter());
 
@@ -766,7 +763,7 @@ public class PledgeWizard extends RunBlock {
 	    browser.setEntityToPresentationConverter(pinKey, converterToUserPersonalID);
 	    browser.setEntityToPresentationConverter(distanceKey, converterToDistanceName);
 	    browser.setEntityToPresentationConverter(charityKey, converterToCharityOrganization);
-	    browser.setShowNavigation(false,true);
+	    browser.setShowNavigation(false,false);
 	    return browser;
 	}
 	
@@ -886,11 +883,11 @@ public class PledgeWizard extends RunBlock {
 		if (this.pledgeHolder == null) {
 			this.pledgeHolder = new PledgeHolder();
 		}
-		if (iwc.isParameterSet(PARAMETER_PERSONAL_ID_FILTER)) {
-			this.pledgeHolder.setPersonalIDFilter(iwc.getParameter(PARAMETER_PERSONAL_ID_FILTER));
-		} else if (iwc.isParameterSetAsEmpty(PARAMETER_PERSONAL_ID_FILTER)) {
-			this.pledgeHolder.setPersonalIDFilter(null);
-		}
+//		if (iwc.isParameterSet(PARAMETER_PERSONAL_ID_FILTER)) {
+//			this.pledgeHolder.setPersonalIDFilter(iwc.getParameter(PARAMETER_PERSONAL_ID_FILTER));
+//		} else if (iwc.isParameterSetAsEmpty(PARAMETER_PERSONAL_ID_FILTER)) {
+//			this.pledgeHolder.setPersonalIDFilter(null);
+//		}
 		if (iwc.isParameterSet(PARAMETER_FIRST_NAME_FILTER)) {
 			this.pledgeHolder.setFirstNameFilter(iwc.getParameter(PARAMETER_FIRST_NAME_FILTER));
 		} else if (iwc.isParameterSetAsEmpty(PARAMETER_FIRST_NAME_FILTER)) {
