@@ -564,7 +564,11 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 	}
 
 	public Integer ejbFindByUserAndRun(User user, Group run, Group year) throws FinderException{
-		IDOQuery query = idoQueryGetSelect();
+		IDOQuery query = idoQuery();
+		query.appendSelect();
+		query.append(getIDColumnName());
+		query.appendFrom();
+		query.append(this.getEntityName());
 		query.appendWhereEquals(getColumnNameUserID(),user);
 		query.appendAndEquals(getColumnNameRunTypeGroupID(),run);
 		query.appendAndEquals(getColumnNameRunYearGroupID(),year);
