@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.121 2007/08/14 16:17:32 sigtryggur Exp $
+ * $Id: Registration.java,v 1.122 2007/08/14 23:54:38 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -76,10 +76,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/08/14 16:17:32 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/08/14 23:54:38 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.121 $
+ * @version $Revision: 1.122 $
  */
 public class Registration extends RunBlock {
 	
@@ -2114,7 +2114,7 @@ public class Registration extends RunBlock {
 
 		table.setHeight(row++, 12);
 
-		if(!isDisableSponsorContactCheck()){
+		if(!isDisableSponsorContactCheck() && !distance.getName().equals(IWMarathonConstants.DISTANCE_1)){
 			Layer allowContactDiv = new Layer(Layer.DIV);
 			CheckBox allowContactCheck = getCheckBox(PARAMETER_ALLOW_CONTACT , Boolean.TRUE.toString());
 			Label allowContactLabel = new Label(localize("run_reg.allow_sponsor_contact", "I allow that an employee from the sponsor may contact me"),allowContactCheck);

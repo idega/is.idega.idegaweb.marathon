@@ -182,6 +182,8 @@ public class IWMarathonConstants {
   public static final int MAX_NUMBER_DISTANCE_3 = 9999;
   public static final int MIN_NUMBER_DISTANCE_1_5 = 10000;
   public static final int MAX_NUMBER_DISTANCE_1_5 = 14999;
+  public static final int MIN_NUMBER_DISTANCE_1 = 10000;
+  public static final int MAX_NUMBER_DISTANCE_1 = 14999;
   
   public static final int MIN_NUMBER_DISTANCE_MIDNIGHT_5 = 1;
   public static final int MAX_NUMBER_DISTANCE_MIDNIGHT_5 = 999;
