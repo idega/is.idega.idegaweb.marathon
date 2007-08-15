@@ -70,6 +70,7 @@ import com.idega.user.data.User;
 import com.idega.util.Age;
 import com.idega.util.IWTimestamp;
 import com.idega.util.LocaleUtil;
+import com.idega.util.Timer;
 import com.idega.util.text.Name;
 
 /**
@@ -503,11 +504,14 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					participant.setApplyForInternationalTravelSupport(runner.isApplyForInternationalTravelSupport());
 					participant.setSponsoredRunner(runner.isSponsoredRunner());
 					//check customer:
-					boolean enableCustomerWebservice = "true".equalsIgnoreCase(getIWMainApplication().getSettings().getProperty("MARATHON_ENABLE_CUSTOMER_WEBSERVICE","false"));
+					boolean enableCustomerWebservice = "true".equalsIgnoreCase(getIWMainApplication().getSettings().getProperty("MARATHON_ENABLE_CUSTOMER_WS","false"));
 					if (personalId != null && enableCustomerWebservice) {
+						Timer wsTimer = new Timer();
+						wsTimer.start();
 						try{
 							MarathonWS2Client wsClient = new MarathonWS2Client(getIWMainApplication());
 							if (getUserBiz().hasValidIcelandicSSN(user)) {
+								
 								if(wsClient.erIVidskiptumVidGlitni(user.getPersonalID())){
 									participant.setCustomer(true);
 								}
@@ -522,6 +526,8 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 							System.out.println("Lookup to the GlitnirCustomerWebService failed: " + e.getMessage());
 							//e.printStackTrace();
 						}
+						wsTimer.stop();
+						System.out.println("Time to execute GlitnirCustomerWebService was: " + wsTimer.getTimeString());
 					}
 					participant.store();
 					participants.add(participant);
