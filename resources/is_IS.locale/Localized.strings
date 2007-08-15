@@ -98,7 +98,7 @@ iw.component.is.idega.idegaweb.marathon.presentation.RunYearSortDropdownTriple.n
 iw.component.is.idega.idegaweb.marathon.presentation.SendPledgeLink.name=Senda \u00E1heitatengil
 iw.component.is.idega.idegaweb.marathon.presentation.UpdateCustomersByWS.name=Uppf\u00E6ra vi\u00F0skiptavini Glitnis
 iw.component.is.idega.idegaweb.marathon.presentation.UserPledges.name=\u00C1heit einstaklings
-iw.component.is.idega.idegaweb.marathon.presentation.UserRunOverview.name=Virkar hlaupaskr\u00E1ningar
+iw.component.is.idega.idegaweb.marathon.presentation.UserRunOverview.name=Hlaupaskr\u00E1ningar einstaklings
 male_11=Karlar 11 \u00E1ra og yngri
 male_14=Karlar 14 \u00E1ra og yngri
 male_15_17=Karlar 15 til 17 \u00E1ra
@@ -454,4 +454,4 @@ userRunOverview.charity=G\u00F3\u00F0ger\u00F0arf\u00E9lag
 userRunOverview.distance=Vegalengd
 userRunOverview.participant_number=Keppnisn\u00FAmer
 userRunOverview.run=Hlaup
-userRunOverview.user_run_overview=Virkar hlaupaskr\u00E1ningar
+userRunOverview.user_run_overview=Hlaupaskr\u00E1ningar einstaklings
