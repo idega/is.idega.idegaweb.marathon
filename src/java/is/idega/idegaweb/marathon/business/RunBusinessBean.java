@@ -117,7 +117,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				dateOfBirth = getBirthDateFromSSN(ssn);
 			}
 			Name fullName = new Name(name);
-			user = getUserBiz().createUser(fullName.getFirstName(), fullName.getMiddleName(), fullName.getLastName(), null, gender, dateOfBirth);
+			user = getUserBiz().createUser(fullName.getFirstName(), fullName.getMiddleName(), fullName.getLastName(), fullName.getName(), null, gender, dateOfBirth);
 			user.store();
 
 			if (address != null && !address.equals("")) {
