@@ -102,7 +102,7 @@ public class UpdateCustomersByWS extends RunBlock {
 				Iterator partIt = participants.iterator();
 				while (partIt.hasNext()) {
 					Participant participant = (Participant)partIt.next();
-					if (participant != null && participant.getUser() != null && participant.getUser().getPersonalID() != null && participant.getUser().getPersonalID().length()== 10) {
+					if (participant != null && participant.getUser() != null && participant.getUser().getPersonalID() != null && getUserBusiness(iwc).hasValidIcelandicSSN(participant.getUser())) {
 						if(wsClient.erIVidskiptumVidGlitni(participant.getUser().getPersonalID())){
 							participant.setCustomer(true);
 						}
