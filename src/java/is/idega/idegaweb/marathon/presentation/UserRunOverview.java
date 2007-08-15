@@ -53,10 +53,6 @@ public class UserRunOverview extends RunBlock {
 		TableRow row = group.createRow();
 		TableCell2 cell = row.createHeaderCell();
 		cell.setStyleClass("firstColumn");
-		cell.setStyleClass("runnerName");
-		cell.add(new Text(getResourceBundle().getLocalizedString(KEY_PREFIX + "name", "Name")));	
-		
-		cell = row.createHeaderCell();
 		cell.setStyleClass("runnerRun");
 		cell.add(new Text(getResourceBundle().getLocalizedString(KEY_PREFIX + "run", "Run")));
 		
@@ -97,16 +93,12 @@ public class UserRunOverview extends RunBlock {
 	
 				cell = row.createCell();
 				cell.setStyleClass("firstColumn");
-				cell.setStyleClass("runnerName");
-				cell.add(new Text(participant.getUser().getName()));
-	
-				cell = row.createCell();
 				cell.setStyleClass("runnerRun");
-				cell.add(new Text(participant.getRunYearGroup().getName()));
+				cell.add(new Text(getResourceBundle().getLocalizedString(participant.getRunTypeGroup().getName(),participant.getRunTypeGroup().getName()) + " " + participant.getRunYearGroup().getName()));
 				
 				cell = row.createCell();
 				cell.setStyleClass("runnerDistance");
-				cell.add(new Text(participant.getRunDistanceGroup().getName()));
+				cell.add(new Text(getResourceBundle().getLocalizedString(participant.getRunDistanceGroup().getName())));
 				
 				cell = row.createCell();
 				cell.setStyleClass("runnerParticipantNumber");
