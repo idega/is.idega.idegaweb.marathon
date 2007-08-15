@@ -93,8 +93,9 @@ public class RunPluginBusinessBean extends IBOServiceBean implements RunPluginBu
 			if (run != null) {
 				Participant runEntry = getRunBiz(iwc).getParticipantByRunAndYear(user, run, year);
 				runEntry.setRunGroupGroup(parentGroup);
-				runEntry.setRunDistanceGroup((Group) parentGroup.getParentNode());
-				if (distance != null) {
+				Distance oldDistance = runEntry.getRunDistanceGroup();
+				runEntry.setRunDistanceGroup(distance);
+				if (distance != null && oldDistance != null && ((Integer)distance.getPrimaryKey()).intValue() != ((Integer)oldDistance.getPrimaryKey()).intValue()) {
 					runEntry.setParticipantNumber(runBiz.getNextAvailableParticipantNumber(run, distance));
 				}
 				runEntry.store();
