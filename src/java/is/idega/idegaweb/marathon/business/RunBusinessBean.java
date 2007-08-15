@@ -503,7 +503,8 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					participant.setApplyForInternationalTravelSupport(runner.isApplyForInternationalTravelSupport());
 					participant.setSponsoredRunner(runner.isSponsoredRunner());
 					//check customer:
-					if (personalId != null) {
+					boolean enableCustomerWebservice = "true".equalsIgnoreCase(getIWMainApplication().getSettings().getProperty("MARATHON_ENABLE_CUSTOMER_WEBSERVICE","false"));
+					if (personalId != null && enableCustomerWebservice) {
 						try{
 							MarathonWS2Client wsClient = new MarathonWS2Client(getIWMainApplication());
 							if (getUserBiz().hasValidIcelandicSSN(user)) {
