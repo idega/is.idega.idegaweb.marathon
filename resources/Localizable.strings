@@ -96,6 +96,7 @@ iw.component.is.idega.idegaweb.marathon.presentation.RunYearSortDropdownTriple.n
 iw.component.is.idega.idegaweb.marathon.presentation.SendPledgeLink.name=SendPledgeLink
 iw.component.is.idega.idegaweb.marathon.presentation.UpdateCustomersByWS.name=UpdateCustomersByWS
 iw.component.is.idega.idegaweb.marathon.presentation.UserPledges.name=UserPledges
+iw.component.is.idega.idegaweb.marathon.presentation.UserRunOverview.name=UserRunOverview
 male_11=male_11
 male_14=male_14
 male_15_17=male_15_17
@@ -412,3 +413,8 @@ userPledges.date=Date
 userPledges.pledger=Pledger
 userPledges.sponsor=Sponsor
 userPledges.user_pledges=User pledges
+userRunOverview.charity=Charity
+userRunOverview.distance=Distance
+userRunOverview.participant_number=Participant number
+userRunOverview.run=Run
+userRunOverview.user_run_overview=Run overview
