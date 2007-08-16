@@ -45,6 +45,7 @@ import com.idega.business.IBOLookupException;
 import com.idega.business.IBORuntimeException;
 import com.idega.business.IBOServiceBean;
 import com.idega.core.accesscontrol.business.LoginDBHandler;
+import com.idega.core.accesscontrol.data.LoginTable;
 import com.idega.core.contact.data.Email;
 import com.idega.core.location.data.Address;
 import com.idega.core.location.data.AddressHome;
@@ -433,25 +434,16 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				} else {
 					personalId = user.getPersonalID();
 				}
-				String passwordString = LoginDBHandler.getGeneratedPasswordForUser();
-				String userNameString = runner.getEmail();
+
+				String userNameString = "";
+				String passwordString = "";
+
 				try {
-					boolean loginInUse = true;
-					if (!LoginDBHandler.isLoginInUse(userNameString)) {
-						LoginDBHandler.createLogin(user, userNameString, passwordString);
-						loginInUse = false;
-					}
-					int i = 1;
-					while (loginInUse) {
-						if (!LoginDBHandler.isLoginInUse(userNameString+"_"+i)) {
-							userNameString = userNameString+"_"+i;
-							LoginDBHandler.createLogin(user, userNameString, passwordString);
-							loginInUse = false;
-						}
-						i++;
-					}
+					LoginTable login = LoginDBHandler.getUserLogin(user);
+					userNameString = login.getUserLogin();
+					passwordString = login.getUserPasswordInClearText();
 				} catch (Exception e) {
-					System.out.println("Error creating login: " + userNameString + ", for user: " + user.getName());
+					System.out.println("Error creating login for user: " + user.getName());
 					e.printStackTrace();
 				}
 				
