@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.122 2007/08/14 23:54:38 sigtryggur Exp $
+ * $Id: Registration.java,v 1.123 2007/08/16 10:15:09 sigtryggur Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -76,10 +76,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/08/14 23:54:38 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/08/16 10:15:09 $ by $Author: sigtryggur $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.122 $
+ * @version $Revision: 1.123 $
  */
 public class Registration extends RunBlock {
 	
@@ -1291,7 +1291,7 @@ public class Registration extends RunBlock {
 		if(isDisablePaymentAndOverviewSteps()){
 			doPayment=false;
 		}
-		boolean disablePaymentProcess = "true".equalsIgnoreCase(iwc.getApplicationSettings().getProperty("MARAHTON_DISABLE_PAYMENT_AUTH","false"));
+		boolean disablePaymentProcess = "true".equalsIgnoreCase(iwc.getApplicationSettings().getProperty("MARATHON_DISABLE_PAYMENT_AUTH","false"));
 		if (doPayment && disablePaymentProcess) {
 			doPayment = false;
 		}
