@@ -435,19 +435,24 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				}
 				String passwordString = LoginDBHandler.getGeneratedPasswordForUser();
 				String userNameString = runner.getEmail();
-				boolean loginInUse = true;
-				if (!LoginDBHandler.isLoginInUse(userNameString)) {
-					LoginDBHandler.createLogin(user, userNameString, passwordString);
-					loginInUse = false;
-				}
-				int i = 1;
-				while (loginInUse) {
-					if (!LoginDBHandler.isLoginInUse(userNameString+"_"+i)) {
-						userNameString = userNameString+"_"+i;
+				try {
+					boolean loginInUse = true;
+					if (!LoginDBHandler.isLoginInUse(userNameString)) {
 						LoginDBHandler.createLogin(user, userNameString, passwordString);
 						loginInUse = false;
 					}
-					i++;
+					int i = 1;
+					while (loginInUse) {
+						if (!LoginDBHandler.isLoginInUse(userNameString+"_"+i)) {
+							userNameString = userNameString+"_"+i;
+							LoginDBHandler.createLogin(user, userNameString, passwordString);
+							loginInUse = false;
+						}
+						i++;
+					}
+				} catch (Exception e) {
+					System.out.println("Error creating login: " + userNameString + ", for user: " + user.getName());
+					e.printStackTrace();
 				}
 				
 				Group ageGenderGroup = getAgeGroup(user, runner.getRun(), runner.getDistance());
@@ -619,7 +624,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					String phone = runner.getHomePhone();
 					String mobilePhone = runner.getMobilePhone();
 					String runnerEmail = runner.getEmail();
-					String sponsorEmail = getIWApplicationContext().getIWMainApplication().getSettings().getProperty("marathon_sponsor_email");
+					String sponsorEmail = getIWApplicationContext().getIWMainApplication().getSettings().getProperty("MARATHON_SPONSOR_EMAIL");
 					
 					IWResourceBundle iwrb = getIWApplicationContext().getIWMainApplication().getBundle(IWMarathonConstants.IW_BUNDLE_IDENTIFIER).getResourceBundle(locale);
 					Object[] args = { name, personalId, sAddress, phone, mobilePhone,runnerEmail };
@@ -1206,10 +1211,10 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				com.idega.util.SendMail.send(fromAddress, email.trim(), cc, "", mailServer, subject, body);
 			}
 			catch (javax.mail.MessagingException me) {
-				System.err.println("Error sending mail to address: " + email + " Message was: " + me.getMessage());
+				System.err.println("MessagingException when sending mail to address: " + email + " Message was: " + me.getMessage());
 			}
 			catch (Exception e) {
-				System.err.println("Error sending mail to address: " + email + " Message was: " + e.getMessage());
+				System.err.println("Exception when sending mail to address: " + email + " Message was: " + e.getMessage());
 			}
 		}
 	}
