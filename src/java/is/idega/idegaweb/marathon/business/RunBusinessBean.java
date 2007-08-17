@@ -390,7 +390,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		}
 	}
 	
-	public Participant importParticipant(User user, Group run, Group year, Group distance, Country country) throws CreateException {
+	public Participant importParticipant(User user, Group run, Group year, Group distance) throws CreateException {
 		try {
 			Group ageGenderGroup = getAgeGroup(user, run, distance);
 			ageGenderGroup.addGroup(user);
@@ -402,9 +402,6 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			participant.setRunDistanceGroup(distance);
 			participant.setRunYearGroup(year);
 			participant.setRunGroupGroup(ageGenderGroup);
-			if (country != null) {
-				participant.setUserNationality(country.getName());
-			}
 			participant.store();
 			
 			return participant;
