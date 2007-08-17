@@ -59,6 +59,8 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		
 		addAttribute(getColumnNameRunTime(), "Run Time", true, true, Integer.class);
 		addAttribute(getColumnNameChipTime(), "Chip Time", true, true, Integer.class);
+		addAttribute(getColumnNameSplitTime1(), "Split Time 1", true, true, Integer.class);
+		addAttribute(getColumnNameSplitTime2(), "Split Time 2", true, true, Integer.class);
 		addAttribute(getColumnNameChipNumber(), "Chip Number", true, true, String.class);
 		addAttribute(getColumnNameChipBunchNumber(), "Chip bunch Number", true, true, String.class);
 		addAttribute(getColumnNameChipOwnershipStatus(), "Chip ownership status", true, true, String.class);
@@ -77,7 +79,7 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		addAttribute(getColumnNameCategoryId(), "CategoryId", true, true, Integer.class);
 		
 		addAttribute(getColumnApplyForDomesticTravelSupport(), "Domestic travel support", true, true, Boolean.class);
-		addAttribute(getColumnApplyForInternationalTravelSupport(), "international Travel support", true, true, Boolean.class);
+		addAttribute(getColumnApplyForInternationalTravelSupport(), "International Travel support", true, true, Boolean.class);
 		addAttribute(getColumnSponsoredRunner(), "Sponsored runner", true, true, Boolean.class);
 		addAttribute(getColumnIsCustomer(), "Is Customer", true, true, Boolean.class);
 		
