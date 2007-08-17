@@ -1,5 +1,6 @@
 package is.idega.idegaweb.marathon.business;
 
+import is.idega.idegaweb.marathon.data.Charity;
 import is.idega.idegaweb.marathon.data.Participant;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 	Collection countries;
 	RunBusiness business;
 	GenderBusiness genderBusiness;
+	CharityBusiness charityBusiness;
 	Locale englishLocale;
 	Locale icelandicLocale;
 	Collection runs;
@@ -56,6 +58,7 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 	public boolean handleRecords() throws RemoteException {
 		this.business = getBusiness(getIWApplicationContext());
 		this.genderBusiness = getGenderBusiness(getIWApplicationContext());
+		this.charityBusiness = getCharityBusiness(getIWApplicationContext());
 		this.countries = this.business.getCountries();
 		this.runs = this.business.getRuns();
 		this.englishLocale = LocaleUtil.getLocale(LocaleSwitcher.englishParameterString);
@@ -108,9 +111,10 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 		//String result = (String) values.get(13);
 		//String resultInGroup = (String) values.get(14);
 		String runGroupName = (String) values.get(15);
-		//String runGroupTime = size >= 17 ? (String) values.get(16) : null;
-		String split1 = size >= 18 ? (String) values.get(17) : null;
-		String split2 = size >= 19 ? (String) values.get(18) : null;
+		String charity = (String) values.get(16);
+		//String runGroupTime = size >= 18 ? (String) values.get(17) : null;
+		String split1 = size >= 19 ? (String) values.get(18) : null;
+		String split2 = size >= 20 ? (String) values.get(19) : null;
 		
 		int number = -1;
 		try {
@@ -183,7 +187,7 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 						try {
 							Gender theGender = this.genderBusiness.getGender(new Integer(gender));
 							Name fullName = new Name(name);
-							user = this.business.getUserBiz().createUser(fullName.getFirstName(), fullName.getMiddleName(), fullName.getLastName(), personalID, theGender, birth);
+							user = this.business.getUserBiz().createUser(fullName.getFirstName(), fullName.getMiddleName(), fullName.getLastName(), fullName.getName(), personalID, theGender, birth);
 						}
 						catch (FinderException fe) {
 							System.err.println("Gender not found");
@@ -201,7 +205,7 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 					}
 					catch (FinderException fe) {
 						try {
-							participant = this.business.importParticipant(user, runGroup, yearGroup, distanceGroup, country);
+							participant = this.business.importParticipant(user, runGroup, yearGroup, distanceGroup);
 						}
 						catch (CreateException ce) {
 							ce.printStackTrace();
@@ -212,6 +216,16 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 					participant.setUserNationality(nationality);
 					if (runGroupName != null && runGroupName.trim().length() > 0) {
 						participant.setRunGroupName(runGroupName);
+					}
+					try {
+						if (charity != null && !charity.trim().equals("")) {
+							Charity charityOgranization = this.charityBusiness.getCharityHome().findByPrimaryKey(Integer.valueOf(charity.trim()));
+							if (charityOgranization!= null) {
+								participant.setCharityId(charityOgranization.getOrganizationalID());
+							}
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 					this.business.updateRunForParticipant(participant, number, runTime, chipTime, split1, split2);
 					return true;
@@ -249,6 +263,15 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 	protected GenderBusiness getGenderBusiness(IWApplicationContext iwac) {
 		try {
 			return (GenderBusiness) IBOLookup.getServiceInstance(iwac, GenderBusiness.class);
+		}
+		catch (IBOLookupException e) {
+			throw new IBORuntimeException(e);
+		}
+	}
+
+	protected CharityBusiness getCharityBusiness(IWApplicationContext iwac) {
+		try {
+			return (CharityBusiness) IBOLookup.getServiceInstance(iwac, CharityBusiness.class);
 		}
 		catch (IBOLookupException e) {
 			throw new IBORuntimeException(e);
