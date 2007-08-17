@@ -78,7 +78,7 @@ public class UserPledges extends RunBlock {
 				} catch (FinderException e) {
 					//Run not found
 				}
-				if (year != null && year.isSponsoredRun() && (participant.isSponsoredRunner() || participant.isCustomer())) {
+				if (year != null && year.isSponsoredRun() && (participant.isSponsoredRunner() || participant.isCustomer()) && participant.getCharityId() != null) {
 					Pledge pledge = createPledge();
 					if (pledge != null) {
 						pledge.setCardholderName(getResourceBundle().getLocalizedString(KEY_PREFIX + "sponsor", "Sponsor"));

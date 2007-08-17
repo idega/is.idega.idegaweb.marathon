@@ -105,12 +105,14 @@ public class UserRunOverview extends RunBlock {
 				cell.add(new Text(String.valueOf(participant.getParticipantNumber())));
 				
 				String charityString = "";
-				try {
-					Charity charity = getCharityBusiness(iwc).getCharityByOrganisationalID(participant.getCharityId());
-					charityString = charity.getName();
-				} catch (Exception e) {
-					//charity not found
-					System.err.println(e.getMessage());
+				if (participant.getCharityId() != null) {
+					try {
+						Charity charity = getCharityBusiness(iwc).getCharityByOrganisationalID(participant.getCharityId());
+						charityString = charity.getName();
+					} catch (Exception e) {
+						//charity not found
+						System.err.println(e.getMessage());
+					}
 				}
 				
 				cell = row.createCell();
