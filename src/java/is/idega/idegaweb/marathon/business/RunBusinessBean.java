@@ -434,12 +434,11 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				} else {
 					personalId = user.getPersonalID();
 				}
-
 				String userNameString = "";
 				String passwordString = "";
 
 				try {
-					LoginTable login = LoginDBHandler.getUserLogin(user);
+					LoginTable login = getUserBiz().generateUserLogin(user);
 					userNameString = login.getUserLogin();
 					passwordString = login.getUserPasswordInClearText();
 				} catch (Exception e) {
