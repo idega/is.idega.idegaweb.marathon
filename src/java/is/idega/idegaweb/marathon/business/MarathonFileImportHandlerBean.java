@@ -20,6 +20,7 @@ import com.idega.core.localisation.business.LocaleSwitcher;
 import com.idega.core.location.data.Country;
 import com.idega.idegaweb.IWApplicationContext;
 import com.idega.user.business.GenderBusiness;
+import com.idega.user.business.UserBusiness;
 import com.idega.user.data.Gender;
 import com.idega.user.data.Group;
 import com.idega.user.data.User;
@@ -42,6 +43,7 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 	RunBusiness business;
 	GenderBusiness genderBusiness;
 	CharityBusiness charityBusiness;
+	UserBusiness userBusiness;
 	Locale englishLocale;
 	Locale icelandicLocale;
 	Collection runs;
@@ -59,6 +61,7 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 		this.business = getBusiness(getIWApplicationContext());
 		this.genderBusiness = getGenderBusiness(getIWApplicationContext());
 		this.charityBusiness = getCharityBusiness(getIWApplicationContext());
+		this.userBusiness = getUserBusiness(getIWApplicationContext());
 		this.countries = this.business.getCountries();
 		this.runs = this.business.getRuns();
 		this.englishLocale = LocaleUtil.getLocale(LocaleSwitcher.englishParameterString);
@@ -67,16 +70,18 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 		Vector errors = new Vector();
 		if (this.file != null) {
 			String line = (String) this.file.getNextRecord();
-			int counter = 1;
+			int counter = 0;
 			while (line != null && !"".equals(line)) {
 				++counter;
-				System.out.println("Counter = "+counter);
+				if (counter %100 == 0) {
+					System.out.println("MarathonImportCounter = "+counter);
+				}
 				if (!handleLine(line)) {
 					errors.add(line);
 				}
 				line = (String) this.file.getNextRecord();
 			}
-			System.out.println(counter);
+			System.out.println("Total numbers of runners imported: " + counter);
 			
 		}
 		
@@ -96,17 +101,17 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 		boolean validLine = true;
 		
 		String participantNumber = (String) values.get(0);
-		String gender = (String) values.get(1);
-		String dateOfBirth = (String) values.get(2);
-		String name = (String) values.get(3);
-		String personalID = ((String) values.get(4)).trim();
-		String nationality = (String) values.get(5);
-		String chipTime = (String) values.get(6);
-		String runTime = (String) values.get(7);
-		String run = (String) values.get(8);
-		String distance = (String) values.get(9);
-		String year = (String) values.get(10);
-		//String group = (String) values.get(11);
+		String userID = (String) values.get(1);
+		String gender = (String) values.get(2);
+		String dateOfBirth = (String) values.get(3);
+		String name = (String) values.get(4);
+		String personalID = ((String) values.get(5)).trim();
+		String nationality = (String) values.get(6);
+		String chipTime = (String) values.get(7);
+		String runTime = (String) values.get(8);
+		String run = (String) values.get(9);
+		String distance = (String) values.get(10);
+		String year = (String) values.get(11);
 		String chipNumber = ((String) values.get(12)).trim();
 		//String result = (String) values.get(13);
 		//String resultInGroup = (String) values.get(14);
@@ -170,8 +175,15 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 					}
 				}
 			
-				if (validLine) {
-					User user = null;
+				User user = null;
+				if (!userID.trim().equals("")) {
+					try {
+						user = this.userBusiness.getUser(Integer.valueOf(userID));
+					} catch (Exception e) {
+						System.out.println("User not found by pk, trying to find by other criteria");
+					}
+				}
+				if (user == null) {
 					try {
 						if (personalID.length() > 0) {
 							user = this.business.getUserBiz().getUser(personalID);
@@ -183,53 +195,53 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 					catch (FinderException fe) {
 						System.out.println("User not found, creating...");
 					}
-					if (user == null) {
-						try {
-							Gender theGender = this.genderBusiness.getGender(new Integer(gender));
-							Name fullName = new Name(name);
-							user = this.business.getUserBiz().createUser(fullName.getFirstName(), fullName.getMiddleName(), fullName.getLastName(), fullName.getName(), personalID, theGender, birth);
-						}
-						catch (FinderException fe) {
-							System.err.println("Gender not found");
-							return false;
-						}
-						catch (CreateException ce) {
-							ce.printStackTrace();
-							return false;
-						}
-					}
-					
-					Participant participant = null;
+				}
+				if (user == null) {
 					try {
-						participant = this.business.getParticipantByRunAndYear(user, runGroup, yearGroup);
+						Gender theGender = this.genderBusiness.getGender(new Integer(gender));
+						Name fullName = new Name(name);
+						user = this.business.getUserBiz().createUser(fullName.getFirstName(), fullName.getMiddleName(), fullName.getLastName(), fullName.getName(), personalID, theGender, birth);
 					}
 					catch (FinderException fe) {
-						try {
-							participant = this.business.importParticipant(user, runGroup, yearGroup, distanceGroup);
-						}
-						catch (CreateException ce) {
-							ce.printStackTrace();
-							return false;
-						}
+						System.err.println("Gender not found");
+						return false;
 					}
-					participant.setChipNumber(chipNumber);
-					participant.setUserNationality(nationality);
-					if (runGroupName != null && runGroupName.trim().length() > 0) {
-						participant.setRunGroupName(runGroupName);
+					catch (CreateException ce) {
+						ce.printStackTrace();
+						return false;
 					}
-					try {
-						if (charity != null && !charity.trim().equals("")) {
-							Charity charityOgranization = this.charityBusiness.getCharityHome().findByPrimaryKey(Integer.valueOf(charity.trim()));
-							if (charityOgranization!= null) {
-								participant.setCharityId(charityOgranization.getOrganizationalID());
-							}
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					this.business.updateRunForParticipant(participant, number, runTime, chipTime, split1, split2);
-					return true;
 				}
+				
+				Participant participant = null;
+				try {
+					participant = this.business.getParticipantByRunAndYear(user, runGroup, yearGroup);
+				}
+				catch (FinderException fe) {
+					try {
+						participant = this.business.importParticipant(user, runGroup, yearGroup, distanceGroup);
+					}
+					catch (CreateException ce) {
+						ce.printStackTrace();
+						return false;
+					}
+				}
+				participant.setChipNumber(chipNumber);
+				participant.setUserNationality(nationality);
+				if (runGroupName != null && runGroupName.trim().length() > 0) {
+					participant.setRunGroupName(runGroupName);
+				}
+				try {
+					if (charity != null && !charity.trim().equals("")) {
+						Charity charityOgranization = this.charityBusiness.getCharityHome().findByPrimaryKey(Integer.valueOf(charity.trim()));
+						if (charityOgranization!= null) {
+							participant.setCharityId(charityOgranization.getOrganizationalID());
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				this.business.updateRunForParticipant(participant, number, runTime, chipTime, split1, split2);
+				return true;
 			}
 			catch (RemoteException e1) {
 				e1.printStackTrace();
@@ -272,6 +284,15 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 	protected CharityBusiness getCharityBusiness(IWApplicationContext iwac) {
 		try {
 			return (CharityBusiness) IBOLookup.getServiceInstance(iwac, CharityBusiness.class);
+		}
+		catch (IBOLookupException e) {
+			throw new IBORuntimeException(e);
+		}
+	}
+
+	protected UserBusiness getUserBusiness(IWApplicationContext iwac) {
+		try {
+			return (UserBusiness) IBOLookup.getServiceInstance(iwac, UserBusiness.class);
 		}
 		catch (IBOLookupException e) {
 			throw new IBORuntimeException(e);
