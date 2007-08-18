@@ -44,7 +44,6 @@ import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
 import com.idega.business.IBORuntimeException;
 import com.idega.business.IBOServiceBean;
-import com.idega.core.accesscontrol.business.LoginDBHandler;
 import com.idega.core.accesscontrol.data.LoginTable;
 import com.idega.core.contact.data.Email;
 import com.idega.core.location.data.Address;
@@ -437,7 +436,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				try {
 					LoginTable login = getUserBiz().generateUserLogin(user);
 					userNameString = login.getUserLogin();
-					passwordString = login.getUserPasswordInClearText();
+					passwordString = login.getUnencryptedUserPassword();
 				} catch (Exception e) {
 					System.out.println("Error creating login for user: " + user.getName());
 					e.printStackTrace();
