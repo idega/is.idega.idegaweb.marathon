@@ -1663,7 +1663,6 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			runs = getGroupBiz().getGroups(type, true);
 		}
 		catch (Exception e) {
-			runs = null;
 		}
 		return runs;
 	}
@@ -1677,11 +1676,9 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		}
 		catch (IBOLookupException e) {
 			e.printStackTrace();
-			groups = null;
 		}
 		catch (RemoteException e) {
 			e.printStackTrace();
-			groups = null;
 		}
 		if(groups != null) {
 			Iterator groupsIter = groups.iterator();
@@ -1725,11 +1722,9 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		}
 		catch (IBOLookupException e) {
 			e.printStackTrace();
-			typeGroups = null;
 		}
 		catch (RemoteException e) {
 			e.printStackTrace();
-			typeGroups = null;
 		}
 		if(typeGroups != null) {
 			Iterator groupsIter = typeGroups.iterator();
@@ -1798,11 +1793,9 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		}
 		catch (IBOLookupException e) {
 			e.printStackTrace();
-			groups = null;
 		}
 		catch (RemoteException e) {
 			e.printStackTrace();
-			groups = null;
 		}
 		return groups;
 	}
@@ -1828,7 +1821,6 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			years = null;
 		}
 		return years;
 	}
@@ -1908,11 +1900,9 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		}
 		catch (IBOLookupException e) {
 			e.printStackTrace();
-			groups = null;
 		}
 		catch (RemoteException e) {
 			e.printStackTrace();
-			groups = null;
 		}
 		if(groups != null) {
 			Iterator i = groups.iterator();
