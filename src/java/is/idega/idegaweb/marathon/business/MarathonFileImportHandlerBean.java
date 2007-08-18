@@ -155,94 +155,100 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 					}
 				}
 				
-				Group yearGroup = null;
-				iterator = runGroup.getChildrenIterator();
-				while (iterator.hasNext()) {
-					Group element = (Group) iterator.next();
-					if (element.getName().equals(year)) {
-						yearGroup = element;
-						break;
-					}
-				}
+				if (runGroup == null) {
+					System.out.println("Run is not found. Skipping participant with participant nr: " + participantNumber);
+					validLine = false;
+				} else {
 				
-				Group distanceGroup = null;
-				Collection distances = this.business.getDistancesMap(runGroup, year);
-				iterator = distances.iterator();
-				while (iterator.hasNext()) {
-					Group element = (Group) iterator.next();
-					if (element.getName().equals(distance)) {
-						distanceGroup = element;
-						break;
+					Group yearGroup = null;
+					iterator = runGroup.getChildrenIterator();
+					while (iterator.hasNext()) {
+						Group element = (Group) iterator.next();
+						if (element.getName().equals(year)) {
+							yearGroup = element;
+							break;
+						}
 					}
-				}
-			
-				User user = null;
-				if (!userID.trim().equals("")) {
+					
+					Group distanceGroup = null;
+					Collection distances = this.business.getDistancesMap(runGroup, year);
+					iterator = distances.iterator();
+					while (iterator.hasNext()) {
+						Group element = (Group) iterator.next();
+						if (element.getName().equals(distance)) {
+							distanceGroup = element;
+							break;
+						}
+					}
+				
+					User user = null;
+					if (!userID.trim().equals("")) {
+						try {
+							user = this.userBusiness.getUser(Integer.valueOf(userID));
+						} catch (Exception e) {
+							System.out.println("User not found by pk, trying to find by other criteria");
+						}
+					}
+					if (user == null) {
+						try {
+							if (personalID.length() > 0) {
+								personalID = TextSoap.findAndReplace(personalID, "-", "");
+								user = this.business.getUserBiz().getUser(personalID);
+							}
+							else {
+								user = this.business.getUserBiz().getUserHome().findByDateOfBirthAndName(birth.getDate(), name);
+							}
+						}
+						catch (FinderException fe) {
+							System.out.println("User not found, creating...");
+						}
+					}
+					if (user == null) {
+						try {
+							Gender theGender = this.genderBusiness.getGender(new Integer(gender));
+							Name fullName = new Name(name);
+							user = this.business.getUserBiz().createUser(fullName.getFirstName(), fullName.getMiddleName(), fullName.getLastName(), fullName.getName(), personalID, theGender, birth);
+						}
+						catch (FinderException fe) {
+							System.err.println("Gender not found");
+							return false;
+						}
+						catch (CreateException ce) {
+							ce.printStackTrace();
+							return false;
+						}
+					}
+					
+					Participant participant = null;
 					try {
-						user = this.userBusiness.getUser(Integer.valueOf(userID));
+						participant = this.business.getParticipantByRunAndYear(user, runGroup, yearGroup);
+					}
+					catch (FinderException fe) {
+						try {
+							participant = this.business.importParticipant(user, runGroup, yearGroup, distanceGroup);
+						}
+						catch (CreateException ce) {
+							ce.printStackTrace();
+							return false;
+						}
+					}
+					participant.setChipNumber(chipNumber);
+					participant.setUserNationality(nationality);
+					if (runGroupName != null && runGroupName.trim().length() > 0) {
+						participant.setRunGroupName(runGroupName);
+					}
+					try {
+						if (charity != null && !charity.trim().equals("")) {
+							Charity charityOgranization = this.charityBusiness.getCharityHome().findByPrimaryKey(Integer.valueOf(charity.trim()));
+							if (charityOgranization!= null) {
+								participant.setCharityId(charityOgranization.getOrganizationalID());
+							}
+						}
 					} catch (Exception e) {
-						System.out.println("User not found by pk, trying to find by other criteria");
+						e.printStackTrace();
 					}
+					this.business.updateRunForParticipant(participant, number, runTime, chipTime, split1, split2);
 				}
-				if (user == null) {
-					try {
-						if (personalID.length() > 0) {
-							personalID = TextSoap.findAndReplace(personalID, "-", "");
-							user = this.business.getUserBiz().getUser(personalID);
-						}
-						else {
-							user = this.business.getUserBiz().getUserHome().findByDateOfBirthAndName(birth.getDate(), name);
-						}
-					}
-					catch (FinderException fe) {
-						System.out.println("User not found, creating...");
-					}
-				}
-				if (user == null) {
-					try {
-						Gender theGender = this.genderBusiness.getGender(new Integer(gender));
-						Name fullName = new Name(name);
-						user = this.business.getUserBiz().createUser(fullName.getFirstName(), fullName.getMiddleName(), fullName.getLastName(), fullName.getName(), personalID, theGender, birth);
-					}
-					catch (FinderException fe) {
-						System.err.println("Gender not found");
-						return false;
-					}
-					catch (CreateException ce) {
-						ce.printStackTrace();
-						return false;
-					}
-				}
-				
-				Participant participant = null;
-				try {
-					participant = this.business.getParticipantByRunAndYear(user, runGroup, yearGroup);
-				}
-				catch (FinderException fe) {
-					try {
-						participant = this.business.importParticipant(user, runGroup, yearGroup, distanceGroup);
-					}
-					catch (CreateException ce) {
-						ce.printStackTrace();
-						return false;
-					}
-				}
-				participant.setChipNumber(chipNumber);
-				participant.setUserNationality(nationality);
-				if (runGroupName != null && runGroupName.trim().length() > 0) {
-					participant.setRunGroupName(runGroupName);
-				}
-				try {
-					if (charity != null && !charity.trim().equals("")) {
-						Charity charityOgranization = this.charityBusiness.getCharityHome().findByPrimaryKey(Integer.valueOf(charity.trim()));
-						if (charityOgranization!= null) {
-							participant.setCharityId(charityOgranization.getOrganizationalID());
-						}
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				this.business.updateRunForParticipant(participant, number, runTime, chipTime, split1, split2);
 				return true;
 			}
 			catch (RemoteException e1) {
