@@ -27,6 +27,7 @@ import com.idega.user.data.User;
 import com.idega.util.IWTimestamp;
 import com.idega.util.LocaleUtil;
 import com.idega.util.text.Name;
+import com.idega.util.text.TextSoap;
 
 
 /**
@@ -186,6 +187,7 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 				if (user == null) {
 					try {
 						if (personalID.length() > 0) {
+							personalID = TextSoap.findAndReplace(personalID, "-", "");
 							user = this.business.getUserBiz().getUser(personalID);
 						}
 						else {
