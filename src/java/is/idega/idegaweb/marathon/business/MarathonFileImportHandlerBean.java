@@ -105,7 +105,7 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 		String userID = (String) values.get(1);
 		String gender = (String) values.get(2);
 		String dateOfBirth = (String) values.get(3);
-		String name = (String) values.get(4);
+		String name = ((String) values.get(4)).trim();
 		String personalID = ((String) values.get(5)).trim();
 		String nationality = (String) values.get(6);
 		String chipTime = (String) values.get(7);
@@ -195,9 +195,14 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 								personalID = TextSoap.findAndReplace(personalID, "-", "");
 								user = this.business.getUserBiz().getUser(personalID);
 							}
-							else {
-								user = this.business.getUserBiz().getUserHome().findByDateOfBirthAndName(birth.getDate(), name);
-							}
+						}
+						catch (FinderException fe) {
+							System.out.println("User not found by personal ID, trying name and date of birth...");
+						}
+					}
+					if (user == null) {
+						try {
+							user = this.business.getUserBiz().getUserHome().findByDateOfBirthAndName(birth.getDate(), name);
 						}
 						catch (FinderException fe) {
 							System.out.println("User not found, creating...");
@@ -233,7 +238,9 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 						}
 					}
 					participant.setChipNumber(chipNumber);
-					participant.setUserNationality(nationality);
+					if (country != null) {
+						participant.setUserNationality(country.getName());
+					}
 					if (runGroupName != null && runGroupName.trim().length() > 0) {
 						participant.setRunGroupName(runGroupName);
 					}
