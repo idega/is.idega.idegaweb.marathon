@@ -15,6 +15,7 @@ import com.idega.data.IDOLookupException;
 import com.idega.data.IDOQuery;
 import com.idega.data.query.Column;
 import com.idega.data.query.CountColumn;
+import com.idega.data.query.JoinCriteria;
 import com.idega.data.query.MatchCriteria;
 import com.idega.data.query.MaxColumn;
 import com.idega.data.query.SelectQuery;
@@ -551,6 +552,19 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		return (Integer) super.idoFindOnePKByQuery(query);
 	}
 	
+	public Integer ejbFindByYearAndParticipantNumberAndName(Object yearPK, int participantNumber, String fullName) throws FinderException{
+		Table table = new Table(this);
+		Table userTable = new Table(User.class);
+		SelectQuery query = new SelectQuery(table);
+		query.addColumn(new Column(getIDColumnName()));
+		query.addCriteria(new MatchCriteria(table, getColumnNameRunYearGroupID(), MatchCriteria.EQUALS, yearPK));
+		query.addCriteria(new MatchCriteria(table, getColumnNameParticipantNumber(), MatchCriteria.EQUALS, participantNumber));
+		query.addCriteria(new JoinCriteria(new Column(table, getColumnNameUserID()), new Column(userTable, User.FIELD_USER_ID)));
+		query.addCriteria(new MatchCriteria(userTable, User.FIELD_DISPLAY_NAME, MatchCriteria.EQUALS, fullName));
+
+		return (Integer) super.idoFindOnePKByQuery(query);
+	}
+
 	public Integer ejbFindByDistanceAndParticipantNumber(Object distancePK, int participantNumber) throws FinderException{
 		IDOQuery query = idoQueryGetSelect();
 		query.appendWhereEquals(getColumnNameRunDistanceGroupID(), distancePK);

@@ -30,6 +30,8 @@ public interface ParticipantHome extends IDOHome {
 	public Participant findByUserIDandYearID(int userID, int yearID) throws FinderException;
 
 	public Participant findByUserIDandDistanceID(int userID, int distanceID) throws FinderException;
+	
+	public Participant findByYearAndParticipantNumberAndName(Object distancePK, int participantNumber, String fullName) throws FinderException;
 
 	public Participant findByDistanceAndParticipantNumber(Object distancePK, int participantNumber) throws FinderException;
 

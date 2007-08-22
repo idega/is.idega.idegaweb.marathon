@@ -107,6 +107,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 	private static String DEFAULT_CC_ADDRESS = "hjordis@ibr.is";
 
 	private AddressHome addressHome;
+	private ParticipantHome participantHome;
 
 	/**
 	 * saves information on the user - creates a new user if he doesn't exsist..
@@ -687,7 +688,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		return getAgeGroup(user, (Group) run, distance);
 	}
 	
-	private Group getAgeGroup(User user, Group run, Group distance) {
+	public Group getAgeGroup(User user, Group run, Group distance) {
 		Year year = null;
 		try {
 			year = ConverterUtility.getInstance().convertGroupToYear((Group) distance.getParentNode());
@@ -961,7 +962,13 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 	}
 	
 	private int convertTimeToInt(String time) {
+		if (time == null || time.equals("-1")) {
+			return -1;
+		}
 		int index = time.lastIndexOf(":");
+		if (index == -1) {
+			return Integer.parseInt(time);
+		}
 		int hours = 0;
 		int minutes = 0;
 		int seconds = Integer.parseInt(time.substring(index + 1));
@@ -2154,5 +2161,17 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		else {
 			return iwrb.getLocalizedString(key, value);
 		}
+	}
+
+	public ParticipantHome getParticipantHome() {
+		if (this.participantHome == null) {
+			try {
+				this.participantHome = (ParticipantHome) IDOLookup.getHome(Participant.class);
+			}
+			catch (RemoteException rme) {
+				throw new RuntimeException(rme.getMessage());
+			}
+		}
+		return this.participantHome;
 	}
 }
