@@ -19,6 +19,7 @@ import com.idega.business.IBOServiceBean;
 import com.idega.core.localisation.business.LocaleSwitcher;
 import com.idega.core.location.data.Country;
 import com.idega.idegaweb.IWApplicationContext;
+import com.idega.presentation.IWContext;
 import com.idega.user.business.GenderBusiness;
 import com.idega.user.business.UserBusiness;
 import com.idega.user.data.Gender;
@@ -48,15 +49,6 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 	Locale englishLocale;
 	Locale icelandicLocale;
 	Collection runs;
-	
-	public static void main(String[] args) throws RemoteException {
-		/*File fFile = new File("/Users/gimmi/Desktop/Marathonhlauparar.csv");
-		ImportFile ifile = new ColumnSeparatedImportFile(fFile);
-		
-		MarathonFileImportHandlerBean m = new MarathonFileImportHandlerBean();
-		m.setImportFile(ifile);
-		m.handleRecords();*/
-	}
 	
 	public boolean handleRecords() throws RemoteException {
 		this.business = getBusiness(getIWApplicationContext());
@@ -182,6 +174,7 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 					}
 				
 					User user = null;
+					Participant participant = null;
 					if (!userID.trim().equals("")) {
 						try {
 							user = this.userBusiness.getUser(Integer.valueOf(userID));
@@ -198,6 +191,15 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 						}
 						catch (FinderException fe) {
 							System.out.println("User not found by personal ID, trying name and date of birth...");
+						}
+					}
+					if (user == null) {
+						try {
+							participant = this.business.getParticipantHome().findByYearAndParticipantNumberAndName(yearGroup.getPrimaryKey(), Integer.parseInt(participantNumber), name);
+							user = participant.getUser();
+						}
+						catch (FinderException fe) {
+							System.out.println("User not found, creating...");
 						}
 					}
 					if (user == null) {
@@ -224,18 +226,30 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 						}
 					}
 					
-					Participant participant = null;
-					try {
-						participant = this.business.getParticipantByRunAndYear(user, runGroup, yearGroup);
-					}
-					catch (FinderException fe) {
+					if (participant == null) {
 						try {
-							participant = this.business.importParticipant(user, runGroup, yearGroup, distanceGroup);
+							participant = this.business.getParticipantByRunAndYear(user, runGroup, yearGroup);
 						}
-						catch (CreateException ce) {
-							ce.printStackTrace();
-							return false;
+						catch (FinderException fe) {
+							try {
+								participant = this.business.importParticipant(user, runGroup, yearGroup, distanceGroup);
+							}
+							catch (CreateException ce) {
+								ce.printStackTrace();
+								return false;
+							}
 						}
+					}
+					if (participant.getRunDistanceGroupID() != ((Integer)distanceGroup.getPrimaryKey()).intValue()) {
+						Group oldAgeGenderGroup = participant.getRunGroupGroup();
+						Group newAgeGenderGroup = this.business.getAgeGroup(user, runGroup, distanceGroup);
+						
+						Collection userIDs = new ArrayList();
+						userIDs.add(user.getPrimaryKey().toString());
+						userBusiness.moveUsers(IWContext.getInstance(),userIDs, oldAgeGenderGroup, ((Integer)newAgeGenderGroup.getPrimaryKey()).intValue());
+						
+						participant.setRunDistanceGroup(distanceGroup);
+						participant.setRunGroupGroup(newAgeGenderGroup);
 					}
 					participant.setChipNumber(chipNumber);
 					if (country != null) {
