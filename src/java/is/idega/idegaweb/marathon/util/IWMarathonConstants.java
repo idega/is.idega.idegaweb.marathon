@@ -106,6 +106,7 @@ public class IWMarathonConstants {
   public static final String DISTANCE_7 = "7_km";
   public static final String DISTANCE_5 = "5_km";
   public static final String DISTANCE_3 = "3_km";
+  public static final String DISTANCE_0_5 = "0.5_km";
   public static final String DISTANCE_1 = "1_km";
   public static final String DISTANCE_1_5 = "1.5_km";
   public static final String DISTANCE_CHARITY_42 = "42_km_charity";
@@ -184,6 +185,8 @@ public class IWMarathonConstants {
   public static final int MAX_NUMBER_DISTANCE_1_5 = 14999;
   public static final int MIN_NUMBER_DISTANCE_1 = 10000;
   public static final int MAX_NUMBER_DISTANCE_1 = 14999;
+  public static final int MIN_NUMBER_DISTANCE_0_5 = 10000;
+  public static final int MAX_NUMBER_DISTANCE_0_5 = 14999;
   
   public static final int MIN_NUMBER_DISTANCE_MIDNIGHT_5 = 1;
   public static final int MAX_NUMBER_DISTANCE_MIDNIGHT_5 = 999;

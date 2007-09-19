@@ -88,6 +88,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 	private static final String RUN_RVK_MARATHON = "Reykjavik Marathon";
 	private static final String RUN_OSLO_MARATHON = "Oslo Marathon";
 	private static final String RUN_LAZY_TOWN_RUN = "Lazy Town Run";
+	private static final String RUN_LAZY_TOWN_RUN_OSLO = "Lazy Town Run Oslo";
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -1288,6 +1289,15 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				}
 			}
 		}
+		else if (runName.equals(RUN_LAZY_TOWN_RUN_OSLO)) {
+			if (distance.getName().equals(IWMarathonConstants.DISTANCE_0_5)) {
+				if (genderID == 2) {
+					nameOfGroup = IWMarathonConstants.FEMALE_9;
+				} else {
+					nameOfGroup = IWMarathonConstants.MALE_9;
+				}
+			}
+		}
 		else if (runName.equals(RUN_OSLO_MARATHON)) {
 			if (age >= 18 && age <= 22) {
 				if (genderID == 2) {
@@ -1480,12 +1490,20 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		String[] disForLaugavegur = { IWMarathonConstants.DISTANCE_55 };
 		String[] disForMidnight = { IWMarathonConstants.DISTANCE_10, IWMarathonConstants.DISTANCE_5, IWMarathonConstants.DISTANCE_3 };
 		String[] disForRollerSkate = { IWMarathonConstants.DISTANCE_10, IWMarathonConstants.DISTANCE_5 };
+		String[] disForLazyTown = { IWMarathonConstants.DISTANCE_1 };
+		String[] disForLazyTownOslo = { IWMarathonConstants.DISTANCE_0_5 };
 
 		if (runName.equals(RUN_RVK_MARATHON)) {
 			return disForMarathon;
 		}
 		else if (runName.equals(RUN_OSLO_MARATHON)) {
 			return disForOsloMarathon;
+		}
+		else if (runName.equals(RUN_LAZY_TOWN_RUN)) {
+			return disForLazyTown;
+		}
+		else if (runName.equals(RUN_LAZY_TOWN_RUN_OSLO)) {
+			return disForLazyTownOslo;
 		}
 		else if (runName.equals(RUN_MIDNIGHT_RUN)) {
 			return disForMidnight;
@@ -2057,6 +2075,9 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		else if (distanceType.equals(IWMarathonConstants.DISTANCE_1)) {
 			return IWMarathonConstants.MAX_NUMBER_DISTANCE_1;
 		}
+		else if (distanceType.equals(IWMarathonConstants.DISTANCE_0_5)) {
+			return IWMarathonConstants.MAX_NUMBER_DISTANCE_0_5;
+		}
 		return 0;
 	}
 
@@ -2097,6 +2118,9 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		}
 		else if (distanceType.equals(IWMarathonConstants.DISTANCE_1)) {
 			return IWMarathonConstants.MIN_NUMBER_DISTANCE_1;
+		}
+		else if (distanceType.equals(IWMarathonConstants.DISTANCE_0_5)) {
+			return IWMarathonConstants.MIN_NUMBER_DISTANCE_0_5;
 		}
 		return 0;
 	}
