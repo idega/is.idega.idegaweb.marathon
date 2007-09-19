@@ -88,7 +88,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 	private static final String RUN_RVK_MARATHON = "Reykjavik Marathon";
 	private static final String RUN_OSLO_MARATHON = "Oslo Marathon";
 	private static final String RUN_LAZY_TOWN_RUN = "Lazy Town Run";
-	private static final String RUN_LAZY_TOWN_RUN_OSLO = "Lazy Town Run Oslo";
+	private static final String RUN_LAZY_TOWN_MINIMARATON_OSLO = "Lazy Town Minimaraton Oslo";
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -1289,7 +1289,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				}
 			}
 		}
-		else if (runName.equals(RUN_LAZY_TOWN_RUN_OSLO)) {
+		else if (runName.equals(RUN_LAZY_TOWN_MINIMARATON_OSLO)) {
 			if (distance.getName().equals(IWMarathonConstants.DISTANCE_0_5)) {
 				if (genderID == 2) {
 					nameOfGroup = IWMarathonConstants.FEMALE_9;
@@ -1502,7 +1502,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		else if (runName.equals(RUN_LAZY_TOWN_RUN)) {
 			return disForLazyTown;
 		}
-		else if (runName.equals(RUN_LAZY_TOWN_RUN_OSLO)) {
+		else if (runName.equals(RUN_LAZY_TOWN_MINIMARATON_OSLO)) {
 			return disForLazyTownOslo;
 		}
 		else if (runName.equals(RUN_MIDNIGHT_RUN)) {
@@ -1600,7 +1600,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		else if (runName.equals(RUN_LAZY_TOWN_RUN)) {
 			generateSubGroups(iwc, group, getDistancesForRun(run), grForLazyTown, priceISK, priceEUR, useChips, childrenPriceISK, childrenPriceEUR, familyDiscount, allowsGroups, numberOfSplits, offersTransport);
 		}
-		else if (runName.equals(RUN_LAZY_TOWN_RUN_OSLO)) {
+		else if (runName.equals(RUN_LAZY_TOWN_MINIMARATON_OSLO)) {
 			generateSubGroups(iwc, group, getDistancesForRun(run), grForLazyTownOslo, priceISK, priceEUR, useChips, childrenPriceISK, childrenPriceEUR, familyDiscount, allowsGroups, numberOfSplits, offersTransport);
 		}
 		else if (runName.equals(RUN_MIDNIGHT_RUN)) {
