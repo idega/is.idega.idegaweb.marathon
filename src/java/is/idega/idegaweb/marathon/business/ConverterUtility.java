@@ -1,5 +1,5 @@
 /*
- * $Id: ConverterUtility.java,v 1.2 2005/08/01 17:38:19 laddi Exp $
+ * $Id: ConverterUtility.java,v 1.3 2007/09/26 08:05:23 laddi Exp $
  * Created on May 22, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -22,10 +22,10 @@ import com.idega.user.data.Group;
 
 
 /**
- * Last modified: $Date: 2005/08/01 17:38:19 $ by $Author: laddi $
+ * Last modified: $Date: 2007/09/26 08:05:23 $ by $Author: laddi $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class ConverterUtility {
 
@@ -76,7 +76,7 @@ public class ConverterUtility {
 	public Year convertGroupToYear(Object groupPK) throws FinderException {
 		try {
 			YearHome home = (YearHome) IDOLookup.getHome(Year.class);
-			return (Year) home.findByPrimaryKey(groupPK);
+			return home.findByPrimaryKey(groupPK);
 		}
 		catch (IDOLookupException ile) {
 			throw new FinderException(ile.getMessage());

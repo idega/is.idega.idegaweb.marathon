@@ -20,7 +20,7 @@ import com.idega.presentation.ui.TextInput;
 
 public class RegisterUsersEditor extends RunBlock {
 	
-	private static final String PARAMETER_ACTION = "marathon_prm_action";
+	private static final String PRM_ACTION = "marathon_prm_action";
 	private static final String PARAMETER_NAME = "prm_name";
 	private static final String PARAMETER_MARATHON_PK = "prm_run_pk";
 	private static final String PARAMETER_MARATHON_YEAR_PK = "prm_run_year_pk";
@@ -97,8 +97,8 @@ public class RegisterUsersEditor extends RunBlock {
 				form.add(layer);
 				form.add(new Break());
 				
-				SubmitButton save = (SubmitButton) getButton(new SubmitButton(localize("save", "Save"), PARAMETER_ACTION, String.valueOf(ACTION_SAVE)));
-				SubmitButton cancel = (SubmitButton) getButton(new SubmitButton(localize("cancel", "Cancel"), PARAMETER_ACTION, String.valueOf(ACTION_VIEW)));
+				SubmitButton save = (SubmitButton) getButton(new SubmitButton(localize("save", "Save"), PRM_ACTION, String.valueOf(ACTION_SAVE)));
+				SubmitButton cancel = (SubmitButton) getButton(new SubmitButton(localize("cancel", "Cancel"), PRM_ACTION, String.valueOf(ACTION_VIEW)));
 
 				form.add(save);
 				form.add(cancel);
@@ -111,7 +111,7 @@ public class RegisterUsersEditor extends RunBlock {
 		form.add(table);
 		form.add(new Break());
 		if (iwc.isParameterSet(PARAMETER_MARATHON_YEAR_PK)) {
-			SubmitButton newLink = (SubmitButton) getButton(new SubmitButton(localize("new_distance", "New distance"), PARAMETER_ACTION, String.valueOf(ACTION_NEW)));
+			SubmitButton newLink = (SubmitButton) getButton(new SubmitButton(localize("new_distance", "New distance"), PRM_ACTION, String.valueOf(ACTION_NEW)));
 			form.add(newLink);
 		}
 		add(form);
@@ -120,8 +120,8 @@ public class RegisterUsersEditor extends RunBlock {
 	public void showEditor(IWContext iwc) throws java.rmi.RemoteException {
 		Form form = new Form();
 		
-		SubmitButton save = (SubmitButton) getButton(new SubmitButton(localize("save", "Save"), PARAMETER_ACTION, String.valueOf(ACTION_SAVE)));
-		SubmitButton cancel = (SubmitButton) getButton(new SubmitButton(localize("cancel", "Cancel"), PARAMETER_ACTION, String.valueOf(ACTION_VIEW)));
+		SubmitButton save = (SubmitButton) getButton(new SubmitButton(localize("save", "Save"), PRM_ACTION, String.valueOf(ACTION_SAVE)));
+		SubmitButton cancel = (SubmitButton) getButton(new SubmitButton(localize("cancel", "Cancel"), PRM_ACTION, String.valueOf(ACTION_VIEW)));
 
 		form.add(save);
 		form.add(cancel);
@@ -133,8 +133,8 @@ public class RegisterUsersEditor extends RunBlock {
 	}
 	
 	protected int parseAction(IWContext iwc) {
-		if (iwc.isParameterSet(PARAMETER_ACTION)) {
-			return Integer.parseInt(iwc.getParameter(PARAMETER_ACTION));
+		if (iwc.isParameterSet(PRM_ACTION)) {
+			return Integer.parseInt(iwc.getParameter(PRM_ACTION));
 		}
 		return ACTION_VIEW;
 	}

@@ -36,7 +36,7 @@ import com.idega.util.MiscUtil;
 
 public class RunDistanceEditor extends RunBlock {
 	
-	private static final String PARAMETER_ACTION = "marathon_prm_action";
+	private static final String PRM_ACTION = "marathon_prm_action";
 	private static final String PARAMETER_DISTANCE = "prm_distance";
 	private static final String PARAMETER_USE_CHIP = "use_chip";
 	private static final String PARAMETER_FAMILY_DISCOUNT = "family_discount";
@@ -150,7 +150,7 @@ public class RunDistanceEditor extends RunBlock {
 							edit.addParameter(PARAMETER_MARATHON_PK, iwc.getParameter(PARAMETER_MARATHON_PK));
 							edit.addParameter(PARAMETER_MARATHON_YEAR_PK, selectedYear.getPrimaryKey().toString());
 							edit.addParameter(PARAMETER_MARATHON_DISTANCE_PK, distance.getPrimaryKey().toString());
-							edit.addParameter(PARAMETER_ACTION, ACTION_EDIT);
+							edit.addParameter(PRM_ACTION, ACTION_EDIT);
 							
 										
 							cell = row.createCell();
@@ -168,7 +168,7 @@ public class RunDistanceEditor extends RunBlock {
 		form.add(table);
 		form.add(new Break());
 		if (iwc.isParameterSet(PARAMETER_MARATHON_YEAR_PK)) {
-			SubmitButton newLink = (SubmitButton) getButton(new SubmitButton(localize("new_distance", "New distance"), PARAMETER_ACTION, String.valueOf(ACTION_NEW)));
+			SubmitButton newLink = (SubmitButton) getButton(new SubmitButton(localize("new_distance", "New distance"), PRM_ACTION, String.valueOf(ACTION_NEW)));
 			form.add(newLink);
 		}
 		add(form);
@@ -300,8 +300,8 @@ public class RunDistanceEditor extends RunBlock {
 		layer.add(shirtSizeSelectionBox);
 		form.add(layer);
 		
-		SubmitButton save = (SubmitButton) getButton(new SubmitButton(localize("save", "Save"), PARAMETER_ACTION, String.valueOf(ACTION_SAVE)));
-		SubmitButton cancel = (SubmitButton) getButton(new SubmitButton(localize("cancel", "Cancel"), PARAMETER_ACTION, String.valueOf(ACTION_VIEW)));
+		SubmitButton save = (SubmitButton) getButton(new SubmitButton(localize("save", "Save"), PRM_ACTION, String.valueOf(ACTION_SAVE)));
+		SubmitButton cancel = (SubmitButton) getButton(new SubmitButton(localize("cancel", "Cancel"), PRM_ACTION, String.valueOf(ACTION_VIEW)));
 
 		form.add(save);
 		form.add(cancel);
@@ -433,8 +433,8 @@ public class RunDistanceEditor extends RunBlock {
 	}
 
 	protected int parseAction(IWContext iwc) {
-		if (iwc.isParameterSet(PARAMETER_ACTION)) {
-			return Integer.parseInt(iwc.getParameter(PARAMETER_ACTION));
+		if (iwc.isParameterSet(PRM_ACTION)) {
+			return Integer.parseInt(iwc.getParameter(PRM_ACTION));
 		}
 		return ACTION_VIEW;
 	}

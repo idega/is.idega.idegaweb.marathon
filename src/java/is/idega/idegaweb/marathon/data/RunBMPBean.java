@@ -1,5 +1,5 @@
 /*
- * $Id: RunBMPBean.java,v 1.32 2007/06/28 13:34:57 tryggvil Exp $
+ * $Id: RunBMPBean.java,v 1.33 2007/09/26 08:05:23 laddi Exp $
  * Created on May 22, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -10,20 +10,22 @@
 package is.idega.idegaweb.marathon.data;
 
 import is.idega.idegaweb.marathon.business.RunBusiness;
+
 import java.rmi.RemoteException;
 import java.util.Map;
+
+import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
-import com.idega.data.IDOLookup;
 import com.idega.presentation.IWContext;
 import com.idega.user.data.GroupBMPBean;
 import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2007/06/28 13:34:57 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/09/26 08:05:23 $ by $Author: laddi $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  */
 public class RunBMPBean extends GroupBMPBean  implements Run{
 
@@ -109,7 +111,7 @@ public class RunBMPBean extends GroupBMPBean  implements Run{
 
 	private RunBusiness getRunBusiness(IWContext iwc) {
 		try {
-			return (RunBusiness) IDOLookup.getServiceInstance(iwc, RunBusiness.class);
+			return (RunBusiness) IBOLookup.getServiceInstance(iwc, RunBusiness.class);
 		}
 		catch (IBOLookupException e) {
 			throw new RuntimeException(e);

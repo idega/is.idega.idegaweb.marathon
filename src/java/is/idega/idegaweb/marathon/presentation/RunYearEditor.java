@@ -37,7 +37,7 @@ import com.idega.util.IWTimestamp;
 
 public class RunYearEditor extends RunBlock {
 	
-	private static final String PARAMETER_ACTION = "marathon_prm_action";
+	private static final String PRM_ACTION = "marathon_prm_action";
 	private static final String PARAMETER_MARATHON_PK = "prm_run_pk";
 	private static final String PARAMETER_MARATHON_YEAR_PK = "prm_run_year_pk";
 	private static final String PARAMETER_YEAR = "prm_year";
@@ -85,8 +85,8 @@ public class RunYearEditor extends RunBlock {
 	}
 
 	protected int parseAction(IWContext iwc) {
-		if (iwc.isParameterSet(PARAMETER_ACTION)) {
-			return Integer.parseInt(iwc.getParameter(PARAMETER_ACTION));
+		if (iwc.isParameterSet(PRM_ACTION)) {
+			return Integer.parseInt(iwc.getParameter(PRM_ACTION));
 		}
 		return ACTION_VIEW;
 	}
@@ -146,7 +146,7 @@ public class RunYearEditor extends RunBlock {
 					Link edit = new Link(getEditIcon(localize("edit", "Edit")));
 					edit.addParameter(PARAMETER_MARATHON_PK, iwc.getParameter(PARAMETER_MARATHON_PK));
 					edit.addParameter(PARAMETER_MARATHON_YEAR_PK, year.getPrimaryKey().toString());
-					edit.addParameter(PARAMETER_ACTION, ACTION_EDIT);
+					edit.addParameter(PRM_ACTION, ACTION_EDIT);
 								
 					cell = row.createCell();
 					cell.add(new Text(year.getName()));
@@ -161,7 +161,7 @@ public class RunYearEditor extends RunBlock {
 		form.add(table);
 		form.add(new Break());
 		if (iwc.isParameterSet(PARAMETER_MARATHON_PK)) {
-			SubmitButton newLink = (SubmitButton) getButton(new SubmitButton(localize("new_year", "New year"), PARAMETER_ACTION, String.valueOf(ACTION_NEW)));
+			SubmitButton newLink = (SubmitButton) getButton(new SubmitButton(localize("new_year", "New year"), PRM_ACTION, String.valueOf(ACTION_NEW)));
 			form.add(newLink);
 		}
 		add(form);
@@ -280,8 +280,8 @@ public class RunYearEditor extends RunBlock {
 			maximumAgeDropDown.addMenuElement(i,String.valueOf(i));
 		}
 		
-		SubmitButton save = (SubmitButton) getButton(new SubmitButton(localize("save", "Save"), PARAMETER_ACTION, String.valueOf(ACTION_SAVE_EDIT)));
-		SubmitButton cancel = (SubmitButton) getButton(new SubmitButton(localize("cancel", "Cancel"), PARAMETER_ACTION, String.valueOf(ACTION_VIEW)));
+		SubmitButton save = (SubmitButton) getButton(new SubmitButton(localize("save", "Save"), PRM_ACTION, String.valueOf(ACTION_SAVE_EDIT)));
+		SubmitButton cancel = (SubmitButton) getButton(new SubmitButton(localize("cancel", "Cancel"), PRM_ACTION, String.valueOf(ACTION_VIEW)));
 
 		form.add(save);
 		form.add(cancel);

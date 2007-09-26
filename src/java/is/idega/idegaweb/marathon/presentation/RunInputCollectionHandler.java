@@ -1,5 +1,5 @@
 /*
- * $Id: RunInputCollectionHandler.java,v 1.12 2007/08/08 01:03:18 sigtryggur Exp $
+ * $Id: RunInputCollectionHandler.java,v 1.13 2007/09/26 08:05:23 laddi Exp $
  * Created on Feb 14, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -27,16 +27,15 @@ import com.idega.presentation.remotescripting.RemoteScriptCollection;
 import com.idega.presentation.remotescripting.RemoteScriptHandler;
 import com.idega.presentation.remotescripting.RemoteScriptingResults;
 import com.idega.user.data.Group;
-import com.idega.user.data.User;
 import com.idega.util.IWTimestamp;
 
 
 /**
  * 
- *  Last modified: $Date: 2007/08/08 01:03:18 $ by $Author: sigtryggur $
+ *  Last modified: $Date: 2007/09/26 08:05:23 $ by $Author: laddi $
  * 
  * @author <a href="mailto:birna@idega.com">birna</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class RunInputCollectionHandler extends PresentationObject implements RemoteScriptCollection {
 
@@ -91,10 +90,10 @@ public class RunInputCollectionHandler extends PresentationObject implements Rem
 			    Vector ids = new Vector();
 			    Vector names = new Vector();
 			    
-			    User user = null;
+			    /*User user = null;
 			    if (iwc.isParameterSet(PARAMETER_USER_ID)) {
 			    	user = getRunBiz(iwc).getUserBiz().getUser(new Integer(iwc.getParameter(PARAMETER_USER_ID)));
-			    }
+			    }*/
 			    if (distances != null) {
 				    Iterator disIter = distances.iterator();
 				    if (disIter.hasNext()) {
