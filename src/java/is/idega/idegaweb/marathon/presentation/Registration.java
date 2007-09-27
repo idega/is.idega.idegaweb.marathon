@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.123 2007/08/16 10:15:09 sigtryggur Exp $
+ * $Id: Registration.java,v 1.124 2007/09/27 12:18:48 idegaweb Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -76,10 +76,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/08/16 10:15:09 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/09/27 12:18:48 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.123 $
+ * @version $Revision: 1.124 $
  */
 public class Registration extends RunBlock {
 	
@@ -2156,7 +2156,13 @@ public class Registration extends RunBlock {
 	}
 
 	private String localizeForRun(String key, String value) {
-		if (getRunner().getRun() != null) {
+		Runner runner = null;
+		try {
+			runner = getRunner();
+		} catch (Exception e) {
+			//unable to initialize runner, using default value
+		}
+		if (runner != null && runner.getRun() != null) {
 			String runKey = key+"_runid_"+getRunner().getRun().getId();
 			String localizedString = getResourceBundle().getLocalizedString(runKey);
 			if(localizedString == null){
