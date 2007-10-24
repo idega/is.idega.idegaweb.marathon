@@ -44,6 +44,7 @@ import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
 import com.idega.business.IBORuntimeException;
 import com.idega.business.IBOServiceBean;
+import com.idega.core.accesscontrol.business.LoginDBHandler;
 import com.idega.core.accesscontrol.data.LoginTable;
 import com.idega.core.contact.data.Email;
 import com.idega.core.location.data.Address;
@@ -113,14 +114,14 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 	/**
 	 * saves information on the user - creates a new user if he doesn't exsist..
 	 */
-	private User saveUser(String name, String ssn, IWTimestamp dateOfBirth, Gender gender, String address, String postal, String city, Country country) {
+	public User saveUser(String name, String ssn, IWTimestamp dateOfBirth, Gender gender, String address, String postal, String city, Country country) {
 		User user = null;
 		try {
 			if (dateOfBirth == null) {
 				dateOfBirth = getBirthDateFromSSN(ssn);
 			}
 			Name fullName = new Name(name);
-			user = getUserBiz().createUser(fullName.getFirstName(), fullName.getMiddleName(), fullName.getLastName(), fullName.getName(), null, gender, dateOfBirth);
+			user = getUserBiz().createUser(fullName.getFirstName(), fullName.getMiddleName(), fullName.getLastName(), fullName.getName(), ssn, gender, dateOfBirth);
 			user.store();
 
 			if (address != null && !address.equals("")) {
@@ -435,13 +436,25 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				String userNameString = "";
 				String passwordString = "";
 
-				try {
-					LoginTable login = getUserBiz().generateUserLogin(user);
-					userNameString = login.getUserLogin();
-					passwordString = login.getUnencryptedUserPassword();
-				} catch (Exception e) {
-					System.out.println("Error creating login for user: " + user.getName());
-					e.printStackTrace();
+				if (getUserBiz().hasUserLogin(user)) {
+					try {
+						LoginTable login = LoginDBHandler.getUserLogin(user);
+						userNameString = login.getUserLogin();
+						passwordString = LoginDBHandler.getGeneratedPasswordForUser();
+						LoginDBHandler.changePassword(login, passwordString);
+					} catch (Exception e) {
+						System.out.println("Error re-generating password for user: " + user.getName());
+						e.printStackTrace();
+					}
+				} else {
+					try {
+						LoginTable login = getUserBiz().generateUserLogin(user);
+						userNameString = login.getUserLogin();
+						passwordString = login.getUnencryptedUserPassword();
+					} catch (Exception e) {
+						System.out.println("Error creating login for user: " + user.getName());
+						e.printStackTrace();
+					}
 				}
 				
 				Group ageGenderGroup = getAgeGroup(user, runner.getRun(), runner.getDistance());

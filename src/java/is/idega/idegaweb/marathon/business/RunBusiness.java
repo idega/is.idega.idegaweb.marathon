@@ -1,5 +1,5 @@
 /*
- * $Id: RunBusiness.java,v 1.40 2007/08/22 14:19:50 sigtryggur Exp $
+ * $Id: RunBusiness.java,v 1.41 2007/10/24 20:25:25 idegaweb Exp $
  * Created on Aug 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -27,16 +27,17 @@ import com.idega.core.location.data.Country;
 import com.idega.data.IDOCreateException;
 import com.idega.presentation.IWContext;
 import com.idega.user.business.UserBusiness;
+import com.idega.user.data.Gender;
 import com.idega.user.data.Group;
 import com.idega.user.data.User;
 import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2007/08/22 14:19:50 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/10/24 20:25:25 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.40 $
+ * @version $Revision: 1.41 $
  */
 public interface RunBusiness extends IBOService {
 
@@ -78,6 +79,11 @@ public interface RunBusiness extends IBOService {
 	public Participant importParticipant(User user, Group run, Group year, Group distance)
 			throws CreateException, java.rmi.RemoteException;
 
+	/**
+	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#saveUser
+	 */
+	public User saveUser(String name, String ssn, IWTimestamp dateOfBirth, Gender gender, String address, String postal, String city, Country country) throws java.rmi.RemoteException;
+	
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#saveParticipants
 	 */
