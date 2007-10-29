@@ -268,9 +268,7 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		try {
 			conn = getConnection(getDatasource());
 			Stmt = conn.createStatement();
-			StringBuffer buffer = new StringBuffer();
-			buffer.append("select distinct " + getColumnPaymentGroup() + " from " + getEntityName() + " where " + getRunYearGroupID() + " = " + getRunYearGroupID() +" and " +getColumnPaymentGroup() + " is not null and " + getColumnPaymentGroup() + " != ''");
-			String sql = buffer.toString();
+			String sql = "select distinct " + getColumnPaymentGroup() + " from " + getEntityName() + " where " + getColumnNameRunYearGroupID() + " = " + getRunYearGroupID() +" and " +getColumnPaymentGroup() + " is not null and " + getColumnPaymentGroup() + " != ''";
 			RS = Stmt.executeQuery(sql);
 			while (RS.next()) {
 				String paymentGroupName = RS.getString(getColumnPaymentGroup());
