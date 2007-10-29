@@ -121,6 +121,7 @@ public class MarathonGroupUsersImportBean extends IBOServiceBean implements Mara
 		String countryName = ((String) values.get(11)).trim();
 		String nationality = ((String) values.get(12)).trim();
 		String shirtSize = ((String) values.get(13)).trim();
+		String paymentGroup = ((String) values.get(14)).trim();
 		
 		if ((name.equals("Nafn")) || (name.equals("Name")) ) {
 			//ignoring headers in first line
@@ -281,6 +282,7 @@ public class MarathonGroupUsersImportBean extends IBOServiceBean implements Mara
 			participant.setRunGroupGroup(ageGenderGroup);
 			participant.setUserNationality(nationality);
 			participant.setShirtSize(shirtSize);
+			participant.setPaymentGroup(paymentGroup);
 			participant.store();
 			
 			String userNameString = "";
