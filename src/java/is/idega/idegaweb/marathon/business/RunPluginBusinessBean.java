@@ -207,7 +207,9 @@ public class RunPluginBusinessBean extends IBOServiceBean implements RunPluginBu
 	 * @see com.idega.user.business.UserGroupPlugInBusiness#getMainToolbarElements()
 	 */
 	public List getMainToolbarElements() throws RemoteException {
-		return null;
+		List list = new ArrayList();
+		list.add(new MarathonGroupUsersImportPlugin());
+		return list;
 	}
 
 	/*
