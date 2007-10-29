@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.124 2007/09/27 12:18:48 idegaweb Exp $
+ * $Id: Registration.java,v 1.125 2007/10/29 14:14:10 idegaweb Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -76,10 +76,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/09/27 12:18:48 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/10/29 14:14:10 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.124 $
+ * @version $Revision: 1.125 $
  */
 public class Registration extends RunBlock {
 	
@@ -152,7 +152,6 @@ public class Registration extends RunBlock {
 	private float chipDiscount;
 	private float childDiscount = 0;
 	private Runner setRunner;
-	private boolean disableTransportStep = false;
 	private boolean disablePaymentAndOverviewSteps = false;
 	private String runIds;
 	private String constrainedToOneRun;
@@ -1738,7 +1737,7 @@ public class Registration extends RunBlock {
 					if(dist.isUseChip()){
 						addStep(iwc,ACTION_STEP_CHIP,localize("run_reg.time_registration_chip", "Time registration chip"));
 					}
-					if(dist.isTransportOffered()&&!disableTransportStep){
+					if(dist.isTransportOffered()){
 						addStep(iwc,ACTION_STEP_TRANSPORT,localize("run_reg.order_transport", "Order a bus trip"));
 					}
 				}
@@ -1859,7 +1858,7 @@ public class Registration extends RunBlock {
 					action = ACTION_STEP_PERSONALDETAILS;
 				}
 				else if (fromAction == ACTION_STEP_PERSONALDETAILS) {
-					if (getRunner() != null && getRunner().getDistance().isTransportOffered() && !disableTransportStep) {
+					if (getRunner() != null && getRunner().getDistance().isTransportOffered()) {
 						action= ACTION_STEP_TRANSPORT;
 					}
 					else {
@@ -1869,7 +1868,7 @@ public class Registration extends RunBlock {
 			}
 		}
 		if (action == ACTION_STEP_TRANSPORT) {
-			if (getRunner() != null && !(getRunner().getDistance().isTransportOffered() && !disableTransportStep)) {
+			if (getRunner() != null && !(getRunner().getDistance().isTransportOffered())) {
 				int fromAction = Integer.parseInt(iwc.getParameter(PARAMETER_FROM_ACTION));
 				if (fromAction == ACTION_STEP_DISCLAIMER) {
 					if (getRunner() != null && getRunner().getDistance().isUseChip()) {
@@ -2013,10 +2012,6 @@ public class Registration extends RunBlock {
 			return "invalid chipcode.";
 		}
 	}*/
-
-	public void setDisableTransportStep(boolean disableTransportStep) {
-		this.disableTransportStep = disableTransportStep;
-	}
 	
 	private void stepCharity(IWContext iwc) {
 		Form form = new Form();
