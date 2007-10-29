@@ -339,6 +339,7 @@ run_tab.participant_nr=Participant number
 run_tab.partitionnumber_must_be_digits=You can only enter digits in the partition number field
 run_tab.pay_method=Pay method
 run_tab.payed_amount=Paid amount
+run_tab.paymentGroup=Payment group
 run_tab.price_EUR=Price (EUR)
 run_tab.price_ISK=Price (ISK)
 run_tab.price_for_transport_EUR=Price for bus trip (EUR)
