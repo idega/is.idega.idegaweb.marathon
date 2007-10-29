@@ -12,6 +12,7 @@ import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import javax.ejb.FinderException;
 import com.idega.business.IBOLookup;
@@ -60,6 +61,7 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 	private Text teamNameText;
 	private Text categoryText;
 	private Text charityText;
+	private Text paymentGroupText;
 	
 
 	// fields
@@ -86,6 +88,7 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 	private TextInput teamNameField;
 	private DropdownMenu categoryField;
 	private DropdownMenu charityField;
+	private DropdownMenu paymentGroupField;
 
 	private Form f;
 
@@ -113,6 +116,7 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 		this.teamNameText = new Text(iwrb.getLocalizedString("run_tab.team_name", "Team name"));
 		this.categoryText = new Text(iwrb.getLocalizedString("run_tab.category", "Category"));
 		this.charityText = new Text(iwrb.getLocalizedString("run_tab.charity", "Charity"));
+		this.paymentGroupText = new Text(iwrb.getLocalizedString("run_tab.paymentGroup", "Payment group"));
 	}
 
 	public void initializeFields() {
@@ -199,6 +203,9 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 		this.categoryField.setWidth("170");
 		this.charityField = new CharitiesForRunDropDownMenu(IWMarathonConstants.PARAMETER_CHARITY);
 		this.charityField.setWidth("170");
+		this.paymentGroupField = new DropdownMenu(IWMarathonConstants.PARAMETER_PAYMENT_GROUP);
+		this.paymentGroupField.setWidth("170");
+
 
 		if (run != null) {
 			int disID = run.getRunDistanceGroupID();
@@ -248,6 +255,18 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 			}
 			this.categoryField.setSelectedElement(run.getCategoryId());
 			this.charityField.setSelectedElement(run.getCharityId());
+			this.paymentGroupField.addMenuElement("","");
+			Collection paymentGroups = run.getPaymentGroupsForYear();
+			if (paymentGroups != null) {
+				Iterator paymentGroupIt = paymentGroups.iterator();
+				while (paymentGroupIt.hasNext()) {
+					String paymentGroup = (String) paymentGroupIt.next();
+					this.paymentGroupField.addMenuElement(paymentGroup, paymentGroup);
+				}
+			}
+			if (run.getPaymentGroup() != null) {
+				this.paymentGroupField.setSelectedElement(run.getPaymentGroup());
+			}
 		}
 		this.submitButton = new SubmitButton(iwrb.getLocalizedString("run_tab.save", "Save"), PARAMETER_ACTION, Integer.toString(ACTION_SAVE));
 		this.submitButton.setAsImageButton(true);
@@ -267,6 +286,7 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 		String chipTime = iwc.getParameter(IWMarathonConstants.PARAMETER_CHIP_TIME);
 		String categoryID = iwc.getParameter(IWMarathonConstants.PARAMETER_CATEGORY);
 		String charityID = iwc.getParameter(IWMarathonConstants.PARAMETER_CHARITY);
+		String paymentGroup = iwc.getParameter(IWMarathonConstants.PARAMETER_PAYMENT_GROUP);
 		String userIDString = iwc.getParameter(PARAMETER_IC_USER_ID);
 		String groupIDString = iwc.getParameter(PARAMETER_SELECTED_IC_GROUP_ID);
 		String distanceIDString = iwc.getParameter(PARAMETER_DISTANCE);
@@ -303,6 +323,7 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 			} else {
 				participant.setCharityId(null);
 			}
+			participant.setPaymentGroup(paymentGroup);
 			if (distanceIDString != null && !distanceIDString.equals("")) {
 				Group distanceGroup = null;
 				Distance distance = null;
@@ -413,8 +434,12 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 		t.add(this.charityField, 2, 20);
 		t.setHeight(1, 21, 8);
 		t.setHeight(2, 21, 8);
-		t.setAlignment(2, 22, Table.HORIZONTAL_ALIGN_RIGHT);
-		t.add(this.submitButton, 2, 22);
+		t.add(this.paymentGroupText + ": ", 1, 22);
+		t.add(this.paymentGroupField, 1, 23);
+		t.setHeight(1, 24, 8);
+		t.setHeight(2, 24, 8);
+		t.setAlignment(2, 25, Table.HORIZONTAL_ALIGN_RIGHT);
+		t.add(this.submitButton, 2, 25);
 		this.f.add(t);
 	}
 
