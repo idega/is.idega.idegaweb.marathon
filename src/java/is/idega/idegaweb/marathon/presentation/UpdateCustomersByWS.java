@@ -15,6 +15,7 @@ import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Paragraph;
 import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.Form;
+import com.idega.user.data.Group;
 
 public class UpdateCustomersByWS extends RunBlock {
 
@@ -22,12 +23,11 @@ public class UpdateCustomersByWS extends RunBlock {
 	private final static int ACTION_FORM_SUBMIT = 2;
 	
 	private final static String PARAMETER_FORM_SUBMIT = "cp_sbmt";
-	
 	private final static String KEY_PREFIX = "updateCustomers.";
-	
 	private final static String KEY_UPDATE = KEY_PREFIX + "update";
-	
 	private final static String DEFAULT_UPDATE = "Update";
+	
+	private int runGroupID = -1;
 
 	protected int parseAction (final IWContext iwc) {
 		if (iwc.isParameterSet(PARAMETER_FORM_SUBMIT)) {
@@ -75,8 +75,19 @@ public class UpdateCustomersByWS extends RunBlock {
 		section.setStyleClass("formSection");
 		contents.add(section);
 		
+		Group runYear = null;
+		try {
+			runYear = getGroupBusiness(iwc).getGroupByGroupID(this.runGroupID);
+		} catch (Exception e) {
+			//runYear group not found
+		}
+		
 		Paragraph paragraph = new Paragraph();
-		paragraph.add(new Text(this.iwrb.getLocalizedString(KEY_PREFIX + "update_customers_helper_text", "Please select the desired run and year.")));
+		if (runYear != null) {
+			paragraph.add(new Text(this.iwrb.getLocalizedString(runYear.getParentNode().getNodeName(),runYear.getParentNode().getNodeName()) + " " + runYear.getName()));
+		} else {
+			paragraph.add(new Text(this.iwrb.getLocalizedString(KEY_PREFIX + "update_customers_helper_text", "Please select the desired run and year.")));
+		}
 		section.add(paragraph);
 		
 		Layer buttonLayer = new Layer(Layer.DIV);
@@ -97,24 +108,40 @@ public class UpdateCustomersByWS extends RunBlock {
         try {
         	MarathonWS2Client wsClient = new MarathonWS2Client(getIWApplicationContext().getIWMainApplication());
         	ParticipantHome partHome = (ParticipantHome) IDOLookup.getHome(Participant.class);
-			Collection participants = partHome.findAllByRunGroupIdAndYear(4,2007);
-			if (participants != null && !participants.isEmpty()) {
-				Iterator partIt = participants.iterator();
-				while (partIt.hasNext()) {
-					Participant participant = (Participant)partIt.next();
-					if (participant != null && participant.getUser() != null && participant.getUser().getPersonalID() != null && getUserBusiness(iwc).hasValidIcelandicSSN(participant.getUser())) {
-						if(wsClient.erIVidskiptumVidGlitni(participant.getUser().getPersonalID())){
-							participant.setCustomer(true);
+        	Collection participants = null;
+        	if (this.runGroupID != -1) {
+				Group runYear = getGroupBusiness(iwc).getGroupByGroupID(this.runGroupID);
+				participants = partHome.findAllByRunGroupIdAndYearGroupId(Integer.parseInt(runYear.getParentNode().getId()), runGroupID);
+				if (participants != null && !participants.isEmpty()) {
+					Iterator partIt = participants.iterator();
+					while (partIt.hasNext()) {
+						Participant participant = (Participant)partIt.next();
+						if (participant != null && participant.getUser() != null && participant.getUser().getPersonalID() != null && getUserBusiness(iwc).hasValidIcelandicSSN(participant.getUser())) {
+							if(wsClient.erIVidskiptumVidGlitni(participant.getUser().getPersonalID())){
+								participant.setCustomer(true);
+							}
+							else{
+								participant.setCustomer(false);
+							}
+							participant.store();
 						}
-						else{
-							participant.setCustomer(false);
-						}
-						participant.store();
 					}
 				}
-			}
+        	}
+    	
+        	
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public void setRunYearGroup(Group group) {
+		setRunYearGroup(new Integer(group.getPrimaryKey().toString()).intValue());
+	}
+	
+	public void setRunYearGroup(int groupID) {
+		if (groupID != -1) {
+			this.runGroupID = groupID;
 		}
 	}
 }
