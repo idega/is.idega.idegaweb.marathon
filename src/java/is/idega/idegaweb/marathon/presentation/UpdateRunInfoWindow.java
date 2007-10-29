@@ -4,10 +4,15 @@
  */
 package is.idega.idegaweb.marathon.presentation;
 
+import is.idega.idegaweb.marathon.business.ConverterUtility;
 import is.idega.idegaweb.marathon.business.RunBusiness;
+import is.idega.idegaweb.marathon.data.Distance;
 import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Collection;
+
 import javax.ejb.FinderException;
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
@@ -32,9 +37,13 @@ import com.idega.user.data.User;
  */
 public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 
+	private static final String PARAMETER_DISTANCE = "prm_distance";
 	private static final String PARAMETER_ACTION = "prm_action";
 	private static final int ACTION_DISPLAY = 1;
 	private static final int ACTION_SAVE = 2;
+	
+	private static final String PARAMETER_IC_USER_ID = "ic_user_id";
+	private static final String PARAMETER_SELECTED_IC_GROUP_ID = "selected_ic_group_id";
 
 	// texts
 	private Text userNameText;
@@ -51,11 +60,12 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 	private Text teamNameText;
 	private Text categoryText;
 	private Text charityText;
+	
 
 	// fields
 	private Text userNameField;
 	private Text runField;
-	private Text distanceField;
+	private DropdownMenu distanceField;
 	private Text groupField;
 	private SubmitButton submitButton;
 	private TextInput participantNumberField;
@@ -106,8 +116,8 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 	public void initializeFields() {
 		IWContext iwc = IWContext.getInstance();
 		IWResourceBundle iwrb = getResourceBundle(iwc);
-		String userID = iwc.getParameter("ic_user_id");
-		String selectedGroupID = iwc.getParameter("selected_ic_group_id");
+		String userID = iwc.getParameter(PARAMETER_IC_USER_ID);
+		String selectedGroupID = iwc.getParameter(PARAMETER_SELECTED_IC_GROUP_ID);
 		String runGroupID = iwc.getParameter(IWMarathonConstants.GROUP_TYPE_RUN);
 		User user = null;
 		if (userID != null) {
@@ -211,7 +221,7 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 				e.printStackTrace();
 			}
 			if (dis != null) {
-				this.distanceField = new Text(iwrb.getLocalizedString(dis.getName(), dis.getName()));
+				this.distanceField = new DistanceDropDownMenu(PARAMETER_DISTANCE, run);
 			}
 			if (gr != null) {
 				this.groupField = new Text(iwrb.getLocalizedString(gr.getName(), gr.getName()));
@@ -255,8 +265,9 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 		String chipTime = iwc.getParameter(IWMarathonConstants.PARAMETER_CHIP_TIME);
 		String categoryID = iwc.getParameter(IWMarathonConstants.PARAMETER_CATEGORY);
 		String charityID = iwc.getParameter(IWMarathonConstants.PARAMETER_CHARITY);
-		String userIDString = iwc.getParameter("ic_user_id");
-		String groupIDString = iwc.getParameter("selected_ic_group_id");
+		String userIDString = iwc.getParameter(PARAMETER_IC_USER_ID);
+		String groupIDString = iwc.getParameter(PARAMETER_SELECTED_IC_GROUP_ID);
+		String distanceIDString = iwc.getParameter(PARAMETER_DISTANCE);
 		
 		try {
 			Participant participant = getRunBiz(iwc).getRunObjByUserAndGroup(Integer.parseInt(userIDString), Integer.parseInt(groupIDString));
@@ -290,6 +301,26 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 			} else {
 				participant.setCharityId(null);
 			}
+			if (distanceIDString != null && !distanceIDString.equals("")) {
+				Group distanceGroup = null;
+				Distance distance = null;
+				try {
+					distanceGroup = getGroupBiz().getGroupByGroupID(Integer.parseInt(distanceIDString));
+					distance = ConverterUtility.getInstance().convertGroupToDistance(distanceGroup);
+				} catch (Exception e) {
+					//group not found
+				}
+				if (distance != null && participant.getRunDistanceGroupID() != ((Integer)distance.getPrimaryKey()).intValue()) {
+					Group oldAgeGenderGroup = participant.getRunGroupGroup();
+					Collection userIDs = new ArrayList();
+					userIDs.add(userIDString);
+					Group ageGenderGroup = getRunBiz(iwc).getAgeGroup(participant.getUser(), participant.getRunTypeGroup(), distanceGroup);
+					getUserBusiness(iwc).moveUsers(IWContext.getInstance(),userIDs, oldAgeGenderGroup, ((Integer)ageGenderGroup.getPrimaryKey()).intValue());
+					participant.setParticipantNumber(getRunBiz(iwc).getNextAvailableParticipantNumber(participant.getRunTypeGroup(), distance));
+					participant.setRunDistanceGroup(distanceGroup);
+					participant.setRunGroupGroup(ageGenderGroup);
+				}
+			}
 			participant.store();
 			t.add(getResourceBundle(iwc).getLocalizedString("update.successful", "Update successful"));
 			this.f.add(t);
@@ -306,7 +337,10 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 
 	public void main(IWContext iwc) throws Exception {
 		this.f = new Form();
-		this.f.maintainAllParameters();
+		this.f.maintainParameter(PARAMETER_IC_USER_ID);
+		this.f.maintainParameter(PARAMETER_SELECTED_IC_GROUP_ID);
+		this.f.maintainParameter(IWMarathonConstants.GROUP_TYPE_RUN);
+		//this.f.maintainAllParameters();
 		initializeTexts();
 		initializeFields();
 
@@ -316,6 +350,7 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 				break;
 			case ACTION_SAVE:
 				store(iwc);
+				lineUp(iwc);
 				break;
 		}
 		add(this.f, iwc);
@@ -329,7 +364,7 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 			return ACTION_DISPLAY;
 		}
 	}
-	
+
 	public void lineUp(IWContext iwc) {
 		Table t = new Table();
 		t.setCellpadding(0);
