@@ -347,4 +347,14 @@ public interface Participant extends IDOEntity {
 	 */
 	public void setCustomer(boolean isCustomer);
 	
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getPaymentGroup
+	 */
+	public String getPaymentGroup();
+	
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setPaymentGroup
+	 */
+	public void setPaymentGroup(String paymentGroup);
+	
 }

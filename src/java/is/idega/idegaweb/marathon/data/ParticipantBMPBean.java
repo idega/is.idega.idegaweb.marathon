@@ -83,7 +83,7 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		addAttribute(getColumnApplyForInternationalTravelSupport(), "International Travel support", true, true, Boolean.class);
 		addAttribute(getColumnSponsoredRunner(), "Sponsored runner", true, true, Boolean.class);
 		addAttribute(getColumnIsCustomer(), "Is Customer", true, true, Boolean.class);
-		
+		addAttribute(getColumnPaymentGroup(), "PaymentGroup", true, true, String.class);		
 	}
 
 	public static String getEntityTableName() {
@@ -204,6 +204,10 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 
 	public static String getColumnIsCustomer(){
 		return "is_customer";
+	}
+	
+	public static String getColumnPaymentGroup(){
+		return "payment_group";
 	}
 	
 	public String getIDColumnName() {
@@ -678,5 +682,12 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 	public void setCustomer(boolean isCustomer) {
 		setColumn(getColumnIsCustomer(), isCustomer);
 	}
+	
+	public String getPaymentGroup() {
+		return getStringColumnValue(getColumnPaymentGroup());
+	}
 
+	public void setPaymentGroup(String paymentGroup) {
+		setColumn(getColumnPaymentGroup(), paymentGroup);
+	}
 }
