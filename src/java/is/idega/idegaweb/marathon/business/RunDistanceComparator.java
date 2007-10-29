@@ -20,14 +20,18 @@ public class RunDistanceComparator implements Comparator {
 		Group group1 = (Group) arg0;
 		Group group2 = (Group) arg1;
 		
-		int distance1 = Integer.parseInt(group1.getName().substring(0, group1.getName().indexOf("_")));
-		int distance2 = Integer.parseInt(group2.getName().substring(0, group2.getName().indexOf("_")));
+		try {
+			int distance1 = Integer.parseInt(group1.getName().substring(0, group1.getName().indexOf("_")));
+			int distance2 = Integer.parseInt(group2.getName().substring(0, group2.getName().indexOf("_")));
 		
-		if (distance1 < distance2) {
+			if (distance1 < distance2) {
+				return -1;
+			}
+			else if (distance1 > distance2) {
+				return 1;
+			}
+		} catch (NumberFormatException e) {
 			return -1;
-		}
-		else if (distance1 > distance2) {
-			return 1;
 		}
 		return 0;
 	}
