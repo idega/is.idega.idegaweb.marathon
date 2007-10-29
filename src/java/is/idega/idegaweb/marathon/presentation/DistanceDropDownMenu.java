@@ -3,6 +3,7 @@ package is.idega.idegaweb.marathon.presentation;
 import is.idega.idegaweb.marathon.business.ConverterUtility;
 import is.idega.idegaweb.marathon.business.RunBusiness;
 import is.idega.idegaweb.marathon.business.Runner;
+import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.data.Run;
 import is.idega.idegaweb.marathon.data.Year;
 import java.util.Collection;
@@ -21,19 +22,27 @@ public class DistanceDropDownMenu extends DropdownMenu {
 	private static final String IW_BUNDLE_IDENTIFIER = "is.idega.idegaweb.marathon";
 	private static final String PARAMETER_DISTANCES = "prm_distances";
 	private static final String PARAMETER_MARATHON_PK = "prm_run_pk";
-	private Runner runner = null;
-
-	public DistanceDropDownMenu() {
-		this(PARAMETER_DISTANCES);
-	}
+	private Run run = null;
+	private Group distance = null;
 
 	public DistanceDropDownMenu(String parameterName) {
-		this(parameterName, null);
+		super(parameterName);
 	}
 
 	public DistanceDropDownMenu(String parameterName, Runner runner) {
 		super(parameterName);
-		this.runner = runner;
+		this.run = runner.getRun();
+		this.distance = runner.getDistance();
+	}
+	
+	public DistanceDropDownMenu(String parameterName, Participant participant) {
+		super(parameterName);
+		try {
+			this.run = ConverterUtility.getInstance().convertGroupToRun(participant.getRunTypeGroup());
+			this.distance = participant.getRunDistanceGroup();
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 
 	public void main(IWContext iwc) throws Exception {
@@ -43,16 +52,13 @@ public class DistanceDropDownMenu extends DropdownMenu {
 
 
 		addMenuElement("-1", iwrb.getLocalizedString("run_year_ddd.select_distance", "Select distance..."));
-		Run run = null;
-		if (this.runner != null && this.runner.getRun() != null) {
-			run = this.runner.getRun();
-		}
-		else if (iwc.isParameterSet(PARAMETER_MARATHON_PK)) {
+		
+		if (this.run == null && iwc.isParameterSet(PARAMETER_MARATHON_PK)) {
 			Group gRun = getRunBusiness(iwc).getRunGroupByGroupId(Integer.valueOf(iwc.getParameter(PARAMETER_MARATHON_PK)));
 			run = ConverterUtility.getInstance().convertGroupToRun(gRun);
 		}
-		if (run != null) {
-			Year year = run.getCurrentRegistrationYear();
+		if (this.run != null) {
+			Year year = ConverterUtility.getInstance().convertGroupToYear(Integer.valueOf(distance.getParentNode().getId()));
 			String runnerYearString = year.getYearString();
 			Collection distances = getRunBusiness(iwc).getDistancesMap(run, runnerYearString);
 			if (distances != null) {
@@ -62,8 +68,8 @@ public class DistanceDropDownMenu extends DropdownMenu {
 					addMenuElement(distance.getPrimaryKey().toString(), iwrb.getLocalizedString(distance.getName(), distance.getName()));
 				}
 			}
-			if (this.runner != null && this.runner.getDistance() != null) {
-				setSelectedElement(this.runner.getDistance().getPrimaryKey().toString());
+			if (this.distance != null) {
+				setSelectedElement(this.distance.getPrimaryKey().toString());
 			}
 		}
 	}
