@@ -67,6 +67,7 @@ public class IWMarathonConstants {
   public static final String PARAMETER_CHIP_TIME = "prm_chip_time";
   public static final String PARAMETER_CATEGORY = "prm_category";
   public static final String PARAMETER_CHARITY = "prm_charity";
+  public static final String PARAMETER_PAYMENT_GROUP = "prm_payment_group";
   
 	public static final String CHIP_RENT = "chip_rent";
 	public static final String CHIP_BUY = "chip_buy";
