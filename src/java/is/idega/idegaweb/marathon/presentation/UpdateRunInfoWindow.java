@@ -92,6 +92,8 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 	public UpdateRunInfoWindow() {
 		super();
 		setResizable(true);
+		setHeight(350);
+		setWidth(450);
 	}
 
 	public void initializeTexts() {
@@ -350,7 +352,6 @@ public class UpdateRunInfoWindow extends StyledIWAdminWindow {
 				break;
 			case ACTION_SAVE:
 				store(iwc);
-				lineUp(iwc);
 				break;
 		}
 		add(this.f, iwc);
