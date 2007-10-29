@@ -357,4 +357,8 @@ public interface Participant extends IDOEntity {
 	 */
 	public void setPaymentGroup(String paymentGroup);
 	
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getPaymentGroupsForYear
+	 */
+	public java.util.Collection getPaymentGroupsForYear();
 }

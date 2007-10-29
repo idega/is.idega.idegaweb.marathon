@@ -3,7 +3,11 @@
  */
 package is.idega.idegaweb.marathon.data;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -254,6 +258,44 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 			throw new RuntimeException(e);
 		}
 		
+	}
+	
+	public Collection getPaymentGroupsForYear() {
+		Connection conn = null;
+		Statement Stmt = null;
+		ResultSet RS = null;
+		Collection paymentGroups = new ArrayList();
+		try {
+			conn = getConnection(getDatasource());
+			Stmt = conn.createStatement();
+			StringBuffer buffer = new StringBuffer();
+			buffer.append("select distinct " + getColumnPaymentGroup() + " from " + getEntityName() + " where " + getRunYearGroupID() + " = " + getRunYearGroupID() +" and " +getColumnPaymentGroup() + " is not null and " + getColumnPaymentGroup() + " != ''");
+			String sql = buffer.toString();
+			RS = Stmt.executeQuery(sql);
+			while (RS.next()) {
+				String paymentGroupName = RS.getString(getColumnPaymentGroup());
+				paymentGroups.add(paymentGroupName);
+			}
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				if (RS != null) {
+					RS.close();
+				}
+				if (Stmt != null) {
+					Stmt.close();
+				}
+				if (conn != null) {
+					freeConnection(getDatasource(), conn);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return paymentGroups;
 	}
 
 	public int getRunGroupGroupID() {
