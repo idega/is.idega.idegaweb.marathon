@@ -15,11 +15,11 @@ import com.idega.user.app.ToolbarElement;
 /**
  * <p>Title: idegaWeb</p>
  * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
+ * <p>Copyright: Copyright (c) 2006</p>
  * <p>Company: idega Software</p>
- * @author <a href="thomas@idega.is">Thomas Hilbig</a>
+ * @author <a href="sigtryggur@idega.is">Sigtryggur Simonarson</a>
  * @version 1.0
- * Created on Aug 27, 2004
+ * Created on Oct 26, 2007
  */
 public class MarathonGroupUsersImportPlugin implements ToolbarElement {
 	
