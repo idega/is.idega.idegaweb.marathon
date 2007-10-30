@@ -209,6 +209,7 @@ public class RunPluginBusinessBean extends IBOServiceBean implements RunPluginBu
 	public List getMainToolbarElements() throws RemoteException {
 		List list = new ArrayList();
 		list.add(new MarathonGroupUsersImportPlugin());
+		list.add(new MarathonFileImportHandlerPlugin());
 		return list;
 	}
 
