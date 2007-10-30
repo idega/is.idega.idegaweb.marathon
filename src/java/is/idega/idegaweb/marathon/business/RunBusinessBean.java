@@ -53,6 +53,7 @@ import com.idega.core.location.data.Country;
 import com.idega.core.location.data.CountryHome;
 import com.idega.core.location.data.PostalCode;
 import com.idega.core.location.data.PostalCodeHome;
+import com.idega.core.messaging.MessagingSettings;
 import com.idega.data.IDOAddRelationshipException;
 import com.idega.data.IDOCreateException;
 import com.idega.data.IDOException;
@@ -99,14 +100,8 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 	private final static String IW_BUNDLE_IDENTIFIER = IWMarathonConstants.IW_BUNDLE_IDENTIFIER;
 
 	private static String DEFAULT_SMTP_MAILSERVER = "mail.idega.is";
-
-	private static String PROP_SYSTEM_SMTP_MAILSERVER = "messagebox_smtp_mailserver";
-	private static String PROP_CC_ADDRESS = "messagebox_cc_address";
-
-	private static String PROP_MESSAGEBOX_FROM_ADDRESS = "messagebox_from_mailaddress";
-
-	private static String DEFAULT_MESSAGEBOX_FROM_ADDRESS = "messagebox@idega.com";
-	private static String DEFAULT_CC_ADDRESS = "hjordis@ibr.is";
+	private static String DEFAULT_MESSAGEBOX_FROM_ADDRESS = "marathon@marathon.is";
+	private static String DEFAULT_CC_ADDRESS = "marathon@marathon.is";
 
 	private AddressHome addressHome;
 	private ParticipantHome participantHome;
@@ -1203,17 +1198,15 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			String fromAddress = DEFAULT_MESSAGEBOX_FROM_ADDRESS;
 			String cc = DEFAULT_CC_ADDRESS;
 			try {
-				IWBundle iwb = getIWApplicationContext().getIWMainApplication().getBundle(IW_BUNDLE_IDENTIFIER);
-				mailServer = iwb.getProperty(PROP_SYSTEM_SMTP_MAILSERVER, DEFAULT_SMTP_MAILSERVER);
-				fromAddress = iwb.getProperty(PROP_MESSAGEBOX_FROM_ADDRESS, DEFAULT_MESSAGEBOX_FROM_ADDRESS);
-				cc = iwb.getProperty(PROP_CC_ADDRESS, DEFAULT_CC_ADDRESS);
+				MessagingSettings messagingSetting = getIWApplicationContext().getIWMainApplication().getMessagingSettings();
+				mailServer = messagingSetting.getSMTPMailServer();
+				fromAddress = messagingSetting.getFromMailAddress();
+				cc = getIWApplicationContext().getIWMainApplication().getSettings().getProperty("messagebox_cc_receiver_address","");
 			}
 			catch (Exception e) {
 				System.err.println("MessageBusinessBean: Error getting mail property from bundle");
 				e.printStackTrace();
 			}
-	
-			cc = "";
 			
 			try {
 				com.idega.util.SendMail.send(fromAddress, email.trim(), cc, "", mailServer, subject, body);
