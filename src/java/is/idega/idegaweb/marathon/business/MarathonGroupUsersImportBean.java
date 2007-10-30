@@ -70,8 +70,7 @@ public class MarathonGroupUsersImportBean extends IBOServiceBean implements Mara
 		this.groupBusiness = getGroupBusiness(getIWApplicationContext());
 		this.genderBusiness = getGenderBusiness(getIWApplicationContext());
 		this.runBusiness = getRunBusiness(getIWApplicationContext());
-		
-		failedRecords = new ArrayList();
+		this.failedRecords = new ArrayList();
 		
 		if (this.file != null) {
 			String line = (String) this.file.getNextRecord();
