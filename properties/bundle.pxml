@@ -171,21 +171,6 @@
       <value>is.idega.idegaweb.marathon</value>
     </key>
     <key>
-      <name>messagebox_smtp_mailserver</name>
-      <type>java.lang.String</type>
-      <value>mail.simnet.is</value>
-    </key>
-    <key>
-      <name>messagebox_from_mailaddress</name>
-      <type>java.lang.String</type>
-      <value>marathon@marathon.is</value>
-    </key>
-    <key>
-      <name>messagebox_cc_address</name>
-      <type>java.lang.String</type>
-      <value>marathon@marathon.is</value>
-    </key>
-    <key>
       <name>run_selected</name>
       <type>java.lang.String</type>
       <value>4</value>
