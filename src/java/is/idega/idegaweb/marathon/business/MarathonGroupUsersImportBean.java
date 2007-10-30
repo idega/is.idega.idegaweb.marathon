@@ -16,11 +16,11 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
 
+import com.idega.block.importer.business.ImportFileHandler;
 import com.idega.block.importer.data.ImportFile;
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
@@ -48,7 +48,7 @@ import com.idega.util.text.TextSoap;
 /**
  * @author laddi
  */
-public class MarathonGroupUsersImportBean extends IBOServiceBean implements MarathonGroupUsersImport {
+public class MarathonGroupUsersImportBean extends IBOServiceBean implements MarathonGroupUsersImport, ImportFileHandler {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -62,6 +62,7 @@ public class MarathonGroupUsersImportBean extends IBOServiceBean implements Mara
 	GenderBusiness genderBusiness;
 	RunBusiness runBusiness;
 	Group group;
+	List failedRecords;
 	
 	
 	public boolean handleRecords() throws RemoteException {
@@ -70,7 +71,7 @@ public class MarathonGroupUsersImportBean extends IBOServiceBean implements Mara
 		this.genderBusiness = getGenderBusiness(getIWApplicationContext());
 		this.runBusiness = getRunBusiness(getIWApplicationContext());
 		
-		Vector errors = new Vector();
+		failedRecords = new ArrayList();
 		
 		if (this.file != null) {
 			String line = (String) this.file.getNextRecord();
@@ -85,16 +86,16 @@ public class MarathonGroupUsersImportBean extends IBOServiceBean implements Mara
 					System.out.println("MarathonGroupUsersImportCounter = "+counter);
 				}
 				if (!handleLine(line)) {
-					errors.add(line);
+					failedRecords.add(line);
 				}
 				line = (String) this.file.getNextRecord();
 			}
 			System.out.println("Total numbers of runners imported: " + counter);
 		}
 		
-		if (!errors.isEmpty()) {
+		if (!failedRecords.isEmpty()) {
 			System.out.println("Errors in the following lines :");
-			Iterator iter = errors.iterator();
+			Iterator iter = failedRecords.iterator();
 			while (iter.hasNext()) {
 				System.out.println((String) iter.next());
 			}
@@ -127,210 +128,202 @@ public class MarathonGroupUsersImportBean extends IBOServiceBean implements Mara
 			//ignoring headers in first line
 			return true;
 		}
+		if (name.equals("") && personalID.equals("") && dateOfBirth.equals("") && gender.equals("")) {
+			//ignoring lines where no basic userinfo is set
+			return true;
+		}
 		if (name.equals("") && personalID.equals("")) {
-			//ignoring lines where neither name or personal ID is set
+			//reporting as failed all lines where neither name or personal ID is set
 			return false;
 		}
 		
-		Date dobDate = null;
-		IWTimestamp dateOfBirthStamp = null;
 		try {
-			SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
-			dobDate = formatter.parse(dateOfBirth);
-			dateOfBirthStamp = new IWTimestamp(dobDate);
-		}
-		catch (Exception e){
-			e.printStackTrace();
-		}
-		Country country = null;
-		try {
-			country = userBusiness.getAddressBusiness().getCountryHome().findByCountryName(countryName);
-		} catch (FinderException e) {
-			//country not found
-		}
-		
-		User user = null;
-		try {
-			if (personalID != null && personalID.length() > 0) {
-				personalID = TextSoap.findAndReplace(personalID, "-", "");
-				personalID = TextSoap.removeWhiteSpace(personalID);
-				user = this.userBusiness.getUser(personalID);
+			Date dobDate = null;
+			IWTimestamp dateOfBirthStamp = null;
+			if (!dateOfBirth.equals("")) {
+				SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+				dobDate = formatter.parse(dateOfBirth);
+				dateOfBirthStamp = new IWTimestamp(dobDate);
 			}
-		}
-		catch (FinderException fe) {
-			System.out.println("User not found by personal ID");
-		}
-		
-		if (user == null) {
+			 
+			
+			User user = null;
 			try {
-				if (dobDate != null) {
-					user = this.userBusiness.getUserHome().findByDateOfBirthAndName(new java.sql.Date(dobDate.getTime()), name);
+				if (personalID != null && personalID.length() > 0) {
+					personalID = TextSoap.findAndReplace(personalID, "-", "");
+					personalID = TextSoap.removeWhiteSpace(personalID);
+					user = this.userBusiness.getUser(personalID);
 				}
 			}
 			catch (FinderException fe) {
-				System.out.println("User not found by name and date_of_birth");
-			}
-		}
-		
-		
-		if (user == null) {
-			Gender femaleGender = null;
-			Gender maleGender = null;
-			try {
-				femaleGender = genderBusiness.getFemaleGender();
-				maleGender = genderBusiness.getMaleGender();
-			} catch (FinderException e) {
-				e.printStackTrace();
+				System.out.println("User not found by personal ID");
 			}
 			
-			Gender theGender = null;
-			if (gender != null && gender.equals(GenderBMPBean.NAME_MALE)) {
-				theGender = maleGender;
-			} else if (gender != null && gender.equals(GenderBMPBean.NAME_FEMALE)) {
-				theGender = femaleGender;
-			} 
-			user = this.runBusiness.saveUser(name, personalID, dateOfBirthStamp, theGender, address, city, postalCode, country);
-		}
-		if (user != null) {
-			if (!email.equals("")) {
+			if (user == null) {
 				try {
-					userBusiness.updateUserMail(user, email);
-				} catch (Exception e){
-					System.out.println("Unable to set " + email + " as email for user: "+ user);
+					if (dobDate != null) {
+						user = this.userBusiness.getUserHome().findByDateOfBirthAndName(new java.sql.Date(dobDate.getTime()), name);
+					}
 				}
-			}
-		}
-		
-		List groupTypes = new ArrayList();
-		groupTypes.add(IWMarathonConstants.GROUP_TYPE_RUN);
-		Collection runs = this.groupBusiness.getGroupsByGroupNameAndGroupTypes(run, groupTypes, true);
-		
-		Iterator iterator = runs.iterator();
-		Group runGroup = null; 
-		if (iterator.hasNext()) {
-			runGroup = (Group)iterator.next();
-		}
-		
-	    if (year == null || year.equals("")) {
-	    	IWTimestamp thisYearStamp = IWTimestamp.RightNow();
-	    	year = String.valueOf(thisYearStamp.getYear());
-	    }
-		if (runGroup != null) {
-			Group yearGroup = null;
-			iterator = runGroup.getChildrenIterator();
-			while (iterator.hasNext()) {
-				Group element = (Group) iterator.next();
-				if (element.getName().equals(year)) {
-					yearGroup = element;
-					break;
+				catch (FinderException fe) {
+					System.out.println("User not found by name and date_of_birth");
 				}
 			}
 			
-			Group distanceGroup = null;
-			Collection distances = this.runBusiness.getDistancesMap(runGroup, year);
-			if (distances == null) {
-				System.out.println("Distance not found, ignoring line");
-				return false;
-			}
-			iterator = distances.iterator();
-			while (iterator.hasNext()) {
-				Group element = (Group) iterator.next();
-				if (element.getName().equals(distance)) {
-					distanceGroup = element;
-					break;
-				}
-			}
-			Participant participant = null;
-			boolean newParticipant = false;
-			boolean movedParticipant = false;
-			try {
-				participant = this.runBusiness.getParticipantByRunAndYear(user, runGroup, yearGroup);
-			}
-			catch (FinderException fe) {
+			if (user == null) {
+				Gender femaleGender = null;
+				Gender maleGender = null;
 				try {
-					participant = this.runBusiness.importParticipant(user, runGroup, yearGroup, distanceGroup);
-					newParticipant = true;
+					femaleGender = genderBusiness.getFemaleGender();
+					maleGender = genderBusiness.getMaleGender();
+				} catch (FinderException e) {
+					e.printStackTrace();
 				}
-				catch (CreateException ce) {
-					ce.printStackTrace();
+				
+				Gender theGender = null;
+				if (gender != null && gender.equals(GenderBMPBean.NAME_MALE)) {
+					theGender = maleGender;
+				} else if (gender != null && gender.equals(GenderBMPBean.NAME_FEMALE)) {
+					theGender = femaleGender;
+				} 
+				Country country = userBusiness.getAddressBusiness().getCountryHome().findByCountryName(countryName);
+				user = this.runBusiness.saveUser(name, personalID, dateOfBirthStamp, theGender, address, city, postalCode, country);
+			}
+			if (user != null) {
+				if (!email.equals("")) {
+					try {
+						userBusiness.updateUserMail(user, email);
+					} catch (Exception e){
+						System.out.println("Unable to set " + email + " as email for user: "+ user);
+					}
+				}
+			}
+			
+			List groupTypes = new ArrayList();
+			groupTypes.add(IWMarathonConstants.GROUP_TYPE_RUN);
+			Collection runs = this.groupBusiness.getGroupsByGroupNameAndGroupTypes(run, groupTypes, true);
+			
+			Iterator iterator = runs.iterator();
+			Group runGroup = null; 
+			if (iterator.hasNext()) {
+				runGroup = (Group)iterator.next();
+			}
+			
+		    if (year == null || year.equals("")) {
+		    	IWTimestamp thisYearStamp = IWTimestamp.RightNow();
+		    	year = String.valueOf(thisYearStamp.getYear());
+		    }
+			if (runGroup != null) {
+				Group yearGroup = null;
+				iterator = runGroup.getChildrenIterator();
+				while (iterator.hasNext()) {
+					Group element = (Group) iterator.next();
+					if (element.getName().equals(year)) {
+						yearGroup = element;
+						break;
+					}
+				}
+				
+				Group distanceGroup = null;
+				Collection distances = this.runBusiness.getDistancesMap(runGroup, year);
+				if (distances == null) {
+					System.out.println("Distance not found, ignoring line");
 					return false;
 				}
-				catch (Exception e) {
-					e.printStackTrace();
-					return false;
+				iterator = distances.iterator();
+				while (iterator.hasNext()) {
+					Group element = (Group) iterator.next();
+					if (element.getName().equals(distance)) {
+						distanceGroup = element;
+						break;
+					}
 				}
-			}
-			Group ageGenderGroup = this.runBusiness.getAgeGroup(user, runGroup, distanceGroup);
-			Distance distanceObject = null;
-			try {
-				distanceObject = ConverterUtility.getInstance().convertGroupToDistance(distanceGroup);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			if (participant.getRunDistanceGroupID() != ((Integer)distanceGroup.getPrimaryKey()).intValue()) {
-				Group oldAgeGenderGroup = participant.getRunGroupGroup();
-				Collection userIDs = new ArrayList();
-				userIDs.add(user.getPrimaryKey().toString());
-				userBusiness.moveUsers(IWContext.getInstance(),userIDs, oldAgeGenderGroup, ((Integer)ageGenderGroup.getPrimaryKey()).intValue());
-				movedParticipant = true;
-			}
-			if (newParticipant || movedParticipant) {
-				participant.setParticipantNumber(runBusiness.getNextAvailableParticipantNumber(runGroup, distanceObject));
-			}
-			participant.setRunDistanceGroup(distanceGroup);
-			participant.setRunGroupGroup(ageGenderGroup);
-			participant.setUserNationality(nationality);
-			participant.setShirtSize(shirtSize);
-			participant.setPaymentGroup(paymentGroup);
-			participant.store();
-			
-			String userNameString = "";
-			String passwordString = "";
-			
-			if (userBusiness.hasUserLogin(user)) {
+				Participant participant = null;
+				boolean newParticipant = false;
+				boolean movedParticipant = false;
 				try {
-					LoginTable login = LoginDBHandler.getUserLogin(user);
-					userNameString = login.getUserLogin();
-					passwordString = LoginDBHandler.getGeneratedPasswordForUser();
-					LoginDBHandler.changePassword(login, passwordString);
-				} catch (Exception e) {
-					System.out.println("Error re-generating password for user: " + user.getName());
-					e.printStackTrace();
+					participant = this.runBusiness.getParticipantByRunAndYear(user, runGroup, yearGroup);
 				}
-			} else {
-				try {
-					LoginTable login = this.userBusiness.generateUserLogin(user);
-					userNameString = login.getUserLogin();
-					passwordString = login.getUnencryptedUserPassword();
-				} catch (Exception e) {
-					System.out.println("Error creating login for user: " + user.getName());
-					e.printStackTrace();
+				catch (FinderException fe) {
+					try {
+						participant = this.runBusiness.importParticipant(user, runGroup, yearGroup, distanceGroup);
+						newParticipant = true;
+					}
+					catch (CreateException ce) {
+						ce.printStackTrace();
+						return false;
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+						return false;
+					}
 				}
-			}
-			Run selectedRun = null;
-			try {
-				selectedRun = ConverterUtility.getInstance().convertGroupToRun(runGroup);
-			} catch (FinderException e) {
-				//Run not found
-			}
-			String informationPageString = "";
-			String runHomePageString = "";
-			if (selectedRun != null) {
-				runHomePageString = selectedRun.getRunHomePage();
-				if (iwrb.getLocale().equals(LocaleUtil.getIcelandicLocale())) {
-					informationPageString = selectedRun.getRunInformationPage();
+				Group ageGenderGroup = this.runBusiness.getAgeGroup(user, runGroup, distanceGroup);
+				Distance distanceObject = ConverterUtility.getInstance().convertGroupToDistance(distanceGroup);
+				
+				if (participant.getRunDistanceGroupID() != ((Integer)distanceGroup.getPrimaryKey()).intValue()) {
+					Group oldAgeGenderGroup = participant.getRunGroupGroup();
+					Collection userIDs = new ArrayList();
+					userIDs.add(user.getPrimaryKey().toString());
+					userBusiness.moveUsers(IWContext.getInstance(),userIDs, oldAgeGenderGroup, ((Integer)ageGenderGroup.getPrimaryKey()).intValue());
+					movedParticipant = true;
+				}
+				if (newParticipant || movedParticipant) {
+					participant.setParticipantNumber(runBusiness.getNextAvailableParticipantNumber(runGroup, distanceObject));
+				}
+				participant.setRunDistanceGroup(distanceGroup);
+				participant.setRunGroupGroup(ageGenderGroup);
+				participant.setUserNationality(nationality);
+				participant.setShirtSize(shirtSize);
+				participant.setPaymentGroup(paymentGroup);
+				participant.store();
+				
+				String userNameString = "";
+				String passwordString = "";
+				
+				if (userBusiness.hasUserLogin(user)) {
+					try {
+						LoginTable login = LoginDBHandler.getUserLogin(user);
+						userNameString = login.getUserLogin();
+						passwordString = LoginDBHandler.getGeneratedPasswordForUser();
+						LoginDBHandler.changePassword(login, passwordString);
+					} catch (Exception e) {
+						System.out.println("Error re-generating password for user: " + user.getName());
+						e.printStackTrace();
+					}
 				} else {
-					informationPageString = selectedRun.getEnglishRunInformationPage();
+					try {
+						LoginTable login = this.userBusiness.generateUserLogin(user);
+						userNameString = login.getUserLogin();
+						passwordString = login.getUnencryptedUserPassword();
+					} catch (Exception e) {
+						System.out.println("Error creating login for user: " + user.getName());
+						e.printStackTrace();
+					}
 				}
+				Run selectedRun = ConverterUtility.getInstance().convertGroupToRun(runGroup);
+				String informationPageString = "";
+				String runHomePageString = "";
+				if (selectedRun != null) {
+					runHomePageString = selectedRun.getRunHomePage();
+					if (iwrb.getLocale().equals(LocaleUtil.getIcelandicLocale())) {
+						informationPageString = selectedRun.getRunInformationPage();
+					} else {
+						informationPageString = selectedRun.getEnglishRunInformationPage();
+					}
+				}
+				Object[] args = { user.getName(), iwrb.getLocalizedString(runGroup.getName(),runGroup.getName()), iwrb.getLocalizedString(distance,distance), iwrb.getLocalizedString("shirt_size."+shirtSize,shirtSize), String.valueOf(participant.getParticipantNumber()), runHomePageString, informationPageString, userNameString, passwordString };
+				String subject = iwrb.getLocalizedString("registration_received_subject_mail", "Your registration has been received.");
+				String body = MessageFormat.format(iwrb.getLocalizedString("registration_received_body_mail", "Your registration has been received."), args);
+				runBusiness.sendMessage(email, subject, body);
 			}
-			Object[] args = { user.getName(), iwrb.getLocalizedString(runGroup.getName(),runGroup.getName()), iwrb.getLocalizedString(distance,distance), "", String.valueOf(participant.getParticipantNumber()), runHomePageString, informationPageString, userNameString, passwordString };
-			String subject = iwrb.getLocalizedString("registration_received_subject_mail", "Your registration has been received.");
-			String body = MessageFormat.format(iwrb.getLocalizedString("registration_received_body_mail", "Your registration has been received."), args);
-			runBusiness.sendMessage(email, subject, body);
+			
+			return true;
+		} catch (Exception e) {
+			//some exception occured, import-line is considered failed
+			e.printStackTrace();
+			return false;
 		}
-		
-		return true;
 	}
 	
 
@@ -342,7 +335,7 @@ public class MarathonGroupUsersImportBean extends IBOServiceBean implements Mara
 	}
 
 	public List getFailedRecords() throws RemoteException {
-		return null;
+		return failedRecords;
 	}
 	
 	protected UserBusiness getUserBusiness(IWApplicationContext iwac) {
