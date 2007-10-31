@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.126 2007/10/31 13:00:59 idegaweb Exp $
+ * $Id: Registration.java,v 1.127 2007/10/31 13:33:22 idegaweb Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -77,10 +77,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/10/31 13:00:59 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/10/31 13:33:22 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.126 $
+ * @version $Revision: 1.127 $
  */
 public class Registration extends RunBlock {
 	
@@ -808,6 +808,7 @@ public class Registration extends RunBlock {
 		
 		runDropdown.setAsNotEmpty(localize("run_reg.must_select_run", "You have to select a run"));
 		try {
+			//main is run to check if any runs exists. Otherwise isConstrainedToOneRun() will not work 
 			runDropdown.main(iwc);
 		} catch (Exception e) {
 			e.printStackTrace();
