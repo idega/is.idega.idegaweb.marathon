@@ -87,6 +87,7 @@ public class IWMarathonConstants {
   public static final String RR_TEL = "run_reg.tel";
   public static final String RR_MOBILE = "run_reg.mobile";
   public static final String RR_EMAIL = "run_reg.email";
+  public static final String RR_EMAIL2 = "run_reg.email2";
   public static final String RR_TSHIRT = "run_reg.t_shirt";
   public static final String RR_OWN_CHIP = "run_reg.own_chip";
   public static final String RR_BUY_CHIP = "run_reg.buy_chip";

@@ -1,5 +1,5 @@
 /*
- * $Id: Runner.java,v 1.11 2007/07/12 22:51:54 sigtryggur Exp $ Created on May 16, 2005
+ * $Id: Runner.java,v 1.12 2007/10/31 12:59:39 idegaweb Exp $ Created on May 16, 2005
  * 
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
  * 
@@ -23,10 +23,10 @@ import com.idega.user.data.User;
  * A holder class for information about runners and their selection when
  * registering.
  * 
- * Last modified: $Date: 2007/07/12 22:51:54 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/10/31 12:59:39 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class Runner {
 
@@ -52,6 +52,7 @@ public class Runner {
 	private Gender gender;
 	private Country nationality;
 	private String email;
+	private String email2;
 	private String homePhone;
 	private String mobilePhone;
 	private boolean agree;
@@ -204,6 +205,14 @@ public class Runner {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	public String getEmail2() {
+		return this.email2;
+	}
+
+	public void setEmail2(String email2) {
+		this.email2 = email2;
 	}
 
 	public String getHomePhone() {

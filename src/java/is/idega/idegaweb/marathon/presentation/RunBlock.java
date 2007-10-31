@@ -1,5 +1,5 @@
 /*
- * $Id: RunBlock.java,v 1.12 2007/08/04 13:23:37 sigtryggur Exp $
+ * $Id: RunBlock.java,v 1.13 2007/10/31 12:59:39 idegaweb Exp $
  * Created on May 17, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -22,6 +22,7 @@ import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
 import com.idega.business.IBORuntimeException;
+import com.idega.core.location.business.AddressBusiness;
 import com.idega.idegaweb.IWApplicationContext;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;
@@ -37,10 +38,10 @@ import com.idega.user.business.UserBusiness;
 
 
 /**
- * Last modified: $Date: 2007/08/04 13:23:37 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2007/10/31 12:59:39 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class RunBlock extends StepsBlock {
 	
@@ -92,6 +93,15 @@ public class RunBlock extends StepsBlock {
 	protected GenderBusiness getGenderBusiness(IWApplicationContext iwac) {
 		try {
 			return (GenderBusiness) IBOLookup.getServiceInstance(iwac, GenderBusiness.class);
+		}
+		catch (IBOLookupException e) {
+			throw new IBORuntimeException(e);
+		}
+	}
+	
+	protected AddressBusiness getAddressBusiness(IWApplicationContext iwac) {
+		try {
+			return (AddressBusiness) IBOLookup.getServiceInstance(iwac, AddressBusiness.class);
 		}
 		catch (IBOLookupException e) {
 			throw new IBORuntimeException(e);
