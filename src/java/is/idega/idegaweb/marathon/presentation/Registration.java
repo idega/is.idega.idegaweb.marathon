@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.125 2007/10/29 14:14:10 idegaweb Exp $
+ * $Id: Registration.java,v 1.126 2007/10/31 13:00:59 idegaweb Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -40,6 +40,7 @@ import com.idega.block.creditcard.business.CreditCardAuthorizationException;
 import com.idega.core.contact.data.Email;
 import com.idega.core.contact.data.Phone;
 import com.idega.core.location.data.Address;
+import com.idega.core.location.data.Country;
 import com.idega.core.location.data.PostalCode;
 import com.idega.data.IDOCreateException;
 import com.idega.data.IDOLookup;
@@ -76,10 +77,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/10/29 14:14:10 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/10/31 13:00:59 $ by $Author: idegaweb $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.125 $
+ * @version $Revision: 1.126 $
  */
 public class Registration extends RunBlock {
 	
@@ -106,6 +107,7 @@ public class Registration extends RunBlock {
 	private static final String PARAMETER_GENDER = "prm_gender";
 	private static final String PARAMETER_NATIONALITY = "prm_nationality";
 	private static final String PARAMETER_EMAIL = "prm_email";
+	private static final String PARAMETER_EMAIL2 = "prm_email2";
 	private static final String PARAMETER_HOME_PHONE = "prm_home_phone";
 	private static final String PARAMETER_MOBILE_PHONE = "prm_mobile_phone";
 	private static final String PARAMETER_SHIRT_SIZE = "prm_shirt_size";
@@ -135,6 +137,7 @@ public class Registration extends RunBlock {
 	
 	private static final int ACTION_STEP_PERSONLOOKUP = 10;
 	private static final int ACTION_STEP_PERSONALDETAILS = 20;
+	private static final int ACTION_STEP_RUNDETAILS = 21;
 	private static final int ACTION_STEP_CHIP = 30;
 	private static final int ACTION_STEP_TRANSPORT = 31;
 	private static final int ACTION_STEP_CHARITY = 32;
@@ -191,6 +194,9 @@ public class Registration extends RunBlock {
 					break;
 				case ACTION_STEP_PERSONALDETAILS:
 					stepPersonalDetails(iwc);
+					break;
+				case ACTION_STEP_RUNDETAILS:
+					stepRunDetails(iwc);
 					break;
 				case ACTION_STEP_CHIP:
 					stepChip(iwc);
@@ -317,55 +323,6 @@ public class Registration extends RunBlock {
 		int iRow = 1;
 		Runner runner = getRunner();
 		
-		ActiveRunDropDownMenu runDropdown = getRunDropdown(iwc, runner);
-		if (runDropdown.getChildCount() == 1) {
-			getParentPage().setAlertOnLoad(localize("run_reg.no_runs_available", "There are no runs you can register for."));
-			if (this.isIcelandic) {
-				removeRunner(iwc, getRunner().getPersonalID());
-				stepPersonalLookup(iwc);
-				return;
-			}
-		}
-		runDropdown.clearChildren();
-
-
-		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_PRIMARY_DD, "Run")), 1, iRow);
-		if (!isConstrainedToOneRun()){
-			choiceTable.add(redStar, 1, iRow);
-		}
-		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_SECONDARY_DD, "Distance")), 3, iRow);
-		choiceTable.add(redStar, 3, iRow++);
-
-		if (isConstrainedToOneRun()){
-			choiceTable.add(getHeader(localize(runner.getRun().getName(),runner.getRun().getName())+ " " + runner.getYear().getName()), 1, iRow);
-			choiceTable.add(runDropdown, 1, 0);
-			runDropdown.setVisible(false);
-		} else {
-			choiceTable.add(runDropdown, 1, iRow);
-		}
-
-		DistanceDropDownMenu distanceDropdown = (DistanceDropDownMenu) getStyledInterface(new DistanceDropDownMenu(PARAMETER_DISTANCE, runner));
-		distanceDropdown.setAsNotEmpty(localize("run_reg.must_select_distance", "You have to select a distance"));
-
-		choiceTable.add(distanceDropdown, 3, iRow++);
-		
-		RemoteScriptHandler rsh = new RemoteScriptHandler(runDropdown, distanceDropdown);
-		try {
-			rsh.setRemoteScriptCollectionClass(RunInputCollectionHandler.class);
-			if (getRunner().getUser() != null) {
-				rsh.addParameter(RunInputCollectionHandler.PARAMETER_USER_ID, getRunner().getUser().getPrimaryKey().toString());
-			}
-		}
-		catch (InstantiationException e) {
-			e.printStackTrace();
-		}
-		catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
-		add(rsh);
-
-		choiceTable.setHeight(iRow++, 3);
-		
 		TextInput nameField = (TextInput) getStyledInterface(new TextInput(PARAMETER_NAME));
 		//nameField.setWidth(Table.HUNDRED_PERCENT);
 		if (getRunner().getName() != null) {
@@ -462,6 +419,23 @@ public class Registration extends RunBlock {
 			ssnField.setDate(getRunner().getDateOfBirth());
 		}
 
+		TextInput emailField = (TextInput) getStyledInterface(new TextInput(PARAMETER_EMAIL));
+		emailField.setAsEmail(localize("run_reg.email_err_msg", "Not a valid email address"));
+		emailField.setAsNotEmpty(localize("run_reg.continue_without_email", "You can not continue without entering an e-mail"));
+		//emailField.setWidth(Table.HUNDRED_PERCENT);
+		if (getRunner().getEmail() != null) {
+			emailField.setContent(getRunner().getEmail());
+		}
+		else if (getRunner().getUser() != null) {
+			try {
+				Email mail = getUserBusiness(iwc).getUsersMainEmail(getRunner().getUser());
+				emailField.setContent(mail.getEmailAddress());
+			}
+			catch (NoEmailFoundException nefe) {
+				//No email registered...
+			}
+		}
+		
 		Collection countries = getRunBusiness(iwc).getCountries(getPresetCountriesArray());
 		DropdownMenu nationalityField = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_NATIONALITY));
 		DropdownMenu countryField = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_COUNTRY));
@@ -474,7 +448,13 @@ public class Registration extends RunBlock {
 		}
 		if (this.isIcelandic) {
 			countryField.setDisabled(true);
-			nationalityField.setSelectedElement("104");
+			Country icelandicNationality = null;
+			try {
+				icelandicNationality = getAddressBusiness(iwc).getCountryHome().findByIsoAbbreviation("IS");
+				nationalityField.setSelectedElement(icelandicNationality.getPrimaryKey().toString());
+			} catch (FinderException e) {
+				//icelandicNationality not found
+			}
 			if (getRunner().getUser() != null) {
 				Address address = getUserBusiness(iwc).getUsersMainAddress(getRunner().getUser());
 				if (address != null && address.getCountry() != null) {
@@ -497,7 +477,7 @@ public class Registration extends RunBlock {
 		
 		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_SSN, "SSN")), 1, iRow);
 		choiceTable.add(redStar, 1, iRow);
-		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_NATIONALITY, "Nationality")), 3, iRow);
+		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_EMAIL, "Email")), 3, iRow);
 		choiceTable.add(redStar, 3, iRow++);
 		if (this.isIcelandic) {
 			choiceTable.add(ssnISField, 1, iRow);
@@ -505,7 +485,7 @@ public class Registration extends RunBlock {
 		else {
 			choiceTable.add(ssnField, 1, iRow);
 		}
-		choiceTable.add(nationalityField, 3, iRow++);
+		choiceTable.add(emailField, 3, iRow++);
 		choiceTable.setHeight(iRow++, 3);
 		
 		TextInput addressField = (TextInput) getStyledInterface(new TextInput(PARAMETER_ADDRESS));
@@ -526,17 +506,17 @@ public class Registration extends RunBlock {
 			}
 		}
 
-		TextInput emailField = (TextInput) getStyledInterface(new TextInput(PARAMETER_EMAIL));
-		emailField.setAsEmail(localize("run_reg.email_err_msg", "Not a valid email address"));
-		emailField.setAsNotEmpty(localize("run_reg.continue_without_email", "You can not continue without entering an e-mail"));
+		TextInput emailField2 = (TextInput) getStyledInterface(new TextInput(PARAMETER_EMAIL2));
+		emailField2.setAsEmail(localize("run_reg.email_err_msg", "Not a valid email address"));
+		emailField2.setAsNotEmpty(localize("run_reg.continue_without_email2", "You can not continue without repeating the e-mail"));
 		//emailField.setWidth(Table.HUNDRED_PERCENT);
-		if (getRunner().getEmail() != null) {
-			emailField.setContent(getRunner().getEmail());
+		if (getRunner().getEmail2() != null) {
+			emailField2.setContent(getRunner().getEmail2());
 		}
 		else if (getRunner().getUser() != null) {
 			try {
 				Email mail = getUserBusiness(iwc).getUsersMainEmail(getRunner().getUser());
-				emailField.setContent(mail.getEmailAddress());
+				emailField2.setContent(mail.getEmailAddress());
 			}
 			catch (NoEmailFoundException nefe) {
 				//No email registered...
@@ -545,10 +525,10 @@ public class Registration extends RunBlock {
 		
 		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_ADDRESS, "Address")), 1, iRow);
 		choiceTable.add(redStar, 1, iRow);
-		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_EMAIL, "Email")), 3, iRow);
+		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_EMAIL2, "Email repeated")), 3, iRow);
 		choiceTable.add(redStar, 3, iRow++);
 		choiceTable.add(addressField, 1, iRow);
-		choiceTable.add(emailField, 3, iRow++);
+		choiceTable.add(emailField2, 3, iRow++);
 		choiceTable.setHeight(iRow++, 3);
 
 		TextInput cityField = (TextInput) getStyledInterface(new TextInput(PARAMETER_CITY));
@@ -635,6 +615,137 @@ public class Registration extends RunBlock {
 		choiceTable.add(mobileField, 3, iRow++);
 		choiceTable.setHeight(iRow++, 3);
 
+		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_COUNTRY, "Country")), 1, iRow);
+		choiceTable.add(redStar, 1, iRow);
+		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_NATIONALITY, "Nationality")), 3, iRow);
+		choiceTable.add(redStar, 3, iRow++);
+
+		choiceTable.add(countryField, 1, iRow);
+		choiceTable.add(nationalityField, 3, iRow++);
+		choiceTable.setHeight(iRow++, 3);
+
+		Integer runYearID = null;
+		if (runner.getYear() != null) {
+			runYearID = (Integer)runner.getYear().getPrimaryKey();
+		}
+		
+		if (this.showCategories) {
+			DropdownMenu categoriesDropdown = (CategoriesForRunYearDropDownMenu)(getStyledInterface(new CategoriesForRunYearDropDownMenu(PARAMETER_CATEGORY_ID, runYearID)));
+			categoriesDropdown.setAsNotEmpty(localize("run_reg.must_select_category","You must select department"));
+			if(getRunner().getCategory()!=null){
+				categoriesDropdown.setSelectedElement(getRunner().getCategory().getPrimaryKey().toString());
+			}
+			int iCol = 1;
+		
+			choiceTable.add(getHeader(localize("run_reg.category", "Department")), iCol, iRow);
+			choiceTable.add(redStar, iCol, iRow++);
+			choiceTable.add(categoriesDropdown, iCol, iRow);
+			
+			//RemoteScriptHandler rshCategories = new RemoteScriptHandler(distanceDropdown, categoriesDropdown);
+			//try {
+			//	rshCategories.setRemoteScriptCollectionClass(DistanceMenuCategoriesMenuInputCollectionHandler.class);
+			//} catch (InstantiationException e) {
+			//	e.printStackTrace();
+			//} catch (IllegalAccessException e) {
+			//	e.printStackTrace();
+			//}
+			//add(rshCategories);
+		}
+		
+		
+		UIComponent buttonsContainer = getButtonsFooter(iwc,false,true);
+		form.add(buttonsContainer);
+
+		add(form);
+	}
+	
+	private void stepRunDetails(IWContext iwc) throws RemoteException {
+		Form form = new Form();
+		form.maintainParameter(PARAMETER_PERSONAL_ID);
+		form.addParameter(PARAMETER_ACTION, "-1");
+		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_RUNDETAILS);
+		
+		Table table = new Table();
+		table.setCellpadding(0);
+		table.setCellspacing(0);
+		table.setWidth(Table.HUNDRED_PERCENT);
+		
+		form.add(getStepsHeader(iwc, ACTION_STEP_RUNDETAILS));
+		
+		form.add(table);
+		int row = 1;
+		
+		table.setHeight(row++, 12);
+
+		table.add(getInformationTable(localize("run_reg.information_text_step_20", "Information text run details...")), 1, row++);
+		table.setHeight(row++, 18);
+				
+		Table choiceTable = new Table();
+		choiceTable.setColumns(3);
+		choiceTable.setCellpadding(2);
+		choiceTable.setCellspacing(0);
+		choiceTable.setWidth(1, "50%");
+		choiceTable.setWidth(2, 12);
+		choiceTable.setWidth(3, "50%");
+		choiceTable.setWidth(Table.HUNDRED_PERCENT);
+		table.add(choiceTable, 1, row++);
+		
+		Text redStar = getHeader(" *");
+		redStar.setFontColor("#ff0000");
+		
+		int iRow = 1;
+		Runner runner = getRunner();
+		
+		ActiveRunDropDownMenu runDropdown = getRunDropdown(iwc, runner);
+		if (runDropdown.getChildCount() == 1) {
+			getParentPage().setAlertOnLoad(localize("run_reg.no_runs_available", "There are no runs you can register for."));
+			if (this.isIcelandic) {
+				removeRunner(iwc, getRunner().getPersonalID());
+				stepPersonalLookup(iwc);
+				return;
+			} else {
+				stepPersonalDetails(iwc);
+				return;
+			}
+		}
+		runDropdown.clearChildren();
+
+		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_PRIMARY_DD, "Run")), 1, iRow);
+		if (!isConstrainedToOneRun()){
+			choiceTable.add(redStar, 1, iRow);
+			choiceTable.add(runDropdown, 3, iRow++);
+		} else {
+			choiceTable.add(getHeader(localize(runner.getRun().getName(),runner.getRun().getName())+ " " + runner.getYear().getName()), 3, iRow++);
+			choiceTable.add(runDropdown, 1, 0);
+			runDropdown.setVisible(false);
+		}
+		
+		choiceTable.setHeight(iRow++, 5);
+
+		DistanceDropDownMenu distanceDropdown = (DistanceDropDownMenu) getStyledInterface(new DistanceDropDownMenu(PARAMETER_DISTANCE, runner));
+		distanceDropdown.setAsNotEmpty(localize("run_reg.must_select_distance", "You have to select a distance"));
+
+		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_SECONDARY_DD, "Distance")), 1, iRow);
+		choiceTable.add(redStar, 1, iRow);
+		choiceTable.add(distanceDropdown, 3, iRow++);
+		
+		RemoteScriptHandler rsh = new RemoteScriptHandler(runDropdown, distanceDropdown);
+		try {
+			rsh.setRemoteScriptCollectionClass(RunInputCollectionHandler.class);
+			if (getRunner().getUser() != null) {
+				rsh.addParameter(RunInputCollectionHandler.PARAMETER_USER_ID, getRunner().getUser().getPrimaryKey().toString());
+			}
+		}
+		catch (InstantiationException e) {
+			e.printStackTrace();
+		}
+		catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		add(rsh);
+
+		choiceTable.setHeight(iRow++, 5);
+
 		DropdownMenu tShirtField = null;
 		if (!isHideShirtSize()) {
 			tShirtField = (DropdownMenu) getStyledInterface(new DropdownMenu(PARAMETER_SHIRT_SIZE));
@@ -671,52 +782,15 @@ public class Registration extends RunBlock {
 			add(rshShirts);
 		}
 
-		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_COUNTRY, "Country")), 1, iRow);
-		choiceTable.add(redStar, 1, iRow);
 		if (!isHideShirtSize()) {
-			choiceTable.add(getHeader(localize(IWMarathonConstants.RR_TSHIRT, "Shirt size")), 3, iRow);
-			choiceTable.add(redStar, 3, iRow);
-		}
-		iRow++;
-		choiceTable.add(countryField, 1, iRow);
-		if (!isHideShirtSize()) {
-			choiceTable.add(tShirtField, 3, iRow);
-		}
-		iRow++;
-		Integer runYearID = null;
-		if (runner.getYear() != null) {
-			runYearID = (Integer)runner.getYear().getPrimaryKey();
+			choiceTable.add(getHeader(localize(IWMarathonConstants.RR_TSHIRT, "Shirt size")), 1, iRow);
+			choiceTable.add(redStar, 1, iRow);
+			choiceTable.add(tShirtField, 3, iRow++);
 		}
 		
-		if (this.showCategories) {
-			DropdownMenu categoriesDropdown = (CategoriesForRunYearDropDownMenu)(getStyledInterface(new CategoriesForRunYearDropDownMenu(PARAMETER_CATEGORY_ID, runYearID)));
-			categoriesDropdown.setAsNotEmpty(localize("run_reg.must_select_category","You must select department"));
-			if(getRunner().getCategory()!=null){
-				categoriesDropdown.setSelectedElement(getRunner().getCategory().getPrimaryKey().toString());
-			}
-			int iCol = 1;
-			if (isHideShirtSize()) {
-				iRow = iRow-2;
-				iCol = 3;
-			}
-			
-			choiceTable.add(getHeader(localize("run_reg.category", "Department")), iCol, iRow);
-			choiceTable.add(redStar, iCol, iRow++);
-			choiceTable.add(categoriesDropdown, iCol, iRow);
-			
-			//RemoteScriptHandler rshCategories = new RemoteScriptHandler(distanceDropdown, categoriesDropdown);
-			//try {
-			//	rshCategories.setRemoteScriptCollectionClass(DistanceMenuCategoriesMenuInputCollectionHandler.class);
-			//} catch (InstantiationException e) {
-			//	e.printStackTrace();
-			//} catch (IllegalAccessException e) {
-			//	e.printStackTrace();
-			//}
-			//add(rshCategories);
-		}
+		choiceTable.setHeight(iRow++, 10);
 		
-		
-		UIComponent buttonsContainer = getButtonsFooter(iwc,false,true);
+		UIComponent buttonsContainer = getButtonsFooter(iwc,true,true);
 		form.add(buttonsContainer);
 
 		add(form);
@@ -820,6 +894,7 @@ public class Registration extends RunBlock {
 		
 		add(form);
 	}
+	
 	
 	private void stepTransport(IWContext iwc) {
 		Form form = new Form();
@@ -1599,6 +1674,9 @@ public class Registration extends RunBlock {
 			if (iwc.isParameterSet(PARAMETER_EMAIL)) {
 				runner.setEmail(iwc.getParameter(PARAMETER_EMAIL));
 			}
+			if (iwc.isParameterSet(PARAMETER_EMAIL2)) {
+				runner.setEmail2(iwc.getParameter(PARAMETER_EMAIL2));
+			}
 			if (iwc.isParameterSet(PARAMETER_HOME_PHONE)) {
 				runner.setHomePhone(iwc.getParameter(PARAMETER_HOME_PHONE));
 			}
@@ -1725,6 +1803,7 @@ public class Registration extends RunBlock {
 				addStep(iwc,ACTION_STEP_PERSONLOOKUP,localize("run_reg.registration", "Registration"));
 			}
 			addStep(iwc,ACTION_STEP_PERSONALDETAILS,localize("run_reg.registration", "Registration"));
+			addStep(iwc,ACTION_STEP_RUNDETAILS,localize("run_reg.run_details", "Run details"));
 			Runner runner = null;
 			try {
 				runner = getRunner(); 
@@ -1793,34 +1872,43 @@ public class Registration extends RunBlock {
 			}catch(Exception e){e.printStackTrace();}
 		}*/
 
+		Runner runner = null;
 		try {
-			Runner runner = getRunner();
-			if(runner != null && runner.getDateOfBirth() != null || runner != null && runner.getUser() != null && runner.getUser().getDateOfBirth() != null){
-				Date dateOfBirth;
-				if (runner.getDateOfBirth() != null) {
-					dateOfBirth = runner.getDateOfBirth();
-				} else {
-					dateOfBirth = runner.getUser().getDateOfBirth();
-				}
-				long ageInMillisecs = IWTimestamp.getMilliSecondsBetween(new IWTimestamp(dateOfBirth),new IWTimestamp());
-				BigDecimal ageObject = new BigDecimal(ageInMillisecs/MILLISECONDS_IN_YEAR);
-				int age = ageObject.intValue();
-				if (runner.getYear() != null) {
-					int maximumAgeForRun = runner.getYear().getMaximumAgeForRun();
-					if (maximumAgeForRun != -1 && age > maximumAgeForRun) {
-						Object[] args = { String.valueOf(maximumAgeForRun) };
-						getParentPage().setAlertOnLoad(MessageFormat.format(localize("run_reg.invalid_date_of_birth_exeeding","Invalid date of birth.  You have to be {0} or younger to register"), args));
-						//initializeSteps(iwc);
-						return ACTION_STEP_PERSONALDETAILS;
-					}
-				}
-			}
+			runner = getRunner();
 		}
 		catch (RuntimeException fe) {
 			getParentPage().setAlertOnLoad(localize("run_reg.user_not_found_for_personal_id", "No user found with personal ID."));
 			//action = ACTION_STEP_PERSONLOOKUP;
 			initializeSteps(iwc);
 			return ACTION_STEP_PERSONLOOKUP;
+		}
+		
+		if(runner != null && runner.getDateOfBirth() != null || runner != null && runner.getUser() != null && runner.getUser().getDateOfBirth() != null){
+			Date dateOfBirth;
+			if (runner.getDateOfBirth() != null) {
+				dateOfBirth = runner.getDateOfBirth();
+			} else {
+				dateOfBirth = runner.getUser().getDateOfBirth();
+			}
+			long ageInMillisecs = IWTimestamp.getMilliSecondsBetween(new IWTimestamp(dateOfBirth),new IWTimestamp());
+			BigDecimal ageObject = new BigDecimal(ageInMillisecs/MILLISECONDS_IN_YEAR);
+			int age = ageObject.intValue();
+			if (runner.getYear() != null) {
+				int maximumAgeForRun = runner.getYear().getMaximumAgeForRun();
+				if (maximumAgeForRun != -1 && age > maximumAgeForRun) {
+					Object[] args = { String.valueOf(maximumAgeForRun) };
+					getParentPage().setAlertOnLoad(MessageFormat.format(localize("run_reg.invalid_date_of_birth_exeeding","Invalid date of birth.  You have to be {0} or younger to register"), args));
+					//initializeSteps(iwc);
+					return ACTION_STEP_PERSONALDETAILS;
+				}
+			}
+		}
+		
+		if(runner != null && runner.getEmail()!= null && runner.getEmail2()!= null) {
+			if (!runner.getEmail().equals(runner.getEmail2())) {
+				getParentPage().setAlertOnLoad(localize("run_reg.email_dont_match","Emails do not match. Please type the same email in both email inputs"));
+				return ACTION_STEP_PERSONALDETAILS;
+			}
 		}
 		
 		initializeSetRuns(iwc);
