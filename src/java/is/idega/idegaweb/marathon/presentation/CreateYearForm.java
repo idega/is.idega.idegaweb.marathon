@@ -39,6 +39,9 @@ public class CreateYearForm extends Block {
 
 	private String runID = null;
 	
+	public CreateYearForm() {
+		super();
+	}
 	public CreateYearForm (String runID) {
 		super();
 		this.runID = runID;
