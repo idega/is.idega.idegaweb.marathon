@@ -1,5 +1,5 @@
 /*
- * $Id: DistanceBMPBean.java,v 1.11 2007/06/28 13:34:57 tryggvil Exp $
+ * $Id: DistanceBMPBean.java,v 1.12 2007/12/13 20:02:00 civilis Exp $
  * Created on May 22, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -18,10 +18,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/06/28 13:34:57 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/12/13 20:02:00 $ by $Author: civilis $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class DistanceBMPBean extends GroupBMPBean  implements Group, Distance{
 
@@ -42,6 +42,9 @@ public class DistanceBMPBean extends GroupBMPBean  implements Group, Distance{
 	private static final String METADATA_ALLOWS_GROUPS = "allows_groups";
 	private static final String METADATA_NEXT_PARTICIPANT_NUMBER = "next_participant_number";
 	private static final String METADATA_NUMBER_OF_SPLITS = "number_of_splits";
+	
+	public static final String METADATA_MINIMUM_AGE_FOR_DISTANCE = "minimum_age_for_distance";
+	public static final String METADATA_MAXIMUM_AGE_FOR_DISTANCE = "maximum_age_for_distance";
 
 	//Suffix that all distance groups are suffixed with in their name
 	public static final String KM_SUFFIX="_km";
@@ -230,5 +233,33 @@ public class DistanceBMPBean extends GroupBMPBean  implements Group, Distance{
 			}
 		}
 		return year;
+	}
+	
+	public int getMinimumAgeForDistance() {
+		String sMinimumAge = getMetaData(METADATA_MINIMUM_AGE_FOR_DISTANCE);
+		int minimumAge=-1;
+		try{
+			minimumAge = Integer.parseInt(sMinimumAge);
+		}
+		catch(Exception e){}
+		return minimumAge;
+	}
+
+	public void setMinimumAgeForDistance(int minimumAgeForDistance) {
+		setMetaData(METADATA_MINIMUM_AGE_FOR_DISTANCE, String.valueOf(minimumAgeForDistance));
+	}
+
+	public int getMaximumAgeForDistance() {
+		String sMaximumAge = getMetaData(METADATA_MAXIMUM_AGE_FOR_DISTANCE);
+		int maximumAge=-1;
+		try{
+			maximumAge = Integer.parseInt(sMaximumAge);
+		}
+		catch(Exception e){}
+		return maximumAge;
+	}
+
+	public void setMaximumAgeForDistance(int maximumAgeForDistance) {
+		setMetaData(METADATA_MAXIMUM_AGE_FOR_DISTANCE, String.valueOf(maximumAgeForDistance));
 	}
 }

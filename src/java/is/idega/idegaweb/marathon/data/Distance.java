@@ -1,5 +1,5 @@
 /*
- * $Id: Distance.java,v 1.8 2007/06/04 13:48:19 tryggvil Exp $
+ * $Id: Distance.java,v 1.9 2007/12/13 20:02:00 civilis Exp $
  * Created on Aug 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -14,10 +14,10 @@ import com.idega.user.data.Group;
 
 
 /**
- * Last modified: $Date: 2007/06/04 13:48:19 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/12/13 20:02:00 $ by $Author: civilis $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public interface Distance extends Group {
 
@@ -135,4 +135,9 @@ public interface Distance extends Group {
 	public int getDistanceInKms();
 	
 	public Year getYear();
+	
+	public int getMinimumAgeForDistance();
+	public void setMinimumAgeForDistance(int minimumAgeForRun);
+	public int getMaximumAgeForDistance();
+	public void setMaximumAgeForDistance(int maximumAgeForRun);
 }
