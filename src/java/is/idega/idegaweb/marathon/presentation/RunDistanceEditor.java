@@ -53,6 +53,8 @@ public class RunDistanceEditor extends RunBlock {
 	private static final String PARAMETER_MARATHON_PK = "prm_run_pk";
 	private static final String PARAMETER_MARATHON_YEAR_PK = "prm_run_year_pk";
 	private static final String PARAMETER_MARATHON_DISTANCE_PK = "prm_run_distance_pk";
+	public static final String PARAMETER_MINIMUM_AGE_FOR_DISTANCE = "minimum_age_for_distance";
+	public static final String PARAMETER_MAXIMUM_AGE_FOR_DISTANCE = "maximum_age_for_distance";
 
 	private static final int ACTION_VIEW = 1;
 	private static final int ACTION_EDIT = 2;
@@ -174,13 +176,13 @@ public class RunDistanceEditor extends RunBlock {
 		add(form);
 	}
 	
-	public void showEditor(IWContext iwc, String distanceID) throws java.rmi.RemoteException {
+	public void showEditor(IWContext iwc, String distanceID) throws java.rmi.RemoteException, FinderException {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_MARATHON_PK);
 		form.maintainParameter(PARAMETER_MARATHON_YEAR_PK);
 		form.maintainParameter(PARAMETER_MARATHON_DISTANCE_PK);
 
-		TextInput distance = new TextInput(PARAMETER_DISTANCE);
+		TextInput distanceInput = new TextInput(PARAMETER_DISTANCE);
 		TextInput priceISK = new TextInput(PARAMETER_PRICE_ISK);
 		priceISK.setAsFloat("Not a valid price");
 		TextInput priceEUR = new TextInput(PARAMETER_PRICE_EUR);
@@ -210,9 +212,9 @@ public class RunDistanceEditor extends RunBlock {
 		
 		Layer layer = new Layer(Layer.DIV);
 		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
-		Label label = new Label(localize("run_tab.distance", "Distance"), distance);
+		Label label = new Label(localize("run_tab.distance", "Distance"), distanceInput);
 		layer.add(label);
-		layer.add(distance);
+		layer.add(distanceInput);
 		form.add(layer);
 		form.add(new Break());
 
@@ -300,6 +302,34 @@ public class RunDistanceEditor extends RunBlock {
 		layer.add(shirtSizeSelectionBox);
 		form.add(layer);
 		
+		layer = new Layer(Layer.DIV);
+		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
+		DropdownMenu minimumAgeDropDown = new DropdownMenu(PARAMETER_MINIMUM_AGE_FOR_DISTANCE);
+		Label minimumAgeDropDownLabel = new Label(localize("run_reg.minimum_age_for_distance", "Minimum age for distance"),minimumAgeDropDown);
+		layer.add(minimumAgeDropDownLabel);
+		layer.add(minimumAgeDropDown);
+		form.add(layer);
+		form.add(new Break());
+		
+		minimumAgeDropDown.addMenuElement(-1,localize("run_reg.select_age", "Select age..."));
+		for (int i=0; i<100; i++) {
+			minimumAgeDropDown.addMenuElement(i,String.valueOf(i));
+		}
+		
+		layer = new Layer(Layer.DIV);
+		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
+		DropdownMenu maximumAgeDropDown = new DropdownMenu(PARAMETER_MAXIMUM_AGE_FOR_DISTANCE);
+		Label maximumAgeDropDownLabel = new Label(localize("run_reg.maximum_age_for_distance", "Maximum age for distance"),maximumAgeDropDown);
+		layer.add(maximumAgeDropDownLabel);
+		layer.add(maximumAgeDropDown);
+		form.add(layer);
+		form.add(new Break());
+		
+		maximumAgeDropDown.addMenuElement(-1,localize("run_reg.select_age", "Select age..."));
+		for (int i=0; i<100; i++) {
+			maximumAgeDropDown.addMenuElement(i,String.valueOf(i));
+		}
+		
 		SubmitButton save = (SubmitButton) getButton(new SubmitButton(localize("save", "Save"), PRM_ACTION, String.valueOf(ACTION_SAVE)));
 		SubmitButton cancel = (SubmitButton) getButton(new SubmitButton(localize("cancel", "Cancel"), PRM_ACTION, String.valueOf(ACTION_VIEW)));
 
@@ -308,8 +338,10 @@ public class RunDistanceEditor extends RunBlock {
 		
 		if (distanceID != null) {
 			Group selectedDistance = getRunBusiness(iwc).getRunGroupByGroupId(Integer.valueOf(distanceID.toString()));
-			distance.setValue(selectedDistance.getName());
-			distance.setDisabled(true);
+			Distance distance = ConverterUtility.getInstance().convertGroupToDistance(selectedDistance);
+			
+			distanceInput.setValue(selectedDistance.getName());
+			distanceInput.setDisabled(true);
 			priceISK.setValue(selectedDistance.getMetaData(PARAMETER_PRICE_ISK));
 			priceEUR.setValue(selectedDistance.getMetaData(PARAMETER_PRICE_EUR));
 			childrenPriceISK.setValue(selectedDistance.getMetaData(PARAMETER_CHILDREN_PRICE_ISK));
@@ -325,6 +357,15 @@ public class RunDistanceEditor extends RunBlock {
 			if (shirtSizeMetadata != null) {
 				String[] shirtSizeMetadataArray = MiscUtil.str2array(shirtSizeMetadata,",");
 				shirtSizeSelectionBox.setSelectedElements(shirtSizeMetadataArray);
+			}
+			
+			int minimumAgeForRun = distance.getMinimumAgeForDistance();
+			if(minimumAgeForRun!=-1){
+				minimumAgeDropDown.setSelectedElement(minimumAgeForRun);
+			}
+			int maximumAgeForRun = distance.getMaximumAgeForDistance();
+			if(maximumAgeForRun!=-1){
+				maximumAgeDropDown.setSelectedElement(maximumAgeForRun);
 			}
 		}
 		add(form);
@@ -346,7 +387,7 @@ public class RunDistanceEditor extends RunBlock {
 			}	Group group = null;
 			try {
 				String distanceString = iwc.getParameter(PARAMETER_DISTANCE);
-				if (distanceString == null || "".equals(distanceString)) {
+				if (distanceString != null && !"".equals(distanceString)) {
 					group = getGroupBiz().createGroupUnder(distanceString, null, year);
 					group.setGroupType(IWMarathonConstants.GROUP_TYPE_RUN_DISTANCE);
 					group.store();
@@ -373,7 +414,26 @@ public class RunDistanceEditor extends RunBlock {
 			}
 		}
 		
-		if (distance != null) { 
+		if (distance != null) {
+			
+			String sMinimumAgeForRun = iwc.getParameter(PARAMETER_MINIMUM_AGE_FOR_DISTANCE);
+			int minimumAgeForRun = -1;
+			if(sMinimumAgeForRun!=null){
+				try{
+					minimumAgeForRun = Integer.parseInt(sMinimumAgeForRun);
+				}
+				catch(Exception e){}
+			}
+			String sMaximumAgeForRun = iwc.getParameter(PARAMETER_MAXIMUM_AGE_FOR_DISTANCE);
+			int maximumAgeForRun = -1;
+			if(sMaximumAgeForRun!=null){
+				try{
+					maximumAgeForRun = Integer.parseInt(sMaximumAgeForRun);
+				}
+				catch(Exception e){}
+			}
+			
+			
 			distance.setUseChip(iwc.isParameterSet(PARAMETER_USE_CHIP));
 			distance.setFamilyDiscount(iwc.isParameterSet(PARAMETER_FAMILY_DISCOUNT));
 			distance.setAllowsGroups(iwc.isParameterSet(PARAMETER_ALLOWS_GROUPS));
@@ -428,6 +488,10 @@ public class RunDistanceEditor extends RunBlock {
 					distance.setMetaData(PARAMETER_SHIRT_SIZES_PER_RUN, commaSeparated);
 				}
 			}
+			
+			distance.setMinimumAgeForDistance(minimumAgeForRun);
+			distance.setMaximumAgeForDistance(maximumAgeForRun);
+			
 			distance.store();
 		}
 	}
