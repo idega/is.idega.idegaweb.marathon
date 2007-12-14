@@ -59,7 +59,6 @@ import com.idega.data.IDOCreateException;
 import com.idega.data.IDOException;
 import com.idega.data.IDOLookup;
 import com.idega.data.IDOLookupException;
-import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.UnavailableIWContext;
 import com.idega.presentation.IWContext;
