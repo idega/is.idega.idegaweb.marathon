@@ -1,5 +1,5 @@
 /*
- * $Id: Runner.java,v 1.13 2007/12/17 13:39:17 civilis Exp $ Created on May 16, 2005
+ * $Id: Runner.java,v 1.14 2007/12/17 15:57:11 civilis Exp $ Created on May 16, 2005
  * 
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
  * 
@@ -28,10 +28,10 @@ import com.idega.util.IWTimestamp;
  * A holder class for information about runners and their selection when
  * registering.
  * 
- * Last modified: $Date: 2007/12/17 13:39:17 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/17 15:57:11 $ by $Author: civilis $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class Runner {
 
@@ -385,7 +385,7 @@ public class Runner {
 			
 			Distance distance = (Distance)iterator.next();
 			
-			if(age < distance.getMinimumAgeForDistance() || age > distance.getMaximumAgeForDistance())
+			if((distance.getMinimumAgeForDistance() > 0 && age < distance.getMinimumAgeForDistance()) || (distance.getMaximumAgeForDistance() > 0 && age > distance.getMaximumAgeForDistance()))
 				disallowed.add(distance.getPrimaryKey().toString());
 		}
 		
