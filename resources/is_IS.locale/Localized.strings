@@ -474,3 +474,4 @@ userRunOverview.distance=Vegalengd
 userRunOverview.participant_number=Keppnisn\u00FAmer
 userRunOverview.run=Hlaup
 userRunOverview.user_run_overview=Hlaupaskr\u00E1ningar einstaklings
+runDistance.choiceNotAvailableBecauseOfAge=(Ekki til fyrir þinn aldursflokk)
