@@ -5,6 +5,12 @@
 	</properties>
 	<body>
 
+	<release version="3.1.22" date="2007-12-17">
+		<action dev="civilis" type="update">
+			Age restriction for distances added in the user group tab 
+		</action>     
+	</release>
+
 	<release version="3.1.21" date="2007-12-17">
 		<action dev="civilis" type="update">
 			Age restriction for distances added 
