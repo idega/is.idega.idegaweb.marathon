@@ -1,5 +1,5 @@
 /*
- * $Id: ConverterUtility.java,v 1.3 2007/09/26 08:05:23 laddi Exp $
+ * $Id: ConverterUtility.java,v 1.4 2007/12/17 13:16:53 civilis Exp $
  * Created on May 22, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -22,10 +22,10 @@ import com.idega.user.data.Group;
 
 
 /**
- * Last modified: $Date: 2007/09/26 08:05:23 $ by $Author: laddi $
+ * Last modified: $Date: 2007/12/17 13:16:53 $ by $Author: civilis $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class ConverterUtility {
 
@@ -34,7 +34,7 @@ public class ConverterUtility {
 	private ConverterUtility() {
 	}
 	
-	public static ConverterUtility getInstance() {
+	public static synchronized ConverterUtility getInstance() {
 		if (util == null) {
 			util = new ConverterUtility();
 		}
