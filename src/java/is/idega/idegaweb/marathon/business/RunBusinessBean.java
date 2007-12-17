@@ -1921,7 +1921,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 						}
 					}
 				}
-				if(distances != null) {
+				if(distances != null && distances.size() > 1) {
 					Collections.sort(distances, new RunDistanceComparator());
 				}
 			}

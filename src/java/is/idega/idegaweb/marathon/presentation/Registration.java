@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.127 2007/10/31 13:33:22 idegaweb Exp $
+ * $Id: Registration.java,v 1.128 2007/12/17 13:48:13 civilis Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -77,14 +77,14 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/10/31 13:33:22 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/12/17 13:48:13 $ by $Author: civilis $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.127 $
+ * @version $Revision: 1.128 $
  */
 public class Registration extends RunBlock {
 	
-	private static final String SESSION_ATTRIBUTE_RUNNER_MAP = "sa_runner_map";
+	public static final String SESSION_ATTRIBUTE_RUNNER_MAP = "sa_runner_map";
 	public static final String SESSION_ATTRIBUTE_PARTICIPANTS = "sa_participants";
 	public static final String SESSION_ATTRIBUTE_AMOUNT = "sa_amount";
 	public static final String SESSION_ATTRIBUTE_CARD_NUMBER = "sa_card_number";
@@ -378,10 +378,6 @@ public class Registration extends RunBlock {
 				ssnISField.setContent(getRunner().getUser().getPersonalID());
 			}
 		}
-		
-		
-		
-
 		
 		DateInput ssnField = (DateInput) getStyledInterface(new DateInput(PARAMETER_PERSONAL_ID));
 		ssnField.setAsNotEmpty("Date of birth can not be empty");
@@ -732,6 +728,8 @@ public class Registration extends RunBlock {
 		RemoteScriptHandler rsh = new RemoteScriptHandler(runDropdown, distanceDropdown);
 		try {
 			rsh.setRemoteScriptCollectionClass(RunInputCollectionHandler.class);
+			rsh.addParameter(RunInputCollectionHandler.RUNNER_PERSONAL_ID, getRunner().getPersonalID());
+			
 			if (getRunner().getUser() != null) {
 				rsh.addParameter(RunInputCollectionHandler.PARAMETER_USER_ID, getRunner().getUser().getPrimaryKey().toString());
 			}
