@@ -1,5 +1,5 @@
 /*
- * $Id: Runner.java,v 1.12 2007/10/31 12:59:39 idegaweb Exp $ Created on May 16, 2005
+ * $Id: Runner.java,v 1.13 2007/12/17 13:39:17 civilis Exp $ Created on May 16, 2005
  * 
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
  * 
@@ -14,19 +14,24 @@ import is.idega.idegaweb.marathon.data.Run;
 import is.idega.idegaweb.marathon.data.RunCategory;
 import is.idega.idegaweb.marathon.data.Year;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import javax.ejb.FinderException;
 import com.idega.core.location.data.Country;
 import com.idega.user.data.Gender;
 import com.idega.user.data.User;
+import com.idega.util.IWTimestamp;
 
 /**
  * A holder class for information about runners and their selection when
  * registering.
  * 
- * Last modified: $Date: 2007/10/31 12:59:39 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/12/17 13:39:17 $ by $Author: civilis $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class Runner {
 
@@ -362,5 +367,28 @@ public class Runner {
 
 	public void setSponsoredRunner(boolean sponsoredRunner) {
 		this.sponsoredRunner = sponsoredRunner;
+	}
+
+	public List getDisallowedDistancesPKs(List distances) {
+		
+		List disallowed = new ArrayList();
+		
+		int currentYear = new IWTimestamp().getYear();
+		int userBirthYear = new IWTimestamp(getDateOfBirth()).getYear();
+		
+		if(currentYear < userBirthYear)
+			throw new IllegalArgumentException("Current year lower than birth year. User birth year: "+userBirthYear+", current year: "+currentYear);
+		
+		int age = currentYear - userBirthYear;
+		
+		for (Iterator iterator = distances.iterator(); iterator.hasNext();) {
+			
+			Distance distance = (Distance)iterator.next();
+			
+			if(age < distance.getMinimumAgeForDistance() || age > distance.getMaximumAgeForDistance())
+				disallowed.add(distance.getPrimaryKey().toString());
+		}
+		
+		return disallowed;
 	}
 }
