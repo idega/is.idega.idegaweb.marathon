@@ -5,7 +5,13 @@
 	</properties>
 	<body>
 
-		<release version="3.1.20" date="2007-10-30">
+	<release version="3.1.21" date="2007-12-17">
+		<action dev="civilis" type="update">
+			Age restriction for distances added 
+		</action>     
+	</release>
+
+	<release version="3.1.20" date="2007-10-30">
 		<action dev="sigtryggur" type="update">
 			New import for groups of marathon runners
 		</action>     
