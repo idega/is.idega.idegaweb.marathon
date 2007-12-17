@@ -43,6 +43,9 @@ public class RunDistanceTab extends UserGroupTab{
 	
 	private static final String PARAMETER_NUMBER_OF_SPLITS = "number_of_splits";
 	private static final String PARAMETER_SHIRT_SIZES_PER_RUN = "shirt_sizes_per_run";
+	
+	private static final String PARAMETER_MINIMUM_AGE_FOR_DISTANCE = "minimum_age_for_distance";
+	private static final String PARAMETER_MAXIMUM_AGE_FOR_DISTANCE = "maximum_age_for_distance";
 
 	private TextInput priceISK;
 	private TextInput priceEUR;
@@ -57,6 +60,9 @@ public class RunDistanceTab extends UserGroupTab{
 	private CheckBox transportOffered;
 	
 	private DropdownMenu numberOfSplits;
+	private DropdownMenu minimumAgeDropDown;
+	private DropdownMenu maximumAgeDropDown;
+	
 	private ShirtSizeSelectionBox shirtSizeSelectionBox;
 	
 	private Text priceISKText;
@@ -71,6 +77,8 @@ public class RunDistanceTab extends UserGroupTab{
 	private Text transportOfferedText;
 	private Text numberOfSplitsText;
 	private Text shirtSizeSelectionBoxText;
+	private Text minimumAgeDropDownText;
+	private Text maximumAgeDropDownText;
 	
 	public RunDistanceTab() {
 		super();
@@ -96,6 +104,8 @@ public class RunDistanceTab extends UserGroupTab{
 			String childPriceEUR = iwc.getParameter(PARAMETER_CHILDREN_PRICE_EUR);
 			String priceForTransportISK = iwc.getParameter(PARAMETER_PRICE_FOR_TRANSPORT_ISK);
 			String priceForTransportEUR = iwc.getParameter(PARAMETER_PRICE_FOR_TRANSPORT_EUR);
+			String minimumAge = iwc.getParameter(PARAMETER_MINIMUM_AGE_FOR_DISTANCE);
+			String maximumAge = iwc.getParameter(PARAMETER_MAXIMUM_AGE_FOR_DISTANCE);
 			
 			String numberOfSplits = iwc.getParameter(PARAMETER_NUMBER_OF_SPLITS);
 			String[] shirtSizesPerRun = iwc.getParameterValues(PARAMETER_SHIRT_SIZES_PER_RUN);
@@ -129,6 +139,13 @@ public class RunDistanceTab extends UserGroupTab{
 			if(shirtSizesPerRun != null){
 				this.fieldValues.put(PARAMETER_SHIRT_SIZES_PER_RUN, shirtSizesPerRun);
 			}
+			if(minimumAge != null){
+				this.fieldValues.put(PARAMETER_MINIMUM_AGE_FOR_DISTANCE, new Integer(minimumAge));
+			}
+			if(maximumAge != null){
+				this.fieldValues.put(PARAMETER_MAXIMUM_AGE_FOR_DISTANCE, new Integer(maximumAge));
+			}
+			
 			updateFieldsDisplayStatus();
 			return true;
 		}
@@ -153,6 +170,9 @@ public class RunDistanceTab extends UserGroupTab{
 			this.fieldValues.put(PARAMETER_PRICE_FOR_TRANSPORT_ISK, new Float(distance.getPriceForTransport(LocaleUtil.getIcelandicLocale())));
 			this.fieldValues.put(PARAMETER_PRICE_FOR_TRANSPORT_EUR, new Float(distance.getPriceForTransport(Locale.ENGLISH)));
 			this.fieldValues.put(PARAMETER_NUMBER_OF_SPLITS, new Integer(distance.getNumberOfSplits()));
+			this.fieldValues.put(PARAMETER_MINIMUM_AGE_FOR_DISTANCE, new Integer(distance.getMinimumAgeForDistance()));
+			this.fieldValues.put(PARAMETER_MAXIMUM_AGE_FOR_DISTANCE, new Integer(distance.getMaximumAgeForDistance()));
+			
 			String shirtSizeMetadata = distance.getMetaData(PARAMETER_SHIRT_SIZES_PER_RUN);
 			if (shirtSizeMetadata != null) {
 				String[] shirtSizeMetadataArray = MiscUtil.str2array(shirtSizeMetadata,",");
@@ -206,6 +226,9 @@ public class RunDistanceTab extends UserGroupTab{
 
 		this.shirtSizeSelectionBox = new ShirtSizeSelectionBox(PARAMETER_SHIRT_SIZES_PER_RUN);
 		this.shirtSizeSelectionBox.initialize(IWContext.getInstance());
+		
+		minimumAgeDropDown = new DropdownMenu(PARAMETER_MINIMUM_AGE_FOR_DISTANCE);
+		maximumAgeDropDown = new DropdownMenu(PARAMETER_MAXIMUM_AGE_FOR_DISTANCE);
 	}
 	
 	/* (non-Javadoc)
@@ -224,6 +247,8 @@ public class RunDistanceTab extends UserGroupTab{
 		this.fieldValues.put(PARAMETER_PRICE_FOR_TRANSPORT_EUR, new Float(0));
 		this.fieldValues.put(PARAMETER_NUMBER_OF_SPLITS, new Integer(0));
 		this.fieldValues.put(PARAMETER_SHIRT_SIZES_PER_RUN, new String[0]);
+		this.fieldValues.put(PARAMETER_MINIMUM_AGE_FOR_DISTANCE, new Integer(-1));
+		this.fieldValues.put(PARAMETER_MAXIMUM_AGE_FOR_DISTANCE, new Integer(-1));
 	}
 	
 	/* (non-Javadoc)
@@ -268,6 +293,23 @@ public class RunDistanceTab extends UserGroupTab{
 
 		this.shirtSizeSelectionBoxText = new Text(iwrb.getLocalizedString("run_tab.shirt_sizes", "Shirt sizes"));
 		this.shirtSizeSelectionBoxText.setBold();
+		
+		minimumAgeDropDownText = new Text(iwrb.getLocalizedString("run_reg.minimum_age_for_distance", "Minimum age for distance"));
+		minimumAgeDropDownText.setBold();
+		
+		maximumAgeDropDownText = new Text(iwrb.getLocalizedString("run_reg.maximum_age_for_distance", "Maximum age for distance"));
+		maximumAgeDropDownText.setBold();
+		
+		minimumAgeDropDown.addMenuElement(-1, iwrb.getLocalizedString("run_reg.select_age", "Select age..."));
+		maximumAgeDropDown.addMenuElement(-1, iwrb.getLocalizedString("run_reg.select_age", "Select age..."));
+		
+		minimumAgeDropDown.setLabel(iwrb.getLocalizedString("run_reg.minimum_age_for_distance", "Minimum age for distance"));
+		maximumAgeDropDown.setLabel(iwrb.getLocalizedString("run_reg.maximum_age_for_distance", "Maximum age for distance"));
+		
+		for (int i=0; i<100; i++) {
+			minimumAgeDropDown.addMenuElement(i,String.valueOf(i));
+			maximumAgeDropDown.addMenuElement(i,String.valueOf(i));
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -338,6 +380,17 @@ public class RunDistanceTab extends UserGroupTab{
 		table.add(this.priceForTransportEURText, 1, 3);
 		table.add(Text.getBreak(), 1, 3);
 		table.add(this.priceForTransportEUR, 1, 3);
+		table.add(Text.getBreak(), 1, 3);
+		table.add(Text.getBreak(), 1, 3);
+		table.add(minimumAgeDropDownText, 1, 3);
+		table.add(Text.getBreak(), 1, 3);
+		table.add(minimumAgeDropDown, 1, 3);
+		table.add(Text.getBreak(), 1, 3);
+		table.add(Text.getBreak(), 1, 3);
+		table.add(maximumAgeDropDownText, 1, 3);
+		table.add(Text.getBreak(), 1, 3);
+		table.add(maximumAgeDropDown, 1, 3);
+		
 		table.setVerticalAlignment(1, 3, Table.VERTICAL_ALIGN_TOP);
 
 		table.mergeCells(2, 3, 2, 4);		
@@ -367,7 +420,9 @@ public class RunDistanceTab extends UserGroupTab{
 				distance.setChildrenPriceInEUR(((Float) this.fieldValues.get(PARAMETER_CHILDREN_PRICE_EUR)).floatValue());
 				distance.setPriceForTransportInISK(((Float) this.fieldValues.get(PARAMETER_PRICE_FOR_TRANSPORT_ISK)).floatValue());
 				distance.setPriceForTransportInEUR(((Float) this.fieldValues.get(PARAMETER_PRICE_FOR_TRANSPORT_EUR)).floatValue());
-
+				distance.setMinimumAgeForDistance(((Integer)this.fieldValues.get(PARAMETER_MINIMUM_AGE_FOR_DISTANCE)).intValue());
+				distance.setMaximumAgeForDistance(((Integer)this.fieldValues.get(PARAMETER_MAXIMUM_AGE_FOR_DISTANCE)).intValue());
+				
 				distance.setNumberOfSplits(((Integer) this.fieldValues.get(PARAMETER_NUMBER_OF_SPLITS)).intValue());
 				String[] shirtSizesPerRun = (String[]) this.fieldValues.get(PARAMETER_SHIRT_SIZES_PER_RUN);
 				if(shirtSizesPerRun!=null && shirtSizesPerRun.length != 0){
@@ -407,7 +462,8 @@ public class RunDistanceTab extends UserGroupTab{
 		this.childrenPriceEUR.setContent(((Float) this.fieldValues.get(PARAMETER_CHILDREN_PRICE_EUR)).toString());
 		this.priceForTransportISK.setContent(((Float) this.fieldValues.get(PARAMETER_PRICE_FOR_TRANSPORT_ISK)).toString());
 		this.priceForTransportEUR.setContent(((Float) this.fieldValues.get(PARAMETER_PRICE_FOR_TRANSPORT_EUR)).toString());
-		
+		minimumAgeDropDown.setSelectedElement(String.valueOf(fieldValues.get(PARAMETER_MINIMUM_AGE_FOR_DISTANCE)));
+		maximumAgeDropDown.setSelectedElement(String.valueOf(fieldValues.get(PARAMETER_MAXIMUM_AGE_FOR_DISTANCE)));
 
 		this.numberOfSplits.setSelectedElement(((Integer) this.fieldValues.get(PARAMETER_NUMBER_OF_SPLITS)).intValue());
 		this.shirtSizeSelectionBox.setSelectedElements((String[]) this.fieldValues.get(PARAMETER_SHIRT_SIZES_PER_RUN));
