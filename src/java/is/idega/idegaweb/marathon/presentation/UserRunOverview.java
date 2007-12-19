@@ -13,9 +13,9 @@ import com.idega.presentation.IWBaseComponent;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
- * Last modified: $Date: 2007/12/19 18:08:16 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/19 18:21:18 $ by $Author: civilis $
  *
  */
 public class UserRunOverview extends IWBaseComponent {
@@ -26,8 +26,6 @@ public class UserRunOverview extends IWBaseComponent {
 	protected void initializeComponent(FacesContext context) {
 		super.initializeComponent(context);
 	
-		System.out.println("UserRunOverview.initializeComponent xxxxxxxxxx");
-		
 		try {
 			
 			getFacets().put("UserRunOverviewList", new UserRunOverviewList());
@@ -47,15 +45,12 @@ public class UserRunOverview extends IWBaseComponent {
 	public void encodeChildren(FacesContext context) throws IOException {
 		super.encodeChildren(context);
 	
-		System.out.println("UserRunOverview.encodeChildren");
 		UIComponent stepComponent;
 		
 		if(context.getExternalContext().getRequestParameterMap().get("wizzard") != null/* || true*/)
 			stepComponent = getFacet("DistanceChangeWizzard");
 		else 
 			stepComponent = getFacet("UserRunOverviewList");
-		
-		System.out.println("component: "+stepComponent);
 		
 		if(stepComponent != null) {
 			
