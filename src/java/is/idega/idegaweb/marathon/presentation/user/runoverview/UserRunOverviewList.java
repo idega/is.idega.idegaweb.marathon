@@ -15,11 +15,14 @@ import com.idega.presentation.TableCell2;
 import com.idega.presentation.TableRow;
 import com.idega.presentation.TableRowGroup;
 import com.idega.presentation.text.Heading1;
+import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
+import com.idega.presentation.ui.Form;
 
 public class UserRunOverviewList extends RunBlock {
 
 	private final static String KEY_PREFIX = "userRunOverview.";
+	public final static String CHANGE_DISTANCE_PARAM = "chDstnc";
 
 	public void main(IWContext iwc) throws Exception {
 		if (!iwc.isLoggedOn()) {
@@ -37,12 +40,15 @@ public class UserRunOverviewList extends RunBlock {
 
 		Heading1 heading = new Heading1(this.iwrb.getLocalizedString(KEY_PREFIX + "user_run_overview", "Run overview"));
 		headerLayer.add(heading);
-
+		
+		Form form = new Form();
 		layer.add(getRunOverviewTable(iwc));
-		add(layer);
+		form.add(layer);
+		add(form);
 	}
 	
 	private Table2 getRunOverviewTable(IWContext iwc) {
+		
 		Table2 table = new Table2();
 		table.setStyleClass("listTable");
 		table.setStyleClass("ruler");
@@ -67,21 +73,25 @@ public class UserRunOverviewList extends RunBlock {
 		
 		cell = row.createHeaderCell();
 		cell.setStyleClass("runnerCharity");
-		cell.setStyleClass("lastColumn");
 		cell.add(new Text(getResourceBundle().getLocalizedString(KEY_PREFIX + "charity", "Charity")));
+		
+		cell = row.createHeaderCell();
+		cell.setStyleClass("runnerChangeDistanceCellHeader");
+		cell.setStyleClass("lastColumn");
+		cell.add(new Text(getResourceBundle().getLocalizedString("blahblah", "Change distance")));
 		
 		group = table.createBodyRowGroup();
 		int iRow = 1;
 		
-		Collection runRegistrations = null;
+		Collection participants = null;
 		try {
-			runRegistrations = getRunBusiness(iwc).getParticipantsByUser(iwc.getCurrentUser());
+			participants = getRunBusiness(iwc).getParticipantsByUser(iwc.getCurrentUser());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		if (runRegistrations != null && !runRegistrations.isEmpty()) {
-			Iterator iter = runRegistrations.iterator();
+		if (participants != null && !participants.isEmpty()) {
+			Iterator iter = participants.iterator();
 			while (iter.hasNext()) {
 				row = group.createRow();
 				Participant participant = (Participant)iter.next();
@@ -118,7 +128,6 @@ public class UserRunOverviewList extends RunBlock {
 				
 				cell = row.createCell();
 				cell.setStyleClass("runnerCharity");
-				cell.setStyleClass("lastColumn");
 				cell.add(new Text(charityString));
 	
 				boolean addNonBrakingSpace = true;
@@ -126,6 +135,13 @@ public class UserRunOverviewList extends RunBlock {
 				if (addNonBrakingSpace) {
 					cell.add(Text.getNonBrakingSpace());
 				}
+				
+				cell = row.createCell();
+				cell.setStyleClass("runnerChangeDistanceCell");
+				cell.setStyleClass("lastColumn");
+				Link link = getLink(localize("edit", "Edit"));
+				link.addParameter(CHANGE_DISTANCE_PARAM, participant.getRunDistanceGroupID());
+				cell.add(link);
 	
 				if (iRow % 2 == 0) {
 					row.setStyleClass("evenRow");

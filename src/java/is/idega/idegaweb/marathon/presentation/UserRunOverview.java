@@ -13,30 +13,24 @@ import com.idega.presentation.IWBaseComponent;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
- * Last modified: $Date: 2007/12/19 18:21:18 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/19 19:13:34 $ by $Author: civilis $
  *
  */
 public class UserRunOverview extends IWBaseComponent {
 
+	private static final String UserRunOverviewListFacet = "UserRunOverviewList";
+	private static final String DistanceChangeWizzardFacet = "DistanceChangeWizzard";
+	
 	/**
 	 * @Override
 	 */
 	protected void initializeComponent(FacesContext context) {
 		super.initializeComponent(context);
 	
-		try {
-			
-			getFacets().put("UserRunOverviewList", new UserRunOverviewList());
-			getFacets().put("DistanceChangeWizzard", new DistanceChangeWizard());
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		} catch(Error ee) {
-			ee.printStackTrace();
-		}
-		
+		getFacets().put(UserRunOverviewListFacet, new UserRunOverviewList());
+		getFacets().put(DistanceChangeWizzardFacet, new DistanceChangeWizard());
 	}
 	
 	/**
@@ -45,12 +39,13 @@ public class UserRunOverview extends IWBaseComponent {
 	public void encodeChildren(FacesContext context) throws IOException {
 		super.encodeChildren(context);
 	
+		String distanceGroupIdToEdit = (String)context.getExternalContext().getRequestParameterMap().get(UserRunOverviewList.CHANGE_DISTANCE_PARAM);
 		UIComponent stepComponent;
 		
-		if(context.getExternalContext().getRequestParameterMap().get("wizzard") != null/* || true*/)
-			stepComponent = getFacet("DistanceChangeWizzard");
+		if(distanceGroupIdToEdit != null)
+			stepComponent = getFacet(DistanceChangeWizzardFacet);
 		else 
-			stepComponent = getFacet("UserRunOverviewList");
+			stepComponent = getFacet(UserRunOverviewListFacet);
 		
 		if(stepComponent != null) {
 			
