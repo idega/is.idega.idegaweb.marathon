@@ -2,9 +2,10 @@
  * Created on Aug 17, 2004
  *
  */
-package is.idega.idegaweb.marathon.presentation;
+package is.idega.idegaweb.marathon.presentation.user;
 
 import is.idega.idegaweb.marathon.business.RunBusiness;
+import is.idega.idegaweb.marathon.presentation.UpdateRunInfoWindow;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
 import java.rmi.RemoteException;

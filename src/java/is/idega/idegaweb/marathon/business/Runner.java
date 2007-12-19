@@ -1,5 +1,5 @@
 /*
- * $Id: Runner.java,v 1.14 2007/12/17 15:57:11 civilis Exp $ Created on May 16, 2005
+ * $Id: Runner.java,v 1.15 2007/12/19 18:05:35 civilis Exp $ Created on May 16, 2005
  * 
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
  * 
@@ -22,16 +22,16 @@ import javax.ejb.FinderException;
 import com.idega.core.location.data.Country;
 import com.idega.user.data.Gender;
 import com.idega.user.data.User;
-import com.idega.util.IWTimestamp;
+import com.idega.util.Age;
 
 /**
  * A holder class for information about runners and their selection when
  * registering.
  * 
- * Last modified: $Date: 2007/12/17 15:57:11 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/19 18:05:35 $ by $Author: civilis $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class Runner {
 
@@ -371,15 +371,8 @@ public class Runner {
 
 	public List getDisallowedDistancesPKs(List distances) {
 		
+		int age = new Age(getDateOfBirth()).getYears();
 		List disallowed = new ArrayList();
-		
-		int currentYear = new IWTimestamp().getYear();
-		int userBirthYear = new IWTimestamp(getDateOfBirth()).getYear();
-		
-		if(currentYear < userBirthYear)
-			throw new IllegalArgumentException("Current year lower than birth year. User birth year: "+userBirthYear+", current year: "+currentYear);
-		
-		int age = currentYear - userBirthYear;
 		
 		for (Iterator iterator = distances.iterator(); iterator.hasNext();) {
 			

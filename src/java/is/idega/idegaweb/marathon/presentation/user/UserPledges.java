@@ -1,4 +1,4 @@
-package is.idega.idegaweb.marathon.presentation;
+package is.idega.idegaweb.marathon.presentation.user;
 
 import is.idega.idegaweb.marathon.business.ConverterUtility;
 import is.idega.idegaweb.marathon.data.Charity;
@@ -6,6 +6,7 @@ import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.data.Pledge;
 import is.idega.idegaweb.marathon.data.PledgeHome;
 import is.idega.idegaweb.marathon.data.Year;
+import is.idega.idegaweb.marathon.presentation.RunBlock;
 
 import java.rmi.RemoteException;
 import java.text.NumberFormat;

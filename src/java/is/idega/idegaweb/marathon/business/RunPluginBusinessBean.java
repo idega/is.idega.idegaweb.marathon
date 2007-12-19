@@ -9,7 +9,7 @@ import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.presentation.CreateYearWindowPlugin;
 import is.idega.idegaweb.marathon.presentation.RunDistanceTab;
 import is.idega.idegaweb.marathon.presentation.RunYearTab;
-import is.idega.idegaweb.marathon.presentation.UserRunTab;
+import is.idega.idegaweb.marathon.presentation.user.UserRunTab;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
 import java.rmi.RemoteException;
