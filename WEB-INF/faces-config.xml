@@ -9,7 +9,17 @@
 	<managed-bean>
 		<managed-bean-name>distanceChangeWizardBean</managed-bean-name>
 		<managed-bean-class>is.idega.idegaweb.marathon.presentation.user.runoverview.DistanceChangeWizardBean</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>distanceChangeStepBean</managed-bean-name>
+		<managed-bean-class>is.idega.idegaweb.marathon.presentation.user.runoverview.DistanceChangeStepBean</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>wizardBean</property-name>
+			<property-class>is.idega.idegaweb.marathon.presentation.user.runoverview.DistanceChangeWizardBean</property-class>
+			<value>#{distanceChangeWizardBean}</value>
+		</managed-property>
 	</managed-bean>
 
 </faces-config>

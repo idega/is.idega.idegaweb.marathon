@@ -12,16 +12,22 @@ import com.idega.presentation.wizard.Wizard;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
- * Last modified: $Date: 2007/12/19 21:49:49 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/21 15:05:02 $ by $Author: civilis $
  *
  */
 public class DistanceChangeWizard extends Wizard {
 
 	public static final String distanceChangeWizardBeanExp = "#{distanceChangeWizardBean}";
-	public static final String distanceChangeWizardBean_distanceIdExp = "#{distanceChangeWizardBean.distanceId}";
-	public static final String distanceChangeWizardBean_wizardModeExp = "#{distanceChangeWizardBean.wizardMode}";
+	//public static final String distanceChangeWizardBean_participantIdExp = "#{distanceChangeWizardBean.participantId}";
+	
+	public static final String distanceChangeStepBeanExp = "#{distanceChangeStepBean}";
+	public static final String distanceChangeStepBean_wizardModeExp = "#{distanceChangeStepBean.wizardMode}";
+	public static final String distanceChangeStepBean_runLabelExp = "#{distanceChangeStepBean.runLabel}";
+	public static final String distanceChangeStepBean_newDistanceExp = "#{distanceChangeStepBean.newDistanceId}";
+	public static final String distanceChangeStepBean_runDistancesExp = "#{distanceChangeStepBean.runDistances}";
+	
 	
 	/**
 	 * @Override
@@ -38,6 +44,10 @@ public class DistanceChangeWizard extends Wizard {
 	 * @Override
 	 */
 	protected UIComponent getContainer(FacesContext context) {
-		return context.getApplication().createComponent(HtmlForm.COMPONENT_TYPE);
+		
+		HtmlForm form = (HtmlForm)context.getApplication().createComponent(HtmlForm.COMPONENT_TYPE);
+		form.setId(context.getViewRoot().createUniqueId());
+		
+		return form;
 	}
 }

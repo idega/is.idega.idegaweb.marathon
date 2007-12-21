@@ -1,5 +1,6 @@
 package is.idega.idegaweb.marathon.presentation;
 
+import is.idega.idegaweb.marathon.presentation.user.runoverview.DistanceChangeStepBean;
 import is.idega.idegaweb.marathon.presentation.user.runoverview.DistanceChangeWizard;
 import is.idega.idegaweb.marathon.presentation.user.runoverview.DistanceChangeWizardBean;
 import is.idega.idegaweb.marathon.presentation.user.runoverview.UserRunOverviewList;
@@ -11,14 +12,13 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
 import com.idega.presentation.IWBaseComponent;
-import com.idega.presentation.wizard.WizardControlValues;
 
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *
- * Last modified: $Date: 2007/12/19 21:49:49 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/21 15:04:09 $ by $Author: civilis $
  *
  */
 public class UserRunOverview extends IWBaseComponent {
@@ -42,19 +42,21 @@ public class UserRunOverview extends IWBaseComponent {
 	public void encodeChildren(FacesContext context) throws IOException {
 		super.encodeChildren(context);
 	
-		String distanceGroupIdToEdit = (String)context.getExternalContext().getRequestParameterMap().get(UserRunOverviewList.CHANGE_DISTANCE_PARAM);
+		String participantId = (String)context.getExternalContext().getRequestParameterMap().get(UserRunOverviewList.PARTICIPANT_PARAM);
 		UIComponent stepComponent;
 		
-		ValueBinding vb = context.getApplication().createValueBinding(DistanceChangeWizard.distanceChangeWizardBeanExp);
-		DistanceChangeWizardBean distanceChangeWizardBean = (DistanceChangeWizardBean)vb.getValue(context);
+		ValueBinding vb = context.getApplication().createValueBinding(DistanceChangeWizard.distanceChangeStepBeanExp);
+		DistanceChangeStepBean distanceChangeStepBean = (DistanceChangeStepBean)vb.getValue(context);
 		
-		if(distanceGroupIdToEdit != null) {
-			
-			distanceChangeWizardBean.setWizardMode(true);
-			distanceChangeWizardBean.setDistanceId(distanceGroupIdToEdit);
+		if(participantId != null) {
+		
+			vb = context.getApplication().createValueBinding(DistanceChangeWizard.distanceChangeWizardBeanExp);
+			DistanceChangeWizardBean distanceChangeWizardBean = (DistanceChangeWizardBean)vb.getValue(context);
+			distanceChangeWizardBean.setParticipantId(participantId);
+			distanceChangeStepBean.setWizardMode(true);
 		}
 		
-		if(distanceChangeWizardBean.isWizardMode())
+		if(distanceChangeStepBean.isWizardMode())
 			stepComponent = getFacet(DistanceChangeWizzardFacet);
 		else 
 			stepComponent = getFacet(UserRunOverviewListFacet);

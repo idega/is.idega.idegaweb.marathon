@@ -1,5 +1,5 @@
 /*
- * $Id: IWBundleStarter.java,v 1.5 2007/06/05 16:48:11 tryggvil Exp $
+ * $Id: IWBundleStarter.java,v 1.6 2007/12/21 15:04:09 civilis Exp $
  * Created on May 23, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -32,12 +32,14 @@ import com.idega.idegaweb.include.GlobalIncludeManager;
 
 
 /**
- * Last modified: $Date: 2007/06/05 16:48:11 $ by $Author: tryggvil $
+ * Last modified: $Date: 2007/12/21 15:04:09 $ by $Author: civilis $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class IWBundleStarter implements IWBundleStartable {
+	
+	public static final String IW_BUNDLE_IDENTIFIER = "is.idega.idegaweb.marathon";
 	
 	/* (non-Javadoc)
 	 * @see com.idega.idegaweb.IWBundleStartable#start(com.idega.idegaweb.IWBundle)

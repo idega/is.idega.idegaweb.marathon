@@ -1,5 +1,5 @@
 /*
- * $Id: RunBusiness.java,v 1.41 2007/10/24 20:25:25 idegaweb Exp $
+ * $Id: RunBusiness.java,v 1.42 2007/12/21 15:04:09 civilis Exp $
  * Created on Aug 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -34,10 +34,10 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2007/10/24 20:25:25 $ by $Author: idegaweb $
+ * Last modified: $Date: 2007/12/21 15:04:09 $ by $Author: civilis $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.41 $
+ * @version $Revision: 1.42 $
  */
 public interface RunBusiness extends IBOService {
 
@@ -298,4 +298,6 @@ public interface RunBusiness extends IBOService {
 	 * @see com.idega.user.business.UserBusinessBean#getAgeGroup
 	 */
 	public Group getAgeGroup(User user, Group run, Group distance) throws java.rmi.RemoteException;
+	
+	public List getDisallowedDistancesPKs(User user, List distances);
 }

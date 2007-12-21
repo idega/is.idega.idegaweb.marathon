@@ -22,7 +22,7 @@ import com.idega.presentation.ui.Form;
 public class UserRunOverviewList extends RunBlock {
 
 	private final static String KEY_PREFIX = "userRunOverview.";
-	public final static String CHANGE_DISTANCE_PARAM = "chDstnc";
+	public final static String PARTICIPANT_PARAM = "urol_prtcpnt";
 
 	public void main(IWContext iwc) throws Exception {
 		if (!iwc.isLoggedOn()) {
@@ -140,7 +140,7 @@ public class UserRunOverviewList extends RunBlock {
 				cell.setStyleClass("runnerChangeDistanceCell");
 				cell.setStyleClass("lastColumn");
 				Link link = getLink(localize("edit", "Edit"));
-				link.addParameter(CHANGE_DISTANCE_PARAM, participant.getRunDistanceGroupID());
+				link.addParameter(PARTICIPANT_PARAM, participant.getPrimaryKey().toString());
 				cell.add(link);
 	
 				if (iRow % 2 == 0) {

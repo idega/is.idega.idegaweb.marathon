@@ -2211,4 +2211,20 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		}
 		return this.participantHome;
 	}
+	
+	public List getDisallowedDistancesPKs(User user, List distances) {
+		
+		int age = new Age(user.getDateOfBirth()).getYears();
+		List disallowed = new ArrayList();
+		
+		for (Iterator iterator = distances.iterator(); iterator.hasNext();) {
+			
+			Distance distance = (Distance)iterator.next();
+			
+			if((distance.getMinimumAgeForDistance() > 0 && age < distance.getMinimumAgeForDistance()) || (distance.getMaximumAgeForDistance() > 0 && age > distance.getMaximumAgeForDistance()))
+				disallowed.add(distance.getPrimaryKey().toString());
+		}
+		
+		return disallowed;
+	}
 }
