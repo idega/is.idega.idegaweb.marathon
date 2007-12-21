@@ -21,33 +21,27 @@ import com.idega.user.data.Group;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
- * Last modified: $Date: 2007/12/21 15:05:02 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/21 17:19:19 $ by $Author: civilis $
  *
  */
 public class DistanceChangeStepBean {
 
 	private DistanceChangeWizardBean wizardBean;
-	
 	private boolean wizardMode;
-	private String newDistanceId;
 	
 	/**
 	 * List<SelectItem>
 	 */
 	private List runDistances;
 
-	public String getNewDistanceId() {
+	public String getChosenDistanceName() {
 		
-		if(newDistanceId == null)
-			newDistanceId = getWizardBean().getParticipant().getRunDistanceGroup().getPrimaryKey().toString();
+		IWContext iwc = IWContext.getIWContext(FacesContext.getCurrentInstance());
 		
-		return newDistanceId;
-	}
-
-	public void setNewDistanceId(String newDistanceId) {
-		this.newDistanceId = newDistanceId;
+		return iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc)
+		.getLocalizedString(getWizardBean().getParticipant().getRunDistanceGroup().getName(), getWizardBean().getParticipant().getRunDistanceGroup().getName());
 	}
 
 	public String getRunLabel() {
@@ -82,14 +76,14 @@ public class DistanceChangeStepBean {
 			runDistances.add(selectItem);
 			
 			try {
-				Collection distancesGroups = getWizardBean().getRunBiz().getDistancesMap(getWizardBean().getParticipant().getRunTypeGroup(), getWizardBean().getParticipant().getRunDistanceGroup().getYear().getYearString());
+				Collection distancesGroups = getWizardBean().getRunBusiness().getDistancesMap(getWizardBean().getParticipant().getRunTypeGroup(), getWizardBean().getParticipant().getRunDistanceGroup().getYear().getYearString());
 				List distances = new ArrayList(distancesGroups.size());
 				ConverterUtility converterUtility = ConverterUtility.getInstance();
 				
 				for (Iterator distancesGroupsIterator = distancesGroups.iterator(); distancesGroupsIterator.hasNext();)
 					distances.add(converterUtility.convertGroupToDistance((Group) distancesGroupsIterator.next()));
 
-				List disallowedDistances = getWizardBean().getRunBiz().getDisallowedDistancesPKs(getWizardBean().getParticipant().getUser(), distances);
+				List disallowedDistances = getWizardBean().getRunBusiness().getDisallowedDistancesPKs(getWizardBean().getParticipant().getUser(), distances);
 				
 				for (Iterator iterator = distancesGroups.iterator(); iterator.hasNext();) {
 					

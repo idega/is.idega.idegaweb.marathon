@@ -1,5 +1,7 @@
 package is.idega.idegaweb.marathon.presentation.user.runoverview;
 
+import is.idega.idegaweb.marathon.IWBundleStarter;
+
 import java.io.IOException;
 
 import javax.faces.application.Application;
@@ -13,16 +15,18 @@ import javax.faces.context.FacesContext;
 
 import org.apache.myfaces.custom.htmlTag.HtmlTag;
 
+import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWBaseComponent;
+import com.idega.presentation.IWContext;
 import com.idega.presentation.wizard.Wizard;
 import com.idega.presentation.wizard.WizardStep;
 
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
- * Last modified: $Date: 2007/12/21 15:05:02 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/21 17:19:19 $ by $Author: civilis $
  *
  */
 public class DistanceChangeStep extends IWBaseComponent implements WizardStep {
@@ -56,17 +60,12 @@ public class DistanceChangeStep extends IWBaseComponent implements WizardStep {
 	protected void initializeComponent(FacesContext context) {
 		
 		Application application = context.getApplication();
-		
+		IWContext iwc = IWContext.getIWContext(FacesContext.getCurrentInstance());
+		IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
 		
 		HtmlTag container = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		container.setId(context.getViewRoot().createUniqueId());
 		container.setValue("div");
-		
-//		HtmlInputHidden hidden = (HtmlInputHidden)application.createComponent(HtmlInputHidden.COMPONENT_TYPE);
-//		hidden.setId("xxxxxxxxxxxx");
-//		hidden.setValueBinding("value", application.createValueBinding(DistanceChangeWizard.distanceChangeWizardBean_participantIdExp));
-		
-//		container.getChildren().add(hidden);
 		
 		HtmlInputHidden hidden = (HtmlInputHidden)application.createComponent(HtmlInputHidden.COMPONENT_TYPE);
 		hidden.setId(context.getViewRoot().createUniqueId());
@@ -86,7 +85,7 @@ public class DistanceChangeStep extends IWBaseComponent implements WizardStep {
 		
 		text = (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		text.setId(context.getViewRoot().createUniqueId());
-		text.setValue("You will need to pay to change your chosen distance.");
+		text.setValue(iwrb.getLocalizedString("blablah", "You will need to pay to change your chosen distance."));
 		
 		div = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		div.setId(context.getViewRoot().createUniqueId());
@@ -104,7 +103,7 @@ public class DistanceChangeStep extends IWBaseComponent implements WizardStep {
 		
 		text = (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		text.setId(context.getViewRoot().createUniqueId());
-		text.setValue("Currently chosen distance: ");
+		text.setValue(iwrb.getLocalizedString("blablaxh2", "Currently chosen distance: "));
 		distanceChangeArea.getChildren().add(text);
 		
 		div = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
@@ -115,12 +114,12 @@ public class DistanceChangeStep extends IWBaseComponent implements WizardStep {
 		
 		text = (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		text.setId(context.getViewRoot().createUniqueId());
-		text.setValue("Super great distance");
+		text.setValueBinding("value", application.createValueBinding(DistanceChangeWizard.distanceChangeStepBean_chosenDistanceNameExp));
 		div.getChildren().add(text);
 		
 		text = (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		text.setId(context.getViewRoot().createUniqueId());
-		text.setValue("Choose new distance: ");
+		text.setValue(iwrb.getLocalizedString("blablzah3", "Choose new distance: "));
 		distanceChangeArea.getChildren().add(text);
 		
 		div = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
@@ -131,15 +130,13 @@ public class DistanceChangeStep extends IWBaseComponent implements WizardStep {
 		
 		HtmlSelectOneMenu distanceChooser = (HtmlSelectOneMenu)application.createComponent(HtmlSelectOneMenu.COMPONENT_TYPE);
 		distanceChooser.setId(context.getViewRoot().createUniqueId());
-		distanceChooser.setValueBinding("value", application.createValueBinding(DistanceChangeWizard.distanceChangeStepBean_newDistanceExp));
+		distanceChooser.setValueBinding("value", application.createValueBinding(DistanceChangeWizard.distanceChangeWizardBean_newDistanceExp));
 		UISelectItems selectItems = (UISelectItems)application.createComponent(UISelectItems.COMPONENT_TYPE);
 		selectItems.setId(context.getViewRoot().createUniqueId());
 		selectItems.setValueBinding("value", application.createValueBinding(DistanceChangeWizard.distanceChangeStepBean_runDistancesExp));
 		distanceChooser.getChildren().add(selectItems);
 		
 		div.getChildren().add(distanceChooser);
-		
-		
 		
 		HtmlCommandButton nextButton = wizard.getNextButton(context, this);
 		container.getChildren().add(nextButton);
@@ -157,9 +154,6 @@ public class DistanceChangeStep extends IWBaseComponent implements WizardStep {
 		super.encodeChildren(context);
 		
 		UIComponent container = getFacet(containerFacet);
-		
-//		ValueBinding vb = context.getApplication().createValueBinding(DistanceChangeWizard.distanceChangeStepBeanExp);
-//		DistanceChangeWizardBean distanceChangeWizardBean = (DistanceChangeWizardBean)vb.getValue(context);
 		
 		if(container != null) {
 			

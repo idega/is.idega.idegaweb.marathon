@@ -13,9 +13,9 @@ import com.idega.presentation.IWContext;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
- * Last modified: $Date: 2007/12/21 15:05:02 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/21 17:19:19 $ by $Author: civilis $
  *
  */
 public class DistanceChangeWizardBean {
@@ -23,7 +23,20 @@ public class DistanceChangeWizardBean {
 	private String participantId;
 	private Participant participant;
 	private RunBusiness runBusiness;
+	private String newDistanceId;
 	
+	public String getNewDistanceId() {
+		
+		if(newDistanceId == null)
+			newDistanceId = getParticipant().getRunDistanceGroup().getPrimaryKey().toString();
+		
+		return newDistanceId;
+	}
+
+	public void setNewDistanceId(String newDistanceId) {
+		this.newDistanceId = newDistanceId;
+	}
+
 	public String getParticipantId() {
 		return participantId;
 	}
@@ -31,6 +44,7 @@ public class DistanceChangeWizardBean {
 	public void setParticipantId(String participantId) {
 		
 		participant = null;
+		newDistanceId = null;
 		this.participantId = participantId;
 	}
 
@@ -39,7 +53,7 @@ public class DistanceChangeWizardBean {
 		if(participant == null) {
 			
 			try {
-				participant = getRunBiz().getParticipantByPrimaryKey(new Integer(getParticipantId()).intValue());
+				participant = getRunBusiness().getParticipantByPrimaryKey(new Integer(getParticipantId()).intValue());
 				
 			} catch (RemoteException e) {
 				throw new RuntimeException(e);
@@ -49,7 +63,7 @@ public class DistanceChangeWizardBean {
 		return participant;
 	}
 	
-	public RunBusiness getRunBiz() {
+	public RunBusiness getRunBusiness() {
 		
 		if(runBusiness == null) {
 			

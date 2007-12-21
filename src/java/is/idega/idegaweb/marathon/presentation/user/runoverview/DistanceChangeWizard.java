@@ -12,22 +12,22 @@ import com.idega.presentation.wizard.Wizard;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
- * Last modified: $Date: 2007/12/21 15:05:02 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/21 17:19:19 $ by $Author: civilis $
  *
  */
 public class DistanceChangeWizard extends Wizard {
 
 	public static final String distanceChangeWizardBeanExp = "#{distanceChangeWizardBean}";
-	//public static final String distanceChangeWizardBean_participantIdExp = "#{distanceChangeWizardBean.participantId}";
+	public static final String distanceChangeWizardBean_newDistanceExp = "#{distanceChangeWizardBean.newDistanceId}";
 	
 	public static final String distanceChangeStepBeanExp = "#{distanceChangeStepBean}";
 	public static final String distanceChangeStepBean_wizardModeExp = "#{distanceChangeStepBean.wizardMode}";
 	public static final String distanceChangeStepBean_runLabelExp = "#{distanceChangeStepBean.runLabel}";
-	public static final String distanceChangeStepBean_newDistanceExp = "#{distanceChangeStepBean.newDistanceId}";
-	public static final String distanceChangeStepBean_runDistancesExp = "#{distanceChangeStepBean.runDistances}";
 	
+	public static final String distanceChangeStepBean_runDistancesExp = "#{distanceChangeStepBean.runDistances}";
+	public static final String distanceChangeStepBean_chosenDistanceNameExp = "#{distanceChangeStepBean.chosenDistanceName}";
 	
 	/**
 	 * @Override
