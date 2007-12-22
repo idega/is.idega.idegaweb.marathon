@@ -12,15 +12,17 @@ import com.idega.presentation.wizard.Wizard;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
- * Last modified: $Date: 2007/12/21 17:19:19 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/22 13:54:19 $ by $Author: civilis $
  *
  */
 public class DistanceChangeWizard extends Wizard {
 
 	public static final String distanceChangeWizardBeanExp = "#{distanceChangeWizardBean}";
 	public static final String distanceChangeWizardBean_newDistanceExp = "#{distanceChangeWizardBean.newDistanceId}";
+	public static final String distanceChangeWizardBean_cardHolderNameExp = "#{distanceChangeWizardBean.cardHolderName}";
+	public static final String distanceChangeWizardBean_cardHolderEmailExp = "#{distanceChangeWizardBean.cardHolderEmail}";
 	
 	public static final String distanceChangeStepBeanExp = "#{distanceChangeStepBean}";
 	public static final String distanceChangeStepBean_wizardModeExp = "#{distanceChangeStepBean.wizardMode}";
