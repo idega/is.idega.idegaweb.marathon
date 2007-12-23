@@ -18,18 +18,21 @@ import org.apache.myfaces.custom.htmlTag.HtmlTag;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWBaseComponent;
 import com.idega.presentation.IWContext;
+import com.idega.presentation.ui.UICreditCardNumber;
 import com.idega.presentation.wizard.Wizard;
 import com.idega.presentation.wizard.WizardStep;
 
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.1 $
  *
- * Last modified: $Date: 2007/12/22 13:54:19 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/23 17:54:49 $ by $Author: civilis $
  *
  */
-public class PaymentStep extends IWBaseComponent implements WizardStep {
+public class UIPaymentStep extends IWBaseComponent implements WizardStep {
+	
+	public static final String COMPONENT_TYPE = "idega_PaymentStep";
 	
 	private static final long serialVersionUID = 983517329599024600L;
 	static final String stepIdentifier = "PaymentStep";
@@ -46,7 +49,8 @@ public class PaymentStep extends IWBaseComponent implements WizardStep {
 
 	public UIComponent getStepComponent(FacesContext context, Wizard wizard) {
 		
-		PaymentStep step = new PaymentStep();
+		UIPaymentStep step = (UIPaymentStep)context.getApplication().createComponent(COMPONENT_TYPE);
+		step.setId(context.getViewRoot().createUniqueId());
 		step.setWizard(wizard);
 		return step;
 	}
@@ -55,6 +59,7 @@ public class PaymentStep extends IWBaseComponent implements WizardStep {
 	 * @Override
 	 */
 	protected void initializeComponent(FacesContext context) {
+		
 		
 		Application application = context.getApplication();
 		IWContext iwc = IWContext.getIWContext(context);
@@ -65,16 +70,18 @@ public class PaymentStep extends IWBaseComponent implements WizardStep {
 		container.setValue(divTag);
 		
 		HtmlInputHidden hidden = (HtmlInputHidden)application.createComponent(HtmlInputHidden.COMPONENT_TYPE);
-		hidden.setId(context.getViewRoot().createUniqueId());
-		hidden.setValueBinding(valueAtt, application.createValueBinding(DistanceChangeWizard.distanceChangeStepBean_wizardModeExp));
+		hidden.setId("iswizzard_payment");
+		hidden.setValueBinding(valueAtt, application.createValueBinding(UIDistanceChangeWizard.distanceChangeStepBean_wizardModeExp));
 		container.getChildren().add(hidden);
 		
 		container.getChildren().add(getCreditCardInformationArea(context, iwrb));
 		
 		HtmlCommandButton prevButton = wizard.getPreviousButton(context, this);
+		prevButton.setId(context.getViewRoot().createUniqueId());
 		container.getChildren().add(prevButton);
 		
 		HtmlCommandButton justButton = (HtmlCommandButton)application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
+		justButton.setId(context.getViewRoot().createUniqueId());
 		container.getChildren().add(justButton);
 		
 		getFacets().put(containerFacet, container);
@@ -119,29 +126,66 @@ public class PaymentStep extends IWBaseComponent implements WizardStep {
 		
 //		card holder name
 		HtmlOutputLabel label = (HtmlOutputLabel)application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+		label.setId(context.getViewRoot().createUniqueId());
 		label.setValue(iwrb.getLocalizedString("run_reg.card_holder", "Card holder"));
 		ccidiv.getChildren().add(label);
 		
 		HtmlInputText cardHolderName = (HtmlInputText)application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		cardHolderName.setId(context.getViewRoot().createUniqueId());
-		cardHolderName.setValueBinding(valueAtt, application.createValueBinding(DistanceChangeWizard.distanceChangeWizardBean_cardHolderNameExp));
+		cardHolderName.setValueBinding(valueAtt, application.createValueBinding(UIDistanceChangeWizard.distanceChangeWizardBean_cardHolderNameExp));
 		ccidiv.getChildren().add(cardHolderName);
+		label.setFor(cardHolderName.getId());
 		
 //		card holder email
 		label = (HtmlOutputLabel)application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+		label.setId(context.getViewRoot().createUniqueId());
 		label.setValue(iwrb.getLocalizedString("run_reg.card_holder", "Card holder"));
 		ccidiv.getChildren().add(label);
 		
 		HtmlInputText cardHolderEmail = (HtmlInputText)application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		cardHolderEmail.setId(context.getViewRoot().createUniqueId());
-		cardHolderEmail.setValueBinding(valueAtt, application.createValueBinding(DistanceChangeWizard.distanceChangeWizardBean_cardHolderEmailExp));
+		cardHolderEmail.setValueBinding(valueAtt, application.createValueBinding(UIDistanceChangeWizard.distanceChangeWizardBean_cardHolderEmailExp));
 		ccidiv.getChildren().add(cardHolderEmail);
-		
-		
-		
-		
-		
 		label.setFor(cardHolderName.getId());
+		
+//		credit card number
+		label = (HtmlOutputLabel)application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+		label.setId(context.getViewRoot().createUniqueId());
+		label.setValue(iwrb.getLocalizedString("run_reg.card_number", "Card number"));
+		ccidiv.getChildren().add(label);
+		
+		UICreditCardNumber creditCardNumber = (UICreditCardNumber)application.createComponent(UICreditCardNumber.COMPONENT_TYPE);
+		creditCardNumber.setId(context.getViewRoot().createUniqueId());
+		creditCardNumber.setValueBinding(valueAtt, application.createValueBinding(UIDistanceChangeWizard.distanceChangeWizardBean_creditCardNumberExp));
+		label.setFor(creditCardNumber.getId());
+		ccidiv.getChildren().add(creditCardNumber);
+		
+//		ccv number
+		label = (HtmlOutputLabel)application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+		label.setId(context.getViewRoot().createUniqueId());
+		label.setValue(iwrb.getLocalizedString("run_reg.ccv_number", "CCV number"));
+		ccidiv.getChildren().add(label);
+		
+		HtmlInputText ccvNumber = (HtmlInputText)application.createComponent(HtmlInputText.COMPONENT_TYPE);
+		ccvNumber.setId(context.getViewRoot().createUniqueId());
+		ccvNumber.setValueBinding(valueAtt, application.createValueBinding(UIDistanceChangeWizard.distanceChangeWizardBean_ccvNumberExp));
+		ccidiv.getChildren().add(ccvNumber);
+		label.setFor(ccvNumber.getId());
+		
+//		card expires
+//		label = (HtmlOutputLabel)application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+//		label.setId(context.getViewRoot().createUniqueId());
+//		label.setValue(iwrb.getLocalizedString("run_reg.card_expires", "Card expires"));
+//		ccidiv.getChildren().add(label);
+		
+//		HtmlInputDate cardExpire = (HtmlInputDate)application.createComponent(HtmlInputDate.COMPONENT_TYPE);
+		//cardExpire.setId(context.getViewRoot().createUniqueId());
+//		cardExpire.setPopupCalendar(false);
+//		cardExpire.setType("date");
+//		ccvNumber.setValueBinding(valueAtt, application.createValueBinding(UIDistanceChangeWizard.distanceChangeWizardBean_cardExpirationDateExp));
+		//label.setFor(cardExpire.getId());
+//		ccidiv.getChildren().add(cardExpire);
+		
 		
 		return ccidiv;
 	}

@@ -19,7 +19,7 @@ import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.Form;
 
-public class UserRunOverviewList extends RunBlock {
+public class UIUserRunOverviewList extends RunBlock {
 
 	private final static String KEY_PREFIX = "userRunOverview.";
 	public final static String PARTICIPANT_PARAM = "urol_prtcpnt";

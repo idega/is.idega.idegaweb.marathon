@@ -5,6 +5,7 @@ import is.idega.idegaweb.marathon.data.Participant;
 
 import java.rmi.RemoteException;
 import java.util.Collection;
+import java.util.Date;
 
 import javax.faces.context.FacesContext;
 
@@ -12,13 +13,14 @@ import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
 import com.idega.core.contact.data.Email;
 import com.idega.presentation.IWContext;
+import com.idega.presentation.ui.CreditCardNumber;
 
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
- * Last modified: $Date: 2007/12/22 13:54:19 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/23 17:54:49 $ by $Author: civilis $
  *
  */
 public class DistanceChangeWizardBean {
@@ -29,6 +31,9 @@ public class DistanceChangeWizardBean {
 	private String newDistanceId;
 	private String cardHolderName;
 	private String cardHolderEmail;
+	private CreditCardNumber creditCardNumber;
+	private String ccvNumber;
+	private Date cardExpirationDate;
 	
 	public String getNewDistanceId() {
 		
@@ -49,10 +54,13 @@ public class DistanceChangeWizardBean {
 	}
 
 	public void setParticipantId(String participantId) {
-		
 		participant = null;
 		newDistanceId = null;
 		cardHolderName = null;
+		cardHolderEmail = null;
+		creditCardNumber = null;
+		ccvNumber = null;
+		cardExpirationDate = null;
 		this.participantId = participantId;
 	}
 
@@ -116,5 +124,42 @@ public class DistanceChangeWizardBean {
 		
 		if(cardHolderEmail != null)
 			this.cardHolderEmail = cardHolderEmail;
+	}
+
+	public CreditCardNumber getCreditCardNumber() {
+		
+		if(creditCardNumber == null)
+			creditCardNumber = new CreditCardNumber();
+		
+		return creditCardNumber;
+	}
+
+	public void setCreditCardNumber(CreditCardNumber creditCardNumber) {
+		
+		this.creditCardNumber = creditCardNumber;
+	}
+
+	public String getCcvNumber() {
+		return ccvNumber;
+	}
+
+	public void setCcvNumber(String ccvNumber) {
+		
+		if(ccvNumber != null)
+			this.ccvNumber = ccvNumber;
+	}
+
+	public Date getCardExpirationDate() {
+		
+		if(cardExpirationDate == null)
+			cardExpirationDate = new Date();
+		
+		return cardExpirationDate;
+	}
+
+	public void setCardExpirationDate(Date cardExpirationDate) {
+		
+		if(cardExpirationDate != null)
+			this.cardExpirationDate = cardExpirationDate;
 	}
 }
