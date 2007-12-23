@@ -19,15 +19,17 @@ import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWBaseComponent;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.ui.UICreditCardNumber;
+import com.idega.presentation.ui.UIDateInput;
 import com.idega.presentation.wizard.Wizard;
 import com.idega.presentation.wizard.WizardStep;
+import com.idega.util.IWTimestamp;
 
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
- * Last modified: $Date: 2007/12/23 17:54:49 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/23 20:57:16 $ by $Author: civilis $
  *
  */
 public class UIPaymentStep extends IWBaseComponent implements WizardStep {
@@ -179,13 +181,19 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 //		ccidiv.getChildren().add(label);
 		
 //		HtmlInputDate cardExpire = (HtmlInputDate)application.createComponent(HtmlInputDate.COMPONENT_TYPE);
-		//cardExpire.setId(context.getViewRoot().createUniqueId());
+//		cardExpire.setId(context.getViewRoot().createUniqueId());
 //		cardExpire.setPopupCalendar(false);
 //		cardExpire.setType("date");
-//		ccvNumber.setValueBinding(valueAtt, application.createValueBinding(UIDistanceChangeWizard.distanceChangeWizardBean_cardExpirationDateExp));
+//		cardExpire.setValueBinding(valueAtt, application.createValueBinding(UIDistanceChangeWizard.distanceChangeWizardBean_cardExpirationDateExp));
 		//label.setFor(cardExpire.getId());
 //		ccidiv.getChildren().add(cardExpire);
 		
+		
+		UIDateInput dateInput = (UIDateInput)application.createComponent(UIDateInput.COMPONENT_TYPE);
+		dateInput.setRendered(true);
+		dateInput.setValueBinding(valueAtt, application.createValueBinding(UIDistanceChangeWizard.distanceChangeWizardBean_cardExpirationDateExp));
+		dateInput.setYearRange(IWTimestamp.RightNow().getYear(), IWTimestamp.RightNow().getYear()+10);
+		ccidiv.getChildren().add(dateInput);
 		
 		return ccidiv;
 	}
