@@ -9,6 +9,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectItems;
 import javax.faces.component.html.HtmlCommandButton;
 import javax.faces.component.html.HtmlInputHidden;
+import javax.faces.component.html.HtmlOutputLabel;
 import javax.faces.component.html.HtmlOutputText;
 import javax.faces.component.html.HtmlSelectOneMenu;
 import javax.faces.context.FacesContext;
@@ -24,9 +25,9 @@ import com.idega.presentation.wizard.WizardStep;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
- * Last modified: $Date: 2007/12/23 17:54:49 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/27 12:52:26 $ by $Author: civilis $
  *
  */
 public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep {
@@ -38,6 +39,12 @@ public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep 
 	private static final String valueAtt = "value";
 	private static final String divTag = "div";
 	private static final String containerFacet = "container";
+	
+	private static final String distChangeAreaStyleClass = UIDistanceChangeWizard.distanceChangeWizard_cssPrefix+"distChangeArea";
+	private static final String headerStyleClass = "header";
+	private static final String warningStyleClass = "warning";
+	private static final String contentsStyleClass = "contents";
+	private static final String entryStyleClass = "entry";
 	
 	private Wizard wizard;
 	
@@ -66,14 +73,16 @@ public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep 
 		IWContext iwc = IWContext.getIWContext(context);
 		IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
 		
-		HtmlTag container = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
-		container.setId(context.getViewRoot().createUniqueId());
-		container.setValue(divTag);
+		HtmlTag dcsDiv = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
+		dcsDiv.setId(context.getViewRoot().createUniqueId());
+		dcsDiv.setStyleClass(distChangeAreaStyleClass);
+		dcsDiv.setValue(divTag);
 		
 		HtmlInputHidden hidden = (HtmlInputHidden)application.createComponent(HtmlInputHidden.COMPONENT_TYPE);
-		hidden.setId("iswizzard_distch");
+		hidden.setId(context.getViewRoot().createUniqueId());
 		hidden.setValueBinding(valueAtt, application.createValueBinding(UIDistanceChangeWizard.distanceChangeStepBean_wizardModeExp));
-		container.getChildren().add(hidden);
+		dcsDiv.getChildren().add(hidden);
+		
 		
 		HtmlOutputText text = (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		text.setId(context.getViewRoot().createUniqueId());
@@ -83,8 +92,8 @@ public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep 
 		div.setId(context.getViewRoot().createUniqueId());
 		div.setValue(divTag);
 		div.getChildren().add(text);
-		div.setStyleClass("runDistanceChangeHeader");
-		container.getChildren().add(div);
+		div.setStyleClass(headerStyleClass);
+		dcsDiv.getChildren().add(div);
 		
 		text = (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		text.setId(context.getViewRoot().createUniqueId());
@@ -94,42 +103,53 @@ public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep 
 		div.setId(context.getViewRoot().createUniqueId());
 		div.setValue(divTag);
 		div.getChildren().add(text);
-		div.setStyleClass("runDistanceChangeWarning");
-		container.getChildren().add(div);
+		div.setStyleClass(warningStyleClass);
+		dcsDiv.getChildren().add(div);
 		
 		HtmlTag distanceChangeArea = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		distanceChangeArea.setId(context.getViewRoot().createUniqueId());
 		distanceChangeArea.setValue(divTag);
-		distanceChangeArea.getChildren().add(text);
-		distanceChangeArea.setStyleClass("distanceChangeArea");
-		container.getChildren().add(distanceChangeArea);
+		distanceChangeArea.setStyleClass(contentsStyleClass);
+		dcsDiv.getChildren().add(distanceChangeArea);
 		
+//		currently chosen distance
+		HtmlTag entryDiv = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
+		entryDiv.setId(context.getViewRoot().createUniqueId());
+		entryDiv.setStyleClass(entryStyleClass);
+		entryDiv.setValue(divTag);
+		distanceChangeArea.getChildren().add(entryDiv);
+		
+//		currently chosen distance label
 		text = (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		text.setId(context.getViewRoot().createUniqueId());
 		text.setValue(iwrb.getLocalizedString("runDistance.chosenDistance", "Currently chosen distance: "));
-		distanceChangeArea.getChildren().add(text);
+		entryDiv.getChildren().add(text);
 		
+//		currently chosen distance value		
 		div = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		div.setId(context.getViewRoot().createUniqueId());
 		div.setValue(divTag);
-		div.getChildren().add(text);
-		distanceChangeArea.getChildren().add(div);
+		entryDiv.getChildren().add(div);
 		
 		text = (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		text.setId(context.getViewRoot().createUniqueId());
 		text.setValueBinding(valueAtt, application.createValueBinding(UIDistanceChangeWizard.distanceChangeStepBean_chosenDistanceNameExp));
 		div.getChildren().add(text);
 		
-		text = (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
-		text.setId(context.getViewRoot().createUniqueId());
-		text.setValue(iwrb.getLocalizedString("runDistance.chooseNewDistance", "Choose new distance: "));
-		distanceChangeArea.getChildren().add(text);
+//		choose new distance
+		entryDiv = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
+		entryDiv.setId(context.getViewRoot().createUniqueId());
+		entryDiv.setStyleClass(entryStyleClass);
+		entryDiv.setValue(divTag);
+		distanceChangeArea.getChildren().add(entryDiv);
 		
-		div = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
-		div.setId(context.getViewRoot().createUniqueId());
-		div.setValue(divTag);
-		div.getChildren().add(text);
-		distanceChangeArea.getChildren().add(div);
+//		choose new distance label
+		HtmlOutputLabel label = (HtmlOutputLabel)application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+		label.setId(context.getViewRoot().createUniqueId());
+		label.setValue(iwrb.getLocalizedString("runDistance.chooseNewDistance", "Choose new distance: "));
+		entryDiv.getChildren().add(label);
+
+//		choose new distance value
 		
 		HtmlSelectOneMenu distanceChooser = (HtmlSelectOneMenu)application.createComponent(HtmlSelectOneMenu.COMPONENT_TYPE);
 		distanceChooser.setId(context.getViewRoot().createUniqueId());
@@ -137,17 +157,17 @@ public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep 
 		UISelectItems selectItems = (UISelectItems)application.createComponent(UISelectItems.COMPONENT_TYPE);
 		selectItems.setId(context.getViewRoot().createUniqueId());
 		selectItems.setValueBinding(valueAtt, application.createValueBinding(UIDistanceChangeWizard.distanceChangeStepBean_runDistancesExp));
+		label.setFor(distanceChooser.getId());
 		distanceChooser.getChildren().add(selectItems);
-		
-		div.getChildren().add(distanceChooser);
+		entryDiv.getChildren().add(distanceChooser);
 		
 		HtmlCommandButton nextButton = wizard.getNextButton(context, this);
-		container.getChildren().add(nextButton);
+		dcsDiv.getChildren().add(nextButton);
 		HtmlCommandButton justButton = (HtmlCommandButton)application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
 		justButton.setId(context.getViewRoot().createUniqueId());
-		container.getChildren().add(justButton);
+		dcsDiv.getChildren().add(justButton);
 		
-		getFacets().put(containerFacet, container);
+		getFacets().put(containerFacet, dcsDiv);
 	}
 
 	/**

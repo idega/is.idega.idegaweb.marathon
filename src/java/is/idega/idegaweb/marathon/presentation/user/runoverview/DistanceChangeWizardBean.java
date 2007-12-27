@@ -18,9 +18,9 @@ import com.idega.presentation.ui.CreditCardNumber;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
- * Last modified: $Date: 2007/12/23 17:54:49 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/27 12:52:26 $ by $Author: civilis $
  *
  */
 public class DistanceChangeWizardBean {
@@ -128,15 +128,13 @@ public class DistanceChangeWizardBean {
 
 	public CreditCardNumber getCreditCardNumber() {
 		
-		if(creditCardNumber == null)
-			creditCardNumber = new CreditCardNumber();
-		
 		return creditCardNumber;
 	}
 
 	public void setCreditCardNumber(CreditCardNumber creditCardNumber) {
 		
-		this.creditCardNumber = creditCardNumber;
+		if(creditCardNumber != null)
+			this.creditCardNumber = creditCardNumber;
 	}
 
 	public String getCcvNumber() {
@@ -150,9 +148,6 @@ public class DistanceChangeWizardBean {
 	}
 
 	public Date getCardExpirationDate() {
-		
-		if(cardExpirationDate == null)
-			cardExpirationDate = new Date();
 		
 		return cardExpirationDate;
 	}
