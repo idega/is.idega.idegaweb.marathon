@@ -27,3 +27,46 @@ div.FormElement textarea {
 	width: 300px;
 	height: 50px;
 }
+
+div.distChWiz_assetsCart, div.distChWiz_creditCardInformation, div.distChWiz_distChangeArea {
+	
+	display: block;
+}
+
+div.distChWiz_creditCardInformation .header, div.distChWiz_assetsCart .header, div.distChWiz_distChangeArea .header {
+	
+	font: medium;
+	font-weight: bold;
+	border-bottom: 1px #CCCCCC solid;
+}
+
+div.distChWiz_distChangeArea .warning {
+	font-style: italic;
+}
+
+div.distChWiz_assetsCart div.contents, div.distChWiz_creditCardInformation div.contents, div.distChWiz_distChangeArea div.contents {
+	display: block;
+}
+
+div.distChWiz_assetsCart div.contents div.entry, div.distChWiz_creditCardInformation div.contents div.entry, div.distChWiz_distChangeArea div.contents div.entry {
+	margin: 10px;
+}
+
+div.distChWiz_assetsCart div.contents div.entry div, div.distChWiz_creditCardInformation div.contents div.entry input, div.distChWiz_creditCardInformation div.contents div.entry span, div.distChWiz_distChangeArea div.contents div.entry div, div.distChWiz_distChangeArea div.contents div.entry select {
+	display: inline;
+	position: absolute;
+	left: 200px;
+}
+
+div.distChWiz_creditCardInformation div.contents div.entry input {
+	width: 200px;
+}
+
+div.distChWiz_creditCardInformation div.contents div.entry input.ccvNumber {
+	width: auto !important;
+}
+
+div.distChWiz_creditCardInformation div.contents div.credCardNr input {
+	position: static;
+	width: auto !important;
+}
