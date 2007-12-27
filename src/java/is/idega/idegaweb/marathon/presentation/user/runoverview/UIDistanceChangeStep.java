@@ -26,9 +26,9 @@ import com.idega.presentation.wizard.WizardStep;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
- * Last modified: $Date: 2007/12/27 16:03:47 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/27 20:32:56 $ by $Author: civilis $
  *
  */
 public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep {
@@ -39,6 +39,8 @@ public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep 
 	
 	private static final String valueAtt = "value";
 	private static final String divTag = "div";
+	private static final String spanTag = "span";
+	
 	private static final String containerFacet = "container";
 	
 	private static final String distChangeAreaStyleClass = UIDistanceChangeWizard.distanceChangeWizard_cssPrefix+"distChangeArea";
@@ -46,6 +48,8 @@ public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep 
 	private static final String warningStyleClass = "warning";
 	private static final String contentsStyleClass = "contents";
 	private static final String entryStyleClass = "entry";
+	private static final String subentryStyleClass = "subentry";
+	private static final String errorStyleClass = "error";
 	
 	private Wizard wizard;
 	
@@ -154,8 +158,8 @@ public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep 
 		
 		HtmlTag span = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		span.setId(context.getViewRoot().createUniqueId());
-		span.setValue("span");
-		span.setStyleClass("subentry");
+		span.setValue(spanTag);
+		span.setStyleClass(subentryStyleClass);
 		entryDiv.getChildren().add(span);
 		
 		HtmlSelectOneMenu distanceChooser = (HtmlSelectOneMenu)application.createComponent(HtmlSelectOneMenu.COMPONENT_TYPE);
@@ -171,8 +175,8 @@ public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep 
 		
 		HtmlTag errSpan = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		errSpan.setId(context.getViewRoot().createUniqueId());
-		errSpan.setStyleClass("error");
-		errSpan.setValue("span");
+		errSpan.setStyleClass(errorStyleClass);
+		errSpan.setValue(spanTag);
 		span.getChildren().add(errSpan);
 		
 		HtmlMessage errMsg = (HtmlMessage)application.createComponent(HtmlMessage.COMPONENT_TYPE);

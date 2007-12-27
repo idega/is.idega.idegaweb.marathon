@@ -15,6 +15,7 @@ import javax.faces.component.html.HtmlOutputLabel;
 import javax.faces.component.html.HtmlOutputText;
 import javax.faces.context.FacesContext;
 
+import org.apache.myfaces.custom.creditcardvalidator.CreditCardValidator;
 import org.apache.myfaces.custom.htmlTag.HtmlTag;
 
 import com.idega.idegaweb.IWResourceBundle;
@@ -29,9 +30,9 @@ import com.idega.util.IWTimestamp;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
- * Last modified: $Date: 2007/12/27 16:03:47 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/27 20:32:56 $ by $Author: civilis $
  *
  */
 public class UIPaymentStep extends IWBaseComponent implements WizardStep {
@@ -52,6 +53,7 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 	private static final String headerStyleClass = "header";
 	private static final String contentsStyleClass = "contents";
 	private static final String entryStyleClass = "entry";
+	private static final String subentryStyleClass = "subentry";
 	private static final String ccvNumberStyleClass = "ccvNumber";
 	private static final String errorStyleClass = "error";
 	private static final String credCardNrStyleClass = "credCardNr";
@@ -227,12 +229,16 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 		ccidiv.getChildren().add(contentsDiv);
 		
 		contentsDiv.getChildren().add(createEntry(context, iwrb.getLocalizedString("run_reg.card_holder", "Card holder"), HtmlInputText.COMPONENT_TYPE, null, UIDistanceChangeWizard.distanceChangeWizardBean_cardHolderNameExp, UIDistanceChangeWizard.distanceChangeStepBean_validateCardholderNameExp));
-		contentsDiv.getChildren().add(createEntry(context, iwrb.getLocalizedString("run_reg.card_holder_email", "Cardholder email"), HtmlInputText.COMPONENT_TYPE, null, UIDistanceChangeWizard.distanceChangeWizardBean_cardHolderEmailExp, null));
+		contentsDiv.getChildren().add(createEntry(context, iwrb.getLocalizedString("run_reg.card_holder_email", "Cardholder email"), HtmlInputText.COMPONENT_TYPE, null, UIDistanceChangeWizard.distanceChangeWizardBean_cardHolderEmailExp, UIDistanceChangeWizard.distanceChangeStepBean_validateCardholderEmailExp));
 		
+		System.out.println("wtf");
 //		ccn
-		HtmlTag entry = createEntry(context, iwrb.getLocalizedString("run_reg.card_number", "Card number"), UICreditCardNumber.COMPONENT_TYPE, null, UIDistanceChangeWizard.distanceChangeWizardBean_creditCardNumberExp, null);
-		entry.setStyleClass(ccnStyleClass);
-		contentsDiv.getChildren().add(entry);
+		if(true) {
+			HtmlTag entry = createEntry(context, iwrb.getLocalizedString("run_reg.card_number", "Card number"), UICreditCardNumber.COMPONENT_TYPE, null, UIDistanceChangeWizard.distanceChangeWizardBean_creditCardNumberExp, UIDistanceChangeWizard.distanceChangeStepBean_validateCardNumberExp);
+			entry.setStyleClass(ccnStyleClass);
+			contentsDiv.getChildren().add(entry);
+		}
+		
 		
 //		ccv
 		HtmlInputText ccvNumber = (HtmlInputText)application.createComponent(HtmlInputText.COMPONENT_TYPE);
@@ -241,7 +247,7 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 		ccvNumber.setMaxlength(3);
 		ccvNumber.setStyleClass(ccvNumberStyleClass);
 		
-		contentsDiv.getChildren().add(createEntry(context, iwrb.getLocalizedString("run_reg.ccv_number", "CCV number"), UICreditCardNumber.COMPONENT_TYPE, ccvNumber, UIDistanceChangeWizard.distanceChangeWizardBean_creditCardNumberExp, null));
+		contentsDiv.getChildren().add(createEntry(context, iwrb.getLocalizedString("run_reg.ccv_number", "CCV number"), HtmlInputText.COMPONENT_TYPE, ccvNumber, UIDistanceChangeWizard.distanceChangeWizardBean_ccvNumberExp, UIDistanceChangeWizard.distanceChangeStepBean_validateCCVNumberExp));
 
 //		card expires
 		UIDateInput dateInput = (UIDateInput)application.createComponent(UIDateInput.COMPONENT_TYPE);
@@ -273,13 +279,21 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 		HtmlTag span = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		span.setId(context.getViewRoot().createUniqueId());
 		span.setValue(spanTag);
-		span.setStyleClass("subentry");
+		span.setStyleClass(subentryStyleClass);
 		entryDiv.getChildren().add(span);
 		
 		if(uiinput == null) {
 			
 			uiinput = application.createComponent(inputComponentType);
 			uiinput.setId(context.getViewRoot().createUniqueId());
+			
+			if(inputComponentType.equals(UICreditCardNumber.COMPONENT_TYPE)) {
+				
+				CreditCardValidator validator = (CreditCardValidator)application.createValidator(CCValidator.VALIDATOR_ID);
+				((UICreditCardNumber)uiinput).addValidator(validator);
+				((UICreditCardNumber)uiinput).setRequired(true);
+				//((UICreditCardNumber)uiinput).setValidator(application.createMethodBinding(labelStr, aclass))
+			}
 		}
 		
 		uiinput.setValueBinding(valueAtt, application.createValueBinding(valueBindingExp));

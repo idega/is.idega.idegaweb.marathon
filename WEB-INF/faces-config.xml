@@ -34,4 +34,9 @@
 			<value>#{distanceChangeWizardBean}</value>
 		</managed-property>
 	</managed-bean>
+	
+	<validator>
+	    <validator-id>is.idega.idegaweb.marathon.presentation.user.runoverview.CCValidator</validator-id>
+	    <validator-class>is.idega.idegaweb.marathon.presentation.user.runoverview.CCValidator</validator-class>
+	</validator>
 </faces-config>

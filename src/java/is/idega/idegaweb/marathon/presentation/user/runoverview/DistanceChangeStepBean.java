@@ -24,9 +24,9 @@ import com.idega.user.data.Group;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
- * Last modified: $Date: 2007/12/27 16:03:47 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/27 20:32:56 $ by $Author: civilis $
  *
  */
 public class DistanceChangeStepBean {
@@ -134,6 +134,8 @@ public class DistanceChangeStepBean {
 	
 	public void validateDistanceChange(FacesContext context, UIComponent toValidate, Object value) {
 		
+		
+		
 	    if (false) {
 	    	((DistanceChangeStepBean)context.getApplication().createValueBinding(UIDistanceChangeWizard.distanceChangeStepBeanExp).getValue(context)).setWizardMode(true);
 	    	((UIInput)toValidate).setValid(false);
@@ -148,15 +150,16 @@ public class DistanceChangeStepBean {
 	}
 	
 	public void validateCardholderEmail(FacesContext context, UIComponent toValidate, Object value) {
-		
+		System.out.println("called validate email");
+		((DistanceChangeStepBean)context.getApplication().createValueBinding(UIDistanceChangeWizard.distanceChangeStepBeanExp).getValue(context)).setWizardMode(true);
 	}
 	
 	public void validateCardNumber(FacesContext context, UIComponent toValidate, Object value) {
-		
+		System.out.println("called validate ccn: "+value);
 	}
 	
 	public void validateCCVNumber(FacesContext context, UIComponent toValidate, Object value) {
-		
+		System.out.println("called validate ccv");	
 	}
 	
 	public void validateCardExpiresDate(FacesContext context, UIComponent toValidate, Object value) {
