@@ -9,6 +9,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectItems;
 import javax.faces.component.html.HtmlCommandButton;
 import javax.faces.component.html.HtmlInputHidden;
+import javax.faces.component.html.HtmlMessage;
 import javax.faces.component.html.HtmlOutputLabel;
 import javax.faces.component.html.HtmlOutputText;
 import javax.faces.component.html.HtmlSelectOneMenu;
@@ -25,9 +26,9 @@ import com.idega.presentation.wizard.WizardStep;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
- * Last modified: $Date: 2007/12/27 12:52:26 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/27 16:03:47 $ by $Author: civilis $
  *
  */
 public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep {
@@ -151,7 +152,14 @@ public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep 
 
 //		choose new distance value
 		
+		HtmlTag span = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
+		span.setId(context.getViewRoot().createUniqueId());
+		span.setValue("span");
+		span.setStyleClass("subentry");
+		entryDiv.getChildren().add(span);
+		
 		HtmlSelectOneMenu distanceChooser = (HtmlSelectOneMenu)application.createComponent(HtmlSelectOneMenu.COMPONENT_TYPE);
+		distanceChooser.setValidator(application.createMethodBinding(UIDistanceChangeWizard.distanceChangeStepBean_validateDistanceChangeExp, new Class[] {FacesContext.class, UIComponent.class, Object.class}));
 		distanceChooser.setId(context.getViewRoot().createUniqueId());
 		distanceChooser.setValueBinding(valueAtt, application.createValueBinding(UIDistanceChangeWizard.distanceChangeWizardBean_newDistanceExp));
 		UISelectItems selectItems = (UISelectItems)application.createComponent(UISelectItems.COMPONENT_TYPE);
@@ -159,7 +167,18 @@ public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep 
 		selectItems.setValueBinding(valueAtt, application.createValueBinding(UIDistanceChangeWizard.distanceChangeStepBean_runDistancesExp));
 		label.setFor(distanceChooser.getId());
 		distanceChooser.getChildren().add(selectItems);
-		entryDiv.getChildren().add(distanceChooser);
+		span.getChildren().add(distanceChooser);
+		
+		HtmlTag errSpan = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
+		errSpan.setId(context.getViewRoot().createUniqueId());
+		errSpan.setStyleClass("error");
+		errSpan.setValue("span");
+		span.getChildren().add(errSpan);
+		
+		HtmlMessage errMsg = (HtmlMessage)application.createComponent(HtmlMessage.COMPONENT_TYPE);
+		errMsg.setId(context.getViewRoot().createUniqueId());
+		errMsg.setFor(distanceChooser.getId());
+		errSpan.getChildren().add(errMsg);
 		
 		HtmlCommandButton nextButton = wizard.getNextButton(context, this);
 		dcsDiv.getChildren().add(nextButton);

@@ -11,6 +11,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.ejb.FinderException;
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
@@ -21,9 +24,9 @@ import com.idega.user.data.Group;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
- * Last modified: $Date: 2007/12/21 17:19:19 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/27 16:03:47 $ by $Author: civilis $
  *
  */
 public class DistanceChangeStepBean {
@@ -127,5 +130,36 @@ public class DistanceChangeStepBean {
 
 	public void setWizardBean(DistanceChangeWizardBean wizardBean) {
 		this.wizardBean = wizardBean;
+	}
+	
+	public void validateDistanceChange(FacesContext context, UIComponent toValidate, Object value) {
+		
+	    if (false) {
+	    	((DistanceChangeStepBean)context.getApplication().createValueBinding(UIDistanceChangeWizard.distanceChangeStepBeanExp).getValue(context)).setWizardMode(true);
+	    	((UIInput)toValidate).setValid(false);
+
+	        FacesMessage message = new FacesMessage("Wuaha levakas!");
+	        context.addMessage(toValidate.getClientId(context), message);
+	    }
+	}
+	
+	public void validateCardholderName(FacesContext context, UIComponent toValidate, Object value) {
+		
+	}
+	
+	public void validateCardholderEmail(FacesContext context, UIComponent toValidate, Object value) {
+		
+	}
+	
+	public void validateCardNumber(FacesContext context, UIComponent toValidate, Object value) {
+		
+	}
+	
+	public void validateCCVNumber(FacesContext context, UIComponent toValidate, Object value) {
+		
+	}
+	
+	public void validateCardExpiresDate(FacesContext context, UIComponent toValidate, Object value) {
+		
 	}
 }
