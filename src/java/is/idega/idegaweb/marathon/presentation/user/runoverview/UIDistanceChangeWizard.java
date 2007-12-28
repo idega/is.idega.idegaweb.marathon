@@ -12,9 +12,9 @@ import com.idega.presentation.wizard.Wizard;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
- * Last modified: $Date: 2007/12/27 16:03:47 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/28 20:53:31 $ by $Author: civilis $
  *
  */
 public class UIDistanceChangeWizard extends Wizard {
@@ -35,7 +35,6 @@ public class UIDistanceChangeWizard extends Wizard {
 	public static final String distanceChangeStepBean_validateDistanceChangeExp = 	"#{distanceChangeStepBean.validateDistanceChange}";
 	public static final String distanceChangeStepBean_validateCardholderNameExp = 	"#{distanceChangeStepBean.validateCardholderName}";
 	public static final String distanceChangeStepBean_validateCardholderEmailExp = 	"#{distanceChangeStepBean.validateCardholderEmail}";
-	public static final String distanceChangeStepBean_validateCardNumberExp = 		"#{distanceChangeStepBean.validateCardNumber}";
 	public static final String distanceChangeStepBean_validateCCVNumberExp = 		"#{distanceChangeStepBean.validateCCVNumber}";
 	public static final String distanceChangeStepBean_validateCardExpiresDateExp = 	"#{distanceChangeStepBean.validateCardExpiresDate}";
 	

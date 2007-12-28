@@ -58,6 +58,11 @@ div.distChWiz_assetsCart div.contents div.entry div, div.distChWiz_creditCardInf
 	left: 200px;
 }
 
+div.distChWiz_distChangeArea .error, div.distChWiz_creditCardInformation .error {
+	margin-left: 5px;
+	color: red;
+}
+
 div.distChWiz_creditCardInformation div.contents div.entry input {
 	width: 200px;
 }

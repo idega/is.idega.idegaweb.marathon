@@ -14,9 +14,12 @@ import javax.faces.component.html.HtmlMessage;
 import javax.faces.component.html.HtmlOutputLabel;
 import javax.faces.component.html.HtmlOutputText;
 import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 
 import org.apache.myfaces.custom.creditcardvalidator.CreditCardValidator;
+import org.apache.myfaces.custom.emailvalidator.EmailValidator;
 import org.apache.myfaces.custom.htmlTag.HtmlTag;
+import org.apache.myfaces.validator.ValidatorBase;
 
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWBaseComponent;
@@ -30,9 +33,9 @@ import com.idega.util.IWTimestamp;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
- * Last modified: $Date: 2007/12/27 20:32:56 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/28 20:53:30 $ by $Author: civilis $
  *
  */
 public class UIPaymentStep extends IWBaseComponent implements WizardStep {
@@ -47,6 +50,7 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 	private static final String divTag = "div";
 	private static final String spanTag = "span";
 	private static final String containerFacet = "container";
+	private static final String wizardModeFacet = "wizardMode";
 	
 	private static final String assetsCartStyleClass = UIDistanceChangeWizard.distanceChangeWizard_cssPrefix+"assetsCart";
 	private static final String creditCardInformationStyleClass = UIDistanceChangeWizard.distanceChangeWizard_cssPrefix+"creditCardInformation";
@@ -79,19 +83,18 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 	 */
 	protected void initializeComponent(FacesContext context) {
 		
-		
 		Application application = context.getApplication();
 		IWContext iwc = IWContext.getIWContext(context);
 		IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
 		
-		HtmlTag container = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
-		container.setId(context.getViewRoot().createUniqueId());
-		container.setValue(divTag);
-		
 		HtmlInputHidden hidden = (HtmlInputHidden)application.createComponent(HtmlInputHidden.COMPONENT_TYPE);
 		hidden.setId(context.getViewRoot().createUniqueId());
 		hidden.setValueBinding(valueAtt, application.createValueBinding(UIDistanceChangeWizard.distanceChangeStepBean_wizardModeExp));
-		container.getChildren().add(hidden);
+		getFacets().put(wizardModeFacet, hidden);
+		
+		HtmlTag container = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
+		container.setId(context.getViewRoot().createUniqueId());
+		container.setValue(divTag);
 		
 		container.getChildren().add(getAssetsCartArea(context, iwrb));
 		container.getChildren().add(getCreditCardInformationArea(context, iwrb));
@@ -228,17 +231,27 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 		contentsDiv.setStyleClass(contentsStyleClass);
 		ccidiv.getChildren().add(contentsDiv);
 		
-		contentsDiv.getChildren().add(createEntry(context, iwrb.getLocalizedString("run_reg.card_holder", "Card holder"), HtmlInputText.COMPONENT_TYPE, null, UIDistanceChangeWizard.distanceChangeWizardBean_cardHolderNameExp, UIDistanceChangeWizard.distanceChangeStepBean_validateCardholderNameExp));
-		contentsDiv.getChildren().add(createEntry(context, iwrb.getLocalizedString("run_reg.card_holder_email", "Cardholder email"), HtmlInputText.COMPONENT_TYPE, null, UIDistanceChangeWizard.distanceChangeWizardBean_cardHolderEmailExp, UIDistanceChangeWizard.distanceChangeStepBean_validateCardholderEmailExp));
+//		card holder name
+		contentsDiv.getChildren().add(createEntry(context, iwrb.getLocalizedString("run_reg.card_holder", "Card holder"), HtmlInputText.COMPONENT_TYPE, null, UIDistanceChangeWizard.distanceChangeWizardBean_cardHolderNameExp, UIDistanceChangeWizard.distanceChangeStepBean_validateCardholderNameExp, true));
 		
-		System.out.println("wtf");
+//		card holder email
+		HtmlInputText chEmail = (HtmlInputText)application.createComponent(HtmlInputText.COMPONENT_TYPE);
+		chEmail.setId(context.getViewRoot().createUniqueId());
+		ValidatorBase validator = (EmailValidator)application.createValidator(EmailValidator.VALIDATOR_ID);
+		validator.setMessage(iwrb.getLocalizedString("run_reg.email_err_msg", "Not a valid email address"));
+		chEmail.addValidator(validator);
+		contentsDiv.getChildren().add(createEntry(context, iwrb.getLocalizedString("run_reg.card_holder_email", "Cardholder email"), HtmlInputText.COMPONENT_TYPE, chEmail, UIDistanceChangeWizard.distanceChangeWizardBean_cardHolderEmailExp, UIDistanceChangeWizard.distanceChangeStepBean_validateCardholderEmailExp, true));
+		
 //		ccn
-		if(true) {
-			HtmlTag entry = createEntry(context, iwrb.getLocalizedString("run_reg.card_number", "Card number"), UICreditCardNumber.COMPONENT_TYPE, null, UIDistanceChangeWizard.distanceChangeWizardBean_creditCardNumberExp, UIDistanceChangeWizard.distanceChangeStepBean_validateCardNumberExp);
-			entry.setStyleClass(ccnStyleClass);
-			contentsDiv.getChildren().add(entry);
-		}
+		UICreditCardNumber ccNumber = (UICreditCardNumber)application.createComponent(UICreditCardNumber.COMPONENT_TYPE);
+		ccNumber.setId(context.getViewRoot().createUniqueId());
+		validator = (CreditCardValidator)application.createValidator(CreditCardValidator.VALIDATOR_ID);
+		validator.setMessage(iwrb.getLocalizedString("run_reg.not_valid_card_number", "Not a valid card number"));
+		ccNumber.addValidator(validator);
 		
+		HtmlTag entry = createEntry(context, iwrb.getLocalizedString("run_reg.card_number", "Card number"), UICreditCardNumber.COMPONENT_TYPE, ccNumber, UIDistanceChangeWizard.distanceChangeWizardBean_creditCardNumberExp, null, true);
+		entry.setStyleClass(ccnStyleClass);
+		contentsDiv.getChildren().add(entry);
 		
 //		ccv
 		HtmlInputText ccvNumber = (HtmlInputText)application.createComponent(HtmlInputText.COMPONENT_TYPE);
@@ -247,7 +260,7 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 		ccvNumber.setMaxlength(3);
 		ccvNumber.setStyleClass(ccvNumberStyleClass);
 		
-		contentsDiv.getChildren().add(createEntry(context, iwrb.getLocalizedString("run_reg.ccv_number", "CCV number"), HtmlInputText.COMPONENT_TYPE, ccvNumber, UIDistanceChangeWizard.distanceChangeWizardBean_ccvNumberExp, UIDistanceChangeWizard.distanceChangeStepBean_validateCCVNumberExp));
+		contentsDiv.getChildren().add(createEntry(context, iwrb.getLocalizedString("run_reg.ccv_number", "CCV number"), HtmlInputText.COMPONENT_TYPE, ccvNumber, UIDistanceChangeWizard.distanceChangeWizardBean_ccvNumberExp, UIDistanceChangeWizard.distanceChangeStepBean_validateCCVNumberExp, true));
 
 //		card expires
 		UIDateInput dateInput = (UIDateInput)application.createComponent(UIDateInput.COMPONENT_TYPE);
@@ -255,12 +268,12 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 		dateInput.setRendered(true);
 		dateInput.setYearRange(IWTimestamp.RightNow().getYear(), IWTimestamp.RightNow().getYear()+10);
 		
-		contentsDiv.getChildren().add(createEntry(context, iwrb.getLocalizedString("run_reg.card_expires", "Card expires"), UIDateInput.COMPONENT_TYPE, dateInput, UIDistanceChangeWizard.distanceChangeWizardBean_cardExpirationDateExp, null));
+		contentsDiv.getChildren().add(createEntry(context, iwrb.getLocalizedString("run_reg.card_expires", "Card expires"), UIDateInput.COMPONENT_TYPE, dateInput, UIDistanceChangeWizard.distanceChangeWizardBean_cardExpirationDateExp, null, true));
 		
 		return ccidiv;
 	}
 	
-	private HtmlTag createEntry(FacesContext context, String labelStr, String inputComponentType, UIComponent uiinput, String valueBindingExp, String validatorMethodExp) {
+	private HtmlTag createEntry(FacesContext context, String labelStr, String inputComponentType, UIComponent uiinput, String valueBindingExp, String validatorMethodExp, boolean required) {
 		
 		Application application = context.getApplication();
 		
@@ -286,23 +299,19 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 			
 			uiinput = application.createComponent(inputComponentType);
 			uiinput.setId(context.getViewRoot().createUniqueId());
-			
-			if(inputComponentType.equals(UICreditCardNumber.COMPONENT_TYPE)) {
-				
-				CreditCardValidator validator = (CreditCardValidator)application.createValidator(CCValidator.VALIDATOR_ID);
-				((UICreditCardNumber)uiinput).addValidator(validator);
-				((UICreditCardNumber)uiinput).setRequired(true);
-				//((UICreditCardNumber)uiinput).setValidator(application.createMethodBinding(labelStr, aclass))
-			}
 		}
 		
 		uiinput.setValueBinding(valueAtt, application.createValueBinding(valueBindingExp));
 		span.getChildren().add(uiinput);
 		label.setFor(uiinput.getId());
 		
-		if(validatorMethodExp != null && (uiinput instanceof UIInput)) {
+		if(uiinput instanceof UIInput) {
 			
-			((UIInput)uiinput).setValidator(application.createMethodBinding(validatorMethodExp, new Class[] {FacesContext.class, UIComponent.class, Object.class}));
+			((UIInput)uiinput).setRequired(required);
+			
+			if(validatorMethodExp != null) {
+				((UIInput)uiinput).setValidator(application.createMethodBinding(validatorMethodExp, new Class[] {FacesContext.class, UIComponent.class, Object.class}));
+			}
 			
 			HtmlTag errSpan = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 			errSpan.setId(context.getViewRoot().createUniqueId());
@@ -329,6 +338,8 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 	public void encodeChildren(FacesContext context) throws IOException {
 		super.encodeChildren(context);
 		
+		renderChild(context, getFacet(wizardModeFacet));
+		
 		UIComponent container = getFacet(containerFacet);
 		
 		if(container != null) {
@@ -343,5 +354,15 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 	 */
 	public boolean getRendersChildren() {
 		return true;
+	}
+	
+	/**
+	 * @Override
+	 */
+	public void decode(FacesContext context) {
+		super.decode(context);
+		
+		ValueBinding vb = context.getApplication().createValueBinding(UIDistanceChangeWizard.distanceChangeStepBean_wizardModeExp);
+		vb.setValue(context, Boolean.valueOf((String)context.getExternalContext().getRequestParameterMap().get(getFacet(wizardModeFacet).getClientId(context))));
 	}
 }
