@@ -33,6 +33,10 @@
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/xml-security/jars/xmlsec-1.3.0.jar">
   </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/commons-validator/jars/commons-validator-1.1.1.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/ant/jars/jakarta-oro-2.0.8.jar">
+  </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/jdom/jars/jdom-1.0.jar">
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/jai/jars/jai-1.0.jar">
