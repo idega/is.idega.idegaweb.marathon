@@ -27,9 +27,9 @@ import com.idega.presentation.wizard.WizardStep;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
- * Last modified: $Date: 2007/12/28 20:53:31 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/29 10:23:27 $ by $Author: civilis $
  *
  */
 public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep {
@@ -83,6 +83,7 @@ public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep 
 		HtmlInputHidden hidden = (HtmlInputHidden)application.createComponent(HtmlInputHidden.COMPONENT_TYPE);
 		hidden.setId(context.getViewRoot().createUniqueId());
 		hidden.setValueBinding(valueAtt, application.createValueBinding(UIDistanceChangeWizard.distanceChangeStepBean_wizardModeExp));
+		getFacets().put(wizardModeFacet, hidden);
 		
 		HtmlTag dcsDiv = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		dcsDiv.setId(context.getViewRoot().createUniqueId());
