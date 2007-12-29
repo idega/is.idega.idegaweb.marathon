@@ -13,13 +13,15 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
 import com.idega.presentation.IWBaseComponent;
+import com.idega.presentation.IWContext;
+import com.idega.presentation.text.Text;
 
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *
- * Last modified: $Date: 2007/12/23 17:54:49 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/29 15:42:13 $ by $Author: civilis $
  *
  */
 public class UserRunOverview extends IWBaseComponent {
@@ -45,6 +47,12 @@ public class UserRunOverview extends IWBaseComponent {
 	 * @Override
 	 */
 	public void encodeChildren(FacesContext context) throws IOException {
+		
+		IWContext iwc = IWContext.getIWContext(FacesContext.getCurrentInstance());
+		if (!iwc.isLoggedOn()) {
+			renderChild(context, new Text("No user logged on..."));
+			return;
+		}
 	
 		String participantId = (String)context.getExternalContext().getRequestParameterMap().get(UIUserRunOverviewList.PARTICIPANT_PARAM);
 		UIComponent stepComponent;

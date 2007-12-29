@@ -24,9 +24,9 @@ import com.idega.user.data.Group;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
- * Last modified: $Date: 2007/12/28 20:53:30 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/29 15:42:13 $ by $Author: civilis $
  *
  */
 public class DistanceChangeStepBean {
@@ -61,6 +61,7 @@ public class DistanceChangeStepBean {
 	}
 
 	public void setWizardMode(boolean wizardMode) {
+		
 		this.wizardMode = wizardMode;
 	}
 
@@ -121,7 +122,9 @@ public class DistanceChangeStepBean {
 	}
 
 	public void setRunDistances(List runDistances) {
-		this.runDistances = runDistances;
+		
+		if(runDistances != null)
+			this.runDistances = runDistances;
 	}
 	
 	public DistanceChangeWizardBean getWizardBean() {
@@ -134,8 +137,6 @@ public class DistanceChangeStepBean {
 	
 	public void validateDistanceChange(FacesContext context, UIComponent toValidate, Object value) {
 		
-		
-		
 	    if (false) {
 	    	((DistanceChangeStepBean)context.getApplication().createValueBinding(UIDistanceChangeWizard.distanceChangeStepBeanExp).getValue(context)).setWizardMode(true);
 	    	((UIInput)toValidate).setValid(false);
@@ -145,20 +146,17 @@ public class DistanceChangeStepBean {
 	    }
 	}
 	
-	public void validateCardholderName(FacesContext context, UIComponent toValidate, Object value) {
-		
-	}
-	
-	public void validateCardholderEmail(FacesContext context, UIComponent toValidate, Object value) {
-		System.out.println("called validate email");
-		((DistanceChangeStepBean)context.getApplication().createValueBinding(UIDistanceChangeWizard.distanceChangeStepBeanExp).getValue(context)).setWizardMode(true);
-	}
-	
 	public void validateCCVNumber(FacesContext context, UIComponent toValidate, Object value) {
 		System.out.println("called validate ccv");	
 	}
 	
 	public void validateCardExpiresDate(FacesContext context, UIComponent toValidate, Object value) {
+
+		System.out.println("validate card expires: "+value);
+	}
+	
+	public void submitDistanceChange() {
 		
+		System.out.println("saving distance and taking money out");
 	}
 }

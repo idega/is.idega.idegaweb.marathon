@@ -40,6 +40,12 @@ div.distChWiz_creditCardInformation .header, div.distChWiz_assetsCart .header, d
 	border-bottom: 1px #CCCCCC solid;
 }
 
+div.distChWiz_assetsCart, div.distChWiz_creditCardInformation, div.distChWiz_distChangeArea {
+	position: relative;
+	left: 0px;
+	top: 0px;
+}
+
 div.distChWiz_distChangeArea .warning {
 	font-style: italic;
 }

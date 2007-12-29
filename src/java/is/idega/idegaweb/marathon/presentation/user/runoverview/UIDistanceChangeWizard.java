@@ -12,9 +12,9 @@ import com.idega.presentation.wizard.Wizard;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
- * Last modified: $Date: 2007/12/28 20:53:31 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/29 15:42:13 $ by $Author: civilis $
  *
  */
 public class UIDistanceChangeWizard extends Wizard {
@@ -23,18 +23,21 @@ public class UIDistanceChangeWizard extends Wizard {
 	
 	public static final String distanceChangeWizardBeanExp = 						"#{distanceChangeWizardBean}";
 	public static final String distanceChangeWizardBean_newDistanceExp = 			"#{distanceChangeWizardBean.newDistanceId}";
+	public static final String distanceChangeWizardBean_newDistanceNameExp = 			"#{distanceChangeWizardBean.newDistanceName}";
 	public static final String distanceChangeWizardBean_cardHolderNameExp = 		"#{distanceChangeWizardBean.cardHolderName}";
 	public static final String distanceChangeWizardBean_cardHolderEmailExp = 		"#{distanceChangeWizardBean.cardHolderEmail}";
 	public static final String distanceChangeWizardBean_creditCardNumberExp = 		"#{distanceChangeWizardBean.creditCardNumber}";
 	public static final String distanceChangeWizardBean_ccvNumberExp = 				"#{distanceChangeWizardBean.ccvNumber}";
 	public static final String distanceChangeWizardBean_cardExpirationDateExp = 	"#{distanceChangeWizardBean.cardExpirationDate}";
+	public static final String distanceChangeWizardBean_distanceChangePriceLabelExp = 	"#{distanceChangeWizardBean.distanceChangePrice.priceLabel}";
 	
 	public static final String distanceChangeStepBeanExp = 							"#{distanceChangeStepBean}";
 	public static final String distanceChangeStepBean_wizardModeExp = 				"#{distanceChangeStepBean.wizardMode}";
 	public static final String distanceChangeStepBean_runLabelExp = 				"#{distanceChangeStepBean.runLabel}";
+	public static final String distanceChangeStepBean_submitDistanceChangeExp =		"#{distanceChangeStepBean.submitDistanceChange}";
+	
+	
 	public static final String distanceChangeStepBean_validateDistanceChangeExp = 	"#{distanceChangeStepBean.validateDistanceChange}";
-	public static final String distanceChangeStepBean_validateCardholderNameExp = 	"#{distanceChangeStepBean.validateCardholderName}";
-	public static final String distanceChangeStepBean_validateCardholderEmailExp = 	"#{distanceChangeStepBean.validateCardholderEmail}";
 	public static final String distanceChangeStepBean_validateCCVNumberExp = 		"#{distanceChangeStepBean.validateCCVNumber}";
 	public static final String distanceChangeStepBean_validateCardExpiresDateExp = 	"#{distanceChangeStepBean.validateCardExpiresDate}";
 	

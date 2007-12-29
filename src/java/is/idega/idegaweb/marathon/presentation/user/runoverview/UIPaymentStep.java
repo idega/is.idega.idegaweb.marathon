@@ -33,9 +33,9 @@ import com.idega.util.IWTimestamp;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *
- * Last modified: $Date: 2007/12/28 20:53:30 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/29 15:42:13 $ by $Author: civilis $
  *
  */
 public class UIPaymentStep extends IWBaseComponent implements WizardStep {
@@ -74,6 +74,7 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 		
 		UIPaymentStep step = (UIPaymentStep)context.getApplication().createComponent(COMPONENT_TYPE);
 		step.setId(context.getViewRoot().createUniqueId());
+		step.setRendered(true);
 		step.setWizard(wizard);
 		return step;
 	}
@@ -103,9 +104,11 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 		prevButton.setId(context.getViewRoot().createUniqueId());
 		container.getChildren().add(prevButton);
 		
-		HtmlCommandButton justButton = (HtmlCommandButton)application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
-		justButton.setId(context.getViewRoot().createUniqueId());
-		container.getChildren().add(justButton);
+		HtmlCommandButton submitButton = (HtmlCommandButton)application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
+		submitButton.setId(context.getViewRoot().createUniqueId());
+		submitButton.setValue("Change distance");
+		submitButton.setAction(application.createMethodBinding(UIDistanceChangeWizard.distanceChangeStepBean_submitDistanceChangeExp, null));
+		container.getChildren().add(submitButton);
 		
 		getFacets().put(containerFacet, container);
 	}
@@ -137,8 +140,32 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 		container.setValue(divTag);
 		abdiv.getChildren().add(container);
 		
-//		Change distance to entry
+//		currently chosen distance
 		HtmlTag entryDiv = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
+		entryDiv.setId(context.getViewRoot().createUniqueId());
+		entryDiv.setStyleClass(entryStyleClass);
+		entryDiv.setValue(divTag);
+		container.getChildren().add(entryDiv);
+		
+//		currently chosen distance label
+		text = (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		text.setId(context.getViewRoot().createUniqueId());
+		text.setValue(iwrb.getLocalizedString("runDistance.chosenDistance", "Currently chosen distance: "));
+		entryDiv.getChildren().add(text);
+		
+//		currently chosen distance value
+		div = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
+		div.setId(context.getViewRoot().createUniqueId());
+		div.setValue(divTag);
+		entryDiv.getChildren().add(div);
+		
+		text = (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		text.setId(context.getViewRoot().createUniqueId());
+		text.setValueBinding(valueAtt, application.createValueBinding(UIDistanceChangeWizard.distanceChangeStepBean_chosenDistanceNameExp));
+		div.getChildren().add(text);
+		
+//		Change distance to entry
+		entryDiv = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		entryDiv.setId(context.getViewRoot().createUniqueId());
 		entryDiv.setStyleClass(entryStyleClass);
 		entryDiv.setValue(divTag);
@@ -158,7 +185,7 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 		
 		text = (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		text.setId(context.getViewRoot().createUniqueId());
-		text.setValue("some selected distance");
+		text.setValueBinding(valueAtt, application.createValueBinding(UIDistanceChangeWizard.distanceChangeWizardBean_newDistanceNameExp));
 		div.getChildren().add(text);
 		
 //		price entry
@@ -182,7 +209,7 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 		
 		text = (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		text.setId(context.getViewRoot().createUniqueId());
-		text.setValue("2343 EUR");
+		text.setValueBinding(valueAtt, application.createValueBinding(UIDistanceChangeWizard.distanceChangeWizardBean_distanceChangePriceLabelExp));
 		div.getChildren().add(text);
 		
 		return abdiv;
@@ -232,7 +259,7 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 		ccidiv.getChildren().add(contentsDiv);
 		
 //		card holder name
-		contentsDiv.getChildren().add(createEntry(context, iwrb.getLocalizedString("run_reg.card_holder", "Card holder"), HtmlInputText.COMPONENT_TYPE, null, UIDistanceChangeWizard.distanceChangeWizardBean_cardHolderNameExp, UIDistanceChangeWizard.distanceChangeStepBean_validateCardholderNameExp, true));
+		contentsDiv.getChildren().add(createEntry(context, iwrb.getLocalizedString("run_reg.card_holder", "Card holder"), HtmlInputText.COMPONENT_TYPE, null, UIDistanceChangeWizard.distanceChangeWizardBean_cardHolderNameExp, null, true));
 		
 //		card holder email
 		HtmlInputText chEmail = (HtmlInputText)application.createComponent(HtmlInputText.COMPONENT_TYPE);
@@ -240,7 +267,7 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 		ValidatorBase validator = (EmailValidator)application.createValidator(EmailValidator.VALIDATOR_ID);
 		validator.setMessage(iwrb.getLocalizedString("run_reg.email_err_msg", "Not a valid email address"));
 		chEmail.addValidator(validator);
-		contentsDiv.getChildren().add(createEntry(context, iwrb.getLocalizedString("run_reg.card_holder_email", "Cardholder email"), HtmlInputText.COMPONENT_TYPE, chEmail, UIDistanceChangeWizard.distanceChangeWizardBean_cardHolderEmailExp, UIDistanceChangeWizard.distanceChangeStepBean_validateCardholderEmailExp, true));
+		contentsDiv.getChildren().add(createEntry(context, iwrb.getLocalizedString("run_reg.card_holder_email", "Cardholder email"), HtmlInputText.COMPONENT_TYPE, chEmail, UIDistanceChangeWizard.distanceChangeWizardBean_cardHolderEmailExp, null, true));
 		
 //		ccn
 		UICreditCardNumber ccNumber = (UICreditCardNumber)application.createComponent(UICreditCardNumber.COMPONENT_TYPE);
@@ -364,5 +391,13 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 		
 		ValueBinding vb = context.getApplication().createValueBinding(UIDistanceChangeWizard.distanceChangeStepBean_wizardModeExp);
 		vb.setValue(context, Boolean.valueOf((String)context.getExternalContext().getRequestParameterMap().get(getFacet(wizardModeFacet).getClientId(context))));
+	}
+	
+	/**
+	 * @Override
+	 */
+	public boolean isRendered() {
+		
+		return IWContext.getIWContext(FacesContext.getCurrentInstance()).isLoggedOn();
 	}
 }

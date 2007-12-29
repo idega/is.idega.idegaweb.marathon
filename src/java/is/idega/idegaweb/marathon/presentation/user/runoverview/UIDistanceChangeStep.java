@@ -27,9 +27,9 @@ import com.idega.presentation.wizard.WizardStep;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *
- * Last modified: $Date: 2007/12/29 10:23:27 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/29 15:42:13 $ by $Author: civilis $
  *
  */
 public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep {
@@ -63,6 +63,8 @@ public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep 
 	public UIComponent getStepComponent(FacesContext context, Wizard wizard) {
 		
 		UIDistanceChangeStep step = (UIDistanceChangeStep)context.getApplication().createComponent(COMPONENT_TYPE);
+		step.setId(context.getViewRoot().createUniqueId());
+		step.setRendered(true);
 		step.setWizard(wizard);
 		return step;
 	}
@@ -226,5 +228,13 @@ public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep 
 		
 		ValueBinding vb = context.getApplication().createValueBinding(UIDistanceChangeWizard.distanceChangeStepBean_wizardModeExp);
 		vb.setValue(context, Boolean.valueOf((String)context.getExternalContext().getRequestParameterMap().get(getFacet(wizardModeFacet).getClientId(context))));
+	}
+
+	/**
+	 * @Override
+	 */
+	public boolean isRendered() {
+		
+		return IWContext.getIWContext(FacesContext.getCurrentInstance()).isLoggedOn();
 	}
 }
