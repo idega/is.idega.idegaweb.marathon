@@ -27,9 +27,9 @@ import com.idega.presentation.wizard.WizardStep;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *
- * Last modified: $Date: 2007/12/29 15:42:13 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/30 18:10:10 $ by $Author: civilis $
  *
  */
 public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep {
@@ -189,9 +189,6 @@ public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep 
 		
 		HtmlCommandButton nextButton = wizard.getNextButton(context, this);
 		dcsDiv.getChildren().add(nextButton);
-		HtmlCommandButton justButton = (HtmlCommandButton)application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
-		justButton.setId(context.getViewRoot().createUniqueId());
-		dcsDiv.getChildren().add(justButton);
 		
 		getFacets().put(containerFacet, dcsDiv);
 	}

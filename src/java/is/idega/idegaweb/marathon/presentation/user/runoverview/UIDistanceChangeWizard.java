@@ -3,18 +3,15 @@ package is.idega.idegaweb.marathon.presentation.user.runoverview;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.component.UIComponent;
-import javax.faces.component.html.HtmlForm;
-import javax.faces.context.FacesContext;
-
 import com.idega.presentation.wizard.Wizard;
+import com.idega.presentation.wizard.WizardStep;
 
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
- * Last modified: $Date: 2007/12/29 15:42:13 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/30 18:10:10 $ by $Author: civilis $
  *
  */
 public class UIDistanceChangeWizard extends Wizard {
@@ -23,19 +20,17 @@ public class UIDistanceChangeWizard extends Wizard {
 	
 	public static final String distanceChangeWizardBeanExp = 						"#{distanceChangeWizardBean}";
 	public static final String distanceChangeWizardBean_newDistanceExp = 			"#{distanceChangeWizardBean.newDistanceId}";
-	public static final String distanceChangeWizardBean_newDistanceNameExp = 			"#{distanceChangeWizardBean.newDistanceName}";
+	public static final String distanceChangeWizardBean_newDistanceNameExp = 		"#{distanceChangeWizardBean.newDistanceName}";
 	public static final String distanceChangeWizardBean_cardHolderNameExp = 		"#{distanceChangeWizardBean.cardHolderName}";
-	public static final String distanceChangeWizardBean_cardHolderEmailExp = 		"#{distanceChangeWizardBean.cardHolderEmail}";
 	public static final String distanceChangeWizardBean_creditCardNumberExp = 		"#{distanceChangeWizardBean.creditCardNumber}";
 	public static final String distanceChangeWizardBean_ccvNumberExp = 				"#{distanceChangeWizardBean.ccvNumber}";
 	public static final String distanceChangeWizardBean_cardExpirationDateExp = 	"#{distanceChangeWizardBean.cardExpirationDate}";
 	public static final String distanceChangeWizardBean_distanceChangePriceLabelExp = 	"#{distanceChangeWizardBean.distanceChangePrice.priceLabel}";
+	public static final String distanceChangeWizardBean_submitDistanceChangeExp =	"#{distanceChangeWizardBean.submitDistanceChange}";
 	
 	public static final String distanceChangeStepBeanExp = 							"#{distanceChangeStepBean}";
 	public static final String distanceChangeStepBean_wizardModeExp = 				"#{distanceChangeStepBean.wizardMode}";
 	public static final String distanceChangeStepBean_runLabelExp = 				"#{distanceChangeStepBean.runLabel}";
-	public static final String distanceChangeStepBean_submitDistanceChangeExp =		"#{distanceChangeStepBean.submitDistanceChange}";
-	
 	
 	public static final String distanceChangeStepBean_validateDistanceChangeExp = 	"#{distanceChangeStepBean.validateDistanceChange}";
 	public static final String distanceChangeStepBean_validateCCVNumberExp = 		"#{distanceChangeStepBean.validateCCVNumber}";
@@ -61,11 +56,8 @@ public class UIDistanceChangeWizard extends Wizard {
 	/**
 	 * @Override
 	 */
-	protected UIComponent getContainer(FacesContext context) {
+	public WizardStep getSubmissionSuccessStep() {
 		
-		HtmlForm form = (HtmlForm)context.getApplication().createComponent(HtmlForm.COMPONENT_TYPE);
-		form.setId(context.getViewRoot().createUniqueId());
-		
-		return form;
+		return new UIDistanceChangeSuccess();
 	}
 }

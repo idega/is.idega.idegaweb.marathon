@@ -18,6 +18,10 @@
 		<component-type>idega_DistanceChangeWizard</component-type>
 		<component-class>is.idega.idegaweb.marathon.presentation.user.runoverview.UIDistanceChangeWizard</component-class>
 	</component>
+	<component>
+		<component-type>idega_DistanceChangeSuccess</component-type>
+		<component-class>is.idega.idegaweb.marathon.presentation.user.runoverview.UIDistanceChangeSuccess</component-class>
+	</component>
 
 	<managed-bean>
 		<managed-bean-name>distanceChangeWizardBean</managed-bean-name>

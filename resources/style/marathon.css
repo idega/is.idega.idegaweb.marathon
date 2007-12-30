@@ -33,6 +33,14 @@ div.distChWiz_assetsCart, div.distChWiz_creditCardInformation, div.distChWiz_dis
 	display: block;
 }
 
+div.distChWiz_changeSuccess {
+	color: green;
+}
+
+div.distChWiz_changeSuccess input {
+	display: block;
+}
+
 div.distChWiz_creditCardInformation .header, div.distChWiz_assetsCart .header, div.distChWiz_distChangeArea .header {
 	
 	font: medium;

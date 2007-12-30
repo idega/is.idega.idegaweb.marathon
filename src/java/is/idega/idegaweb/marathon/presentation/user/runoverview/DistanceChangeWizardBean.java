@@ -7,7 +7,6 @@ import is.idega.idegaweb.marathon.data.DistanceHome;
 import is.idega.idegaweb.marathon.data.Participant;
 
 import java.rmi.RemoteException;
-import java.util.Collection;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,7 +17,6 @@ import javax.faces.context.FacesContext;
 import com.idega.block.creditcard.business.CreditCardAuthorizationException;
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
-import com.idega.core.contact.data.Email;
 import com.idega.data.IDOLookup;
 import com.idega.data.IDOLookupException;
 import com.idega.idegaweb.IWBundle;
@@ -31,9 +29,9 @@ import com.idega.util.LocaleUtil;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  *
- * Last modified: $Date: 2007/12/30 15:27:52 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/30 18:10:09 $ by $Author: civilis $
  *
  */
 public class DistanceChangeWizardBean {
@@ -44,7 +42,6 @@ public class DistanceChangeWizardBean {
 	private String newDistanceId;
 	private String newDistanceName;
 	private String cardHolderName;
-	private String cardHolderEmail;
 	private CreditCardNumber creditCardNumber;
 	private String ccvNumber;
 	private Date cardExpirationDate;
@@ -80,7 +77,6 @@ public class DistanceChangeWizardBean {
 		newDistanceId = null;
 		newDistanceName = null;
 		cardHolderName = null;
-		cardHolderEmail = null;
 		creditCardNumber = null;
 		ccvNumber = null;
 		cardExpirationDate = null;
@@ -131,25 +127,6 @@ public class DistanceChangeWizardBean {
 			this.cardHolderName = cardHolderName;
 	}
 	
-	public String getCardHolderEmail() {
-		
-		if(cardHolderEmail == null) {
-			
-			Collection emails = getParticipant().getUser().getEmails();
-			
-			if(emails != null && !emails.isEmpty())
-				cardHolderEmail = ((Email)emails.iterator().next()).getEmailAddress();
-		}
-		
-		return cardHolderEmail;
-	}
-
-	public void setCardHolderEmail(String cardHolderEmail) {
-		
-		if(cardHolderEmail != null)
-			this.cardHolderEmail = cardHolderEmail;
-	}
-
 	public CreditCardNumber getCreditCardNumber() {
 		
 		return creditCardNumber;
@@ -245,7 +222,7 @@ public class DistanceChangeWizardBean {
 		//fixed price
 	}
 	
-public void submitDistanceChange() {
+	public void submitDistanceChange() {
 		
 		IWTimestamp expirationDate = new IWTimestamp(getCardExpirationDate());
 		

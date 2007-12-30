@@ -17,7 +17,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
 import org.apache.myfaces.custom.creditcardvalidator.CreditCardValidator;
-import org.apache.myfaces.custom.emailvalidator.EmailValidator;
 import org.apache.myfaces.custom.htmlTag.HtmlTag;
 import org.apache.myfaces.validator.ValidatorBase;
 
@@ -33,9 +32,9 @@ import com.idega.util.IWTimestamp;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  *
- * Last modified: $Date: 2007/12/30 15:27:52 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/30 18:10:10 $ by $Author: civilis $
  *
  */
 public class UIPaymentStep extends IWBaseComponent implements WizardStep {
@@ -104,10 +103,9 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 		prevButton.setId(context.getViewRoot().createUniqueId());
 		container.getChildren().add(prevButton);
 		
-		HtmlCommandButton submitButton = (HtmlCommandButton)application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
-		submitButton.setId(context.getViewRoot().createUniqueId());
+		HtmlCommandButton submitButton = wizard.getSubmissionSuccessStepButton(context);
 		submitButton.setValue(iwrb.getLocalizedString("dist_ch.changeDistance", "Change distance"));
-		submitButton.setAction(application.createMethodBinding(UIDistanceChangeWizard.distanceChangeStepBean_submitDistanceChangeExp, null));
+		submitButton.setAction(application.createMethodBinding(UIDistanceChangeWizard.distanceChangeWizardBean_submitDistanceChangeExp, null));
 		container.getChildren().add(submitButton);
 		
 		getFacets().put(containerFacet, container);
@@ -261,18 +259,10 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 //		card holder name
 		contentsDiv.getChildren().add(createEntry(context, iwrb.getLocalizedString("run_reg.card_holder", "Card holder"), HtmlInputText.COMPONENT_TYPE, null, UIDistanceChangeWizard.distanceChangeWizardBean_cardHolderNameExp, null, true));
 		
-//		card holder email
-		HtmlInputText chEmail = (HtmlInputText)application.createComponent(HtmlInputText.COMPONENT_TYPE);
-		chEmail.setId(context.getViewRoot().createUniqueId());
-		ValidatorBase validator = (EmailValidator)application.createValidator(EmailValidator.VALIDATOR_ID);
-		validator.setMessage(iwrb.getLocalizedString("run_reg.email_err_msg", "Not a valid email address"));
-		chEmail.addValidator(validator);
-		contentsDiv.getChildren().add(createEntry(context, iwrb.getLocalizedString("run_reg.card_holder_email", "Cardholder email"), HtmlInputText.COMPONENT_TYPE, chEmail, UIDistanceChangeWizard.distanceChangeWizardBean_cardHolderEmailExp, null, true));
-		
 //		ccn
 		UICreditCardNumber ccNumber = (UICreditCardNumber)application.createComponent(UICreditCardNumber.COMPONENT_TYPE);
 		ccNumber.setId(context.getViewRoot().createUniqueId());
-		validator = (CreditCardValidator)application.createValidator(CreditCardValidator.VALIDATOR_ID);
+		ValidatorBase validator = (CreditCardValidator)application.createValidator(CreditCardValidator.VALIDATOR_ID);
 		validator.setMessage(iwrb.getLocalizedString("run_reg.not_valid_card_number", "Not a valid card number"));
 		ccNumber.addValidator(validator);
 		
