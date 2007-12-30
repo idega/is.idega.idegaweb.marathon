@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.ejb.FinderException;
 import javax.faces.application.FacesMessage;
@@ -20,13 +22,14 @@ import javax.faces.model.SelectItem;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 import com.idega.user.data.Group;
+import com.idega.util.CoreConstants;
 
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *
- * Last modified: $Date: 2007/12/29 15:42:13 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/30 15:27:52 $ by $Author: civilis $
  *
  */
 public class DistanceChangeStepBean {
@@ -99,7 +102,7 @@ public class DistanceChangeStepBean {
 						
 						selectItem.setValue("-1");
 						selectItem.setLabel(new StringBuffer(iwrb.getLocalizedString(distanceGroup.getName(), distanceGroup.getName()))
-		    			.append(" ")
+		    			.append(CoreConstants.SPACE)
 		    			.append(iwrb.getLocalizedString("runDistance.choiceNotAvailableBecauseOfAge", "(Not available for your age)"))
 		    			.toString());
 						
@@ -136,27 +139,58 @@ public class DistanceChangeStepBean {
 	}
 	
 	public void validateDistanceChange(FacesContext context, UIComponent toValidate, Object value) {
-		
-	    if (false) {
-	    	((DistanceChangeStepBean)context.getApplication().createValueBinding(UIDistanceChangeWizard.distanceChangeStepBeanExp).getValue(context)).setWizardMode(true);
-	    	((UIInput)toValidate).setValid(false);
 
-	        FacesMessage message = new FacesMessage("Wuaha levakas!");
-	        context.addMessage(toValidate.getClientId(context), message);
-	    }
+		FacesMessage message = null;
+		
+		try {
+			IWContext iwc = IWContext.getIWContext(FacesContext.getCurrentInstance());
+			IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
+			
+			String valueStr = (String)value;
+			
+			if(getWizardBean().getParticipant().getRunDistanceGroup().getPrimaryKey().toString().equals(valueStr)) {
+				
+				message = new FacesMessage("dist_ch.err.distancesEquals", "You have chosen distance you're already registered for");
+				
+			} else if("-1".equals(valueStr)) {
+				message = new FacesMessage(iwrb.getLocalizedString("dist_ch.err.chooseAllowedDistance", "Please choose allowed distance"));
+				
+			} else {
+			
+				Collection distancesGroups = getWizardBean().getRunBusiness().getDistancesMap(getWizardBean().getParticipant().getRunTypeGroup(), getWizardBean().getParticipant().getRunDistanceGroup().getYear().getYearString());
+				List distances = new ArrayList(distancesGroups.size());
+				ConverterUtility converterUtility = ConverterUtility.getInstance();
+				
+				for (Iterator distancesGroupsIterator = distancesGroups.iterator(); distancesGroupsIterator.hasNext();)
+					distances.add(converterUtility.convertGroupToDistance((Group) distancesGroupsIterator.next()));
+				
+				List disallowedDistances = getWizardBean().getRunBusiness().getDisallowedDistancesPKs(getWizardBean().getParticipant().getUser(), distances);
+				
+				if(disallowedDistances.contains(valueStr))
+					message = new FacesMessage(iwrb.getLocalizedString("dist_ch.err.distanceNotAllowed", "Chosen distance is not allowed for you"));
+			}
+			
+		} catch (Exception e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Exception while validating distance change select input choice", e);
+			message = new FacesMessage("dist_ch.err.errorValidatingDistanceChoice", "Sorry, error occured while validating your distance choice. Please try again.");
+		}
+		
+		if(message != null) {
+			((UIInput)toValidate).setValid(false);
+			context.addMessage(toValidate.getClientId(context), message);
+		}
 	}
 	
 	public void validateCCVNumber(FacesContext context, UIComponent toValidate, Object value) {
-		System.out.println("called validate ccv");	
+		
+		if(!((String)value).matches("[0-9]{3}")) {
+			((UIInput)toValidate).setValid(false);
+			FacesMessage message = new FacesMessage("dist_ch.err.ccvIncorrect", "CCV number should be a digit number");
+			context.addMessage(toValidate.getClientId(context), message);
+		}
 	}
 	
 	public void validateCardExpiresDate(FacesContext context, UIComponent toValidate, Object value) {
 
-		System.out.println("validate card expires: "+value);
-	}
-	
-	public void submitDistanceChange() {
-		
-		System.out.println("saving distance and taking money out");
 	}
 }

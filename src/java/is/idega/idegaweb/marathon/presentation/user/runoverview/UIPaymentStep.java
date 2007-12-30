@@ -33,9 +33,9 @@ import com.idega.util.IWTimestamp;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *
- * Last modified: $Date: 2007/12/29 15:42:13 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/30 15:27:52 $ by $Author: civilis $
  *
  */
 public class UIPaymentStep extends IWBaseComponent implements WizardStep {
@@ -106,7 +106,7 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 		
 		HtmlCommandButton submitButton = (HtmlCommandButton)application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
 		submitButton.setId(context.getViewRoot().createUniqueId());
-		submitButton.setValue("Change distance");
+		submitButton.setValue(iwrb.getLocalizedString("dist_ch.changeDistance", "Change distance"));
 		submitButton.setAction(application.createMethodBinding(UIDistanceChangeWizard.distanceChangeStepBean_submitDistanceChangeExp, null));
 		container.getChildren().add(submitButton);
 		
