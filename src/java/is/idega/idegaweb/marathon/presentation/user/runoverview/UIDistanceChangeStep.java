@@ -27,9 +27,9 @@ import com.idega.presentation.wizard.WizardStep;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  *
- * Last modified: $Date: 2007/12/30 18:10:10 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/31 11:18:53 $ by $Author: civilis $
  *
  */
 public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep {
@@ -105,7 +105,7 @@ public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep 
 		
 		text = (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		text.setId(context.getViewRoot().createUniqueId());
-		text.setValue(iwrb.getLocalizedString("runDistance.payToChange", "You will need to pay to change your chosen distance."));
+		text.setValue(iwrb.getLocalizedString("dist_ch.payToChange", "You will need to pay to change your chosen distance."));
 		
 		div = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		div.setId(context.getViewRoot().createUniqueId());
@@ -130,7 +130,7 @@ public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep 
 //		currently chosen distance label
 		text = (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		text.setId(context.getViewRoot().createUniqueId());
-		text.setValue(iwrb.getLocalizedString("runDistance.chosenDistance", "Currently chosen distance: "));
+		text.setValue(iwrb.getLocalizedString("dist_ch.chosenDistance", "Currently chosen distance: "));
 		entryDiv.getChildren().add(text);
 		
 //		currently chosen distance value		
@@ -154,7 +154,7 @@ public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep 
 //		choose new distance label
 		HtmlOutputLabel label = (HtmlOutputLabel)application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 		label.setId(context.getViewRoot().createUniqueId());
-		label.setValue(iwrb.getLocalizedString("runDistance.chooseNewDistance", "Choose new distance: "));
+		label.setValue(iwrb.getLocalizedString("dist_ch.chooseNewDistance", "Choose new distance: "));
 		entryDiv.getChildren().add(label);
 
 //		choose new distance value

@@ -27,9 +27,9 @@ import com.idega.util.CoreConstants;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *
- * Last modified: $Date: 2007/12/30 15:27:52 $ by $Author: civilis $
+ * Last modified: $Date: 2007/12/31 11:18:53 $ by $Author: civilis $
  *
  */
 public class DistanceChangeStepBean {
@@ -79,7 +79,7 @@ public class DistanceChangeStepBean {
 			SelectItem selectItem = new SelectItem();
 			
 			selectItem.setValue("-1");
-			selectItem.setLabel(iwrb.getLocalizedString("run_year_ddd.select_distance","Select distance..."));
+			selectItem.setLabel(iwrb.getLocalizedString("run_year_ddd.select_distance", "Select distance..."));
 			runDistances.add(selectItem);
 			
 			try {
