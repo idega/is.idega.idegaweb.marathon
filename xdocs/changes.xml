@@ -5,6 +5,11 @@
 	</properties>
 	<body>
 
+	<release version="3.1.23" date="2007-12-31">
+		<action dev="civilis" type="update">
+			Already registered distance can now be changed for payment 
+		</action>     
+	</release>
 	<release version="3.1.22" date="2007-12-17">
 		<action dev="civilis" type="update">
 			Age restriction for distances added in the user group tab 
