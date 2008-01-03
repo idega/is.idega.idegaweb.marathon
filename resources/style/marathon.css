@@ -77,6 +77,13 @@ div.distChWiz_distChangeArea .error, div.distChWiz_creditCardInformation .error 
 	margin-left: 5px;
 	color: red;
 	display: block;
+	font-size: small;
+}
+
+div.distChWiz_creditCardInformation .generalError {
+	
+	color: red;
+	font-size: small;
 }
 
 div.distChWiz_distChangeArea select {
