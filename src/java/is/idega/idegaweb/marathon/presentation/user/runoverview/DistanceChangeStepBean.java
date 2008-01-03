@@ -27,9 +27,9 @@ import com.idega.util.CoreConstants;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  *
- * Last modified: $Date: 2007/12/31 11:18:53 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/03 20:30:35 $ by $Author: civilis $
  *
  */
 public class DistanceChangeStepBean {
@@ -142,15 +142,15 @@ public class DistanceChangeStepBean {
 
 		FacesMessage message = null;
 		
+		IWContext iwc = IWContext.getIWContext(FacesContext.getCurrentInstance());
+		IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
+		
 		try {
-			IWContext iwc = IWContext.getIWContext(FacesContext.getCurrentInstance());
-			IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
-			
 			String valueStr = (String)value;
 			
 			if(getWizardBean().getParticipant().getRunDistanceGroup().getPrimaryKey().toString().equals(valueStr)) {
 				
-				message = new FacesMessage("dist_ch.err.distancesEquals", "You have chosen distance you're already registered for");
+				message = new FacesMessage(iwrb.getLocalizedString("dist_ch.err.distancesEquals", "You have chosen distance you're already registered for"));
 				
 			} else if("-1".equals(valueStr)) {
 				message = new FacesMessage(iwrb.getLocalizedString("dist_ch.err.chooseAllowedDistance", "Please choose allowed distance"));
@@ -172,7 +172,7 @@ public class DistanceChangeStepBean {
 			
 		} catch (Exception e) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Exception while validating distance change select input choice", e);
-			message = new FacesMessage("dist_ch.err.errorValidatingDistanceChoice", "Sorry, error occured while validating your distance choice. Please try again.");
+			message = new FacesMessage(iwrb.getLocalizedString("dist_ch.err.errorValidatingDistanceChoice", "Sorry, error occured while validating your distance choice. Please try again."));
 		}
 		
 		if(message != null) {
@@ -184,8 +184,12 @@ public class DistanceChangeStepBean {
 	public void validateCCVNumber(FacesContext context, UIComponent toValidate, Object value) {
 		
 		if(!((String)value).matches("[0-9]{3}")) {
+			
+			IWContext iwc = IWContext.getIWContext(FacesContext.getCurrentInstance());
+			IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
+			
 			((UIInput)toValidate).setValid(false);
-			FacesMessage message = new FacesMessage("dist_ch.err.ccvIncorrect", "CCV number should be a digit number");
+			FacesMessage message = new FacesMessage(iwrb.getLocalizedString("dist_ch.err.ccvIncorrect", "CCV number should be a 3 digit number"));
 			context.addMessage(toValidate.getClientId(context), message);
 		}
 	}

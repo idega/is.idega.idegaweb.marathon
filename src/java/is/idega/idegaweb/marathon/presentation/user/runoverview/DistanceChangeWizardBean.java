@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ejb.FinderException;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
 import com.idega.block.creditcard.business.CreditCardAuthorizationException;
@@ -20,6 +21,7 @@ import com.idega.business.IBOLookupException;
 import com.idega.data.IDOLookup;
 import com.idega.data.IDOLookupException;
 import com.idega.idegaweb.IWBundle;
+import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.ui.CreditCardNumber;
 import com.idega.util.CoreConstants;
@@ -29,9 +31,9 @@ import com.idega.util.LocaleUtil;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  *
- * Last modified: $Date: 2008/01/03 13:44:13 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/03 20:30:35 $ by $Author: civilis $
  *
  */
 public class DistanceChangeWizardBean {
@@ -241,13 +243,27 @@ public class DistanceChangeWizardBean {
 			getRunBusiness().finishPayment(properties);
 			
 		} catch(CreditCardAuthorizationException e) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, ":Distance change. Exception while paying for distance change:", e);
-//			TODO: add msg about error
+			
+			FacesContext context = FacesContext.getCurrentInstance();
+			IWContext iwc = IWContext.getIWContext(context);
+			IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
+			
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, ":Distance change. Exception while paying for distance change: Exception message: "+e.getLocalizedMessage(iwrb), e);
+			
+			FacesMessage message = new FacesMessage(iwrb.getLocalizedString("dist_ch.err.authorizationException", "Internal error occurred while authorizing credit card. Please try again."));
+			message.setSeverity(FacesMessage.SEVERITY_ERROR);
+			context.addMessage(null, message);
 			
 		} catch (Exception e) {
 
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, ":Distance change. Exception while changing distance:", e);
-//			TODO: add msg about error
+			
+			FacesContext context = FacesContext.getCurrentInstance();
+			IWContext iwc = IWContext.getIWContext(context);
+			IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
+			FacesMessage message = new FacesMessage(iwrb.getLocalizedString("dist_ch.err.distanceChangeException", "Internal error occurred while changing distance. Please try again."));
+			message.setSeverity(FacesMessage.SEVERITY_ERROR);
+			context.addMessage(null, message);
 		}
 	}
 }

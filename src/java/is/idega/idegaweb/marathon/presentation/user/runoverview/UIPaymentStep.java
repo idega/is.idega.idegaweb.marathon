@@ -11,6 +11,7 @@ import javax.faces.component.html.HtmlCommandButton;
 import javax.faces.component.html.HtmlInputHidden;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.component.html.HtmlMessage;
+import javax.faces.component.html.HtmlMessages;
 import javax.faces.component.html.HtmlOutputLabel;
 import javax.faces.component.html.HtmlOutputText;
 import javax.faces.context.FacesContext;
@@ -32,9 +33,9 @@ import com.idega.util.IWTimestamp;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *
- * Last modified: $Date: 2007/12/30 18:10:10 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/03 20:30:35 $ by $Author: civilis $
  *
  */
 public class UIPaymentStep extends IWBaseComponent implements WizardStep {
@@ -59,6 +60,7 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 	private static final String subentryStyleClass = "subentry";
 	private static final String ccvNumberStyleClass = "ccvNumber";
 	private static final String errorStyleClass = "error";
+	private static final String generalErrorStyleClass = "generalError";
 	private static final String credCardNrStyleClass = "credCardNr";
 	private static final String ccnStyleClass = entryStyleClass+" "+credCardNrStyleClass;
 	
@@ -249,6 +251,16 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 //				}
 //			}
 //		}
+		
+		div = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
+		div.setId(context.getViewRoot().createUniqueId());
+		div.setValue(divTag);
+		div.setStyleClass(generalErrorStyleClass);
+		ccidiv.getChildren().add(div);
+		
+		HtmlMessages generalErrMessages = (HtmlMessages)application.createComponent(HtmlMessages.COMPONENT_TYPE);
+		generalErrMessages.setId(context.getViewRoot().createUniqueId());
+		div.getChildren().add(generalErrMessages);
 		
 		HtmlTag contentsDiv = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		contentsDiv.setId(context.getViewRoot().createUniqueId());
