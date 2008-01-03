@@ -16,3 +16,5 @@ dist_ch.returnToRunOverview=Return to run overview
 dist_ch.payingFor=You need to pay for\:
 dist_ch.chosenDistance=Currently chosen distance\:
 dist_ch.changeTo=Change distance to\:
+dist_ch.err.authorizationException=Internal error occurred while authorizing credit card. Please try again.
+dist_ch.err.distanceChangeException=Internal error occurred while changing distance. Please try again.

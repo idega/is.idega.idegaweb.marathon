@@ -489,3 +489,5 @@ dist_ch.returnToRunOverview=Aftur \u00ED hlaupayfirlit
 dist_ch.payingFor=\u00DE\u00FA ver\u00F0ur a\u00F0 borga fyrir\:
 dist_ch.chosenDistance=\u00DEegar valin vegalengd\:
 dist_ch.changeTo=Vegalengd breytt \u00ED\:
+dist_ch.err.authorizationException=Villa kom upp vi\u00F0 a\u00F0 f\u00E1 heimild. Vinsamlegast reyni\u00F0 aftur.
+dist_ch.err.distanceChangeException=Villa kom upp vi\u00F0 a\u00F0 breyta venalengt, vinsamlegast reyni\u00F0 aftur.
