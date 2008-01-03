@@ -29,9 +29,9 @@ import com.idega.util.LocaleUtil;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *
- * Last modified: $Date: 2007/12/30 18:10:09 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/03 13:44:13 $ by $Author: civilis $
  *
  */
 public class DistanceChangeWizardBean {
@@ -226,17 +226,10 @@ public class DistanceChangeWizardBean {
 		
 		IWTimestamp expirationDate = new IWTimestamp(getCardExpirationDate());
 		
-//		TODO: how to get it?
-		String referenceNumber = "123";
+		String referenceNumber = getParticipant().getUser().getPersonalID().replaceAll("-", CoreConstants.EMPTY);
 		
 		try {
-			if(false) {
-			
-				String properties = getRunBusiness().authorizePayment(getCardHolderName(), getCreditCardNumber().getFullNumber(CoreConstants.EMPTY), String.valueOf(expirationDate.getMonth()), String.valueOf(expirationDate.getYear()), getCcvNumber(), getDistanceChangePrice().getPrice().floatValue(), getDistanceChangePrice().getCurrencyLabel(), referenceNumber);
-
-				
-				getRunBusiness().finishPayment(properties);
-			}
+			String properties = getRunBusiness().authorizePayment(getCardHolderName(), getCreditCardNumber().getFullNumber(CoreConstants.EMPTY), String.valueOf(expirationDate.getMonth()), String.valueOf(expirationDate.getYear()), getCcvNumber(), getDistanceChangePrice().getPrice().floatValue(), getDistanceChangePrice().getCurrencyLabel(), referenceNumber);
 			
 			String newDistanceId = getNewDistanceId();
 			Distance distance = getDistanceByGroupId(newDistanceId);
@@ -244,6 +237,8 @@ public class DistanceChangeWizardBean {
 			participant.setRunDistanceGroup(distance);
 			participant.store();
 			setParticipantId(participant.getPrimaryKey().toString());
+			
+			getRunBusiness().finishPayment(properties);
 			
 		} catch(CreditCardAuthorizationException e) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, ":Distance change. Exception while paying for distance change:", e);

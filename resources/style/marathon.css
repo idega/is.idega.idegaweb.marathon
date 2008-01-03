@@ -56,6 +56,7 @@ div.distChWiz_assetsCart, div.distChWiz_creditCardInformation, div.distChWiz_dis
 
 div.distChWiz_distChangeArea .warning {
 	font-style: italic;
+	margin-top: 2px;
 }
 
 div.distChWiz_assetsCart div.contents, div.distChWiz_creditCardInformation div.contents, div.distChWiz_distChangeArea div.contents {
@@ -69,12 +70,17 @@ div.distChWiz_assetsCart div.contents div.entry, div.distChWiz_creditCardInforma
 div.distChWiz_assetsCart div.contents div.entry div, div.distChWiz_creditCardInformation div.contents div.entry span.subentry, div.distChWiz_distChangeArea div.contents div.entry div, div.distChWiz_distChangeArea div.contents div.entry span.subentry {
 	display: inline;
 	position: absolute;
-	left: 200px;
+	left: 150px;
 }
 
 div.distChWiz_distChangeArea .error, div.distChWiz_creditCardInformation .error {
 	margin-left: 5px;
 	color: red;
+	display: block;
+}
+
+div.distChWiz_distChangeArea select {
+	width: 150px;
 }
 
 div.distChWiz_creditCardInformation div.contents div.entry input {
