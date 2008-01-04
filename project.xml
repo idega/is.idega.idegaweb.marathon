@@ -149,6 +149,11 @@
       <name>3.1.26</name>
       <tag>MARATHON_3_1_26</tag>
     </version>
+    <version>
+      <id>3.1.27</id>
+      <name>3.1.27</name>
+      <tag>MARATHON_3_1_27</tag>
+    </version>
   </versions>
   <branches/>
   <developers>
