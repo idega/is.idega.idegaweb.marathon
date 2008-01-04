@@ -5,6 +5,11 @@
 	</properties>
 	<body>
 
+	<release version="3.1.26" date="2008-01-04">
+		<action dev="civilis" type="update">
+			more sophisticated credit card authorization logging message 
+		</action>     
+	</release>
 	<release version="3.1.25" date="2008-01-04">
 		<action dev="civilis" type="update">
 			Failed distance change error message display 

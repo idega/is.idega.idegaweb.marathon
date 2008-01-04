@@ -31,9 +31,9 @@ import com.idega.util.LocaleUtil;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  *
- * Last modified: $Date: 2008/01/03 20:30:35 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/04 12:40:43 $ by $Author: civilis $
  *
  */
 public class DistanceChangeWizardBean {
@@ -248,7 +248,7 @@ public class DistanceChangeWizardBean {
 			IWContext iwc = IWContext.getIWContext(context);
 			IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
 			
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, ":Distance change. Exception while paying for distance change: Exception message: "+e.getLocalizedMessage(iwrb), e);
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, ":Distance change. Exception while paying for distance change: Exception message: "+e.getLocalizedMessage(iwrb)+" error code: "+e.getErrorNumber()+": error message: "+e.getErrorMessage(), e);
 			
 			FacesMessage message = new FacesMessage(iwrb.getLocalizedString("dist_ch.err.authorizationException", "Internal error occurred while authorizing credit card. Please try again."));
 			message.setSeverity(FacesMessage.SEVERITY_ERROR);
