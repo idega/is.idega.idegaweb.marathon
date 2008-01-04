@@ -1,5 +1,5 @@
 /*
- * $Id: RunBusiness.java,v 1.42 2007/12/21 15:04:09 civilis Exp $
+ * $Id: RunBusiness.java,v 1.43 2008/01/04 14:37:22 civilis Exp $
  * Created on Aug 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -34,10 +34,10 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2007/12/21 15:04:09 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/04 14:37:22 $ by $Author: civilis $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.42 $
+ * @version $Revision: 1.43 $
  */
 public interface RunBusiness extends IBOService {
 
@@ -101,11 +101,28 @@ public interface RunBusiness extends IBOService {
 	public void finishPayment(String properties) throws CreditCardAuthorizationException, java.rmi.RemoteException;
 
 	/**
+	 * 
+	 * @deprecated use authorizePayment with expiresDate parameter
+	 *
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#authorizePayment
 	 */
 	public String authorizePayment(String nameOnCard, String cardNumber, String monthExpires, String yearExpires,
 			String ccVerifyNumber, double amount, String currency, String referenceNumber)
 			throws CreditCardAuthorizationException, java.rmi.RemoteException;
+	
+	/**
+	 * 
+	 * @param nameOnCard
+	 * @param cardNumber
+	 * @param expiresDate - only year and month are relevant
+	 * @param ccVerifyNumber
+	 * @param amount
+	 * @param currency
+	 * @param referenceNumber
+	 * @return
+	 * @throws CreditCardAuthorizationException
+	 */
+	public String authorizePayment(String nameOnCard, String cardNumber, java.util.Date expiresDate, String ccVerifyNumber, double amount, String currency, String referenceNumber) throws CreditCardAuthorizationException, java.rmi.RemoteException;
 
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getPriceForRunner

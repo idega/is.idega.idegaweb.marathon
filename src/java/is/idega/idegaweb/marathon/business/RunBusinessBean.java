@@ -747,10 +747,50 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		}
 	}
 	
+	/**
+	 * @deprecated use authorizePayment with expiresDate parameter
+	 */
 	public String authorizePayment(String nameOnCard, String cardNumber, String monthExpires, String yearExpires, String ccVerifyNumber, double amount, String currency, String referenceNumber) throws CreditCardAuthorizationException {
 		try {
 			CreditCardClient client = getCreditCardBusiness().getCreditCardClient(getCreditCardMerchant());
 			return client.creditcardAuthorization(nameOnCard, cardNumber, monthExpires, yearExpires, ccVerifyNumber, amount, currency, referenceNumber);
+		}
+		catch (CreditCardAuthorizationException ccae) {
+			throw ccae;
+		}
+		catch (Exception e) {
+			e.printStackTrace(System.err);
+			throw new CreditCardAuthorizationException("Online payment failed. Unknown error.");
+		}
+	}
+	
+	/**
+	 * 
+	 * @param nameOnCard
+	 * @param cardNumber
+	 * @param expiresDate - only year and month are relevant
+	 * @param ccVerifyNumber
+	 * @param amount
+	 * @param currency
+	 * @param referenceNumber
+	 * @return
+	 * @throws CreditCardAuthorizationException
+	 */
+	public String authorizePayment(String nameOnCard, String cardNumber, java.util.Date expiresDate, String ccVerifyNumber, double amount, String currency, String referenceNumber) throws CreditCardAuthorizationException {
+	
+		IWTimestamp expirationDate = new IWTimestamp(expiresDate);
+		String yearPostfix = String.valueOf(expirationDate.getYear() % 100);
+		String monthPostfix = String.valueOf(expirationDate.getMonth());
+		
+		if(yearPostfix.length() != 2)
+			yearPostfix = "0"+yearPostfix;
+		
+		if(monthPostfix.length() != 2)
+			monthPostfix = "0"+monthPostfix;
+		
+		try {
+			CreditCardClient client = getCreditCardBusiness().getCreditCardClient(getCreditCardMerchant());
+			return client.creditcardAuthorization(nameOnCard, cardNumber, monthPostfix, yearPostfix, ccVerifyNumber, amount, currency, referenceNumber);
 		}
 		catch (CreditCardAuthorizationException ccae) {
 			throw ccae;

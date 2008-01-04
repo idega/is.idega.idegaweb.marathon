@@ -25,15 +25,14 @@ import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.ui.CreditCardNumber;
 import com.idega.util.CoreConstants;
-import com.idega.util.IWTimestamp;
 import com.idega.util.LocaleUtil;
 
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  *
- * Last modified: $Date: 2008/01/04 12:40:43 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/04 14:37:22 $ by $Author: civilis $
  *
  */
 public class DistanceChangeWizardBean {
@@ -226,12 +225,10 @@ public class DistanceChangeWizardBean {
 	
 	public void submitDistanceChange() {
 		
-		IWTimestamp expirationDate = new IWTimestamp(getCardExpirationDate());
-		
-		String referenceNumber = getParticipant().getUser().getPersonalID().replaceAll("-", CoreConstants.EMPTY);
-		
 		try {
-			String properties = getRunBusiness().authorizePayment(getCardHolderName(), getCreditCardNumber().getFullNumber(CoreConstants.EMPTY), String.valueOf(expirationDate.getMonth()), String.valueOf(expirationDate.getYear()), getCcvNumber(), getDistanceChangePrice().getPrice().floatValue(), getDistanceChangePrice().getCurrencyLabel(), referenceNumber);
+			String referenceNumber = getParticipant().getUser().getPersonalID().replaceAll("-", CoreConstants.EMPTY);
+			
+			String properties = getRunBusiness().authorizePayment(getCardHolderName(), getCreditCardNumber().getFullNumber(CoreConstants.EMPTY), getCardExpirationDate(), getCcvNumber(), getDistanceChangePrice().getPrice().floatValue(), getDistanceChangePrice().getCurrencyLabel(), referenceNumber);
 			
 			String newDistanceId = getNewDistanceId();
 			Distance distance = getDistanceByGroupId(newDistanceId);
