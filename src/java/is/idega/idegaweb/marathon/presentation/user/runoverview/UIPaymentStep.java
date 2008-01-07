@@ -33,9 +33,9 @@ import com.idega.util.IWTimestamp;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  *
- * Last modified: $Date: 2008/01/03 20:30:35 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/07 09:18:19 $ by $Author: civilis $
  *
  */
 public class UIPaymentStep extends IWBaseComponent implements WizardStep {
@@ -296,6 +296,7 @@ public class UIPaymentStep extends IWBaseComponent implements WizardStep {
 		dateInput.setId(context.getViewRoot().createUniqueId());
 		dateInput.setRendered(true);
 		dateInput.setYearRange(IWTimestamp.RightNow().getYear(), IWTimestamp.RightNow().getYear()+10);
+		dateInput.setShowDay(false);
 		
 		contentsDiv.getChildren().add(createEntry(context, iwrb.getLocalizedString("run_reg.card_expires", "Card expires"), UIDateInput.COMPONENT_TYPE, dateInput, UIDistanceChangeWizard.distanceChangeWizardBean_cardExpirationDateExp, null, true));
 		
