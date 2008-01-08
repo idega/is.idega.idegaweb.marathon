@@ -19,15 +19,15 @@ import com.idega.presentation.text.Text;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  *
- * Last modified: $Date: 2007/12/29 15:42:13 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/08 19:20:25 $ by $Author: civilis $
  *
  */
 public class UserRunOverview extends IWBaseComponent {
 
 	private static final String UserRunOverviewListFacet = "UserRunOverviewList";
-	private static final String DistanceChangeWizzardFormFacet = "DistanceChangeWizzardForm";
+	private static final String DistanceChangeWizardFormFacet = "DistanceChangeWizardForm";
 	
 	/**
 	 * @Override
@@ -40,7 +40,7 @@ public class UserRunOverview extends IWBaseComponent {
 		form.setId(context.getViewRoot().createUniqueId());
 		form.getChildren().add(context.getApplication().createComponent(UIDistanceChangeWizard.COMPONENT_TYPE));
 		
-		getFacets().put(DistanceChangeWizzardFormFacet, form);
+		getFacets().put(DistanceChangeWizardFormFacet, form);
 	}
 	
 	/**
@@ -69,7 +69,7 @@ public class UserRunOverview extends IWBaseComponent {
 		}
 		
 		if(distanceChangeStepBean.isWizardMode())
-			stepComponent = getFacet(DistanceChangeWizzardFormFacet);
+			stepComponent = getFacet(DistanceChangeWizardFormFacet);
 		else 
 			stepComponent = getFacet(UserRunOverviewListFacet);
 		

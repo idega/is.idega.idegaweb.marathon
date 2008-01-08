@@ -22,6 +22,38 @@
 		<component-type>idega_DistanceChangeSuccess</component-type>
 		<component-class>is.idega.idegaweb.marathon.presentation.user.runoverview.UIDistanceChangeSuccess</component-class>
 	</component>
+	<component>
+		<component-type>idega_CrewManageStep</component-type>
+		<component-class>is.idega.idegaweb.marathon.presentation.crew.UICrewManageStep</component-class>
+	</component>
+	<component>
+		<component-type>idega_CrewMembersInivitationStep</component-type>
+		<component-class>is.idega.idegaweb.marathon.presentation.crew.UICrewMembersInivitationStep</component-class>
+	</component>
+	<component>
+		<component-type>idega_CrewRegistrationSuccess</component-type>
+		<component-class>is.idega.idegaweb.marathon.presentation.crew.UICrewRegistrationSuccess</component-class>
+	</component>
+	<component>
+		<component-type>idega_CrewRegistrationWizard</component-type>
+		<component-class>is.idega.idegaweb.marathon.presentation.crew.UICrewRegistrationWizard</component-class>
+	</component>
+	<component>
+		<component-type>CrewsOverview</component-type>
+		<component-class>is.idega.idegaweb.marathon.presentation.crew.UICrewsOverview</component-class>
+		
+		<component-extension>
+			<idegaweb-info>
+				<builder-visible>true</builder-visible>
+				<object-type>jsf.uicomponent</object-type>
+			</idegaweb-info>
+		</component-extension>
+	</component>
+	<component>
+		<component-type>idega_CrewsOverviewList</component-type>
+		<component-class>is.idega.idegaweb.marathon.presentation.crew.UICrewsOverviewList</component-class>
+	</component>
+	
 
 	<managed-bean>
 		<managed-bean-name>distanceChangeWizardBean</managed-bean-name>
@@ -37,5 +69,21 @@
 			<property-class>is.idega.idegaweb.marathon.presentation.user.runoverview.DistanceChangeWizardBean</property-class>
 			<value>#{distanceChangeWizardBean}</value>
 		</managed-property>
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>crewManageBean</managed-bean-name>
+		<managed-bean-class>is.idega.idegaweb.marathon.presentation.crew.CrewManageBean</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>crewEditWizardBean</property-name>
+			<property-class>is.idega.idegaweb.marathon.presentation.crew.CrewEditWizardBean</property-class>
+			<value>#{crewEditWizardBean}</value>
+		</managed-property>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>crewEditWizardBean</managed-bean-name>
+		<managed-bean-class>is.idega.idegaweb.marathon.presentation.crew.CrewEditWizardBean</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
 </faces-config>

@@ -9,9 +9,9 @@ import com.idega.presentation.wizard.WizardStep;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *
- * Last modified: $Date: 2007/12/30 18:10:10 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/08 19:20:50 $ by $Author: civilis $
  *
  */
 public class UIDistanceChangeWizard extends Wizard {
@@ -47,7 +47,7 @@ public class UIDistanceChangeWizard extends Wizard {
 	 */
 	public List getWizardSteps() {
 		
-		List wizardSteps = new ArrayList();
+		List wizardSteps = new ArrayList(2);
 		wizardSteps.add(new UIDistanceChangeStep());
 		wizardSteps.add(new UIPaymentStep());
 		return wizardSteps;
