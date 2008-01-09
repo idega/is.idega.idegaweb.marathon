@@ -1,7 +1,9 @@
 package is.idega.idegaweb.marathon.presentation.crew;
 
 import is.idega.idegaweb.marathon.IWBundleStarter;
+import is.idega.idegaweb.marathon.business.ConverterUtility;
 import is.idega.idegaweb.marathon.business.RunBusiness;
+import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.data.Year;
 
 import java.util.ArrayList;
@@ -12,26 +14,26 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.ejb.FinderException;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-import com.idega.business.IBOLookup;
-import com.idega.business.IBOLookupException;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 import com.idega.user.data.Group;
+import com.idega.user.data.User;
 import com.idega.util.CoreConstants;
 import com.idega.util.IWTimestamp;
 
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
- * Last modified: $Date: 2008/01/08 19:20:25 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/09 16:27:41 $ by $Author: civilis $
  *
  */
 public class CrewManageBean {
@@ -40,7 +42,6 @@ public class CrewManageBean {
 	private String crewLabel;
 	private String runId;
 	private List runsChoices;
-	private RunBusiness runBusiness;
 	
 	private CrewEditWizardBean crewEditWizardBean;
 
@@ -96,7 +97,7 @@ public class CrewManageBean {
 	
 	public List getRuns() {
 
-		
+		System.out.println("getting runs");
 		if(runsChoices == null) {
 			
 			IWContext iwc = IWContext.getIWContext(FacesContext.getCurrentInstance());
@@ -120,8 +121,7 @@ public class CrewManageBean {
 			String nextYearString = String.valueOf(nextYearStamp.getYear());
 			
 			try {
-				
-				Collection runs = getRunBusiness().getRuns();
+				Collection runs = getCrewEditWizardBean().getRunBusiness().getRuns();
 				
 				if (runs != null) {
 					
@@ -135,7 +135,7 @@ public class CrewManageBean {
 						
 						boolean show = false;
 						boolean finished = true;
-						Map yearMap = getRunBusiness().getYearsMap(run);
+						Map yearMap = getCrewEditWizardBean().getRunBusiness().getYearsMap(run);
 						Year year = (Year) yearMap.get(yearString);
 						if (year != null && year.getLastRegistrationDate() != null) {
 							IWTimestamp lastRegistrationDate = new IWTimestamp(year.getLastRegistrationDate());
@@ -190,30 +190,141 @@ public class CrewManageBean {
 		return runsChoices;
 	}
 	
+	protected void validateCrewLabel(FacesContext context, String crewLabel, Integer runId) {
+	
+		IWTimestamp ts = IWTimestamp.RightNow();
+	    Integer currentYear = new Integer(ts.getYear());
+	    
+	    RunBusiness runBusiness = getCrewEditWizardBean().getRunBusiness();
+	    boolean crewLabelExists = runBusiness.isCrewLabelAlreadyExistsForRun(runId.intValue(), currentYear.intValue(), crewLabel);
+	    
+	    if(crewLabelExists) {
+//	    	TODO: check if it belongs to current user
+	    	
+	    	boolean ownerCurrentUser = false;
+	    	
+	    	if(ownerCurrentUser) {
+//	    		TODO: display message, that he should edit his existing crew
+	    	} else {
+//	    		TODO: display message, that the group with such name already exists for the run
+	    	}
+	    }
+	    
+	    System.out.println("crewLabelExists: "+crewLabelExists);
+	}
+	
 	public void validateRunSelection(FacesContext context, UIComponent toValidate, Object value) {
 		
-		if(false) {
+//		will be caught by required
+		if(value == null)
+			return;
+		
+		IWContext iwc = IWContext.getIWContext(context);
+		
+		try {
+			Integer runId = new Integer((String)value);
 			
-			IWContext iwc = IWContext.getIWContext(FacesContext.getCurrentInstance());
+			User ownerUser = iwc.getCurrentUser();
+			RunBusiness runBusiness = getCrewEditWizardBean().getRunBusiness();
+			Group runGroup = runBusiness.getRunGroupByGroupId(runId);
+			Group yearGroup = ConverterUtility.getInstance().convertGroupToRun(runGroup).getCurrentRegistrationYear();
+			
+			Participant participant = null;
+			
+			try {
+				participant = runBusiness.getParticipantByRunAndYear(ownerUser, runGroup, yearGroup);
+				
+			} catch (FinderException e) {
+				// TODO: this happens, when nothing found
+			}
+			
+			if(participant == null)
+//				will be caught by createCrew()
+				return;
+
+			if(participant.getRunGroupName() != null) {
+				
+//				already registered to a crew
+				IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
+				
+				String messageText;
+				
+				if(participant.isCrewOwner())
+					messageText = "You have already created and registered to the crew labeled "+participant.getRunGroupName()+" for this run. You may edit crew from crews list, and/or delete it.";
+				else
+					messageText = "You are registered to the crew labeled "+participant.getRunGroupName()+" for this run already.";
+				
+				
+				((UIInput)toValidate).setValid(false);
+				FacesMessage message = new FacesMessage(messageText);
+				context.addMessage(toValidate.getClientId(context), message);
+			}
+			
+		} catch (Exception e) {
+			
 			IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
-			
-			((UIInput)toValidate).setValid(false);
-			FacesMessage message = new FacesMessage(iwrb.getLocalizedString("dist_ch.err.ccvIncorrect", "CCV number should be a 3 digit number"));
-			context.addMessage(toValidate.getClientId(context), message);
+
+//			TODO: add err messages
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Exception while validating run choice", e);
 		}
 	}
 	
-	protected RunBusiness getRunBusiness() {
+	public void createCrew() {
+
+		FacesContext context = FacesContext.getCurrentInstance();
 		
-		if(runBusiness == null) {
+		String crewLabel = getCrewLabel();
+		Integer runId = new Integer(getRunId());
+		
+		validateCrewLabel(context, crewLabel, runId);
+		
+		if(context.getMessages() != null && context.getMessages().hasNext())
+			return;
+		
+		try {
+			
+			IWContext iwc = IWContext.getIWContext(FacesContext.getCurrentInstance());
+			
+			User ownerUser = iwc.getCurrentUser();
+			RunBusiness runBusiness = getCrewEditWizardBean().getRunBusiness();
+			Group runGroup = runBusiness.getRunGroupByGroupId(runId);
+			Group yearGroup = ConverterUtility.getInstance().convertGroupToRun(runGroup).getCurrentRegistrationYear();
+			
+			Participant participant = null;
 			
 			try {
-				runBusiness = (RunBusiness) IBOLookup.getServiceInstance(IWContext.getIWContext(FacesContext.getCurrentInstance()), RunBusiness.class);
-			} catch (IBOLookupException e) {
-				throw new RuntimeException(e);
+				participant = runBusiness.getParticipantByRunAndYear(ownerUser, runGroup, yearGroup);
+				
+			} catch (FinderException e) {
+				// TODO: this happens, when nothing found
 			}
+			
+			if(participant == null) {
+				
+//				TODO: add error message, that current user is not participant for selected run
+				
+				System.out.println(":participant null ....................:");
+				return;
+			}
+			
+			participant.setRunGroupName(crewLabel);
+			participant.setIsCrewOwner(true);
+			participant.store();
+			getCrewEditWizardBean().setParticipant(participant);
+			getCrewEditWizardBean().setMode(CrewEditWizardBean.editCrewMode);
+			
+		} catch (Exception e) {
+
+//			TODO: add err messages
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Exception while creating new crew", e);
 		}
 		
-		return runBusiness;
+		System.out.println("creating crew for label: "+crewLabel+" : runId: "+runId);
+		
+	}
+	
+	public void updateCrew() {
+		
+		System.out.println("update crew");
 	}
 }

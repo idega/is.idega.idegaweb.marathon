@@ -108,7 +108,7 @@ public interface Participant extends IDOEntity {
 	public String getShirtSize();
 
 	/**
-	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getRunGroupName
+	 * this is actually crew name
 	 */
 	public String getRunGroupName();
 
@@ -238,7 +238,7 @@ public interface Participant extends IDOEntity {
 	public void setShirtSize(String tShirtSize);
 
 	/**
-	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setRunGroupName
+	 * this is actually crew name
 	 */
 	public void setRunGroupName(String runGrName);
 
@@ -361,4 +361,8 @@ public interface Participant extends IDOEntity {
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getPaymentGroupsForYear
 	 */
 	public java.util.Collection getPaymentGroupsForYear();
+	
+	public boolean isCrewOwner();
+	
+	public void setIsCrewOwner(boolean isCrewOwner);
 }

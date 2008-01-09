@@ -1,5 +1,5 @@
 /*
- * $Id: RunBusiness.java,v 1.43 2008/01/04 14:37:22 civilis Exp $
+ * $Id: RunBusiness.java,v 1.44 2008/01/09 16:27:41 civilis Exp $
  * Created on Aug 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -34,10 +34,10 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2008/01/04 14:37:22 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/09 16:27:41 $ by $Author: civilis $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.43 $
+ * @version $Revision: 1.44 $
  */
 public interface RunBusiness extends IBOService {
 
@@ -317,4 +317,6 @@ public interface RunBusiness extends IBOService {
 	public Group getAgeGroup(User user, Group run, Group distance) throws java.rmi.RemoteException;
 	
 	public List getDisallowedDistancesPKs(User user, List distances);
+	
+	public boolean isCrewLabelAlreadyExistsForRun(int runId, int yearId, String crewLabel);
 }

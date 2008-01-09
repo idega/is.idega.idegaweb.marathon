@@ -1,15 +1,12 @@
 package is.idega.idegaweb.marathon.presentation.crew;
 
 import is.idega.idegaweb.marathon.IWBundleStarter;
-import is.idega.idegaweb.marathon.presentation.user.runoverview.UIDistanceChangeWizard;
 
 import java.io.IOException;
 
 import javax.faces.application.Application;
 import javax.faces.component.html.HtmlCommandLink;
 import javax.faces.component.html.HtmlForm;
-import javax.faces.component.html.HtmlInputHidden;
-import javax.faces.component.html.HtmlOutputLink;
 import javax.faces.context.FacesContext;
 
 import org.apache.myfaces.custom.htmlTag.HtmlTag;
@@ -21,9 +18,9 @@ import com.idega.presentation.IWContext;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
- * Last modified: $Date: 2008/01/08 19:20:24 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/09 16:27:41 $ by $Author: civilis $
  *
  */
 public class UICrewsOverviewList extends IWBaseComponent {
@@ -53,7 +50,7 @@ public class UICrewsOverviewList extends IWBaseComponent {
 		
 		HtmlCommandLink startNewCrewRegLink = (HtmlCommandLink)application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
 		startNewCrewRegLink.setId(context.getViewRoot().createUniqueId());
-		startNewCrewRegLink.setValue("x");
+		startNewCrewRegLink.setValue("Create new crew");
 		startNewCrewRegLink.setAction(application.createMethodBinding(UICrewRegistrationWizard.crewManageBean_startNewCrewRegistrationExp, null));
 		
 		containerDiv.getChildren().add(startNewCrewRegLink);
@@ -72,20 +69,5 @@ public class UICrewsOverviewList extends IWBaseComponent {
 	 */
 	public boolean getRendersChildren() {
 		return true;
-	}
-	
-	/**
-	 * @Override
-	 */
-	public String getId() {
-		String id = super.getId();
-
-		if(id == null) {
-			
-			id = FacesContext.getCurrentInstance().getViewRoot().createUniqueId();
-			System.out.println("id was null, creating: "+id);
-		}
-		
-		return id;
 	}
 }

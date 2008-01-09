@@ -72,6 +72,8 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		addAttribute(getColumnNameUserNationality(), "User Nationality", true, true, String.class);
 		addAttribute(getColumnNameTShirtSize(), "TShirt Size", true, true, String.class);
 		addAttribute(getColumnNameRunGroupName(), "Run Group Name", true, true, String.class);
+		addAttribute(getColumnNameIsCrewOwner(), "Is crew owner", true, true, Boolean.class);
+		
 		addAttribute(getColumnNameBestTime(), "Best Time", true, true, String.class);
 		addAttribute(getColumnNameGoalTime(), "Goal Time", true, true, String.class);
 		addAttribute(getColumnNameParticipantNumber(), "Participant number", true, true, Integer.class);
@@ -150,8 +152,13 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		return "run_tShirt_size";
 	}
 
+//	this is actually crew name
 	public static String getColumnNameRunGroupName() {
 		return "run_group_name";
+	}
+	
+	public static String getColumnNameIsCrewOwner() {
+		return "is_crew_owner";
 	}
 
 	public static String getColumnNameBestTime() {
@@ -348,8 +355,15 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		return getStringColumnValue(getColumnNameTShirtSize());
 	}
 
+	/**
+	 * this is actually crew name
+	 */
 	public String getRunGroupName() {
 		return getStringColumnValue(getColumnNameRunGroupName());
+	}
+	
+	public boolean isCrewOwner() {
+		return getBooleanColumnValue(getColumnNameIsCrewOwner());
 	}
 
 	public String getBestTime() {
@@ -453,8 +467,15 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		setColumn(getColumnNameTShirtSize(), tShirtSize);
 	}
 
+	/**
+	 * this is actually crew name
+	 */
 	public void setRunGroupName(String runGrName) {
 		setColumn(getColumnNameRunGroupName(), runGrName);
+	}
+	
+	public void setIsCrewOwner(boolean isCrewOwner) {
+		setColumn(getColumnNameIsCrewOwner(), isCrewOwner);
 	}
 
 	public void setBestTime(String bestTime) {
@@ -665,6 +686,15 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		query.appendWhereEquals(getColumnNameRunTypeGroupID(),runId);
 		query.appendAndEquals(getColumnNameRunYearGroupID(),yearId);
 		return super.idoFindPKsByQuery(query);
+	}
+	
+	public boolean ejbFindCrewLabelAlreadyExistsForRun(int runId, int yearId, String crewLabel) throws FinderException {
+		IDOQuery query = idoQueryGetSelect();
+		query.appendWhereEquals(getColumnNameRunTypeGroupID(), runId);
+		query.appendAndEquals(getColumnNameRunYearGroupID(), yearId);
+		
+		Collection existing = super.idoFindPKsByQuery(query);
+		return existing != null && !existing.isEmpty();
 	}
 	
 	public Collection ejbFindAllByRunGroupIdAndYear(int runId, int year) throws FinderException{

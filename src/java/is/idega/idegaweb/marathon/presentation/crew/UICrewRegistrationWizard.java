@@ -15,9 +15,9 @@ import com.idega.presentation.wizard.WizardStep;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
- * Last modified: $Date: 2008/01/08 19:20:25 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/09 16:27:41 $ by $Author: civilis $
  *
  */
 public class UICrewRegistrationWizard extends Wizard {
@@ -32,12 +32,15 @@ public class UICrewRegistrationWizard extends Wizard {
 	public static final String crewManageBean_runsExp = 							"#{crewManageBean.runs}";
 	public static final String crewManageBean_validateRunSelectionExp = 			"#{crewManageBean.validateRunSelection}";
 	public static final String crewManageBean_runIdExp =				 			"#{crewManageBean.runId}";
+	public static final String crewManageBean_createCrewExp =						"#{crewManageBean.createCrew}";
+	public static final String crewManageBean_updateCrewExp =						"#{crewManageBean.updateCrew}";
+	
 	
 	public static final String crewEditWizardBeanExp = 								"#{crewEditWizardBean}";
 	public static final String crewEditWizardBean_newCrewModeExp = 					"#{crewEditWizardBean.newCrewMode}";
 	public static final String crewEditWizardBean_modeExp = 						"#{crewEditWizardBean.mode}";
 	public static final String crewEditWizardBean_editCrewModeExp = 				"#{crewEditWizardBean.editCrewMode}";
-	
+	public static final String crewEditWizardBean_runLabelExp = 					"#{crewEditWizardBean.runLabel}";
 	
 	
 	private static final String wizardModeFacet = 									"wizardMode";

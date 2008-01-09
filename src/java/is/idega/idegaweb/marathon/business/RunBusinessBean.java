@@ -692,6 +692,17 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		}
 	}
 	
+	public boolean isCrewLabelAlreadyExistsForRun(int runId, int yearId, String crewLabel) {
+		try {
+			ParticipantHome runHome = (ParticipantHome) getIDOHome(Participant.class);
+			return runHome.findCrewLabelAlreadyExistsForRun(runId, yearId, crewLabel);
+		} catch (RemoteException re) {
+			throw new IBORuntimeException(re);
+		} catch (FinderException re) {
+			throw new IBORuntimeException(re);
+		}
+	}
+	
 	private Group getAgeGroup(User user, Run run, Distance distance) {
 		return getAgeGroup(user, (Group) run, distance);
 	}

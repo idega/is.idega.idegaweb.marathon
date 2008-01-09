@@ -48,4 +48,6 @@ public interface ParticipantHome extends IDOHome {
 	public Collection findAllByRunGroupIdAndYearGroupId(int runId, int yearId) throws FinderException;
 
 	public Collection findAllByRunGroupIdAndYear(int runId, int year) throws FinderException;
+	
+	public boolean findCrewLabelAlreadyExistsForRun(int runId, int yearId, String crewLabel) throws FinderException;
 }
