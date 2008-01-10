@@ -91,4 +91,14 @@
 		<managed-bean-class>is.idega.idegaweb.marathon.presentation.crew.CrewsOverviewListBean</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>crewMembersInvitationBean</managed-bean-name>
+		<managed-bean-class>is.idega.idegaweb.marathon.presentation.crew.CrewMembersInvitationBean</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+		<managed-property>
+			<property-name>crewEditWizardBean</property-name>
+			<property-class>is.idega.idegaweb.marathon.presentation.crew.CrewEditWizardBean</property-class>
+			<value>#{crewEditWizardBean}</value>
+		</managed-property>
+	</managed-bean>
 </faces-config>
