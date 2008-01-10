@@ -31,9 +31,9 @@ import com.idega.util.IWTimestamp;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
- * Last modified: $Date: 2008/01/09 16:27:41 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/10 10:44:01 $ by $Author: civilis $
  *
  */
 public class CrewManageBean {
@@ -74,9 +74,6 @@ public class CrewManageBean {
 
 	public String getCrewLabel() {
 		
-//		TODO: resolve from crew (if any) if null
-		System.out.println("getCrewLabel: "+crewLabel);
-		
 		return crewLabel;
 	}
 
@@ -87,7 +84,15 @@ public class CrewManageBean {
 	}
 
 	public String getRunId() {
-//		TODO: resolve from crew (if any) if null
+		
+		if(runId == null) {
+			
+			Participant participant = getCrewEditWizardBean().getParticipant();
+			
+			if(participant != null)
+				runId = String.valueOf(participant.getRunTypeGroupID());
+		}
+		
 		return runId;
 	}
 
@@ -323,8 +328,43 @@ public class CrewManageBean {
 		
 	}
 	
-	public void updateCrew() {
+	public void editCrew() {
 		
-		System.out.println("update crew");
+		Participant participant = getCrewEditWizardBean().getParticipant();
+		
+//		TODO: check if this participant is amongst current user participants
+		
+		if(!participant.isCrewOwner()) {
+//			TODO: add msg
+			System.out.println("wrong wrong");
+			setWizardMode(false);
+		}
+		
+		setCrewLabel(participant.getRunGroupName());
+		
+		setWizardMode(true);
+		getCrewEditWizardBean().setMode(CrewEditWizardBean.editCrewMode);
+		
+		System.out.println("edit crew:"+getCrewEditWizardBean().getParticipantId());
+		
+	}
+	
+	public void updateCrew() {
+
+		System.out.println("updating crew");
+		
+		FacesContext context = FacesContext.getCurrentInstance();
+		
+		Participant participant = getCrewEditWizardBean().getParticipant();
+		String crewLabel = getCrewLabel();
+		
+		if(!crewLabel.equals(participant.getRunGroupName())) {
+		
+			Integer runId = new Integer(getRunId());
+			validateCrewLabel(context, crewLabel, runId);
+			
+			participant.setRunGroupName(crewLabel);
+			participant.store();
+		}
 	}
 }

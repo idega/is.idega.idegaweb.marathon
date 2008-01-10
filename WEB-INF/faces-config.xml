@@ -86,4 +86,9 @@
 		<managed-bean-class>is.idega.idegaweb.marathon.presentation.crew.CrewEditWizardBean</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>crewsOverviewListBean</managed-bean-name>
+		<managed-bean-class>is.idega.idegaweb.marathon.presentation.crew.CrewsOverviewListBean</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
 </faces-config>

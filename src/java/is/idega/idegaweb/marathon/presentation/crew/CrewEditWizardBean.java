@@ -11,13 +11,14 @@ import javax.faces.context.FacesContext;
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
 import com.idega.presentation.IWContext;
+import com.idega.util.CoreConstants;
 
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
- * Last modified: $Date: 2008/01/09 16:27:41 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/10 10:44:01 $ by $Author: civilis $
  *
  */
 public class CrewEditWizardBean {
@@ -59,7 +60,7 @@ public class CrewEditWizardBean {
 	
 	public Participant getParticipant() {
 
-		if(participant == null) {
+		if(participant == null && getParticipantId() != null && !CoreConstants.EMPTY.equals(getParticipantId())) {
 			
 			try {
 				participant = getRunBusiness().getParticipantByPrimaryKey(new Integer(getParticipantId()).intValue());
@@ -95,6 +96,7 @@ public class CrewEditWizardBean {
 	}
 
 	public void setParticipantId(String participantId) {
+		participant = null;
 		this.participantId = participantId;
 	}
 	
