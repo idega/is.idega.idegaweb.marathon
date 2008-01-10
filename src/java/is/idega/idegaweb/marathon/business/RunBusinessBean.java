@@ -1104,6 +1104,23 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			throw new IBORuntimeException(e);
 		}
 	}
+	
+	/**
+	 * 
+	 * @param yearPK
+	 * @param searchQuery
+	 * @return - participants, where search query matches either participant user full name, or personal id, or participant number
+	 * @throws FinderException
+	 */
+	public Collection getParticipantsBySearchQuery(Object yearPK, String searchQuery) throws FinderException {
+		try {
+			ParticipantHome participantHome = (ParticipantHome) getIDOHome(Participant.class);
+			return participantHome.findByYearAndFullNameOrPersonalIdOrParticipantNumberOrParentGroup(yearPK, searchQuery);
+		}
+		catch (RemoteException e) {
+			throw new IBORuntimeException(e);
+		}
+	}
 
 	public Participant getParticipantByRunAndYear(User user, Group run, Group year) throws FinderException {
 		try {

@@ -31,9 +31,9 @@ import com.idega.util.IWTimestamp;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
- * Last modified: $Date: 2008/01/10 10:44:01 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/10 18:56:26 $ by $Author: civilis $
  *
  */
 public class CrewManageBean {
@@ -74,12 +74,14 @@ public class CrewManageBean {
 
 	public String getCrewLabel() {
 		
+		if(crewLabel == null && getCrewEditWizardBean().getParticipant() != null)
+			crewLabel = getCrewEditWizardBean().getParticipant().getRunGroupName();
+		
 		return crewLabel;
 	}
 
 	public void setCrewLabel(String crewLabel) {
 		
-		System.out.println("setting crew label: "+crewLabel);
 		this.crewLabel = crewLabel;
 	}
 
@@ -102,7 +104,6 @@ public class CrewManageBean {
 	
 	public List getRuns() {
 
-		System.out.println("getting runs");
 		if(runsChoices == null) {
 			
 			IWContext iwc = IWContext.getIWContext(FacesContext.getCurrentInstance());
@@ -130,11 +131,9 @@ public class CrewManageBean {
 				
 				if (runs != null) {
 					
-					System.out.println("total: "+runs.size());
 					for (Iterator iterator = runs.iterator(); iterator.hasNext();) {
 						
 						Group run = (Group) iterator.next();
-						System.out.println("run resolved: "+run);
 						String runnerYearString = yearString;
 						String runId = run.getPrimaryKey().toString();
 						
@@ -214,8 +213,6 @@ public class CrewManageBean {
 //	    		TODO: display message, that the group with such name already exists for the run
 	    	}
 	    }
-	    
-	    System.out.println("crewLabelExists: "+crewLabelExists);
 	}
 	
 	public void validateRunSelection(FacesContext context, UIComponent toValidate, Object value) {
@@ -301,7 +298,7 @@ public class CrewManageBean {
 				participant = runBusiness.getParticipantByRunAndYear(ownerUser, runGroup, yearGroup);
 				
 			} catch (FinderException e) {
-				// TODO: this happens, when nothing found
+				//this happens, when nothing found
 			}
 			
 			if(participant == null) {
@@ -323,9 +320,6 @@ public class CrewManageBean {
 //			TODO: add err messages
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Exception while creating new crew", e);
 		}
-		
-		System.out.println("creating crew for label: "+crewLabel+" : runId: "+runId);
-		
 	}
 	
 	public void editCrew() {
@@ -345,14 +339,10 @@ public class CrewManageBean {
 		setWizardMode(true);
 		getCrewEditWizardBean().setMode(CrewEditWizardBean.editCrewMode);
 		
-		System.out.println("edit crew:"+getCrewEditWizardBean().getParticipantId());
-		
 	}
 	
 	public void updateCrew() {
 
-		System.out.println("updating crew");
-		
 		FacesContext context = FacesContext.getCurrentInstance();
 		
 		Participant participant = getCrewEditWizardBean().getParticipant();
@@ -365,6 +355,33 @@ public class CrewManageBean {
 			
 			participant.setRunGroupName(crewLabel);
 			participant.store();
+		}
+	}
+	
+	public void deleteCrew() {
+
+		try {
+			Participant participant = getCrewEditWizardBean().getParticipant();
+			String crewLabel = participant.getRunGroupName();
+			RunBusiness runBusiness = getCrewEditWizardBean().getRunBusiness();
+			
+			Collection crewMembers = runBusiness.getParticipantsByYearAndTeamName(String.valueOf(participant.getRunYearGroupID()), crewLabel);
+			
+			for (Iterator iterator = crewMembers.iterator(); iterator.hasNext();) {
+				Participant member = (Participant) iterator.next();
+				
+				member.setRunGroupName(null);
+				member.setIsCrewOwner(false);
+				member.store();
+			}
+			
+			System.out.println("deleted");
+			setWizardMode(false);
+			getCrewEditWizardBean().setMode(CrewEditWizardBean.newCrewMode);
+			
+		} catch (FinderException e) {
+			e.printStackTrace();
+//			TODO: add msg about err
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: RunBusiness.java,v 1.44 2008/01/09 16:27:41 civilis Exp $
+ * $Id: RunBusiness.java,v 1.45 2008/01/10 18:56:26 civilis Exp $
  * Created on Aug 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -34,10 +34,10 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2008/01/09 16:27:41 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/10 18:56:26 $ by $Author: civilis $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.44 $
+ * @version $Revision: 1.45 $
  */
 public interface RunBusiness extends IBOService {
 
@@ -319,4 +319,13 @@ public interface RunBusiness extends IBOService {
 	public List getDisallowedDistancesPKs(User user, List distances);
 	
 	public boolean isCrewLabelAlreadyExistsForRun(int runId, int yearId, String crewLabel);
+	
+	/**
+	 * 
+	 * @param yearPK
+	 * @param searchQuery
+	 * @return - participants, where search query matches either participant user full name, or personal id, or participant number
+	 * @throws FinderException
+	 */
+	public Collection getParticipantsBySearchQuery(Object yearPK, String searchQuery) throws FinderException;
 }

@@ -22,6 +22,7 @@ import com.idega.data.query.CountColumn;
 import com.idega.data.query.JoinCriteria;
 import com.idega.data.query.MatchCriteria;
 import com.idega.data.query.MaxColumn;
+import com.idega.data.query.OR;
 import com.idega.data.query.SelectQuery;
 import com.idega.data.query.Table;
 import com.idega.data.query.WildCardColumn;
@@ -628,6 +629,31 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		query.addCriteria(new MatchCriteria(userTable, User.FIELD_DISPLAY_NAME, MatchCriteria.EQUALS, fullName));
 
 		return (Integer) super.idoFindOnePKByQuery(query);
+	}
+	
+	public Collection ejbFindByYearAndFullNameOrPersonalIdOrParticipantNumberOrParentGroup(Object yearPK, String searchQuery) throws FinderException{
+		
+		Table table = new Table(this);
+		Table userTable = new Table(User.class);
+		SelectQuery query = new SelectQuery(table);
+		query.addColumn(new Column(getIDColumnName()));
+		
+		query.addCriteria(new MatchCriteria(table, getColumnNameRunYearGroupID(), MatchCriteria.EQUALS, yearPK));
+		query.addCriteria(new JoinCriteria(new Column(table, getColumnNameUserID()), new Column(userTable, User.FIELD_USER_ID)));
+		
+		OR orCriteria = new OR(new MatchCriteria(userTable, User.FIELD_PERSONAL_ID, MatchCriteria.EQUALS, searchQuery),
+				new MatchCriteria(userTable, User.FIELD_DISPLAY_NAME, MatchCriteria.EQUALS, searchQuery));
+		try {
+			int couldBeParticipantNr = Integer.parseInt(searchQuery);
+			orCriteria = new OR(orCriteria, new MatchCriteria(table, getColumnNameParticipantNumber(), MatchCriteria.EQUALS, couldBeParticipantNr));
+			
+		} catch (NumberFormatException e) { }
+		
+		query.addCriteria(orCriteria);
+		
+		System.out.println("q: "+query.toString());
+
+		return super.idoFindPKsByQuery(query);
 	}
 
 	public Integer ejbFindByDistanceAndParticipantNumber(Object distancePK, int participantNumber) throws FinderException{

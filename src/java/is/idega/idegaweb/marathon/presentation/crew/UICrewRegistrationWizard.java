@@ -15,9 +15,9 @@ import com.idega.presentation.wizard.WizardStep;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
- * Last modified: $Date: 2008/01/10 10:44:01 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/10 18:56:26 $ by $Author: civilis $
  *
  */
 public class UICrewRegistrationWizard extends Wizard {
@@ -35,6 +35,22 @@ public class UICrewRegistrationWizard extends Wizard {
 	public static final String crewManageBean_createCrewExp =						"#{crewManageBean.createCrew}";
 	public static final String crewManageBean_editCrewExp =							"#{crewManageBean.editCrew}";
 	public static final String crewManageBean_updateCrewExp =						"#{crewManageBean.updateCrew}";
+	public static final String crewManageBean_deleteCrewExp =						"#{crewManageBean.deleteCrew}";
+	
+	
+	public static final String crewMembersInvitationBean_deleteMemberExp =			"#{crewMembersInvitationBean.deleteMember}";
+	public static final String crewMembersInvitationBean_addMemberExp =				"#{crewMembersInvitationBean.addMember}";
+	public static final String crewMembersInvitationBean_membersListExp =			"#{crewMembersInvitationBean.membersList}";
+	public static final String crewMembersInvitationBean_deleteMemberParticipantIdExp =	"#{crewMembersInvitationBean.deleteMemberParticipantId}";
+	public static final String crewMembersInvitationBean_addMemberParticipantIdExp =	"#{crewMembersInvitationBean.addMemberParticipantId}";
+	public static final String crewMembersInvitationBean_searchStringExp =			"#{crewMembersInvitationBean.searchString}";
+	public static final String crewMembersInvitationBean_searchExp =				"#{crewMembersInvitationBean.search}";
+	public static final String crewMembersInvitationBean_searchResultListRenderedExp =	"#{crewMembersInvitationBean.searchResultListRendered}";
+	
+	
+	
+	public static final String crewMembersInvitationBean_forceIdHackExp = 			"#{crewMembersInvitationBean.forceIdHack}";
+	public static final String crewMembersInvitationBean_headerExp = 				"#{crewMembersInvitationBean.header}";
 	
 	
 	public static final String crewEditWizardBeanExp = 								"#{crewEditWizardBean}";

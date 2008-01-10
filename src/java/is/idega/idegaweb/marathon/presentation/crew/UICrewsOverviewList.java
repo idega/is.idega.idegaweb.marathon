@@ -24,9 +24,9 @@ import com.idega.presentation.IWContext;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
- * Last modified: $Date: 2008/01/10 10:44:01 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/10 18:56:26 $ by $Author: civilis $
  *
  */
 public class UICrewsOverviewList extends IWBaseComponent {
@@ -37,7 +37,7 @@ public class UICrewsOverviewList extends IWBaseComponent {
 	public static final String crewsOverviewListBean_crewsOverviewListExp = 				"#{crewsOverviewListBean.crewsOverviewList}";
 	public static final String crewsOverviewListBean_forceIdHackExp = 						"#{crewsOverviewListBean.forceIdHack}";
 	
-	public static final String crewsOverviewListBean_participantId = 						"colb_pid";
+	public static final String crewsOverviewListBean_participantIdParam = 					"colb_pid";
 	
 	
 	public static final String crew_var = 					"crew";
@@ -70,7 +70,7 @@ public class UICrewsOverviewList extends IWBaseComponent {
 		
 		
 		HtmlInputHidden hidden = (HtmlInputHidden)application.createComponent(HtmlInputHidden.COMPONENT_TYPE);
-		hidden.setId(crewsOverviewListBean_participantId);
+		hidden.setId(crewsOverviewListBean_participantIdParam);
 		hidden.setValueBinding(valueAtt, application.createValueBinding(UICrewRegistrationWizard.crewEditWizardBean_participantIdExp));
 		hidden.setValueBinding(forceIdAtt, application.createValueBinding(crewsOverviewListBean_forceIdHackExp));
 		form.getChildren().add(hidden);
@@ -87,15 +87,15 @@ public class UICrewsOverviewList extends IWBaseComponent {
 		
 		containerDiv.getChildren().add(startNewCrewRegLink);
 		
-		HtmlDataTable table = (HtmlDataTable)application.createComponent(HtmlDataTable.COMPONENT_TYPE);
-		table.setSortable(true);
-		table.setId(context.getViewRoot().createUniqueId());
-		table.setVar(crew_var);
-		table.setValueBinding(valueAtt, context.getApplication().createValueBinding(crewsOverviewListBean_crewsOverviewListExp));
+		HtmlDataTable crewsTable = (HtmlDataTable)application.createComponent(HtmlDataTable.COMPONENT_TYPE);
+		crewsTable.setSortable(true);
+		crewsTable.setId(context.getViewRoot().createUniqueId());
+		crewsTable.setVar(crew_var);
+		crewsTable.setValueBinding(valueAtt, context.getApplication().createValueBinding(crewsOverviewListBean_crewsOverviewListExp));
 		
-		table.getChildren().add(createColumn(context, crew_labelExp, "Crew label"));
-		table.getChildren().add(createColumn(context, crew_runLabelExp, "Run label"));
-		table.getChildren().add(createColumn(context, crew_distanceExp, "Distance"));
+		crewsTable.getChildren().add(createColumn(context, crew_labelExp, "Crew label"));
+		crewsTable.getChildren().add(createColumn(context, crew_runLabelExp, "Run label"));
+		crewsTable.getChildren().add(createColumn(context, crew_distanceExp, "Distance"));
 		
 		HtmlCommandLink editCrewLink = (HtmlCommandLink)application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
 		editCrewLink.setId(context.getViewRoot().createUniqueId());
@@ -103,9 +103,9 @@ public class UICrewsOverviewList extends IWBaseComponent {
 		editCrewLink.setValueBinding(onclickAtt, application.createValueBinding(crew_pidOnclickExp));
 		editCrewLink.setAction(application.createMethodBinding(UICrewRegistrationWizard.crewManageBean_editCrewExp, null));
 		
-		table.getChildren().add(createColumn(context, editCrewLink, " "));
+		crewsTable.getChildren().add(createColumn(context, editCrewLink, " "));
 		
-		containerDiv.getChildren().add(table);
+		containerDiv.getChildren().add(crewsTable);
 	}
 	
 	protected UIColumn createColumn(FacesContext context, UIComponent child, String headerText) {

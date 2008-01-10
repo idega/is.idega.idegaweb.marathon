@@ -25,9 +25,9 @@ import com.idega.user.data.User;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
- * Last modified: $Date: 2008/01/10 10:44:01 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/10 18:56:26 $ by $Author: civilis $
  *
  */
 public class CrewsOverviewListBean {
@@ -69,7 +69,7 @@ public class CrewsOverviewListBean {
 					crew.put(UICrewsOverviewList.crew_label, crewLabel);
 					crew.put(UICrewsOverviewList.crew_runLabel, runLabel);
 					crew.put(UICrewsOverviewList.crew_distance, distanceLabel);
-					crew.put(UICrewsOverviewList.crew_pidOnclick, new StringBuffer("document.getElementById('").append(UICrewsOverviewList.crewsOverviewListBean_participantId).append("').value='").append(participant.getPrimaryKey().toString()).append("';"));
+					crew.put(UICrewsOverviewList.crew_pidOnclick, new StringBuffer("document.getElementById('").append(UICrewsOverviewList.crewsOverviewListBean_participantIdParam).append("').value='").append(participant.getPrimaryKey().toString()).append("';"));
 					crews.add(crew);
 				}
 			}

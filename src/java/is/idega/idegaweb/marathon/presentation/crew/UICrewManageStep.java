@@ -29,9 +29,9 @@ import com.idega.presentation.wizard.WizardStep;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
- * Last modified: $Date: 2008/01/09 16:27:41 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/10 18:56:26 $ by $Author: civilis $
  *
  */
 public class UICrewManageStep extends IWBaseComponent implements WizardStep {
@@ -146,6 +146,13 @@ public class UICrewManageStep extends IWBaseComponent implements WizardStep {
 		next.setValue("Manage crew members");
 		next.setValueBinding(renderedAtt, application.createValueBinding(UICrewRegistrationWizard.crewEditWizardBean_editCrewModeExp));
 		containerDiv.getChildren().add(next);
+		
+		HtmlCommandButton deleteCrewButton = (HtmlCommandButton)application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
+		deleteCrewButton.setId(context.getViewRoot().createUniqueId());
+		deleteCrewButton.setValue("Delete crew");
+		deleteCrewButton.setAction(application.createMethodBinding(UICrewRegistrationWizard.crewManageBean_deleteCrewExp, null));
+		deleteCrewButton.setValueBinding(renderedAtt, application.createValueBinding(UICrewRegistrationWizard.crewEditWizardBean_editCrewModeExp));
+		containerDiv.getChildren().add(deleteCrewButton);
 		
 		getFacets().put(containerFacet, containerDiv);
 	}

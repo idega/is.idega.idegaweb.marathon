@@ -5,6 +5,7 @@ import is.idega.idegaweb.marathon.business.RunBusiness;
 import is.idega.idegaweb.marathon.data.Participant;
 
 import java.rmi.RemoteException;
+import java.util.List;
 
 import javax.faces.context.FacesContext;
 
@@ -16,9 +17,9 @@ import com.idega.util.CoreConstants;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
- * Last modified: $Date: 2008/01/10 10:44:01 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/10 18:56:26 $ by $Author: civilis $
  *
  */
 public class CrewEditWizardBean {
@@ -28,6 +29,7 @@ public class CrewEditWizardBean {
 	public static final Integer editCrewMode = new Integer(2);
 	private Integer crewEditId;
 	private String participantId;
+	private List crewMembersInvitationSearchResults;
 	
 	private Participant participant;
 	private RunBusiness runBusiness;
@@ -74,6 +76,7 @@ public class CrewEditWizardBean {
 	}
 	
 	public void setParticipant(Participant participant) {
+		crewMembersInvitationSearchResults = null;
 		this.participant = participant;
 	}
 	
@@ -97,6 +100,7 @@ public class CrewEditWizardBean {
 
 	public void setParticipantId(String participantId) {
 		participant = null;
+		crewMembersInvitationSearchResults = null;
 		this.participantId = participantId;
 	}
 	
@@ -107,5 +111,14 @@ public class CrewEditWizardBean {
 		
 		return iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc)	
 		.getLocalizedString(participant.getRunTypeGroup().getName(), participant.getRunTypeGroup().getName()) + " " + participant.getRunYearGroup().getName();
+	}
+
+	public List getCrewMembersInvitationSearchResults() {
+		return crewMembersInvitationSearchResults;
+	}
+
+	public void setCrewMembersInvitationSearchResults(
+			List crewMembersInvitationSearchResults) {
+		this.crewMembersInvitationSearchResults = crewMembersInvitationSearchResults;
 	}
 }
