@@ -4,15 +4,15 @@ import is.idega.idegaweb.marathon.IWBundleStarter;
 import is.idega.idegaweb.marathon.business.RunBusiness;
 import is.idega.idegaweb.marathon.data.Participant;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import javax.ejb.FinderException;
 import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
@@ -25,9 +25,9 @@ import com.idega.user.data.User;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
- * Last modified: $Date: 2008/01/10 18:56:26 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/11 19:30:02 $ by $Author: civilis $
  *
  */
 public class CrewsOverviewListBean {
@@ -54,8 +54,20 @@ public class CrewsOverviewListBean {
 					String crewLabel = participant.getRunGroupName();
 					
 //					doesn't belong to a crew in this participation
-					if(crewLabel == null)
+					if(crewLabel == null && participant.getCrewInvitedParticipantId() == null)
 						continue;
+					
+					if(crewLabel == null) {
+						
+						Participant p = runBusiness.getParticipantByPrimaryKey(participant.getCrewInvitedParticipantId().intValue());
+						
+						if(p == null || p.getRunGroupName() == null) {
+							Logger.getLogger(getClass().getName()).log(Level.WARNING, "Owner participant not found for crewInvitedParticipantId set: "+participant.getCrewInvitedParticipantId()+" or crew name was not set for the owner participant");
+							continue;
+						}
+						
+						crewLabel = p.getRunGroupName();
+					}
 					
 					String runLabel = 
 						iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc)	
@@ -65,20 +77,22 @@ public class CrewsOverviewListBean {
 						iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc)
 						.getLocalizedString(participant.getRunDistanceGroup().getName(), participant.getRunDistanceGroup().getName());
 					
-					Map crew = new HashMap(4);
+					Map crew = new HashMap(7);
 					crew.put(UICrewsOverviewList.crew_label, crewLabel);
 					crew.put(UICrewsOverviewList.crew_runLabel, runLabel);
 					crew.put(UICrewsOverviewList.crew_distance, distanceLabel);
 					crew.put(UICrewsOverviewList.crew_pidOnclick, new StringBuffer("document.getElementById('").append(UICrewsOverviewList.crewsOverviewListBean_participantIdParam).append("').value='").append(participant.getPrimaryKey().toString()).append("';"));
+					crew.put(UICrewsOverviewList.crew_renderedEdit, new Boolean(participant.isCrewOwner()));
+					crew.put(UICrewsOverviewList.crew_renderedAcceptInvitation, new Boolean(participant.getCrewInvitedParticipantId() != null));
+					crew.put(UICrewsOverviewList.crew_renderedRejectInvitation, new Boolean(participant.getCrewInvitedParticipantId() != null));
+					
 					crews.add(crew);
 				}
 			}
 			
-		} catch (FinderException e) {
-			e.printStackTrace();
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		};
+		} catch (Exception e) {
+			Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Exception while resolving crews overview list", e);
+		}
 	
 		return new ListDataModel(crews);
 	}

@@ -31,9 +31,9 @@ import com.idega.presentation.wizard.WizardStep;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
- * Last modified: $Date: 2008/01/10 18:56:26 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/11 19:30:02 $ by $Author: civilis $
  *
  */
 public class UICrewMembersInivitationStep extends IWBaseComponent implements WizardStep {
@@ -46,8 +46,8 @@ public class UICrewMembersInivitationStep extends IWBaseComponent implements Wiz
 	public static final String member_var = "member";
 	public static final String member_name = "name";
 	public static final String member_nameExp = "#{member.name}";
-	public static final String member_isOwner = "isOwner";
-	public static final String member_isOwnerExp = "#{member.isOwner}";
+	public static final String member_role = "role";
+	public static final String member_roleExp = "#{member.role}";
 	public static final String member_modifyOnclick = "modifyOnclick";
 	public static final String member_modifyOnclickExp = "#{member.modifyOnclick}";
 	
@@ -105,19 +105,19 @@ public class UICrewMembersInivitationStep extends IWBaseComponent implements Wiz
 		HtmlInputHidden hidden = (HtmlInputHidden)application.createComponent(HtmlInputHidden.COMPONENT_TYPE);
 		hidden.setId(context.getViewRoot().createUniqueId());
 		hidden.setConverter(application.createConverter(Integer.class));
-		hidden.setValueBinding(valueAtt, application.createValueBinding(UICrewRegistrationWizard.crewEditWizardBean_modeExp));
+		hidden.setValueBinding(valueAtt, application.createValueBinding(UICrewsOverview.crewEditWizardBean_modeExp));
 		containerDiv.getChildren().add(hidden);
 		
 		org.apache.myfaces.component.html.ext.HtmlInputHidden extHidden = (org.apache.myfaces.component.html.ext.HtmlInputHidden)application.createComponent(org.apache.myfaces.component.html.ext.HtmlInputHidden.COMPONENT_TYPE);
 		extHidden.setId(crewMembersInvitationBean_memberDeleteParticipantIdParam);
-		extHidden.setValueBinding(valueAtt, application.createValueBinding(UICrewRegistrationWizard.crewMembersInvitationBean_deleteMemberParticipantIdExp));
-		extHidden.setValueBinding(forceIdAtt, application.createValueBinding(UICrewRegistrationWizard.crewMembersInvitationBean_forceIdHackExp));
+		extHidden.setValueBinding(valueAtt, application.createValueBinding(UICrewsOverview.crewMembersInvitationBean_deleteMemberParticipantIdExp));
+		extHidden.setValueBinding(forceIdAtt, application.createValueBinding(UICrewsOverview.crewMembersInvitationBean_forceIdHackExp));
 		containerDiv.getChildren().add(extHidden);
 		
 		extHidden = (org.apache.myfaces.component.html.ext.HtmlInputHidden)application.createComponent(org.apache.myfaces.component.html.ext.HtmlInputHidden.COMPONENT_TYPE);
 		extHidden.setId(crewMembersInvitationBean_memberAddParticipantIdParam);
-		extHidden.setValueBinding(valueAtt, application.createValueBinding(UICrewRegistrationWizard.crewMembersInvitationBean_addMemberParticipantIdExp));
-		extHidden.setValueBinding(forceIdAtt, application.createValueBinding(UICrewRegistrationWizard.crewMembersInvitationBean_forceIdHackExp));
+		extHidden.setValueBinding(valueAtt, application.createValueBinding(UICrewsOverview.crewMembersInvitationBean_addMemberParticipantIdExp));
+		extHidden.setValueBinding(forceIdAtt, application.createValueBinding(UICrewsOverview.crewMembersInvitationBean_forceIdHackExp));
 		containerDiv.getChildren().add(extHidden);
 		
 		HtmlMessages messages = (HtmlMessages)application.createComponent(HtmlMessages.COMPONENT_TYPE);
@@ -132,25 +132,26 @@ public class UICrewMembersInivitationStep extends IWBaseComponent implements Wiz
 		
 		HtmlOutputText text = (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		text.setId(context.getViewRoot().createUniqueId());
-		text.setValueBinding(valueAtt, application.createValueBinding(UICrewRegistrationWizard.crewMembersInvitationBean_headerExp));
+		text.setValueBinding(valueAtt, application.createValueBinding(UICrewsOverview.crewMembersInvitationBean_headerExp));
 		div.getChildren().add(text);
 		
 		containerDiv.getChildren().add(createMembersListArea(context));
 		
 		HtmlInputText searchParticipantsInput = (HtmlInputText)application.createComponent(HtmlInputText.COMPONENT_TYPE);
 		searchParticipantsInput.setId(context.getViewRoot().createUniqueId());
-		searchParticipantsInput.setValueBinding(valueAtt, application.createValueBinding(UICrewRegistrationWizard.crewMembersInvitationBean_searchStringExp));
+		searchParticipantsInput.setValueBinding(valueAtt, application.createValueBinding(UICrewsOverview.crewMembersInvitationBean_searchStringExp));
 		containerDiv.getChildren().add(searchParticipantsInput);
 		
 		HtmlCommandButton searchButton = (HtmlCommandButton)application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
 		searchButton.setId(context.getViewRoot().createUniqueId());
 		searchButton.setValue("Search");
-		searchButton.setAction(application.createMethodBinding(UICrewRegistrationWizard.crewMembersInvitationBean_searchExp, null));
+		searchButton.setAction(application.createMethodBinding(UICrewsOverview.crewMembersInvitationBean_searchExp, null));
 		containerDiv.getChildren().add(searchButton);
 		
 		containerDiv.getChildren().add(createSearchArea(context));
 		
 		HtmlCommandButton prev = wizard.getPreviousButton(context, this);
+		prev.setValue("Manage crew");
 		containerDiv.getChildren().add(prev);
 		
 		getFacets().put(containerFacet, containerDiv);
@@ -168,20 +169,25 @@ public class UICrewMembersInivitationStep extends IWBaseComponent implements Wiz
 		HtmlDataTable membersTable = (HtmlDataTable)application.createComponent(HtmlDataTable.COMPONENT_TYPE);
 		membersTable.setId(context.getViewRoot().createUniqueId());
 		membersTable.setVar(member_var);
-		membersTable.setValueBinding(valueAtt, context.getApplication().createValueBinding(UICrewRegistrationWizard.crewMembersInvitationBean_membersListExp));
+		membersTable.setValueBinding(valueAtt, context.getApplication().createValueBinding(UICrewsOverview.crewMembersInvitationBean_membersListExp));
 		
 		membersTable.getChildren().add(createColumn(context, member_nameExp, "Member name"));
-//		is owner
-		membersTable.getChildren().add(createColumn(context, member_isOwnerExp, " "));
+		membersTable.getChildren().add(createColumn(context, member_roleExp, " "));
 		
 		HtmlCommandLink deleteMemberLink = (HtmlCommandLink)application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
 		deleteMemberLink.setId(context.getViewRoot().createUniqueId());
-		deleteMemberLink.setValue("Delete member");
+		deleteMemberLink.setValue("Remove");
 		deleteMemberLink.setValueBinding(onclickAtt, application.createValueBinding(member_modifyOnclickExp));
-		deleteMemberLink.setAction(application.createMethodBinding(UICrewRegistrationWizard.crewMembersInvitationBean_deleteMemberExp, null));
+		deleteMemberLink.setAction(application.createMethodBinding(UICrewsOverview.crewMembersInvitationBean_deleteMemberExp, null));
 		
 		membersTable.getChildren().add(createColumn(context, deleteMemberLink, " "));
 		containerDiv.getChildren().add(membersTable);
+		
+		HtmlCommandButton viewCrewsListButton = (HtmlCommandButton)application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
+		viewCrewsListButton.setId(context.getViewRoot().createUniqueId());
+		viewCrewsListButton.setValue("View crews list");
+		viewCrewsListButton.setAction(application.createMethodBinding(UICrewsOverview.crewManageBean_viewCrewsListExp, null));
+		containerDiv.getChildren().add(viewCrewsListButton);
 		
 		return containerDiv;
 	}
@@ -199,7 +205,7 @@ public class UICrewMembersInivitationStep extends IWBaseComponent implements Wiz
 		searchResultsTable.setId(context.getViewRoot().createUniqueId());
 		
 		searchResultsTable.setVar(searchResult_var);
-		searchResultsTable.setValueBinding(renderedAtt, context.getApplication().createValueBinding(UICrewRegistrationWizard.crewMembersInvitationBean_searchResultListRenderedExp));
+		searchResultsTable.setValueBinding(renderedAtt, context.getApplication().createValueBinding(UICrewsOverview.crewMembersInvitationBean_searchResultListRenderedExp));
 		searchResultsTable.setValueBinding(valueAtt, context.getApplication().createValueBinding("#{crewMembersInvitationBean.searchResults}"));
 		
 		searchResultsTable.getChildren().add(createColumn(context, sr_participantNameExp, "Member name"));
@@ -207,9 +213,9 @@ public class UICrewMembersInivitationStep extends IWBaseComponent implements Wiz
 		
 		HtmlCommandLink addMemberLink = (HtmlCommandLink)application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
 		addMemberLink.setId(context.getViewRoot().createUniqueId());
-		addMemberLink.setValue("Add crew member");
+		addMemberLink.setValue("Invite crew member");
 		addMemberLink.setValueBinding(onclickAtt, application.createValueBinding(sr_modifyOnclickExp));
-		addMemberLink.setAction(application.createMethodBinding(UICrewRegistrationWizard.crewMembersInvitationBean_addMemberExp, null));
+		addMemberLink.setAction(application.createMethodBinding(UICrewsOverview.crewMembersInvitationBean_inviteMemberExp, null));
 		
 		searchResultsTable.getChildren().add(createColumn(context, addMemberLink, " "));
 		containerDiv.getChildren().add(searchResultsTable);

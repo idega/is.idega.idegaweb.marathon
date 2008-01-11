@@ -31,10 +31,6 @@
 		<component-class>is.idega.idegaweb.marathon.presentation.crew.UICrewMembersInivitationStep</component-class>
 	</component>
 	<component>
-		<component-type>idega_CrewRegistrationSuccess</component-type>
-		<component-class>is.idega.idegaweb.marathon.presentation.crew.UICrewRegistrationSuccess</component-class>
-	</component>
-	<component>
 		<component-type>idega_CrewRegistrationWizard</component-type>
 		<component-class>is.idega.idegaweb.marathon.presentation.crew.UICrewRegistrationWizard</component-class>
 	</component>
@@ -53,6 +49,11 @@
 		<component-type>idega_CrewsOverviewList</component-type>
 		<component-class>is.idega.idegaweb.marathon.presentation.crew.UICrewsOverviewList</component-class>
 	</component>
+	<component>
+		<component-type>idega_CrewView</component-type>
+		<component-class>is.idega.idegaweb.marathon.presentation.crew.UICrewView</component-class>
+	</component>
+	
 	
 
 	<managed-bean>

@@ -52,4 +52,6 @@ public interface ParticipantHome extends IDOHome {
 	public boolean findCrewLabelAlreadyExistsForRun(int runId, int yearId, String crewLabel) throws FinderException;
 	
 	public Collection findByYearAndFullNameOrPersonalIdOrParticipantNumberOrParentGroup(Object yearPK, String searchQuery) throws FinderException;
+	
+	public Collection findByYearAndCrewNameOrInvitationParticipantId(Object yearPK, String crewName, Integer participantId) throws FinderException;
 }

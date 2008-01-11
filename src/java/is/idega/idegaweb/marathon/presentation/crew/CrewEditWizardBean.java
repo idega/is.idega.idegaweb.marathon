@@ -17,9 +17,9 @@ import com.idega.util.CoreConstants;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
- * Last modified: $Date: 2008/01/10 18:56:26 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/11 19:30:02 $ by $Author: civilis $
  *
  */
 public class CrewEditWizardBean {
@@ -30,7 +30,6 @@ public class CrewEditWizardBean {
 	private Integer crewEditId;
 	private String participantId;
 	private List crewMembersInvitationSearchResults;
-	
 	private Participant participant;
 	private RunBusiness runBusiness;
 

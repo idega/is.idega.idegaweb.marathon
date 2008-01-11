@@ -29,9 +29,9 @@ import com.idega.presentation.wizard.WizardStep;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
- * Last modified: $Date: 2008/01/10 18:56:26 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/11 19:30:02 $ by $Author: civilis $
  *
  */
 public class UICrewManageStep extends IWBaseComponent implements WizardStep {
@@ -82,7 +82,7 @@ public class UICrewManageStep extends IWBaseComponent implements WizardStep {
 		HtmlInputHidden hidden = (HtmlInputHidden)application.createComponent(HtmlInputHidden.COMPONENT_TYPE);
 		hidden.setId(context.getViewRoot().createUniqueId());
 		hidden.setConverter(application.createConverter(Integer.class));
-		hidden.setValueBinding(valueAtt, application.createValueBinding(UICrewRegistrationWizard.crewEditWizardBean_modeExp));
+		hidden.setValueBinding(valueAtt, application.createValueBinding(UICrewsOverview.crewEditWizardBean_modeExp));
 		containerDiv.getChildren().add(hidden);
 		
 		HtmlMessages messages = (HtmlMessages)application.createComponent(HtmlMessages.COMPONENT_TYPE);
@@ -97,11 +97,11 @@ public class UICrewManageStep extends IWBaseComponent implements WizardStep {
 		
 		HtmlOutputText text = (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 		text.setId(context.getViewRoot().createUniqueId());
-		text.setValueBinding(valueAtt, application.createValueBinding(UICrewRegistrationWizard.crewManageBean_crewManageHeaderValueExp));
+		text.setValueBinding(valueAtt, application.createValueBinding(UICrewsOverview.crewManageBean_crewManageHeaderValueExp));
 		div.getChildren().add(text);
 		
 //		crew label
-		HtmlTag entry = createEntry(context, "Crew label: ", HtmlInputText.COMPONENT_TYPE, null, UICrewRegistrationWizard.crewManageBean_crewLabelExp, null, true);
+		HtmlTag entry = createEntry(context, "Crew label: ", HtmlInputText.COMPONENT_TYPE, null, UICrewsOverview.crewManageBean_crewLabelExp, null, true);
 		containerDiv.getChildren().add(entry);
 		
 //		<choose run or chosen run>
@@ -112,47 +112,53 @@ public class UICrewManageStep extends IWBaseComponent implements WizardStep {
 		
 		UISelectItems selectItems = (UISelectItems)application.createComponent(UISelectItems.COMPONENT_TYPE);
 		selectItems.setId(context.getViewRoot().createUniqueId());
-		selectItems.setValueBinding(valueAtt, application.createValueBinding(UICrewRegistrationWizard.crewManageBean_runsExp));
+		selectItems.setValueBinding(valueAtt, application.createValueBinding(UICrewsOverview.crewManageBean_runsExp));
 		runChooser.getChildren().add(selectItems);
-		runChooser.setValueBinding(renderedAtt, application.createValueBinding(UICrewRegistrationWizard.crewEditWizardBean_newCrewModeExp));
+		runChooser.setValueBinding(renderedAtt, application.createValueBinding(UICrewsOverview.crewEditWizardBean_newCrewModeExp));
 		
-		entry = createEntry(context, "Choose run: ", HtmlSelectOneMenu.COMPONENT_TYPE, runChooser, UICrewRegistrationWizard.crewManageBean_runIdExp, UICrewRegistrationWizard.crewManageBean_validateRunSelectionExp, true);
+		entry = createEntry(context, "Choose run: ", HtmlSelectOneMenu.COMPONENT_TYPE, runChooser, UICrewsOverview.crewManageBean_runIdExp, UICrewsOverview.crewManageBean_validateRunSelectionExp, true);
 		containerDiv.getChildren().add(entry);
-		entry.setValueBinding(renderedAtt, application.createValueBinding(UICrewRegistrationWizard.crewEditWizardBean_newCrewModeExp));
+		entry.setValueBinding(renderedAtt, application.createValueBinding(UICrewsOverview.crewEditWizardBean_newCrewModeExp));
 		
 //		chosen run
 		
-		entry = createEntry(context, "Crew run: ", HtmlOutputText.COMPONENT_TYPE, null, UICrewRegistrationWizard.crewEditWizardBean_runLabelExp, null, false);
+		entry = createEntry(context, "Crew run: ", HtmlOutputText.COMPONENT_TYPE, null, UICrewsOverview.crewEditWizardBean_runLabelExp, null, false);
 		containerDiv.getChildren().add(entry);
-		entry.setValueBinding(renderedAtt, application.createValueBinding(UICrewRegistrationWizard.crewEditWizardBean_editCrewModeExp));
+		entry.setValueBinding(renderedAtt, application.createValueBinding(UICrewsOverview.crewEditWizardBean_editCrewModeExp));
 		
 //		</choose run or chosen run>
 		
 		HtmlCommandButton createCrewButton = (HtmlCommandButton)application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
 		createCrewButton.setId(context.getViewRoot().createUniqueId());
 		createCrewButton.setValue("Create crew");
-		createCrewButton.setAction(application.createMethodBinding(UICrewRegistrationWizard.crewManageBean_createCrewExp, null));
-		createCrewButton.setValueBinding(renderedAtt, application.createValueBinding(UICrewRegistrationWizard.crewEditWizardBean_newCrewModeExp));
+		createCrewButton.setAction(application.createMethodBinding(UICrewsOverview.crewManageBean_createCrewExp, null));
+		createCrewButton.setValueBinding(renderedAtt, application.createValueBinding(UICrewsOverview.crewEditWizardBean_newCrewModeExp));
 		containerDiv.getChildren().add(createCrewButton);
 		
 		HtmlCommandButton updateCrewButton = (HtmlCommandButton)application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
 		updateCrewButton.setId(context.getViewRoot().createUniqueId());
 		updateCrewButton.setValue("Update crew");
-		updateCrewButton.setAction(application.createMethodBinding(UICrewRegistrationWizard.crewManageBean_updateCrewExp, null));
-		updateCrewButton.setValueBinding(renderedAtt, application.createValueBinding(UICrewRegistrationWizard.crewEditWizardBean_editCrewModeExp));
+		updateCrewButton.setAction(application.createMethodBinding(UICrewsOverview.crewManageBean_updateCrewExp, null));
+		updateCrewButton.setValueBinding(renderedAtt, application.createValueBinding(UICrewsOverview.crewEditWizardBean_editCrewModeExp));
 		containerDiv.getChildren().add(updateCrewButton);
 		
 		HtmlCommandButton next = wizard.getNextButton(context, this);
 		next.setValue("Manage crew members");
-		next.setValueBinding(renderedAtt, application.createValueBinding(UICrewRegistrationWizard.crewEditWizardBean_editCrewModeExp));
+		next.setValueBinding(renderedAtt, application.createValueBinding(UICrewsOverview.crewEditWizardBean_editCrewModeExp));
 		containerDiv.getChildren().add(next);
 		
 		HtmlCommandButton deleteCrewButton = (HtmlCommandButton)application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
 		deleteCrewButton.setId(context.getViewRoot().createUniqueId());
 		deleteCrewButton.setValue("Delete crew");
-		deleteCrewButton.setAction(application.createMethodBinding(UICrewRegistrationWizard.crewManageBean_deleteCrewExp, null));
-		deleteCrewButton.setValueBinding(renderedAtt, application.createValueBinding(UICrewRegistrationWizard.crewEditWizardBean_editCrewModeExp));
+		deleteCrewButton.setAction(application.createMethodBinding(UICrewsOverview.crewManageBean_deleteCrewExp, null));
+		deleteCrewButton.setValueBinding(renderedAtt, application.createValueBinding(UICrewsOverview.crewEditWizardBean_editCrewModeExp));
 		containerDiv.getChildren().add(deleteCrewButton);
+		
+		HtmlCommandButton viewCrewsListButton = (HtmlCommandButton)application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
+		viewCrewsListButton.setId(context.getViewRoot().createUniqueId());
+		viewCrewsListButton.setValue("View crews list");
+		viewCrewsListButton.setAction(application.createMethodBinding(UICrewsOverview.crewManageBean_viewCrewsListExp, null));
+		containerDiv.getChildren().add(viewCrewsListButton);
 		
 		getFacets().put(containerFacet, containerDiv);
 	}

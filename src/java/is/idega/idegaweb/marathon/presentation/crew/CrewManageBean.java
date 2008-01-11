@@ -31,14 +31,15 @@ import com.idega.util.IWTimestamp;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
- * Last modified: $Date: 2008/01/10 18:56:26 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/11 19:30:02 $ by $Author: civilis $
  *
  */
 public class CrewManageBean {
 
 	private boolean wizardMode = false;
+	private boolean crewViewMode = false;
 	private String crewLabel;
 	private String runId;
 	private List runsChoices;
@@ -50,6 +51,9 @@ public class CrewManageBean {
 	}
 
 	public void setWizardMode(boolean wizardMode) {
+		
+		if(wizardMode)
+			crewViewMode = false;
 		this.wizardMode = wizardMode;
 	}
 	
@@ -131,8 +135,12 @@ public class CrewManageBean {
 				
 				if (runs != null) {
 					
+					User user = iwc.getCurrentUser();
+					RunBusiness runBusiness = getCrewEditWizardBean().getRunBusiness();
+					
 					for (Iterator iterator = runs.iterator(); iterator.hasNext();) {
 						
+//						copied from ActiveRunDropDownMenu
 						Group run = (Group) iterator.next();
 						String runnerYearString = yearString;
 						String runId = run.getPrimaryKey().toString();
@@ -169,19 +177,14 @@ public class CrewManageBean {
 						
 						if (show) {
 							
-//							if (this.runner != null && this.runner.getUser() != null) {
-//								if (!getRunBusiness().isRegisteredInRun(runnerYearString, run, this.runner.getUser())) {
-//									addMenuElement(runId, iwrb.getLocalizedString(run.getName(), run.getName()));
-//								}
-//							}
-//							else {
+							if(runBusiness.isRegisteredInRun(runnerYearString, run, user)) {
 							
-							selectItem = new SelectItem();
-							
-							selectItem.setValue(runId);
-							selectItem.setLabel(iwrb.getLocalizedString(run.getName(), run.getName()));
-							runsChoices.add(selectItem);
-//							}
+								selectItem = new SelectItem();
+								
+								selectItem.setValue(runId);
+								selectItem.setLabel(iwrb.getLocalizedString(run.getName(), run.getName()));
+								runsChoices.add(selectItem);
+							}
 						}
 					}
 				}
@@ -252,9 +255,9 @@ public class CrewManageBean {
 				String messageText;
 				
 				if(participant.isCrewOwner())
-					messageText = "You have already created and registered to the crew labeled "+participant.getRunGroupName()+" for this run. You may edit crew from crews list, and/or delete it.";
+					messageText = "You have already created and registered to the crew labeled \""+participant.getRunGroupName()+"\" for this run. You may edit crew from crews list, and/or delete it.";
 				else
-					messageText = "You are registered to the crew labeled "+participant.getRunGroupName()+" for this run already.";
+					messageText = "You are registered to the crew labeled \""+participant.getRunGroupName()+"\" for this run already.";
 				
 				
 				((UIInput)toValidate).setValid(false);
@@ -309,11 +312,22 @@ public class CrewManageBean {
 				return;
 			}
 			
-			participant.setRunGroupName(crewLabel);
-			participant.setIsCrewOwner(true);
-			participant.store();
-			getCrewEditWizardBean().setParticipant(participant);
-			getCrewEditWizardBean().setMode(CrewEditWizardBean.editCrewMode);
+			if(participant.getRunGroupName() != null) {
+				
+				System.out.println("you're already registered to a crew. quit first");
+				
+			} else if(participant.getCrewInvitedParticipantId() != null) {
+				
+				System.out.println("you're invited to a crew. reject invitation first");
+				
+			} else {
+			
+				participant.setRunGroupName(crewLabel);
+				participant.setIsCrewOwner(true);
+				participant.store();
+				getCrewEditWizardBean().setParticipant(participant);
+				getCrewEditWizardBean().setMode(CrewEditWizardBean.editCrewMode);
+			}
 			
 		} catch (Exception e) {
 
@@ -341,6 +355,43 @@ public class CrewManageBean {
 		
 	}
 	
+	public void acceptInvitation() {
+		
+		Participant participant = getCrewEditWizardBean().getParticipant();
+		
+		if(participant.getCrewInvitedParticipantId() == null) {
+			System.out.println("err occured");
+			return;
+		}
+		
+		RunBusiness runBusiness = getCrewEditWizardBean().getRunBusiness();
+		
+		try {
+			Participant crewOwner = runBusiness.getParticipantByPrimaryKey(participant.getCrewInvitedParticipantId().intValue());
+			
+			participant.setRunGroupName(crewOwner.getRunGroupName());
+			participant.setCrewInvitedParticipantId(null);
+			participant.setIsCrewOwner(false);
+			participant.store();
+			
+		} catch (Exception e) {
+			// TODO: add err msg
+			e.printStackTrace();
+			return;
+		}
+	}
+	
+	public void rejectInvitation() {
+		
+		Participant participant = getCrewEditWizardBean().getParticipant();
+		
+		participant.setRunGroupName(null);
+		participant.setCrewInvitedParticipantId(null);
+		participant.setIsCrewOwner(false);
+		participant.store();
+	}
+	
+	
 	public void updateCrew() {
 
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -353,8 +404,26 @@ public class CrewManageBean {
 			Integer runId = new Integer(getRunId());
 			validateCrewLabel(context, crewLabel, runId);
 			
-			participant.setRunGroupName(crewLabel);
-			participant.store();
+			if(context.getMessages() != null && context.getMessages().hasNext())
+				return;
+			
+			try {
+				
+				RunBusiness runBusiness = getCrewEditWizardBean().getRunBusiness();
+				
+				Collection crewMembers = runBusiness.getParticipantsByYearAndTeamName(String.valueOf(participant.getRunYearGroupID()), crewLabel);
+				
+				for (Iterator iterator = crewMembers.iterator(); iterator.hasNext();) {
+					Participant member = (Participant) iterator.next();
+					
+					member.setRunGroupName(crewLabel);
+					member.store();
+				}
+				
+			} catch (FinderException e) {
+				e.printStackTrace();
+//				TODO: add msg about err
+			}
 		}
 	}
 	
@@ -365,17 +434,17 @@ public class CrewManageBean {
 			String crewLabel = participant.getRunGroupName();
 			RunBusiness runBusiness = getCrewEditWizardBean().getRunBusiness();
 			
-			Collection crewMembers = runBusiness.getParticipantsByYearAndTeamName(String.valueOf(participant.getRunYearGroupID()), crewLabel);
+			Collection crewMembers = runBusiness.getParticipantsByYearAndCrewNameOrInvitationParticipantId(String.valueOf(participant.getRunYearGroupID()), crewLabel, new Integer(participant.getRunID()));
 			
 			for (Iterator iterator = crewMembers.iterator(); iterator.hasNext();) {
 				Participant member = (Participant) iterator.next();
 				
 				member.setRunGroupName(null);
 				member.setIsCrewOwner(false);
+				member.setCrewInvitedParticipantId(null);
 				member.store();
 			}
 			
-			System.out.println("deleted");
 			setWizardMode(false);
 			getCrewEditWizardBean().setMode(CrewEditWizardBean.newCrewMode);
 			
@@ -383,5 +452,52 @@ public class CrewManageBean {
 			e.printStackTrace();
 //			TODO: add msg about err
 		}
+	}
+	
+	public void viewCrewsList() {
+		setWizardMode(false);
+		setCrewViewMode(false);
+	}
+	
+	public void viewCrewView() {
+		setWizardMode(false);
+		setCrewViewMode(true);
+	}
+
+	public boolean isCrewViewMode() {
+		return crewViewMode;
+	}
+
+	public void setCrewViewMode(boolean crewViewMode) {
+		this.crewViewMode = crewViewMode;
+	}
+	
+	public String getCrewViewHeader() {
+		
+		Participant viewerParticipant = getCrewEditWizardBean().getParticipant();
+		String crewLabel;
+		
+		if(viewerParticipant.getRunGroupName() != null) {
+			
+			crewLabel = viewerParticipant.getRunGroupName();
+			
+		} else if(viewerParticipant.getCrewInvitedParticipantId() != null) {
+			
+			try {
+				RunBusiness runBusiness = getCrewEditWizardBean().getRunBusiness();
+				Participant owner = runBusiness.getParticipantByPrimaryKey(viewerParticipant.getCrewInvitedParticipantId().intValue());
+				crewLabel = owner.getRunGroupName();
+				
+			} catch (Exception e) {
+				Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Exception while getting crew view header", e);
+				crewLabel = CoreConstants.EMPTY;
+			}
+			
+		} else {
+			Logger.getLogger(getClass().getName()).log(Level.WARNING, "Error when getting crew view header. Crew label not set, crew invitation not set");
+			crewLabel = CoreConstants.EMPTY;
+		}
+		
+		return "Crew \""+crewLabel+"\" view";
 	}
 }

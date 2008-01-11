@@ -24,18 +24,15 @@ import com.idega.presentation.IWContext;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
- * Last modified: $Date: 2008/01/10 18:56:26 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/11 19:30:02 $ by $Author: civilis $
  *
  */
 public class UICrewsOverviewList extends IWBaseComponent {
 
 	public static final String COMPONENT_TYPE = "idega_CrewsOverviewList";
 	public static final String EDIT_CREW_ID = "ecid";
-	
-	public static final String crewsOverviewListBean_crewsOverviewListExp = 				"#{crewsOverviewListBean.crewsOverviewList}";
-	public static final String crewsOverviewListBean_forceIdHackExp = 						"#{crewsOverviewListBean.forceIdHack}";
 	
 	public static final String crewsOverviewListBean_participantIdParam = 					"colb_pid";
 	
@@ -49,9 +46,16 @@ public class UICrewsOverviewList extends IWBaseComponent {
 	public static final String crew_distanceExp = 			"#{crew.distance}";
 	public static final String crew_pidOnclick = 			"pidOnclick";
 	public static final String crew_pidOnclickExp = 		"#{crew.pidOnclick}";
+	public static final String crew_renderedEdit = 			"renderedEdit";
+	public static final String crew_renderedEditExp = 		"#{crew.renderedEdit}";
+	public static final String crew_renderedAcceptInvitation = 		"renderedAcceptInvitation";
+	public static final String crew_renderedAcceptInvitationExp = 	"#{crew.renderedAcceptInvitation}";
+	public static final String crew_renderedRejectInvitation = 		"renderedRejectInvitation";
+	public static final String crew_renderedRejectInvitationExp = 	"#{crew.renderedRejectInvitation}";
 	
 	
 	private static final String onclickAtt = "onclick";
+	private static final String renderedAtt = "rendered";
 	private static final String forceIdAtt = "forceId";
 	private static final String containerFacet = "container";
 	
@@ -71,8 +75,8 @@ public class UICrewsOverviewList extends IWBaseComponent {
 		
 		HtmlInputHidden hidden = (HtmlInputHidden)application.createComponent(HtmlInputHidden.COMPONENT_TYPE);
 		hidden.setId(crewsOverviewListBean_participantIdParam);
-		hidden.setValueBinding(valueAtt, application.createValueBinding(UICrewRegistrationWizard.crewEditWizardBean_participantIdExp));
-		hidden.setValueBinding(forceIdAtt, application.createValueBinding(crewsOverviewListBean_forceIdHackExp));
+		hidden.setValueBinding(valueAtt, application.createValueBinding(UICrewsOverview.crewEditWizardBean_participantIdExp));
+		hidden.setValueBinding(forceIdAtt, application.createValueBinding(UICrewsOverview.crewsOverviewListBean_forceIdHackExp));
 		form.getChildren().add(hidden);
 		
 		HtmlTag containerDiv = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
@@ -83,7 +87,7 @@ public class UICrewsOverviewList extends IWBaseComponent {
 		HtmlCommandLink startNewCrewRegLink = (HtmlCommandLink)application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
 		startNewCrewRegLink.setId(context.getViewRoot().createUniqueId());
 		startNewCrewRegLink.setValue("Create new crew");
-		startNewCrewRegLink.setAction(application.createMethodBinding(UICrewRegistrationWizard.crewManageBean_startNewCrewRegistrationExp, null));
+		startNewCrewRegLink.setAction(application.createMethodBinding(UICrewsOverview.crewManageBean_startNewCrewRegistrationExp, null));
 		
 		containerDiv.getChildren().add(startNewCrewRegLink);
 		
@@ -91,21 +95,57 @@ public class UICrewsOverviewList extends IWBaseComponent {
 		crewsTable.setSortable(true);
 		crewsTable.setId(context.getViewRoot().createUniqueId());
 		crewsTable.setVar(crew_var);
-		crewsTable.setValueBinding(valueAtt, context.getApplication().createValueBinding(crewsOverviewListBean_crewsOverviewListExp));
+		crewsTable.setValueBinding(valueAtt, context.getApplication().createValueBinding(UICrewsOverview.crewsOverviewListBean_crewsOverviewListExp));
 		
 		crewsTable.getChildren().add(createColumn(context, crew_labelExp, "Crew label"));
 		crewsTable.getChildren().add(createColumn(context, crew_runLabelExp, "Run label"));
 		crewsTable.getChildren().add(createColumn(context, crew_distanceExp, "Distance"));
 		
-		HtmlCommandLink editCrewLink = (HtmlCommandLink)application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
-		editCrewLink.setId(context.getViewRoot().createUniqueId());
-		editCrewLink.setValue("Edit");
-		editCrewLink.setValueBinding(onclickAtt, application.createValueBinding(crew_pidOnclickExp));
-		editCrewLink.setAction(application.createMethodBinding(UICrewRegistrationWizard.crewManageBean_editCrewExp, null));
+		HtmlTag buttonsContainer = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
+		buttonsContainer.setId(context.getViewRoot().createUniqueId());
+		buttonsContainer.setValue(spanTag);
 		
-		crewsTable.getChildren().add(createColumn(context, editCrewLink, " "));
+		addLinks(context, buttonsContainer);
+		
+		crewsTable.getChildren().add(createColumn(context, buttonsContainer, " "));
 		
 		containerDiv.getChildren().add(crewsTable);
+	}
+	
+	protected void addLinks(FacesContext context, UIComponent parent) {
+		
+		Application application = context.getApplication();
+		
+		HtmlCommandLink link = (HtmlCommandLink)application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
+		link.setId(context.getViewRoot().createUniqueId());
+		link.setValue("Edit");
+		link.setValueBinding(onclickAtt, application.createValueBinding(crew_pidOnclickExp));
+		link.setValueBinding(renderedAtt, application.createValueBinding(crew_renderedEditExp));
+		link.setAction(application.createMethodBinding(UICrewsOverview.crewManageBean_editCrewExp, null));
+		parent.getChildren().add(link);
+		
+		link = (HtmlCommandLink)application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
+		link.setId(context.getViewRoot().createUniqueId());
+		link.setValue("Accept invitation");
+		link.setValueBinding(onclickAtt, application.createValueBinding(crew_pidOnclickExp));
+		link.setValueBinding(renderedAtt, application.createValueBinding(crew_renderedAcceptInvitationExp));
+		link.setAction(application.createMethodBinding(UICrewsOverview.crewManageBean_acceptInvitationExp, null));
+		parent.getChildren().add(link);
+		
+		link = (HtmlCommandLink)application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
+		link.setId(context.getViewRoot().createUniqueId());
+		link.setValue("Reject invitation");
+		link.setValueBinding(onclickAtt, application.createValueBinding(crew_pidOnclickExp));
+		link.setValueBinding(renderedAtt, application.createValueBinding(crew_renderedRejectInvitationExp));
+		link.setAction(application.createMethodBinding(UICrewsOverview.crewManageBean_rejectInvitationExp, null));
+		parent.getChildren().add(link);
+		
+		link = (HtmlCommandLink)application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
+		link.setId(context.getViewRoot().createUniqueId());
+		link.setValue("View crew");
+		link.setValueBinding(onclickAtt, application.createValueBinding(crew_pidOnclickExp));
+		link.setAction(application.createMethodBinding(UICrewsOverview.crewManageBean_viewCrewViewExp, null));
+		parent.getChildren().add(link);
 	}
 	
 	protected UIColumn createColumn(FacesContext context, UIComponent child, String headerText) {

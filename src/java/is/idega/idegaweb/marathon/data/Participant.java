@@ -365,4 +365,8 @@ public interface Participant extends IDOEntity {
 	public boolean isCrewOwner();
 	
 	public void setIsCrewOwner(boolean isCrewOwner);
+	
+	public Integer getCrewInvitedParticipantId();
+	
+	public void setCrewInvitedParticipantId(Integer crewInvitedParticipantId);
 }

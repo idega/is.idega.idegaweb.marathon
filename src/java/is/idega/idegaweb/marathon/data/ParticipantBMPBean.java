@@ -19,6 +19,7 @@ import com.idega.data.IDOLookupException;
 import com.idega.data.IDOQuery;
 import com.idega.data.query.Column;
 import com.idega.data.query.CountColumn;
+import com.idega.data.query.Criteria;
 import com.idega.data.query.JoinCriteria;
 import com.idega.data.query.MatchCriteria;
 import com.idega.data.query.MaxColumn;
@@ -74,6 +75,7 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		addAttribute(getColumnNameTShirtSize(), "TShirt Size", true, true, String.class);
 		addAttribute(getColumnNameRunGroupName(), "Run Group Name", true, true, String.class);
 		addAttribute(getColumnNameIsCrewOwner(), "Is crew owner", true, true, Boolean.class);
+		addAttribute(getColumnNameCrewInvitedParticipantId(), "Crew invited participant id", true, true, Integer.class);
 		
 		addAttribute(getColumnNameBestTime(), "Best Time", true, true, String.class);
 		addAttribute(getColumnNameGoalTime(), "Goal Time", true, true, String.class);
@@ -160,6 +162,10 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 	
 	public static String getColumnNameIsCrewOwner() {
 		return "is_crew_owner";
+	}
+	
+	public static String getColumnNameCrewInvitedParticipantId() {
+		return "crew_invited_pid";
 	}
 
 	public static String getColumnNameBestTime() {
@@ -366,6 +372,10 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 	public boolean isCrewOwner() {
 		return getBooleanColumnValue(getColumnNameIsCrewOwner());
 	}
+	
+	public Integer getCrewInvitedParticipantId() {
+		return getIntegerColumnValue(getColumnNameCrewInvitedParticipantId());
+	}
 
 	public String getBestTime() {
 		return getStringColumnValue(getColumnNameBestTime());
@@ -477,6 +487,10 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 	
 	public void setIsCrewOwner(boolean isCrewOwner) {
 		setColumn(getColumnNameIsCrewOwner(), isCrewOwner);
+	}
+	
+	public void setCrewInvitedParticipantId(Integer crewInvitedParticipantId) {
+		setColumn(getColumnNameCrewInvitedParticipantId(), crewInvitedParticipantId);
 	}
 
 	public void setBestTime(String bestTime) {
@@ -651,8 +665,31 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		
 		query.addCriteria(orCriteria);
 		
-		System.out.println("q: "+query.toString());
-
+		return super.idoFindPKsByQuery(query);
+	}
+	
+	public Collection ejbFindByYearAndCrewNameOrInvitationParticipantId(Object yearPK, String crewName, Integer participantId) throws FinderException{
+		Table table = new Table(this);
+		SelectQuery query = new SelectQuery(table);
+		query.addColumn(new Column(getIDColumnName()));
+		
+		query.addCriteria(new MatchCriteria(table, getColumnNameRunYearGroupID(), MatchCriteria.EQUALS, yearPK));
+		
+		if(crewName != null && participantId != null) {
+			
+			Criteria crewNameCriteria = new MatchCriteria(table, getColumnNameRunGroupName(), MatchCriteria.EQUALS, crewName);
+			Criteria participantIdCriteria = new MatchCriteria(table, getColumnNameCrewInvitedParticipantId(), MatchCriteria.EQUALS, participantId);
+		
+			query.addCriteria(new OR(crewNameCriteria, participantIdCriteria));
+			
+		} else if(crewName != null) {
+			
+			query.addCriteria(new MatchCriteria(table, getColumnNameRunGroupName(), MatchCriteria.EQUALS, crewName));
+			
+		} else if(participantId != null) {
+			query.addCriteria(new MatchCriteria(table, getColumnNameCrewInvitedParticipantId(), MatchCriteria.EQUALS, participantId));
+		}
+		
 		return super.idoFindPKsByQuery(query);
 	}
 

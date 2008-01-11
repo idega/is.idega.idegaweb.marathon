@@ -3,7 +3,6 @@ package is.idega.idegaweb.marathon.presentation.crew;
 import is.idega.idegaweb.marathon.business.RunBusiness;
 import is.idega.idegaweb.marathon.data.Participant;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -22,9 +21,9 @@ import com.idega.util.CoreConstants;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
- * Last modified: $Date: 2008/01/10 18:56:26 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/11 19:30:02 $ by $Author: civilis $
  *
  */
 public class CrewMembersInvitationBean {
@@ -53,7 +52,6 @@ public class CrewMembersInvitationBean {
 
 	public DataModel getMembersList() {
 
-		System.out.println("resolving members list");
 		List members = new ArrayList();
 		
 		try {
@@ -61,19 +59,51 @@ public class CrewMembersInvitationBean {
 			String crewLabel = participant.getRunGroupName();
 			RunBusiness runBusiness = getCrewEditWizardBean().getRunBusiness();
 			
-			Collection crewMembers = runBusiness.getParticipantsByYearAndTeamName(String.valueOf(participant.getRunYearGroupID()), crewLabel);
+			Collection crewMembers;
+			
+			if(participant.isCrewOwner()) {
+
+//				viewer is crew owner
+				crewMembers = runBusiness.getParticipantsByYearAndCrewNameOrInvitationParticipantId(String.valueOf(participant.getRunYearGroupID()), crewLabel, new Integer(participant.getRunID()));
+			
+			} else if(crewLabel == null && participant.getCrewInvitedParticipantId() != null) {
+//				viewer is invited to this crew
+				
+				Participant owner = runBusiness.getParticipantByPrimaryKey(participant.getCrewInvitedParticipantId().intValue());
+				crewMembers = runBusiness.getParticipantsByYearAndCrewNameOrInvitationParticipantId(String.valueOf(participant.getRunYearGroupID()), owner.getRunGroupName(), new Integer(owner.getRunID()));
+				
+			} else {
+//				viewer is crew member
+				
+				crewMembers = runBusiness.getParticipantsByYearAndCrewNameOrInvitationParticipantId(String.valueOf(participant.getRunYearGroupID()), crewLabel, null);
+			}
 			
 			for (Iterator iterator = crewMembers.iterator(); iterator.hasNext();) {
 				Participant member = (Participant) iterator.next();
 				
+				String role;
+				
+				if(member.isCrewOwner()) {
+					role = "Crew creator";
+					
+				} else if(participant.getRunGroupName() != null && participant.getRunGroupName().equals(member.getRunGroupName())) {
+					role = "Member";
+					
+				} else if(member.getCrewInvitedParticipantId() != null) {
+					role = "Invited";
+					
+				} else {
+					role = CoreConstants.EMPTY;
+				}
+				
 				Map memberData = new HashMap(3);
 				memberData.put(UICrewMembersInivitationStep.member_name, member.getUser().getName());
-				memberData.put(UICrewMembersInivitationStep.member_isOwner, member.isCrewOwner() ? "Crew creator" : CoreConstants.EMPTY);
+				memberData.put(UICrewMembersInivitationStep.member_role, role);
 				memberData.put(UICrewMembersInivitationStep.member_modifyOnclick, new StringBuffer("document.getElementById('").append(UICrewMembersInivitationStep.crewMembersInvitationBean_memberDeleteParticipantIdParam).append("').value='").append(member.getPrimaryKey().toString()).append("';"));
 				members.add(memberData);
 			}
 			
-		} catch (FinderException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 //			TODO: add msg about err
 		}
@@ -95,44 +125,35 @@ public class CrewMembersInvitationBean {
 			String crewLabel = participant.getRunGroupName();
 			RunBusiness runBusiness = getCrewEditWizardBean().getRunBusiness();
 			
-			Collection crewMembers = runBusiness.getParticipantsByYearAndTeamName(String.valueOf(participant.getRunYearGroupID()), crewLabel);
+			int participantToRemoveId = Integer.parseInt(getDeleteMemberParticipantId());
 			
-			for (Iterator iterator = crewMembers.iterator(); iterator.hasNext();) {
-				Participant member = (Participant) iterator.next();
+			Participant participantToRemove = runBusiness.getParticipantByPrimaryKey(participantToRemoveId);
+			
+			if(participantToRemove.isCrewOwner()) {
+				//add err msg
+				System.out.println("owner, won't delete");
+				return;
+			} else if(participantToRemove.getCrewInvitedParticipantId() != null || participantToRemove.getRunGroupName().equals(crewLabel)) {
 				
-				if(member.getPrimaryKey().toString().equals(getDeleteMemberParticipantId())) {
-				
-					if(member.isCrewOwner()) {
-						//add err msg
-						System.out.println("owner, won't delete");
-						return;
-					} else {
-					
-						member.setRunGroupName(null);
-						member.setIsCrewOwner(false);
-						member.store();
-						return;
-					}
-				}
+				participantToRemove.setCrewInvitedParticipantId(null);
+				participantToRemove.setRunGroupName(null);
+				participantToRemove.setIsCrewOwner(false);
+				participantToRemove.store();
 			}
 			
-//			add warning, that participant couldn't be found
-			
-		} catch (FinderException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 //			TODO: add msg about err
 		}
 	}
 	
-	public void addMember() {
+	public void inviteMember() {
 		
-		System.out.println("adding member:"+getAddMemberParticipantId());
-		
-		Participant participant = null;
+		Participant memberInvited = null;
 		RunBusiness runBusiness = getCrewEditWizardBean().getRunBusiness();
 		
 		try {
-			participant = runBusiness.getParticipantByPrimaryKey(Integer.parseInt(getAddMemberParticipantId()));
+			memberInvited = runBusiness.getParticipantByPrimaryKey(Integer.parseInt(getAddMemberParticipantId()));
 			
 		} catch (Exception e) {
 			// TODO: add err msg
@@ -140,7 +161,7 @@ public class CrewMembersInvitationBean {
 			return;
 		}
 		
-		if(participant == null) {
+		if(memberInvited == null) {
 			
 //			TODO: add error message, that current user is not participant for selected run
 			
@@ -148,14 +169,35 @@ public class CrewMembersInvitationBean {
 			return;
 		}
 		
-		if(participant.getRunGroupName() != null) {
+		if(memberInvited.getRunGroupName() != null) {
 //			TODO: add err msg
 			System.out.println("participant already has crew");
+			
+			if(memberInvited.getRunGroupName().equals(getCrewEditWizardBean().getParticipant().getRunGroupName())) {
+				
+//				in your crew
+			} else {
+//				just in crew
+			}
+			
+		} else if(memberInvited.getCrewInvitedParticipantId() != null) {
+			
+//			TODO: add err msg
+			System.out.println("participant already has been invited to a crew");
+			
+			if(memberInvited.getCrewInvitedParticipantId().intValue() == getCrewEditWizardBean().getParticipant().getRunID()) {
+				
+//				in your crew
+			} else {
+//				just in crew
+			}
+			
 		} else {
 			
-			participant.setRunGroupName(getCrewEditWizardBean().getParticipant().getRunGroupName());
-			participant.setIsCrewOwner(false);
-			participant.store();
+			memberInvited.setRunGroupName(null);
+			memberInvited.setCrewInvitedParticipantId(new Integer(getCrewEditWizardBean().getParticipant().getRunID()));
+			memberInvited.setIsCrewOwner(false);
+			memberInvited.store();
 		}
 	}
 
@@ -174,7 +216,7 @@ public class CrewMembersInvitationBean {
 	
 	public String getHeader() {
 		
-		return "Crew members";
+		return "Crew \""+getCrewEditWizardBean().getParticipant().getRunGroupName()+"\" members";
 	}
 
 	public String getAddMemberParticipantId() {
