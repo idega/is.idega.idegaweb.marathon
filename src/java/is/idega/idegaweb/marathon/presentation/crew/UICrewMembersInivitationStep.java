@@ -31,9 +31,9 @@ import com.idega.presentation.wizard.WizardStep;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
- * Last modified: $Date: 2008/01/11 19:30:02 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/12 19:06:46 $ by $Author: civilis $
  *
  */
 public class UICrewMembersInivitationStep extends IWBaseComponent implements WizardStep {
@@ -42,6 +42,8 @@ public class UICrewMembersInivitationStep extends IWBaseComponent implements Wiz
 	public static final String COMPONENT_TYPE = "idega_CrewMembersInivitationStep";
 	static final String stepIdentifier = "CrewMembersInivitationStep";
 	private static final String containerFacet = "container";
+	private static final String membersListStyleClass = "membersList";
+	private static final String searchAreaStyleClass = "searchArea";
 	
 	public static final String member_var = "member";
 	public static final String member_name = "name";
@@ -144,14 +146,14 @@ public class UICrewMembersInivitationStep extends IWBaseComponent implements Wiz
 		
 		HtmlCommandButton searchButton = (HtmlCommandButton)application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
 		searchButton.setId(context.getViewRoot().createUniqueId());
-		searchButton.setValue("Search");
+		searchButton.setValue(iwrb.getLocalizedString("crew.invitation.search", "Search"));
 		searchButton.setAction(application.createMethodBinding(UICrewsOverview.crewMembersInvitationBean_searchExp, null));
 		containerDiv.getChildren().add(searchButton);
 		
 		containerDiv.getChildren().add(createSearchArea(context));
 		
 		HtmlCommandButton prev = wizard.getPreviousButton(context, this);
-		prev.setValue("Manage crew");
+		prev.setValue(iwrb.getLocalizedString("crew.invitation.manageCrew", "Manage crew"));
 		containerDiv.getChildren().add(prev);
 		
 		getFacets().put(containerFacet, containerDiv);
@@ -160,23 +162,25 @@ public class UICrewMembersInivitationStep extends IWBaseComponent implements Wiz
 	protected UIComponent createMembersListArea(FacesContext context) {
 		
 		Application application = context.getApplication();
+		IWContext iwc = IWContext.getIWContext(context);
+		IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
 		
 		HtmlTag containerDiv = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		containerDiv.setId(context.getViewRoot().createUniqueId());
 		containerDiv.setValue(divTag);
-		containerDiv.setStyleClass("membersList");
+		containerDiv.setStyleClass(membersListStyleClass);
 		
 		HtmlDataTable membersTable = (HtmlDataTable)application.createComponent(HtmlDataTable.COMPONENT_TYPE);
 		membersTable.setId(context.getViewRoot().createUniqueId());
 		membersTable.setVar(member_var);
 		membersTable.setValueBinding(valueAtt, context.getApplication().createValueBinding(UICrewsOverview.crewMembersInvitationBean_membersListExp));
 		
-		membersTable.getChildren().add(createColumn(context, member_nameExp, "Member name"));
-		membersTable.getChildren().add(createColumn(context, member_roleExp, " "));
+		membersTable.getChildren().add(createColumn(context, member_nameExp, iwrb.getLocalizedString("crew.invitation.memberName", "Member name")));
+		membersTable.getChildren().add(createColumn(context, member_roleExp, iwrb.getLocalizedString("crew.invitation.memberRole", "Member role")));
 		
 		HtmlCommandLink deleteMemberLink = (HtmlCommandLink)application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
 		deleteMemberLink.setId(context.getViewRoot().createUniqueId());
-		deleteMemberLink.setValue("Remove");
+		deleteMemberLink.setValue(iwrb.getLocalizedString("crew.invitation.remove", "Remove"));
 		deleteMemberLink.setValueBinding(onclickAtt, application.createValueBinding(member_modifyOnclickExp));
 		deleteMemberLink.setAction(application.createMethodBinding(UICrewsOverview.crewMembersInvitationBean_deleteMemberExp, null));
 		
@@ -185,7 +189,7 @@ public class UICrewMembersInivitationStep extends IWBaseComponent implements Wiz
 		
 		HtmlCommandButton viewCrewsListButton = (HtmlCommandButton)application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
 		viewCrewsListButton.setId(context.getViewRoot().createUniqueId());
-		viewCrewsListButton.setValue("View crews list");
+		viewCrewsListButton.setValue(iwrb.getLocalizedString("crew.invitation.viewCrewsList", "View crews list"));
 		viewCrewsListButton.setAction(application.createMethodBinding(UICrewsOverview.crewManageBean_viewCrewsListExp, null));
 		containerDiv.getChildren().add(viewCrewsListButton);
 		
@@ -195,25 +199,27 @@ public class UICrewMembersInivitationStep extends IWBaseComponent implements Wiz
 	protected UIComponent createSearchArea(FacesContext context) {
 		
 		Application application = context.getApplication();
+		IWContext iwc = IWContext.getIWContext(context);
+		IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
 		
 		HtmlTag containerDiv = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		containerDiv.setId(context.getViewRoot().createUniqueId());
 		containerDiv.setValue(divTag);
-		containerDiv.setStyleClass("searchArea");
+		containerDiv.setStyleClass(searchAreaStyleClass);
 		
 		HtmlDataTable searchResultsTable = (HtmlDataTable)application.createComponent(HtmlDataTable.COMPONENT_TYPE);
 		searchResultsTable.setId(context.getViewRoot().createUniqueId());
 		
 		searchResultsTable.setVar(searchResult_var);
 		searchResultsTable.setValueBinding(renderedAtt, context.getApplication().createValueBinding(UICrewsOverview.crewMembersInvitationBean_searchResultListRenderedExp));
-		searchResultsTable.setValueBinding(valueAtt, context.getApplication().createValueBinding("#{crewMembersInvitationBean.searchResults}"));
+		searchResultsTable.setValueBinding(valueAtt, context.getApplication().createValueBinding(UICrewsOverview.crewMembersInvitationBean_searchResultsExp));
 		
-		searchResultsTable.getChildren().add(createColumn(context, sr_participantNameExp, "Member name"));
-		searchResultsTable.getChildren().add(createColumn(context, sr_participantNumberExp, "Member participant number"));
+		searchResultsTable.getChildren().add(createColumn(context, sr_participantNameExp, iwrb.getLocalizedString("crew.invitation.memberName", "Member name")));
+		searchResultsTable.getChildren().add(createColumn(context, sr_participantNumberExp, iwrb.getLocalizedString("crew.invitation.memberPNr", "Member participant number")));
 		
 		HtmlCommandLink addMemberLink = (HtmlCommandLink)application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
 		addMemberLink.setId(context.getViewRoot().createUniqueId());
-		addMemberLink.setValue("Invite crew member");
+		addMemberLink.setValue(iwrb.getLocalizedString("crew.invitation.inviteMember", "Invite crew member"));
 		addMemberLink.setValueBinding(onclickAtt, application.createValueBinding(sr_modifyOnclickExp));
 		addMemberLink.setAction(application.createMethodBinding(UICrewsOverview.crewMembersInvitationBean_inviteMemberExp, null));
 		

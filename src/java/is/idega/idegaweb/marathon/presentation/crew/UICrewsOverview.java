@@ -16,9 +16,9 @@ import com.idega.presentation.text.Text;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
- * Last modified: $Date: 2008/01/12 17:15:16 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/12 19:06:46 $ by $Author: civilis $
  *
  */
 public class UICrewsOverview extends IWBaseComponent {
@@ -58,6 +58,7 @@ public class UICrewsOverview extends IWBaseComponent {
 	public static final String crewMembersInvitationBean_searchResultListRenderedExp =	"#{crewMembersInvitationBean.searchResultListRendered}";
 	public static final String crewMembersInvitationBean_forceIdHackExp = 			"#{crewMembersInvitationBean.forceIdHack}";
 	public static final String crewMembersInvitationBean_headerExp = 				"#{crewMembersInvitationBean.header}";
+	public static final String crewMembersInvitationBean_searchResultsExp = 		"#{crewMembersInvitationBean.searchResults}";
 	
 	
 	public static final String crewEditWizardBeanExp = 								"#{crewEditWizardBean}";

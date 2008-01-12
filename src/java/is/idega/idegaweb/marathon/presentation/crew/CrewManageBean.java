@@ -6,6 +6,7 @@ import is.idega.idegaweb.marathon.business.RunBusiness;
 import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.data.Year;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -31,9 +32,9 @@ import com.idega.util.IWTimestamp;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *
- * Last modified: $Date: 2008/01/12 17:15:16 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/12 19:06:46 $ by $Author: civilis $
  *
  */
 public class CrewManageBean {
@@ -73,7 +74,19 @@ public class CrewManageBean {
 
 	public String getCrewManageHeaderValue() {
 		
-		return getCrewEditWizardBean().isNewCrewMode() ? "Create new crew" : getCrewEditWizardBean().isEditCrewMode() ? "Edit crew" : "Manage crew";
+		IWContext iwc = IWContext.getIWContext(FacesContext.getCurrentInstance());
+		IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
+		
+		String header;
+		
+		if(getCrewEditWizardBean().isNewCrewMode())
+			header = iwrb.getLocalizedString("crew.header.newCrew", "Create new crew");
+		else if (getCrewEditWizardBean().isEditCrewMode())
+			header = iwrb.getLocalizedString("crew.header.editCrew", "Edit crew");
+		else
+			header = iwrb.getLocalizedString("crew.header.manageCrew", "Manage crew");
+		
+		return header;
 	}
 
 	public String getCrewLabelForOwner() {
@@ -201,7 +214,11 @@ public class CrewManageBean {
 	    boolean crewLabelExists = runBusiness.isCrewLabelAlreadyExistsForRun(runId.intValue(), currentYear.intValue(), crewLabel);
 	    
 	    if(crewLabelExists) {
-	    	FacesMessage message = new FacesMessage("Crew already exists with such label");
+	    	
+	    	IWContext iwc = IWContext.getIWContext(context);
+			IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
+	    	
+	    	FacesMessage message = new FacesMessage(iwrb.getLocalizedString("crew.manage.labelExists", "Crew already exists with such label"));
 			message.setSeverity(FacesMessage.SEVERITY_ERROR);
 			context.addMessage(null, message);
 	    }
@@ -246,14 +263,16 @@ public class CrewManageBean {
 				String messageText;
 				
 				if(crewParticipant.getCrewParticipantRole() == CrewParticipant.CREW_PARTICIPANT_ROLE_OWNER)
-					messageText = "You have already created and registered to the crew labeled \""+crewParticipant.getCrewLabel()+"\" for this run. You may edit crew from crews list, and/or delete it.";
+					messageText = iwrb.getLocalizedString("crew.manage.validateRun.isOwner", "You have already created and registered to the crew labeled \"{0}\" for this run. You may edit crew from crews list, and/or delete it.");
 				else if(crewParticipant.getCrewParticipantRole() == CrewParticipant.CREW_PARTICIPANT_ROLE_MEMBER)
-					messageText = "You are registered to the crew labeled \""+crewParticipant.getCrewLabel()+"\" for this run already. Unregister from the crew before creating new crew.";
+					messageText = iwrb.getLocalizedString("crew.manage.validateRun.isMember", "You are registered to the crew labeled \"{0}\" for this run already. Unregister from the crew before creating new crew.");
 				else if(crewParticipant.getCrewParticipantRole() == CrewParticipant.CREW_PARTICIPANT_ROLE_INVITED)
-					messageText = "You are invited to the crew labeled \""+crewParticipant.getCrewLabel()+"\" for this run already. Reject invitation before creating new crew.";
+					messageText = iwrb.getLocalizedString("crew.manage.validateRun.isInvited", "You are invited to the crew labeled \"{0}\" for this run already. Reject invitation before creating new crew.");
 				else
 //					shouldn't possibly happen
 					messageText = CoreConstants.EMPTY;
+				
+				messageText = MessageFormat.format(messageText, new Object[] {crewParticipant.getCrewLabel()});
 				
 				((UIInput)toValidate).setValid(false);
 				FacesMessage message = new FacesMessage(messageText);
@@ -267,7 +286,7 @@ public class CrewManageBean {
 //			TODO: add err messages
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Exception while validating run choice", e);
 			((UIInput)toValidate).setValid(false);
-			FacesMessage message = new FacesMessage("Internal error occured, while validating your run selection");
+			FacesMessage message = new FacesMessage(iwrb.getLocalizedString("crew.manage.validateRun.genException", "Error occurred, while validating your run selection"));
 			context.addMessage(toValidate.getClientId(context), message);
 		}
 	}
@@ -284,9 +303,8 @@ public class CrewManageBean {
 		if(context.getMessages() != null && context.getMessages().hasNext())
 			return;
 		
+		IWContext iwc = IWContext.getIWContext(FacesContext.getCurrentInstance());
 		try {
-			
-			IWContext iwc = IWContext.getIWContext(FacesContext.getCurrentInstance());
 			
 			User ownerUser = iwc.getCurrentUser();
 			RunBusiness runBusiness = getCrewEditWizardBean().getRunBusiness();
@@ -304,7 +322,8 @@ public class CrewManageBean {
 			
 			if(participant == null) {
 				
-				FacesMessage message = new FacesMessage("Participant not found for current user and selected run and year group");
+				IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
+				FacesMessage message = new FacesMessage(iwrb.getLocalizedString("crew.manage.createCrew.noParticipant", "Participant not found for current user and selected run and year group"));
 				context.addMessage(null, message);
 				return;
 			}
@@ -321,8 +340,9 @@ public class CrewManageBean {
 			
 		} catch (Exception e) {
 
+			IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Exception while creating new crew", e);
-			FacesMessage message = new FacesMessage("Internal error while creating crew. Please, try again.");
+			FacesMessage message = new FacesMessage(iwrb.getLocalizedString("crew.manage.createCrew.genException", "Error occurred while creating crew. Please, try again."));
 			context.addMessage(null, message);
 		}
 	}
@@ -335,7 +355,9 @@ public class CrewManageBean {
 		
 		if(!crewParticipant.isCrewOwner()) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Tried to edit crew, when the participant is not the crew owner. Participant id: "+crewParticipant.getParticipantId());
-			FacesMessage message = new FacesMessage("Internal error while trying to edit crew. Please, try again.");
+			IWContext iwc = IWContext.getIWContext(FacesContext.getCurrentInstance());
+			IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
+			FacesMessage message = new FacesMessage(iwrb.getLocalizedString("crew.manage.editCrew.notCrewOwner", "Error occurred while trying to edit crew. Please, try again."));
 			FacesContext.getCurrentInstance().addMessage(null, message);
 			setWizardMode(false);
 		}
@@ -354,7 +376,9 @@ public class CrewManageBean {
 		if(crewParticipant.getCrewParticipantRole() != CrewParticipant.CREW_PARTICIPANT_ROLE_INVITED) {
 			
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Tried to accept invitation, but CrewParticipant was not 'Invited', rather '"+crewParticipant.getCrewParticipantRole()+"'. Participant id: "+crewParticipant.getParticipantId());
-			FacesMessage message = new FacesMessage("Internal error while trying to accept invitation. Please, try again.");
+			IWContext iwc = IWContext.getIWContext(FacesContext.getCurrentInstance());
+			IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
+			FacesMessage message = new FacesMessage(iwrb.getLocalizedString("crew.manage.acceptInvitation.roleNotInvited", "Error occurred while trying to accept invitation. Please, try again."));
 			FacesContext.getCurrentInstance().addMessage(null, message);
 			return;
 		}
@@ -370,7 +394,9 @@ public class CrewManageBean {
 		if(crewParticipant.getCrewParticipantRole() != CrewParticipant.CREW_PARTICIPANT_ROLE_INVITED) {
 			
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Tried to reject invitation, but CrewParticipant was not 'Invited', rather '"+crewParticipant.getCrewParticipantRole()+"'. Participant id: "+crewParticipant.getParticipantId());
-			FacesMessage message = new FacesMessage("Internal error while trying to reject invitation. Please, try again.");
+			IWContext iwc = IWContext.getIWContext(FacesContext.getCurrentInstance());
+			IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
+			FacesMessage message = new FacesMessage(iwrb.getLocalizedString("crew.manage.rejectInvitation.roleNotInvited", "Error occurred while trying to reject invitation. Please, try again."));
 			FacesContext.getCurrentInstance().addMessage(null, message);
 			return;
 		}
@@ -390,7 +416,9 @@ public class CrewManageBean {
 		if(!crewParticipant.isCrewOwner()) {
 			
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Tried to update crew, but CrewParticipant was not crew owner. Participant id: "+crewParticipant.getParticipantId());
-			FacesMessage message = new FacesMessage("Internal error while trying to update crew. Please, try again.");
+			IWContext iwc = IWContext.getIWContext(context);
+			IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
+			FacesMessage message = new FacesMessage(iwrb.getLocalizedString("crew.manage.updateCrew.notCrewOwner", "Error occurred while trying to update crew. Please, try again."));
 			FacesContext.getCurrentInstance().addMessage(null, message);
 			return;
 		}
@@ -415,7 +443,10 @@ public class CrewManageBean {
 		if(!crewParticipant.isCrewOwner()) {
 			
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Tried to delete crew, but CrewParticipant was not crew owner. Participant id: "+crewParticipant.getParticipantId());
-			FacesMessage message = new FacesMessage("Internal error while trying to delete crew. Please, try again.");
+			
+			IWContext iwc = IWContext.getIWContext(FacesContext.getCurrentInstance());
+			IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
+			FacesMessage message = new FacesMessage(iwrb.getLocalizedString("crew.manage.deleteCrew.notCrewOwner", "Error occurred while trying to delete crew. Please, try again."));
 			FacesContext.getCurrentInstance().addMessage(null, message);
 			return;
 		}
@@ -426,7 +457,10 @@ public class CrewManageBean {
 			getCrewEditWizardBean().setMode(CrewEditWizardBean.newCrewMode);
 			
 		} catch (Exception e) {
-			FacesMessage message = new FacesMessage("Internal error while trying to delete crew. Please, try again.");
+			
+			IWContext iwc = IWContext.getIWContext(FacesContext.getCurrentInstance());
+			IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
+			FacesMessage message = new FacesMessage(iwrb.getLocalizedString("crew.manage.deleteCrew.genException", "Error occurred while trying to delete crew. Please, try again."));
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
 	}
@@ -458,6 +492,9 @@ public class CrewManageBean {
 		if(crewLabel == null)
 			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Tried to get crew view header, but crew label was null. Participant id: "+crewParticipant.getParticipantId());
 		
-		return "Crew \""+crewLabel == null ? CoreConstants.EMPTY : crewLabel+"\" view";
+		IWContext iwc = IWContext.getIWContext(FacesContext.getCurrentInstance());
+		IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
+		
+		return iwrb.getLocalizedAndFormattedString("crew.manage.crewViewHeader", "Crew \"{0}\" view", new Object[] {crewLabel == null ? CoreConstants.EMPTY : crewLabel});
 	}
 }

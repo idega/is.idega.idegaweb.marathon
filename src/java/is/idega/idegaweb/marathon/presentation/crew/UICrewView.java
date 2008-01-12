@@ -23,9 +23,9 @@ import com.idega.presentation.IWContext;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
- * Last modified: $Date: 2008/01/11 19:30:02 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/12 19:06:46 $ by $Author: civilis $
  *
  */
 public class UICrewView extends IWBaseComponent {
@@ -41,6 +41,7 @@ public class UICrewView extends IWBaseComponent {
 	private static final String containerFacet = "container";
 	private static final String crewVuewStyleClass = "crewView";
 	private static final String headerStyleClass = "header";
+	private static final String membersListStyleClass = "membersList";
 	
 	
 	/**
@@ -49,8 +50,6 @@ public class UICrewView extends IWBaseComponent {
 	protected void initializeComponent(FacesContext context) {
 	
 		Application application = context.getApplication();
-		IWContext iwc = IWContext.getIWContext(context);
-		IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
 		
 		HtmlForm form = (HtmlForm)context.getApplication().createComponent(HtmlForm.COMPONENT_TYPE);
 		form.setId(context.getViewRoot().createUniqueId());
@@ -80,25 +79,27 @@ public class UICrewView extends IWBaseComponent {
 	protected UIComponent createMembersListArea(FacesContext context) {
 		
 		Application application = context.getApplication();
+		IWContext iwc = IWContext.getIWContext(context);
+		IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
 		
 		HtmlTag containerDiv = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		containerDiv.setId(context.getViewRoot().createUniqueId());
 		containerDiv.setValue(divTag);
-		containerDiv.setStyleClass("membersList");
+		containerDiv.setStyleClass(membersListStyleClass);
 		
 		HtmlDataTable membersTable = (HtmlDataTable)application.createComponent(HtmlDataTable.COMPONENT_TYPE);
 		membersTable.setId(context.getViewRoot().createUniqueId());
 		membersTable.setVar(member_var);
 		membersTable.setValueBinding(valueAtt, context.getApplication().createValueBinding(UICrewsOverview.crewMembersInvitationBean_membersListExp));
 		
-		membersTable.getChildren().add(createColumn(context, member_nameExp, "Member name"));
+		membersTable.getChildren().add(createColumn(context, member_nameExp, iwrb.getLocalizedString("crew.crewView.memberName", "Member name")));
 		membersTable.getChildren().add(createColumn(context, member_roleExp, " "));
 		
 		containerDiv.getChildren().add(membersTable);
 		
 		HtmlCommandButton viewCrewsListButton = (HtmlCommandButton)application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
 		viewCrewsListButton.setId(context.getViewRoot().createUniqueId());
-		viewCrewsListButton.setValue("View crews list");
+		viewCrewsListButton.setValue(iwrb.getLocalizedString("crew.crewView.viewCrewsList", "View crews list"));
 		viewCrewsListButton.setAction(application.createMethodBinding(UICrewsOverview.crewManageBean_viewCrewsListExp, null));
 		containerDiv.getChildren().add(viewCrewsListButton);
 		

@@ -24,9 +24,9 @@ import com.idega.presentation.IWContext;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
- * Last modified: $Date: 2008/01/11 19:30:02 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/12 19:06:46 $ by $Author: civilis $
  *
  */
 public class UICrewsOverviewList extends IWBaseComponent {
@@ -86,7 +86,7 @@ public class UICrewsOverviewList extends IWBaseComponent {
 		
 		HtmlCommandLink startNewCrewRegLink = (HtmlCommandLink)application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
 		startNewCrewRegLink.setId(context.getViewRoot().createUniqueId());
-		startNewCrewRegLink.setValue("Create new crew");
+		startNewCrewRegLink.setValue(iwrb.getLocalizedString("crew.overviewList.createNewCrew", "Create new crew"));
 		startNewCrewRegLink.setAction(application.createMethodBinding(UICrewsOverview.crewManageBean_startNewCrewRegistrationExp, null));
 		
 		containerDiv.getChildren().add(startNewCrewRegLink);
@@ -97,9 +97,9 @@ public class UICrewsOverviewList extends IWBaseComponent {
 		crewsTable.setVar(crew_var);
 		crewsTable.setValueBinding(valueAtt, context.getApplication().createValueBinding(UICrewsOverview.crewsOverviewListBean_crewsOverviewListExp));
 		
-		crewsTable.getChildren().add(createColumn(context, crew_labelExp, "Crew label"));
-		crewsTable.getChildren().add(createColumn(context, crew_runLabelExp, "Run label"));
-		crewsTable.getChildren().add(createColumn(context, crew_distanceExp, "Distance"));
+		crewsTable.getChildren().add(createColumn(context, crew_labelExp, iwrb.getLocalizedString("crew.overviewList.crewLabel", "Crew label")));
+		crewsTable.getChildren().add(createColumn(context, crew_runLabelExp, iwrb.getLocalizedString("crew.overviewList.runLabel", "Run label")));
+		crewsTable.getChildren().add(createColumn(context, crew_distanceExp, iwrb.getLocalizedString("crew.overviewList.distanceLabel", "Distance label")));
 		
 		HtmlTag buttonsContainer = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		buttonsContainer.setId(context.getViewRoot().createUniqueId());
@@ -115,10 +115,12 @@ public class UICrewsOverviewList extends IWBaseComponent {
 	protected void addLinks(FacesContext context, UIComponent parent) {
 		
 		Application application = context.getApplication();
+		IWContext iwc = IWContext.getIWContext(context);
+		IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
 		
 		HtmlCommandLink link = (HtmlCommandLink)application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
 		link.setId(context.getViewRoot().createUniqueId());
-		link.setValue("Edit");
+		link.setValue(iwrb.getLocalizedString("crew.overviewList.edit", "Edit"));
 		link.setValueBinding(onclickAtt, application.createValueBinding(crew_pidOnclickExp));
 		link.setValueBinding(renderedAtt, application.createValueBinding(crew_renderedEditExp));
 		link.setAction(application.createMethodBinding(UICrewsOverview.crewManageBean_editCrewExp, null));
@@ -126,7 +128,7 @@ public class UICrewsOverviewList extends IWBaseComponent {
 		
 		link = (HtmlCommandLink)application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
 		link.setId(context.getViewRoot().createUniqueId());
-		link.setValue("Accept invitation");
+		link.setValue(iwrb.getLocalizedString("crew.overviewList.acceptInvitation", "Accept invitation"));
 		link.setValueBinding(onclickAtt, application.createValueBinding(crew_pidOnclickExp));
 		link.setValueBinding(renderedAtt, application.createValueBinding(crew_renderedAcceptInvitationExp));
 		link.setAction(application.createMethodBinding(UICrewsOverview.crewManageBean_acceptInvitationExp, null));
@@ -134,7 +136,7 @@ public class UICrewsOverviewList extends IWBaseComponent {
 		
 		link = (HtmlCommandLink)application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
 		link.setId(context.getViewRoot().createUniqueId());
-		link.setValue("Reject invitation");
+		link.setValue(iwrb.getLocalizedString("crew.overviewList.rejectInvitation", "Reject invitation"));
 		link.setValueBinding(onclickAtt, application.createValueBinding(crew_pidOnclickExp));
 		link.setValueBinding(renderedAtt, application.createValueBinding(crew_renderedRejectInvitationExp));
 		link.setAction(application.createMethodBinding(UICrewsOverview.crewManageBean_rejectInvitationExp, null));
@@ -142,7 +144,7 @@ public class UICrewsOverviewList extends IWBaseComponent {
 		
 		link = (HtmlCommandLink)application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
 		link.setId(context.getViewRoot().createUniqueId());
-		link.setValue("View crew");
+		link.setValue(iwrb.getLocalizedString("crew.overviewList.viewCrew", "View crew"));
 		link.setValueBinding(onclickAtt, application.createValueBinding(crew_pidOnclickExp));
 		link.setAction(application.createMethodBinding(UICrewsOverview.crewManageBean_viewCrewViewExp, null));
 		parent.getChildren().add(link);
