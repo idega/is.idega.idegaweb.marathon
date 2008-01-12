@@ -16,9 +16,9 @@ import com.idega.presentation.text.Text;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
- * Last modified: $Date: 2008/01/11 19:30:02 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/12 17:15:16 $ by $Author: civilis $
  *
  */
 public class UICrewsOverview extends IWBaseComponent {
@@ -32,10 +32,10 @@ public class UICrewsOverview extends IWBaseComponent {
 	public static final String crewManageBean_startNewCrewRegistrationExp = 		"#{crewManageBean.startNewCrewRegistration}";
 	public static final String crewManageBean_wizardModeExp = 						"#{crewManageBean.wizardMode}";
 	public static final String crewManageBean_crewManageHeaderValueExp = 			"#{crewManageBean.crewManageHeaderValue}";
-	public static final String crewManageBean_crewLabelExp = 						"#{crewManageBean.crewLabel}";
+	public static final String crewManageBean_crewLabelForOwnerExp = 				"#{crewManageBean.crewLabelForOwner}";
 	public static final String crewManageBean_runsExp = 							"#{crewManageBean.runs}";
 	public static final String crewManageBean_validateRunSelectionExp = 			"#{crewManageBean.validateRunSelection}";
-	public static final String crewManageBean_runIdExp =				 			"#{crewManageBean.runId}";
+	public static final String crewManageBean_runIdForOwnerExp =				 	"#{crewManageBean.runIdForOwner}";
 	public static final String crewManageBean_createCrewExp =						"#{crewManageBean.createCrew}";
 	public static final String crewManageBean_editCrewExp =							"#{crewManageBean.editCrew}";
 	public static final String crewManageBean_updateCrewExp =						"#{crewManageBean.updateCrew}";

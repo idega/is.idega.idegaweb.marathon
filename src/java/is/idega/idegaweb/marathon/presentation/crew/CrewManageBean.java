@@ -31,17 +31,17 @@ import com.idega.util.IWTimestamp;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
- * Last modified: $Date: 2008/01/11 19:30:02 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/12 17:15:16 $ by $Author: civilis $
  *
  */
 public class CrewManageBean {
 
 	private boolean wizardMode = false;
 	private boolean crewViewMode = false;
-	private String crewLabel;
-	private String runId;
+	private String crewLabelForOwner;
+	private String runIdForOwner;
 	private List runsChoices;
 	
 	private CrewEditWizardBean crewEditWizardBean;
@@ -76,34 +76,29 @@ public class CrewManageBean {
 		return getCrewEditWizardBean().isNewCrewMode() ? "Create new crew" : getCrewEditWizardBean().isEditCrewMode() ? "Edit crew" : "Manage crew";
 	}
 
-	public String getCrewLabel() {
+	public String getCrewLabelForOwner() {
 		
-		if(crewLabel == null && getCrewEditWizardBean().getParticipant() != null)
-			crewLabel = getCrewEditWizardBean().getParticipant().getRunGroupName();
+		if(crewLabelForOwner == null && getCrewEditWizardBean().getCrewParticipant() != null && getCrewEditWizardBean().getCrewParticipant().isCrewOwner())
+			crewLabelForOwner = getCrewEditWizardBean().getCrewParticipant().getCrewLabel();
 		
-		return crewLabel;
+		return crewLabelForOwner;
 	}
 
-	public void setCrewLabel(String crewLabel) {
+	public void setCrewLabelForOwner(String crewLabel) {
 		
-		this.crewLabel = crewLabel;
+		this.crewLabelForOwner = crewLabel;
 	}
 
-	public String getRunId() {
+	public String getRunIdForOwner() {
 		
-		if(runId == null) {
-			
-			Participant participant = getCrewEditWizardBean().getParticipant();
-			
-			if(participant != null)
-				runId = String.valueOf(participant.getRunTypeGroupID());
-		}
+		if(runIdForOwner == null && getCrewEditWizardBean().getCrewParticipant() != null && getCrewEditWizardBean().getCrewParticipant().isCrewOwner())
+			runIdForOwner = String.valueOf(getCrewEditWizardBean().getCrewParticipant().getParticipant().getRunTypeGroupID());
 		
-		return runId;
+		return runIdForOwner;
 	}
 
-	public void setRunId(String runId) {
-		this.runId = runId;
+	public void setRunIdForOwner(String runIdForOwner) {
+		this.runIdForOwner = runIdForOwner;
 	}
 	
 	public List getRuns() {
@@ -206,15 +201,9 @@ public class CrewManageBean {
 	    boolean crewLabelExists = runBusiness.isCrewLabelAlreadyExistsForRun(runId.intValue(), currentYear.intValue(), crewLabel);
 	    
 	    if(crewLabelExists) {
-//	    	TODO: check if it belongs to current user
-	    	
-	    	boolean ownerCurrentUser = false;
-	    	
-	    	if(ownerCurrentUser) {
-//	    		TODO: display message, that he should edit his existing crew
-	    	} else {
-//	    		TODO: display message, that the group with such name already exists for the run
-	    	}
+	    	FacesMessage message = new FacesMessage("Crew already exists with such label");
+			message.setSeverity(FacesMessage.SEVERITY_ERROR);
+			context.addMessage(null, message);
 	    }
 	}
 	
@@ -246,19 +235,25 @@ public class CrewManageBean {
 			if(participant == null)
 //				will be caught by createCrew()
 				return;
+			
+			CrewParticipant crewParticipant = new CrewParticipant(participant);
 
-			if(participant.getRunGroupName() != null) {
-				
-//				already registered to a crew
+			if(crewParticipant.isParticipatingInCrew()) {
+//				already registered or invited to a crew				
+
 				IWResourceBundle iwrb = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc);
 				
 				String messageText;
 				
-				if(participant.isCrewOwner())
-					messageText = "You have already created and registered to the crew labeled \""+participant.getRunGroupName()+"\" for this run. You may edit crew from crews list, and/or delete it.";
+				if(crewParticipant.getCrewParticipantRole() == CrewParticipant.CREW_PARTICIPANT_ROLE_OWNER)
+					messageText = "You have already created and registered to the crew labeled \""+crewParticipant.getCrewLabel()+"\" for this run. You may edit crew from crews list, and/or delete it.";
+				else if(crewParticipant.getCrewParticipantRole() == CrewParticipant.CREW_PARTICIPANT_ROLE_MEMBER)
+					messageText = "You are registered to the crew labeled \""+crewParticipant.getCrewLabel()+"\" for this run already. Unregister from the crew before creating new crew.";
+				else if(crewParticipant.getCrewParticipantRole() == CrewParticipant.CREW_PARTICIPANT_ROLE_INVITED)
+					messageText = "You are invited to the crew labeled \""+crewParticipant.getCrewLabel()+"\" for this run already. Reject invitation before creating new crew.";
 				else
-					messageText = "You are registered to the crew labeled \""+participant.getRunGroupName()+"\" for this run already.";
-				
+//					shouldn't possibly happen
+					messageText = CoreConstants.EMPTY;
 				
 				((UIInput)toValidate).setValid(false);
 				FacesMessage message = new FacesMessage(messageText);
@@ -271,6 +266,9 @@ public class CrewManageBean {
 
 //			TODO: add err messages
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Exception while validating run choice", e);
+			((UIInput)toValidate).setValid(false);
+			FacesMessage message = new FacesMessage("Internal error occured, while validating your run selection");
+			context.addMessage(toValidate.getClientId(context), message);
 		}
 	}
 	
@@ -278,8 +276,8 @@ public class CrewManageBean {
 
 		FacesContext context = FacesContext.getCurrentInstance();
 		
-		String crewLabel = getCrewLabel();
-		Integer runId = new Integer(getRunId());
+		String crewLabel = getCrewLabelForOwner();
+		Integer runId = new Integer(getRunIdForOwner());
 		
 		validateCrewLabel(context, crewLabel, runId);
 		
@@ -306,49 +304,43 @@ public class CrewManageBean {
 			
 			if(participant == null) {
 				
-//				TODO: add error message, that current user is not participant for selected run
-				
-				System.out.println(":participant null ....................:");
+				FacesMessage message = new FacesMessage("Participant not found for current user and selected run and year group");
+				context.addMessage(null, message);
 				return;
 			}
 			
-			if(participant.getRunGroupName() != null) {
-				
-				System.out.println("you're already registered to a crew. quit first");
-				
-			} else if(participant.getCrewInvitedParticipantId() != null) {
-				
-				System.out.println("you're invited to a crew. reject invitation first");
-				
-			} else {
+//			relying on validateRunSelection, so everything should be fine (no crew for user)
 			
-				participant.setRunGroupName(crewLabel);
-				participant.setIsCrewOwner(true);
-				participant.store();
-				getCrewEditWizardBean().setParticipant(participant);
-				getCrewEditWizardBean().setMode(CrewEditWizardBean.editCrewMode);
-			}
+			CrewParticipant crewParticipant = new CrewParticipant(participant, getCrewEditWizardBean().getRunBusiness());
+			crewParticipant.setCrewOwner(true);
+			crewParticipant.setCrewLabel(crewLabel);
+			crewParticipant.store();
+			
+			getCrewEditWizardBean().setCrewParticipant(crewParticipant);
+			getCrewEditWizardBean().setMode(CrewEditWizardBean.editCrewMode);
 			
 		} catch (Exception e) {
 
-//			TODO: add err messages
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Exception while creating new crew", e);
+			FacesMessage message = new FacesMessage("Internal error while creating crew. Please, try again.");
+			context.addMessage(null, message);
 		}
 	}
 	
 	public void editCrew() {
 		
-		Participant participant = getCrewEditWizardBean().getParticipant();
+		CrewParticipant crewParticipant = getCrewEditWizardBean().getCrewParticipant();
 		
 //		TODO: check if this participant is amongst current user participants
 		
-		if(!participant.isCrewOwner()) {
-//			TODO: add msg
-			System.out.println("wrong wrong");
+		if(!crewParticipant.isCrewOwner()) {
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Tried to edit crew, when the participant is not the crew owner. Participant id: "+crewParticipant.getParticipantId());
+			FacesMessage message = new FacesMessage("Internal error while trying to edit crew. Please, try again.");
+			FacesContext.getCurrentInstance().addMessage(null, message);
 			setWizardMode(false);
 		}
 		
-		setCrewLabel(participant.getRunGroupName());
+		setCrewLabelForOwner(crewParticipant.getCrewLabel());
 		
 		setWizardMode(true);
 		getCrewEditWizardBean().setMode(CrewEditWizardBean.editCrewMode);
@@ -357,38 +349,34 @@ public class CrewManageBean {
 	
 	public void acceptInvitation() {
 		
-		Participant participant = getCrewEditWizardBean().getParticipant();
+		CrewParticipant crewParticipant = getCrewEditWizardBean().getCrewParticipant();
 		
-		if(participant.getCrewInvitedParticipantId() == null) {
-			System.out.println("err occured");
+		if(crewParticipant.getCrewParticipantRole() != CrewParticipant.CREW_PARTICIPANT_ROLE_INVITED) {
+			
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Tried to accept invitation, but CrewParticipant was not 'Invited', rather '"+crewParticipant.getCrewParticipantRole()+"'. Participant id: "+crewParticipant.getParticipantId());
+			FacesMessage message = new FacesMessage("Internal error while trying to accept invitation. Please, try again.");
+			FacesContext.getCurrentInstance().addMessage(null, message);
 			return;
 		}
 		
-		RunBusiness runBusiness = getCrewEditWizardBean().getRunBusiness();
-		
-		try {
-			Participant crewOwner = runBusiness.getParticipantByPrimaryKey(participant.getCrewInvitedParticipantId().intValue());
-			
-			participant.setRunGroupName(crewOwner.getRunGroupName());
-			participant.setCrewInvitedParticipantId(null);
-			participant.setIsCrewOwner(false);
-			participant.store();
-			
-		} catch (Exception e) {
-			// TODO: add err msg
-			e.printStackTrace();
-			return;
-		}
+		crewParticipant.acceptInvitation();
+		crewParticipant.store();
 	}
 	
 	public void rejectInvitation() {
 		
-		Participant participant = getCrewEditWizardBean().getParticipant();
+		CrewParticipant crewParticipant = getCrewEditWizardBean().getCrewParticipant();
 		
-		participant.setRunGroupName(null);
-		participant.setCrewInvitedParticipantId(null);
-		participant.setIsCrewOwner(false);
-		participant.store();
+		if(crewParticipant.getCrewParticipantRole() != CrewParticipant.CREW_PARTICIPANT_ROLE_INVITED) {
+			
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Tried to reject invitation, but CrewParticipant was not 'Invited', rather '"+crewParticipant.getCrewParticipantRole()+"'. Participant id: "+crewParticipant.getParticipantId());
+			FacesMessage message = new FacesMessage("Internal error while trying to reject invitation. Please, try again.");
+			FacesContext.getCurrentInstance().addMessage(null, message);
+			return;
+		}
+		
+		crewParticipant.rejectInvitation();
+		crewParticipant.store();
 	}
 	
 	
@@ -396,61 +384,50 @@ public class CrewManageBean {
 
 		FacesContext context = FacesContext.getCurrentInstance();
 		
-		Participant participant = getCrewEditWizardBean().getParticipant();
-		String crewLabel = getCrewLabel();
+		CrewParticipant crewParticipant = getCrewEditWizardBean().getCrewParticipant();
+		String crewLabel = getCrewLabelForOwner();
 		
-		if(!crewLabel.equals(participant.getRunGroupName())) {
+		if(!crewParticipant.isCrewOwner()) {
+			
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Tried to update crew, but CrewParticipant was not crew owner. Participant id: "+crewParticipant.getParticipantId());
+			FacesMessage message = new FacesMessage("Internal error while trying to update crew. Please, try again.");
+			FacesContext.getCurrentInstance().addMessage(null, message);
+			return;
+		}
 		
-			Integer runId = new Integer(getRunId());
+		if(!crewLabel.equals(crewParticipant.getCrewLabel())) {
+		
+			Integer runId = new Integer(getRunIdForOwner());
 			validateCrewLabel(context, crewLabel, runId);
 			
 			if(context.getMessages() != null && context.getMessages().hasNext())
 				return;
 			
-			try {
-				
-				RunBusiness runBusiness = getCrewEditWizardBean().getRunBusiness();
-				
-				Collection crewMembers = runBusiness.getParticipantsByYearAndTeamName(String.valueOf(participant.getRunYearGroupID()), crewLabel);
-				
-				for (Iterator iterator = crewMembers.iterator(); iterator.hasNext();) {
-					Participant member = (Participant) iterator.next();
-					
-					member.setRunGroupName(crewLabel);
-					member.store();
-				}
-				
-			} catch (FinderException e) {
-				e.printStackTrace();
-//				TODO: add msg about err
-			}
+			crewParticipant.setCrewLabel(crewLabel);
+			crewParticipant.store();
 		}
 	}
 	
 	public void deleteCrew() {
 
+		CrewParticipant crewParticipant = getCrewEditWizardBean().getCrewParticipant();
+		
+		if(!crewParticipant.isCrewOwner()) {
+			
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Tried to delete crew, but CrewParticipant was not crew owner. Participant id: "+crewParticipant.getParticipantId());
+			FacesMessage message = new FacesMessage("Internal error while trying to delete crew. Please, try again.");
+			FacesContext.getCurrentInstance().addMessage(null, message);
+			return;
+		}
+
 		try {
-			Participant participant = getCrewEditWizardBean().getParticipant();
-			String crewLabel = participant.getRunGroupName();
-			RunBusiness runBusiness = getCrewEditWizardBean().getRunBusiness();
-			
-			Collection crewMembers = runBusiness.getParticipantsByYearAndCrewNameOrInvitationParticipantId(String.valueOf(participant.getRunYearGroupID()), crewLabel, new Integer(participant.getRunID()));
-			
-			for (Iterator iterator = crewMembers.iterator(); iterator.hasNext();) {
-				Participant member = (Participant) iterator.next();
-				
-				member.setRunGroupName(null);
-				member.setIsCrewOwner(false);
-				member.setCrewInvitedParticipantId(null);
-				member.store();
-			}
-			
+			crewParticipant.deleteCrew();
 			setWizardMode(false);
 			getCrewEditWizardBean().setMode(CrewEditWizardBean.newCrewMode);
 			
-		} catch (FinderException e) {
-			e.printStackTrace();
-//			TODO: add msg about err
+		} catch (Exception e) {
+			FacesMessage message = new FacesMessage("Internal error while trying to delete crew. Please, try again.");
+			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
 	}
 	
@@ -474,30 +451,13 @@ public class CrewManageBean {
 	
 	public String getCrewViewHeader() {
 		
-		Participant viewerParticipant = getCrewEditWizardBean().getParticipant();
-		String crewLabel;
+		CrewParticipant crewParticipant = getCrewEditWizardBean().getCrewParticipant();
 		
-		if(viewerParticipant.getRunGroupName() != null) {
-			
-			crewLabel = viewerParticipant.getRunGroupName();
-			
-		} else if(viewerParticipant.getCrewInvitedParticipantId() != null) {
-			
-			try {
-				RunBusiness runBusiness = getCrewEditWizardBean().getRunBusiness();
-				Participant owner = runBusiness.getParticipantByPrimaryKey(viewerParticipant.getCrewInvitedParticipantId().intValue());
-				crewLabel = owner.getRunGroupName();
-				
-			} catch (Exception e) {
-				Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Exception while getting crew view header", e);
-				crewLabel = CoreConstants.EMPTY;
-			}
-			
-		} else {
-			Logger.getLogger(getClass().getName()).log(Level.WARNING, "Error when getting crew view header. Crew label not set, crew invitation not set");
-			crewLabel = CoreConstants.EMPTY;
-		}
+		String crewLabel = crewParticipant.getCrewLabel();
 		
-		return "Crew \""+crewLabel+"\" view";
+		if(crewLabel == null)
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Tried to get crew view header, but crew label was null. Participant id: "+crewParticipant.getParticipantId());
+		
+		return "Crew \""+crewLabel == null ? CoreConstants.EMPTY : crewLabel+"\" view";
 	}
 }

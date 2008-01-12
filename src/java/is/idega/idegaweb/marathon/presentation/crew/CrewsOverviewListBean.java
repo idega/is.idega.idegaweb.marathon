@@ -25,9 +25,9 @@ import com.idega.user.data.User;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
- * Last modified: $Date: 2008/01/11 19:30:02 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/12 17:15:15 $ by $Author: civilis $
  *
  */
 public class CrewsOverviewListBean {
@@ -49,42 +49,33 @@ public class CrewsOverviewListBean {
 			if(participants != null) {
 				
 				for (Iterator iterator = participants.iterator(); iterator.hasNext();) {
-					Participant participant = (Participant)iterator.next();
 					
-					String crewLabel = participant.getRunGroupName();
+					CrewParticipant crewParticipant = new CrewParticipant((Participant)iterator.next(), runBusiness);
+					
+					int role = crewParticipant.getCrewParticipantRole();
 					
 //					doesn't belong to a crew in this participation
-					if(crewLabel == null && participant.getCrewInvitedParticipantId() == null)
+					if(role == CrewParticipant.CREW_PARTICIPANT_ROLE_NOT_PARTICIPANT)
 						continue;
 					
-					if(crewLabel == null) {
-						
-						Participant p = runBusiness.getParticipantByPrimaryKey(participant.getCrewInvitedParticipantId().intValue());
-						
-						if(p == null || p.getRunGroupName() == null) {
-							Logger.getLogger(getClass().getName()).log(Level.WARNING, "Owner participant not found for crewInvitedParticipantId set: "+participant.getCrewInvitedParticipantId()+" or crew name was not set for the owner participant");
-							continue;
-						}
-						
-						crewLabel = p.getRunGroupName();
-					}
+					String crewLabel = crewParticipant.getCrewLabel();
 					
 					String runLabel = 
 						iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc)	
-						.getLocalizedString(participant.getRunTypeGroup().getName(), participant.getRunTypeGroup().getName()) + " " + participant.getRunYearGroup().getName();
+						.getLocalizedString(crewParticipant.getParticipant().getRunTypeGroup().getName(), crewParticipant.getParticipant().getRunTypeGroup().getName()) + " " + crewParticipant.getParticipant().getRunYearGroup().getName();
 					
 					String distanceLabel = 
 						iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc)
-						.getLocalizedString(participant.getRunDistanceGroup().getName(), participant.getRunDistanceGroup().getName());
+						.getLocalizedString(crewParticipant.getParticipant().getRunDistanceGroup().getName(), crewParticipant.getParticipant().getRunDistanceGroup().getName());
 					
 					Map crew = new HashMap(7);
 					crew.put(UICrewsOverviewList.crew_label, crewLabel);
 					crew.put(UICrewsOverviewList.crew_runLabel, runLabel);
 					crew.put(UICrewsOverviewList.crew_distance, distanceLabel);
-					crew.put(UICrewsOverviewList.crew_pidOnclick, new StringBuffer("document.getElementById('").append(UICrewsOverviewList.crewsOverviewListBean_participantIdParam).append("').value='").append(participant.getPrimaryKey().toString()).append("';"));
-					crew.put(UICrewsOverviewList.crew_renderedEdit, new Boolean(participant.isCrewOwner()));
-					crew.put(UICrewsOverviewList.crew_renderedAcceptInvitation, new Boolean(participant.getCrewInvitedParticipantId() != null));
-					crew.put(UICrewsOverviewList.crew_renderedRejectInvitation, new Boolean(participant.getCrewInvitedParticipantId() != null));
+					crew.put(UICrewsOverviewList.crew_pidOnclick, new StringBuffer("document.getElementById('").append(UICrewsOverviewList.crewsOverviewListBean_participantIdParam).append("').value='").append(crewParticipant.getParticipantId()).append("';"));
+					crew.put(UICrewsOverviewList.crew_renderedEdit, new Boolean(crewParticipant.isCrewOwner()));
+					crew.put(UICrewsOverviewList.crew_renderedAcceptInvitation, new Boolean(role == CrewParticipant.CREW_PARTICIPANT_ROLE_INVITED));
+					crew.put(UICrewsOverviewList.crew_renderedRejectInvitation, new Boolean(role == CrewParticipant.CREW_PARTICIPANT_ROLE_INVITED));
 					
 					crews.add(crew);
 				}

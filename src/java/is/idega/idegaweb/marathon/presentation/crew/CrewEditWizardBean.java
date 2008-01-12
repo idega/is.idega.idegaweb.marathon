@@ -4,8 +4,9 @@ import is.idega.idegaweb.marathon.IWBundleStarter;
 import is.idega.idegaweb.marathon.business.RunBusiness;
 import is.idega.idegaweb.marathon.data.Participant;
 
-import java.rmi.RemoteException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.faces.context.FacesContext;
 
@@ -17,9 +18,9 @@ import com.idega.util.CoreConstants;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
- * Last modified: $Date: 2008/01/11 19:30:02 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/12 17:15:16 $ by $Author: civilis $
  *
  */
 public class CrewEditWizardBean {
@@ -28,9 +29,8 @@ public class CrewEditWizardBean {
 	public static final Integer newCrewMode = new Integer(1);
 	public static final Integer editCrewMode = new Integer(2);
 	private Integer crewEditId;
-	private String participantId;
 	private List crewMembersInvitationSearchResults;
-	private Participant participant;
+	private CrewParticipant crewParticipant;
 	private RunBusiness runBusiness;
 
 	public Integer getCrewEditId() {
@@ -59,26 +59,6 @@ public class CrewEditWizardBean {
 		return editCrewMode.equals(getMode());
 	}
 	
-	public Participant getParticipant() {
-
-		if(participant == null && getParticipantId() != null && !CoreConstants.EMPTY.equals(getParticipantId())) {
-			
-			try {
-				participant = getRunBusiness().getParticipantByPrimaryKey(new Integer(getParticipantId()).intValue());
-				
-			} catch (RemoteException e) {
-				throw new RuntimeException(e);
-			}
-		}
-		
-		return participant;
-	}
-	
-	public void setParticipant(Participant participant) {
-		crewMembersInvitationSearchResults = null;
-		this.participant = participant;
-	}
-	
 	public RunBusiness getRunBusiness() {
 		
 		if(runBusiness == null) {
@@ -94,19 +74,31 @@ public class CrewEditWizardBean {
 	}
 
 	public String getParticipantId() {
-		return participantId;
+		
+		if(getCrewParticipant() == null)
+			return null;
+		
+		return String.valueOf(getCrewParticipant().getParticipantId());
 	}
 
 	public void setParticipantId(String participantId) {
-		participant = null;
-		crewMembersInvitationSearchResults = null;
-		this.participantId = participantId;
+
+		if(participantId == null || CoreConstants.EMPTY.equals(participantId))
+			return;
+		
+		try {
+			Participant participant = getRunBusiness().getParticipantByPrimaryKey(Integer.parseInt(participantId));
+			setCrewParticipant(new CrewParticipant(participant));
+			
+		} catch (Exception e) {
+			Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Exception while retrieving participant by participantId provided: "+participantId, e);
+		}
 	}
 	
 	public String getRunLabel() {
 
 		IWContext iwc = IWContext.getIWContext(FacesContext.getCurrentInstance());
-		Participant participant = getParticipant();
+		Participant participant = getCrewParticipant().getParticipant();
 		
 		return iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER).getResourceBundle(iwc)	
 		.getLocalizedString(participant.getRunTypeGroup().getName(), participant.getRunTypeGroup().getName()) + " " + participant.getRunYearGroup().getName();
@@ -119,5 +111,14 @@ public class CrewEditWizardBean {
 	public void setCrewMembersInvitationSearchResults(
 			List crewMembersInvitationSearchResults) {
 		this.crewMembersInvitationSearchResults = crewMembersInvitationSearchResults;
+	}
+
+	public CrewParticipant getCrewParticipant() {
+		return crewParticipant;
+	}
+
+	public void setCrewParticipant(CrewParticipant crewParticipant) {
+		crewMembersInvitationSearchResults = null;
+		this.crewParticipant = crewParticipant;
 	}
 }

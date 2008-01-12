@@ -29,9 +29,9 @@ import com.idega.presentation.wizard.WizardStep;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
- * Last modified: $Date: 2008/01/11 19:30:02 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/12 17:15:15 $ by $Author: civilis $
  *
  */
 public class UICrewManageStep extends IWBaseComponent implements WizardStep {
@@ -101,7 +101,7 @@ public class UICrewManageStep extends IWBaseComponent implements WizardStep {
 		div.getChildren().add(text);
 		
 //		crew label
-		HtmlTag entry = createEntry(context, "Crew label: ", HtmlInputText.COMPONENT_TYPE, null, UICrewsOverview.crewManageBean_crewLabelExp, null, true);
+		HtmlTag entry = createEntry(context, "Crew label: ", HtmlInputText.COMPONENT_TYPE, null, UICrewsOverview.crewManageBean_crewLabelForOwnerExp, null, true);
 		containerDiv.getChildren().add(entry);
 		
 //		<choose run or chosen run>
@@ -116,7 +116,7 @@ public class UICrewManageStep extends IWBaseComponent implements WizardStep {
 		runChooser.getChildren().add(selectItems);
 		runChooser.setValueBinding(renderedAtt, application.createValueBinding(UICrewsOverview.crewEditWizardBean_newCrewModeExp));
 		
-		entry = createEntry(context, "Choose run: ", HtmlSelectOneMenu.COMPONENT_TYPE, runChooser, UICrewsOverview.crewManageBean_runIdExp, UICrewsOverview.crewManageBean_validateRunSelectionExp, true);
+		entry = createEntry(context, "Choose run: ", HtmlSelectOneMenu.COMPONENT_TYPE, runChooser, UICrewsOverview.crewManageBean_runIdForOwnerExp, UICrewsOverview.crewManageBean_validateRunSelectionExp, true);
 		containerDiv.getChildren().add(entry);
 		entry.setValueBinding(renderedAtt, application.createValueBinding(UICrewsOverview.crewEditWizardBean_newCrewModeExp));
 		
