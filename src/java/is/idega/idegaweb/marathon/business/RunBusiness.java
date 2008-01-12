@@ -1,5 +1,5 @@
 /*
- * $Id: RunBusiness.java,v 1.46 2008/01/11 19:29:40 civilis Exp $
+ * $Id: RunBusiness.java,v 1.47 2008/01/12 17:12:39 civilis Exp $
  * Created on Aug 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -34,10 +34,10 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2008/01/11 19:29:40 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/12 17:12:39 $ by $Author: civilis $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.46 $
+ * @version $Revision: 1.47 $
  */
 public interface RunBusiness extends IBOService {
 
@@ -329,5 +329,5 @@ public interface RunBusiness extends IBOService {
 	 */
 	public Collection getParticipantsBySearchQuery(Object yearPK, String searchQuery) throws FinderException;
 	
-	public Collection getParticipantsByYearAndCrewNameOrInvitationParticipantId(Object yearPK, String crewName, Integer participantId) throws FinderException;
+	public Collection getParticipantsByYearAndCrewInOrCrewInvitationParticipantId(Object yearPK, Integer crewParticipantId) throws FinderException;
 }

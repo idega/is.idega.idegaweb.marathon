@@ -163,10 +163,10 @@ public class ParticipantHomeImpl extends IDOFactory implements ParticipantHome {
 		return crewLabelExists;
 	}
 	
-	public Collection findByYearAndCrewNameOrInvitationParticipantId(Object yearPK, String crewName, Integer participantId) throws FinderException {
+	public Collection findByYearAndCrewInOrCrewInvitationParticipantId(Object yearPK, Integer crewParticipantId) throws FinderException {
 		
 		IDOEntity entity = this.idoCheckOutPooledEntity();
-		Collection ids = ((ParticipantBMPBean) entity).ejbFindByYearAndCrewNameOrInvitationParticipantId(yearPK, crewName, participantId);
+		Collection ids = ((ParticipantBMPBean) entity).ejbFindByYearAndCrewInOrCrewInvitationParticipantId(yearPK, crewParticipantId);
 		this.idoCheckInPooledEntity(entity);
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}

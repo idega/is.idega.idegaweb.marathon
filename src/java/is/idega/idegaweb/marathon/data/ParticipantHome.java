@@ -53,5 +53,5 @@ public interface ParticipantHome extends IDOHome {
 	
 	public Collection findByYearAndFullNameOrPersonalIdOrParticipantNumberOrParentGroup(Object yearPK, String searchQuery) throws FinderException;
 	
-	public Collection findByYearAndCrewNameOrInvitationParticipantId(Object yearPK, String crewName, Integer participantId) throws FinderException;
+	public Collection findByYearAndCrewInOrCrewInvitationParticipantId(Object yearPK, Integer crewParticipantId) throws FinderException;
 }

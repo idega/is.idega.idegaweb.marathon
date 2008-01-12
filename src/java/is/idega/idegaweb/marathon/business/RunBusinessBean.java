@@ -1095,10 +1095,10 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		}
 	}
 	
-	public Collection getParticipantsByYearAndCrewNameOrInvitationParticipantId(Object yearPK, String crewName, Integer participantId) throws FinderException {
+	public Collection getParticipantsByYearAndCrewInOrCrewInvitationParticipantId(Object yearPK, Integer crewParticipantId) throws FinderException {
 		try {
 			ParticipantHome runHome = (ParticipantHome) getIDOHome(Participant.class);
-			return runHome.findByYearAndCrewNameOrInvitationParticipantId(yearPK, crewName, participantId);
+			return runHome.findByYearAndCrewInOrCrewInvitationParticipantId(yearPK, crewParticipantId);
 		}
 		catch (RemoteException e) {
 			throw new IBORuntimeException(e);

@@ -362,11 +362,11 @@ public interface Participant extends IDOEntity {
 	 */
 	public java.util.Collection getPaymentGroupsForYear();
 	
-	public boolean isCrewOwner();
-	
-	public void setIsCrewOwner(boolean isCrewOwner);
-	
 	public Integer getCrewInvitedParticipantId();
 	
 	public void setCrewInvitedParticipantId(Integer crewInvitedParticipantId);
+	
+	public void setCrewInParticipantId(Integer crewInParticipantId);
+	
+	public Integer getCrewInParticipantId();
 }

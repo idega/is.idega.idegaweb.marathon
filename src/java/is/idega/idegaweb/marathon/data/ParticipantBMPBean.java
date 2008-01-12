@@ -74,8 +74,8 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		addAttribute(getColumnNameUserNationality(), "User Nationality", true, true, String.class);
 		addAttribute(getColumnNameTShirtSize(), "TShirt Size", true, true, String.class);
 		addAttribute(getColumnNameRunGroupName(), "Run Group Name", true, true, String.class);
-		addAttribute(getColumnNameIsCrewOwner(), "Is crew owner", true, true, Boolean.class);
 		addAttribute(getColumnNameCrewInvitedParticipantId(), "Crew invited participant id", true, true, Integer.class);
+		addAttribute(getColumnNameCrewInParticipantId(), "Crew this participant is member of participant id", true, true, Integer.class);
 		
 		addAttribute(getColumnNameBestTime(), "Best Time", true, true, String.class);
 		addAttribute(getColumnNameGoalTime(), "Goal Time", true, true, String.class);
@@ -160,12 +160,12 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		return "run_group_name";
 	}
 	
-	public static String getColumnNameIsCrewOwner() {
-		return "is_crew_owner";
-	}
-	
 	public static String getColumnNameCrewInvitedParticipantId() {
 		return "crew_invited_pid";
+	}
+	
+	public static String getColumnNameCrewInParticipantId() {
+		return "crew_in_pid";
 	}
 
 	public static String getColumnNameBestTime() {
@@ -369,12 +369,12 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		return getStringColumnValue(getColumnNameRunGroupName());
 	}
 	
-	public boolean isCrewOwner() {
-		return getBooleanColumnValue(getColumnNameIsCrewOwner());
-	}
-	
 	public Integer getCrewInvitedParticipantId() {
 		return getIntegerColumnValue(getColumnNameCrewInvitedParticipantId());
+	}
+	
+	public Integer getCrewInParticipantId() {
+		return getIntegerColumnValue(getColumnNameCrewInParticipantId());
 	}
 
 	public String getBestTime() {
@@ -485,12 +485,12 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		setColumn(getColumnNameRunGroupName(), runGrName);
 	}
 	
-	public void setIsCrewOwner(boolean isCrewOwner) {
-		setColumn(getColumnNameIsCrewOwner(), isCrewOwner);
-	}
-	
 	public void setCrewInvitedParticipantId(Integer crewInvitedParticipantId) {
 		setColumn(getColumnNameCrewInvitedParticipantId(), crewInvitedParticipantId);
+	}
+	
+	public void setCrewInParticipantId(Integer crewInParticipantId) {
+		setColumn(getColumnNameCrewInParticipantId(), crewInParticipantId);
 	}
 
 	public void setBestTime(String bestTime) {
@@ -668,27 +668,17 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		return super.idoFindPKsByQuery(query);
 	}
 	
-	public Collection ejbFindByYearAndCrewNameOrInvitationParticipantId(Object yearPK, String crewName, Integer participantId) throws FinderException{
+	public Collection ejbFindByYearAndCrewInOrCrewInvitationParticipantId(Object yearPK, Integer crewParticipantId) throws FinderException{
 		Table table = new Table(this);
 		SelectQuery query = new SelectQuery(table);
 		query.addColumn(new Column(getIDColumnName()));
 		
 		query.addCriteria(new MatchCriteria(table, getColumnNameRunYearGroupID(), MatchCriteria.EQUALS, yearPK));
 		
-		if(crewName != null && participantId != null) {
-			
-			Criteria crewNameCriteria = new MatchCriteria(table, getColumnNameRunGroupName(), MatchCriteria.EQUALS, crewName);
-			Criteria participantIdCriteria = new MatchCriteria(table, getColumnNameCrewInvitedParticipantId(), MatchCriteria.EQUALS, participantId);
 		
-			query.addCriteria(new OR(crewNameCriteria, participantIdCriteria));
-			
-		} else if(crewName != null) {
-			
-			query.addCriteria(new MatchCriteria(table, getColumnNameRunGroupName(), MatchCriteria.EQUALS, crewName));
-			
-		} else if(participantId != null) {
-			query.addCriteria(new MatchCriteria(table, getColumnNameCrewInvitedParticipantId(), MatchCriteria.EQUALS, participantId));
-		}
+		Criteria crewInCriteria = new MatchCriteria(table, getColumnNameCrewInParticipantId(), MatchCriteria.EQUALS, crewParticipantId);
+		Criteria crewInvitedCriteria = new MatchCriteria(table, getColumnNameCrewInvitedParticipantId(), MatchCriteria.EQUALS, crewParticipantId);
+		query.addCriteria(new OR(crewInCriteria, crewInvitedCriteria));
 		
 		return super.idoFindPKsByQuery(query);
 	}
