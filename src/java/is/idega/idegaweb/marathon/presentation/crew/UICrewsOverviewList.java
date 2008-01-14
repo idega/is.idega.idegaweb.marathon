@@ -24,9 +24,9 @@ import com.idega.presentation.IWContext;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *
- * Last modified: $Date: 2008/01/12 19:06:46 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/14 21:05:56 $ by $Author: civilis $
  *
  */
 public class UICrewsOverviewList extends IWBaseComponent {
@@ -82,20 +82,46 @@ public class UICrewsOverviewList extends IWBaseComponent {
 		HtmlTag containerDiv = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		containerDiv.setId(context.getViewRoot().createUniqueId());
 		containerDiv.setValue(divTag);
+		containerDiv.setStyleClass("marathonCrewsOverviewList");
 		form.getChildren().add(containerDiv);
+		
+		HtmlTag div = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
+		div.setId(context.getViewRoot().createUniqueId());
+		div.setValue(divTag);
+		div.setStyleClass("headerContainer");
+		containerDiv.getChildren().add(div);
+		
+		HtmlTag header = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
+		header.setId(context.getViewRoot().createUniqueId());
+		header.setValue(divTag);
+		header.setStyleClass("header");
+		div.getChildren().add(header);
+		
+		HtmlOutputText headerText = (HtmlOutputText)context.getApplication().createComponent(HtmlOutputText.COMPONENT_TYPE);
+		headerText.setValue("Crews view");
+		header.getChildren().add(headerText);		
 		
 		HtmlCommandLink startNewCrewRegLink = (HtmlCommandLink)application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
 		startNewCrewRegLink.setId(context.getViewRoot().createUniqueId());
 		startNewCrewRegLink.setValue(iwrb.getLocalizedString("crew.overviewList.createNewCrew", "Create new crew"));
 		startNewCrewRegLink.setAction(application.createMethodBinding(UICrewsOverview.crewManageBean_startNewCrewRegistrationExp, null));
+		startNewCrewRegLink.setStyleClass("createNewLink");
 		
-		containerDiv.getChildren().add(startNewCrewRegLink);
+		div.getChildren().add(startNewCrewRegLink);
+		
+		div = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
+		div.setId(context.getViewRoot().createUniqueId());
+		div.setValue(divTag);
+		div.setStyleClass("contentsContainer");
+		containerDiv.getChildren().add(div);
 		
 		HtmlDataTable crewsTable = (HtmlDataTable)application.createComponent(HtmlDataTable.COMPONENT_TYPE);
 		crewsTable.setSortable(true);
 		crewsTable.setId(context.getViewRoot().createUniqueId());
 		crewsTable.setVar(crew_var);
 		crewsTable.setValueBinding(valueAtt, context.getApplication().createValueBinding(UICrewsOverview.crewsOverviewListBean_crewsOverviewListExp));
+		crewsTable.setCellpadding("0");
+		crewsTable.setCellspacing("0");
 		
 		crewsTable.getChildren().add(createColumn(context, crew_labelExp, iwrb.getLocalizedString("crew.overviewList.crewLabel", "Crew label")));
 		crewsTable.getChildren().add(createColumn(context, crew_runLabelExp, iwrb.getLocalizedString("crew.overviewList.runLabel", "Run label")));
@@ -103,13 +129,14 @@ public class UICrewsOverviewList extends IWBaseComponent {
 		
 		HtmlTag buttonsContainer = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		buttonsContainer.setId(context.getViewRoot().createUniqueId());
-		buttonsContainer.setValue(spanTag);
+		buttonsContainer.setValue(divTag);
+		buttonsContainer.setStyleClass("links");
 		
 		addLinks(context, buttonsContainer);
 		
 		crewsTable.getChildren().add(createColumn(context, buttonsContainer, " "));
 		
-		containerDiv.getChildren().add(crewsTable);
+		div.getChildren().add(crewsTable);
 	}
 	
 	protected void addLinks(FacesContext context, UIComponent parent) {

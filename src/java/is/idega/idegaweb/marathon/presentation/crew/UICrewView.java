@@ -23,9 +23,9 @@ import com.idega.presentation.IWContext;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
- * Last modified: $Date: 2008/01/12 19:06:46 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/14 21:05:57 $ by $Author: civilis $
  *
  */
 public class UICrewView extends IWBaseComponent {
@@ -39,7 +39,7 @@ public class UICrewView extends IWBaseComponent {
 	public static final String member_roleExp = UICrewMembersInivitationStep.member_roleExp;
 	
 	private static final String containerFacet = "container";
-	private static final String crewVuewStyleClass = "crewView";
+	private static final String crewVuewStyleClass = "marathonCrewView";
 	private static final String headerStyleClass = "header";
 	private static final String membersListStyleClass = "membersList";
 	
@@ -93,7 +93,7 @@ public class UICrewView extends IWBaseComponent {
 		membersTable.setValueBinding(valueAtt, context.getApplication().createValueBinding(UICrewsOverview.crewMembersInvitationBean_membersListExp));
 		
 		membersTable.getChildren().add(createColumn(context, member_nameExp, iwrb.getLocalizedString("crew.crewView.memberName", "Member name")));
-		membersTable.getChildren().add(createColumn(context, member_roleExp, " "));
+		membersTable.getChildren().add(createColumn(context, member_roleExp, iwrb.getLocalizedString("crew.invitation.memberRole", "Member role")));
 		
 		containerDiv.getChildren().add(membersTable);
 		

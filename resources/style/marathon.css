@@ -41,7 +41,7 @@ div.distChWiz_changeSuccess input {
 	display: block;
 }
 
-div.distChWiz_creditCardInformation .header, div.distChWiz_assetsCart .header, div.distChWiz_distChangeArea .header {
+div.distChWiz_creditCardInformation .header, div.distChWiz_assetsCart .header, div.distChWiz_distChangeArea .header, .marathonCrewMembersInivitation .header {
 	
 	font: medium;
 	font-weight: bold;
@@ -102,3 +102,148 @@ div.distChWiz_creditCardInformation div.contents div.credCardNr input {
 	position: static;
 	width: auto !important;
 }
+
+div.marathonCrewsOverviewList {
+	position: relative;
+	left: 0px;
+	top: 0px;
+	color: black;
+}
+
+/**** <marathon crews> */
+
+/*<crews tables>*/
+
+.marathonCrewsOverviewList table, .marathonCrewView table, .marathonCrewMembersInivitation table {
+	margin: 0px;
+	padding: 0px;
+	border: solid #CCCCCC 1px;
+	border-collapse: collapse;
+}
+
+.marathonCrewsOverviewList th, .marathonCrewsOverviewList td, .marathonCrewView td, .marathonCrewView th, .marathonCrewMembersInivitation td, .marathonCrewMembersInivitation th {
+	
+	padding: 2px;
+	border: solid #CCCCCC 1px;
+}
+
+/*</crews tables>*/
+
+
+/*<crews links>*/
+
+.marathonCrewsOverviewList .links a:hover, .marathonCrewsOverviewList .headerContainer a:hover, .marathonCrewsOverviewList .contentsContainer th a:hover, .marathonCrewMembersInivitation td a:hover  {
+	background-color: #6C6C6B;
+	color: white;
+}
+
+.marathonCrewsOverviewList .contentsContainer th a {
+	padding: 2px;
+}
+
+.marathonCrewsOverviewList a, .marathonCrewMembersInivitation a {
+	
+	color: #6C6C6B;
+	text-decoration: none;
+}
+
+.marathonCrewsOverviewList .headerContainer a {
+	border: solid grey 1px;
+	padding: 2px;
+	display: inline !important;
+}
+
+.marathonCrewsOverviewList .links a, .marathonCrewsOverviewList .headerContainer a, .marathonCrewMembersInivitation a {
+	padding: 0px 3px 0px 3px;
+	margin: 2px;
+	border: solid grey 1px;
+	display: block;
+}
+
+/*</crews links>*/
+
+/*<crew headers>*/
+.marathonCrewsOverviewList .headerContainer {
+	padding: 8px;
+}
+
+.marathonCrewView .header, .marathonCrewsOverviewList .headerContainer .header, .marathonCrewManage .header, .marathonCrewMembersInivitation .header {
+	
+	font-size: larger;
+	font-weight: bold;
+	padding: 2px;
+	border-bottom: solid grey 1px;
+	margin-bottom: 5px;
+}
+/*</crew headers>*/
+
+.marathonCrewView {
+	
+	color: black;
+}
+
+.marathonCrewView input {
+	margin: 2px;
+}
+
+.marathonCrewManage {
+	
+}
+
+.marathonCrewManage .entry {
+	display: block;	
+	
+}
+
+.marathonCrewManage .entry .subentryLabel, .marathonCrewManage .entry .subentryInput, .marathonCrewManage .entry .subentryError {
+
+	float: left;
+	padding-left: 10px;
+}
+
+.marathonCrewManage .entry .subentryLabel {
+	width: 100px;
+}
+
+.marathonCrewManage .entry .subentryInput {
+	width: 200px;
+}
+
+.marathonCrewManage .entry .subentryError {
+	width: 300px;
+}
+
+.marathonCrewManage .entry .error {
+	color: red;
+	font-size: small;
+}
+
+.marathonCrewManage .errors {
+	
+	margin-left: 5px;
+	color: red;
+	display: block;
+	font-size: small;
+}
+
+.marathonCrewManage .buttons input {
+	
+	display: block;
+	margin: 2px;
+	width: 200px;
+}
+
+.marathonCrewManage .buttons input.deleteCrew {
+	margin-top: 22px;
+}
+
+.marathonCrewMembersInivitation .buttons {
+	padding: 2px;
+}
+
+.marathonCrewMembersInivitation .searchArea {
+	
+	padding: 5px 0px 5px 0px;
+}
+
+/**** </marathon crews> */

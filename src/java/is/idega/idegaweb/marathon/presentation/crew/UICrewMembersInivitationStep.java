@@ -31,9 +31,9 @@ import com.idega.presentation.wizard.WizardStep;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
- * Last modified: $Date: 2008/01/12 19:06:46 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/14 21:05:56 $ by $Author: civilis $
  *
  */
 public class UICrewMembersInivitationStep extends IWBaseComponent implements WizardStep {
@@ -64,7 +64,7 @@ public class UICrewMembersInivitationStep extends IWBaseComponent implements Wiz
 	public static final String crewMembersInvitationBean_memberDeleteParticipantIdParam = 			"cmib_mdpi";
 	public static final String crewMembersInvitationBean_memberAddParticipantIdParam = 				"cmib_mapi";
 	
-	private static final String crewMembersInivitationStyleClass = "crewMembersInivitation";
+	private static final String crewMembersInivitationStyleClass = "marathonCrewMembersInivitation";
 	private static final String errorStyleClass = "error";
 	private static final String headerStyleClass = "header";
 	private static final String entryStyleClass = "entry";
@@ -187,11 +187,18 @@ public class UICrewMembersInivitationStep extends IWBaseComponent implements Wiz
 		membersTable.getChildren().add(createColumn(context, deleteMemberLink, " "));
 		containerDiv.getChildren().add(membersTable);
 		
+		HtmlTag div = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
+		div.setId(context.getViewRoot().createUniqueId());
+		div.setValue(divTag);
+		div.setStyleClass("buttons");
+		containerDiv.getChildren().add(div);
+		
 		HtmlCommandButton viewCrewsListButton = (HtmlCommandButton)application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
 		viewCrewsListButton.setId(context.getViewRoot().createUniqueId());
 		viewCrewsListButton.setValue(iwrb.getLocalizedString("crew.invitation.viewCrewsList", "View crews list"));
 		viewCrewsListButton.setAction(application.createMethodBinding(UICrewsOverview.crewManageBean_viewCrewsListExp, null));
-		containerDiv.getChildren().add(viewCrewsListButton);
+		viewCrewsListButton.setImmediate(true);
+		div.getChildren().add(viewCrewsListButton);
 		
 		return containerDiv;
 	}
@@ -259,6 +266,7 @@ public class UICrewMembersInivitationStep extends IWBaseComponent implements Wiz
 		return IWContext.getIWContext(FacesContext.getCurrentInstance()).isLoggedOn();
 	}
 	
+//	TODO: remove createEntry
 protected HtmlTag createEntry(FacesContext context, String labelStr, String inputComponentType, UIComponent entryValueComponent, String valueBindingExp, String validatorMethodExp, boolean required) {
 		
 		Application application = context.getApplication();
@@ -274,13 +282,19 @@ protected HtmlTag createEntry(FacesContext context, String labelStr, String inpu
 			entryValueComponent.setId(context.getViewRoot().createUniqueId());
 		}
 		
+		HtmlTag div = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
+		div.setId(context.getViewRoot().createUniqueId());
+		div.setStyleClass("subentryLabel");
+		div.setValue(divTag);
+		entryDiv.getChildren().add(div);
+		
 //		label
 		if(entryValueComponent instanceof UIInput) {
 			HtmlOutputLabel label = (HtmlOutputLabel)application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
 			label.setId(context.getViewRoot().createUniqueId());
 			label.setValue(labelStr);
 			label.setFor(entryValueComponent.getId());
-			entryDiv.getChildren().add(label);
+			div.getChildren().add(label);
 			
 		} else {
 			
@@ -288,26 +302,32 @@ protected HtmlTag createEntry(FacesContext context, String labelStr, String inpu
 			span.setId(context.getViewRoot().createUniqueId());
 			span.setStyleClass(labelStyleClass);
 			span.setValue(spanTag);
-			entryDiv.getChildren().add(span);
+			div.getChildren().add(span);
 			
 			HtmlOutputText text = (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
 			text.setId(context.getViewRoot().createUniqueId());
 			text.setValue(labelStr);
 			span.getChildren().add(text);
 		}
-
+		
 //		input
-		HtmlTag span = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
-		span.setId(context.getViewRoot().createUniqueId());
-		span.setValue(spanTag);
-		span.setStyleClass(subentryStyleClass);
-		entryDiv.getChildren().add(span);
+		
+		div = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
+		div.setId(context.getViewRoot().createUniqueId());
+		div.setStyleClass("subentryInput");
+		div.setValue(divTag);
+		entryDiv.getChildren().add(div);
 		
 		entryValueComponent.setValueBinding(valueAtt, application.createValueBinding(valueBindingExp));
-		span.getChildren().add(entryValueComponent);
-		
+		div.getChildren().add(entryValueComponent);
 		
 		if(entryValueComponent instanceof UIInput) {
+			
+			div = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
+			div.setId(context.getViewRoot().createUniqueId());
+			div.setStyleClass("subentryError");
+			div.setValue(divTag);
+			entryDiv.getChildren().add(div);
 			
 			((UIInput)entryValueComponent).setRequired(required);
 			
@@ -318,12 +338,13 @@ protected HtmlTag createEntry(FacesContext context, String labelStr, String inpu
 			HtmlTag errSpan = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 			errSpan.setId(context.getViewRoot().createUniqueId());
 			errSpan.setStyleClass(errorStyleClass);
-			errSpan.setValue(spanTag);
-			span.getChildren().add(errSpan);
+			errSpan.setValue(divTag);
+			div.getChildren().add(errSpan);
 			
 			HtmlMessage errMsg = (HtmlMessage)application.createComponent(HtmlMessage.COMPONENT_TYPE);
 			errMsg.setId(context.getViewRoot().createUniqueId());
 			errMsg.setFor(entryValueComponent.getId());
+			errMsg.setValueBinding("error", application.createValueBinding(UICrewsOverview.crewManageBean_crewManageHeaderValueExp));
 			errSpan.getChildren().add(errMsg);
 		}
 		
