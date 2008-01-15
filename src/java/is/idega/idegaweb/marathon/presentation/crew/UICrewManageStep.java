@@ -24,16 +24,15 @@ import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.CSSSpacer;
 import com.idega.presentation.IWBaseComponent;
 import com.idega.presentation.IWContext;
-import com.idega.presentation.text.Break;
 import com.idega.presentation.wizard.Wizard;
 import com.idega.presentation.wizard.WizardStep;
 
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *
- * Last modified: $Date: 2008/01/14 21:05:56 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/15 09:20:50 $ by $Author: civilis $
  *
  */
 public class UICrewManageStep extends IWBaseComponent implements WizardStep {
@@ -47,9 +46,15 @@ public class UICrewManageStep extends IWBaseComponent implements WizardStep {
 	private static final String crewManageStyleClass = "marathonCrewManage";
 	private static final String entryStyleClass = "entry";
 	private static final String labelStyleClass = "label";
-	private static final String subentryStyleClass = "subentry";
 	private static final String errorStyleClass = "error";
+	private static final String errorsStyleClass = "errors";
 	private static final String headerStyleClass = "header";
+	private static final String buttonsStyleClass = "buttons";
+	private static final String deleteCrewStyleClass = "deleteCrew";
+	private static final String subentryLabelStyleClass = "subentryLabel";
+	private static final String subentryInputStyleClass = "subentryInput";
+	private static final String subentryErrorStyleClass = "subentryError";
+	
 	
 	private Wizard wizard;
 
@@ -88,7 +93,6 @@ public class UICrewManageStep extends IWBaseComponent implements WizardStep {
 		containerDiv.getChildren().add(hidden);
 		
 		
-		
 		HtmlTag div = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		div.setId(context.getViewRoot().createUniqueId());
 		div.setValue(divTag);
@@ -103,7 +107,7 @@ public class UICrewManageStep extends IWBaseComponent implements WizardStep {
 		div = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		div.setId(context.getViewRoot().createUniqueId());
 		div.setValue(divTag);
-		div.setStyleClass("errors");
+		div.setStyleClass(errorsStyleClass);
 		containerDiv.getChildren().add(div);
 		
 		HtmlMessages messages = (HtmlMessages)application.createComponent(HtmlMessages.COMPONENT_TYPE);
@@ -150,7 +154,7 @@ public class UICrewManageStep extends IWBaseComponent implements WizardStep {
 		div = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		div.setId(context.getViewRoot().createUniqueId());
 		div.setValue(divTag);
-		div.setStyleClass("buttons");
+		div.setStyleClass(buttonsStyleClass);
 		containerDiv.getChildren().add(div);
 		
 		HtmlCommandButton createCrewButton = (HtmlCommandButton)application.createComponent(HtmlCommandButton.COMPONENT_TYPE);
@@ -184,7 +188,7 @@ public class UICrewManageStep extends IWBaseComponent implements WizardStep {
 		deleteCrewButton.setValue(iwrb.getLocalizedString("crew.manage.deleteCrew", "Delete crew"));
 		deleteCrewButton.setAction(application.createMethodBinding(UICrewsOverview.crewManageBean_deleteCrewExp, null));
 		deleteCrewButton.setValueBinding(renderedAtt, application.createValueBinding(UICrewsOverview.crewEditWizardBean_editCrewModeExp));
-		deleteCrewButton.setStyleClass("deleteCrew");
+		deleteCrewButton.setStyleClass(deleteCrewStyleClass);
 		div.getChildren().add(deleteCrewButton);
 		
 		getFacets().put(containerFacet, containerDiv);
@@ -231,7 +235,7 @@ public class UICrewManageStep extends IWBaseComponent implements WizardStep {
 		
 		HtmlTag div = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		div.setId(context.getViewRoot().createUniqueId());
-		div.setStyleClass("subentryLabel");
+		div.setStyleClass(subentryLabelStyleClass);
 		div.setValue(divTag);
 		entryDiv.getChildren().add(div);
 		
@@ -261,7 +265,7 @@ public class UICrewManageStep extends IWBaseComponent implements WizardStep {
 		
 		div = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		div.setId(context.getViewRoot().createUniqueId());
-		div.setStyleClass("subentryInput");
+		div.setStyleClass(subentryInputStyleClass);
 		div.setValue(divTag);
 		entryDiv.getChildren().add(div);
 		
@@ -272,7 +276,7 @@ public class UICrewManageStep extends IWBaseComponent implements WizardStep {
 			
 			div = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 			div.setId(context.getViewRoot().createUniqueId());
-			div.setStyleClass("subentryError");
+			div.setStyleClass(subentryErrorStyleClass);
 			div.setValue(divTag);
 			entryDiv.getChildren().add(div);
 			
@@ -291,7 +295,6 @@ public class UICrewManageStep extends IWBaseComponent implements WizardStep {
 			HtmlMessage errMsg = (HtmlMessage)application.createComponent(HtmlMessage.COMPONENT_TYPE);
 			errMsg.setId(context.getViewRoot().createUniqueId());
 			errMsg.setFor(entryValueComponent.getId());
-			errMsg.setValueBinding("error", application.createValueBinding(UICrewsOverview.crewManageBean_crewManageHeaderValueExp));
 			errSpan.getChildren().add(errMsg);
 		}
 		

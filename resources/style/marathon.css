@@ -218,7 +218,7 @@ div.marathonCrewsOverviewList {
 	font-size: small;
 }
 
-.marathonCrewManage .errors {
+.marathonCrewManage .errors, .marathonCrewMembersInivitation .errors {
 	
 	margin-left: 5px;
 	color: red;
@@ -244,6 +244,11 @@ div.marathonCrewsOverviewList {
 .marathonCrewMembersInivitation .searchArea {
 	
 	padding: 5px 0px 5px 0px;
+}
+
+.marathonCrewMembersInivitation .membersList {
+	border-bottom: solid #CCCCCC 1px;
+	margin-bottom: 5px;
 }
 
 /**** </marathon crews> */
