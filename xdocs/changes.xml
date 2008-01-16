@@ -5,7 +5,11 @@
 	</properties>
 	<body>
 
-
+	<release version="3.1.29" date="2008-01-16">
+		<action dev="civilis" type="update">
+			marathon crews management 
+		</action>     
+	</release>
 	<release version="3.1.28" date="2008-01-07">
 		<action dev="civilis" type="update">
 			date input won't show day anymore 
