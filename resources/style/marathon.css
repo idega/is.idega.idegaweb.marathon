@@ -103,14 +103,17 @@ div.distChWiz_creditCardInformation div.contents div.credCardNr input {
 	width: auto !important;
 }
 
-div.marathonCrewsOverviewList {
-	position: relative;
-	left: 0px;
-	top: 0px;
-	color: black;
-}
-
 /**** <marathon crews> */
+
+/*with #article*/ 
+#article div.marathonCrewsOverviewList,
+/*the same without #article*/
+div.marathonCrewsOverviewList {
+	position: relative !important;
+	left: 0px !important;
+	top: 0px !important;
+	color: black !important;
+}
 
 /*<crews tables>*/
 
@@ -118,10 +121,10 @@ div.marathonCrewsOverviewList {
 #article .marathonCrewsOverviewList table, #article .marathonCrewView table, #article .marathonCrewMembersInivitation table, 
 /*the same without #article*/ 
 .marathonCrewsOverviewList table, .marathonCrewView table, .marathonCrewMembersInivitation table {
-	margin: 0px;
-	padding: 0px;
-	border: solid #CCCCCC 1px;
-	border-collapse: collapse;
+	margin: 0px !important;
+	padding: 0px !important;
+	border: solid #CCCCCC 1px !important;
+	border-collapse: collapse !important;
 }
 
 /*with #article*/
@@ -129,8 +132,8 @@ div.marathonCrewsOverviewList {
 /*the same without #article*/
 .marathonCrewsOverviewList th, .marathonCrewsOverviewList td, .marathonCrewView td, .marathonCrewView th, .marathonCrewMembersInivitation td, .marathonCrewMembersInivitation th {
 	
-	padding: 2px;
-	border: solid #CCCCCC 1px;
+	padding: 2px !important;
+	border: solid #CCCCCC 1px !important;
 }
 
 /*</crews tables>*/
@@ -178,7 +181,7 @@ div.marathonCrewsOverviewList {
 	padding: 0px 3px 0px 3px !important;
 	margin: 2px !important;
 	border: solid grey 1px !important;
-	display: block !important;
+	display: block;
 }
 
 /*</crews links>*/
