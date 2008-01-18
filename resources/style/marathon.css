@@ -114,6 +114,9 @@ div.marathonCrewsOverviewList {
 
 /*<crews tables>*/
 
+/*with #article*/ 
+#article .marathonCrewsOverviewList table, #article .marathonCrewView table, #article .marathonCrewMembersInivitation table, 
+/*the same without #article*/ 
 .marathonCrewsOverviewList table, .marathonCrewView table, .marathonCrewMembersInivitation table {
 	margin: 0px;
 	padding: 0px;
@@ -121,6 +124,9 @@ div.marathonCrewsOverviewList {
 	border-collapse: collapse;
 }
 
+/*with #article*/
+#article .marathonCrewsOverviewList th, #article .marathonCrewsOverviewList td, #article .marathonCrewView td, #article .marathonCrewView th, #article .marathonCrewMembersInivitation td, #article .marathonCrewMembersInivitation th,
+/*the same without #article*/
 .marathonCrewsOverviewList th, .marathonCrewsOverviewList td, .marathonCrewView td, .marathonCrewView th, .marathonCrewMembersInivitation td, .marathonCrewMembersInivitation th {
 	
 	padding: 2px;
@@ -132,123 +138,181 @@ div.marathonCrewsOverviewList {
 
 /*<crews links>*/
 
-.marathonCrewsOverviewList .links a:hover, .marathonCrewsOverviewList .headerContainer a:hover, .marathonCrewsOverviewList .contentsContainer th a:hover, .marathonCrewMembersInivitation td a:hover  {
-	background-color: #6C6C6B;
-	color: white;
+/*with #article*/
+#article .marathonCrewsOverviewList #article .links a:hover, #article .marathonCrewsOverviewList .headerContainer a:hover, #article .marathonCrewsOverviewList .contentsContainer th a:hover, #article .marathonCrewMembersInivitation td a:hover,
+/*the same without #article*/ 
+.marathonCrewsOverviewList .links a:hover, .marathonCrewsOverviewList .headerContainer a:hover, .marathonCrewsOverviewList .contentsContainer th a:hover, .marathonCrewMembersInivitation td a:hover {
+	background-color: #6C6C6B !important;
+	color: white !important;
 }
 
+/*with #article*/
+#article .marathonCrewsOverviewList .contentsContainer th a,
+/*the same without #article*/
 .marathonCrewsOverviewList .contentsContainer th a {
-	padding: 2px;
+	padding: 2px !important;
 }
 
+/*with #article*/
+#article .marathonCrewsOverviewList a, #article .marathonCrewMembersInivitation a,
+/*the same without #article*/
 .marathonCrewsOverviewList a, .marathonCrewMembersInivitation a {
 	
-	color: #6C6C6B;
-	text-decoration: none;
+	color: #6C6C6B !important;
+	text-decoration: none !important;
 }
 
+/*with #article*/
+#article .marathonCrewsOverviewList .headerContainer a,
+/*the same without #article*/
 .marathonCrewsOverviewList .headerContainer a {
-	border: solid grey 1px;
-	padding: 2px;
+	border: solid grey 1px !important;
+	padding: 2px !important;
 	display: inline !important;
 }
 
+/*with #article*/
+#article .marathonCrewsOverviewList .links a, #article .marathonCrewsOverviewList .headerContainer a, #article .marathonCrewMembersInivitation a,
+/*the same without #article*/
 .marathonCrewsOverviewList .links a, .marathonCrewsOverviewList .headerContainer a, .marathonCrewMembersInivitation a {
-	padding: 0px 3px 0px 3px;
-	margin: 2px;
-	border: solid grey 1px;
-	display: block;
+	padding: 0px 3px 0px 3px !important;
+	margin: 2px !important;
+	border: solid grey 1px !important;
+	display: block !important;
 }
 
 /*</crews links>*/
 
 /*<crew headers>*/
+/*with #article*/
+#article .marathonCrewsOverviewList .headerContainer,
+/*the same without #article*/ 
 .marathonCrewsOverviewList .headerContainer {
-	padding: 8px;
+	padding: 8px !important;
 }
 
+/*with #article*/
+#article .marathonCrewView .header, #article .marathonCrewsOverviewList .headerContainer .header, #article .marathonCrewManage .header, #article .marathonCrewMembersInivitation .header,
+/*the same without #article*/
 .marathonCrewView .header, .marathonCrewsOverviewList .headerContainer .header, .marathonCrewManage .header, .marathonCrewMembersInivitation .header {
 	
-	font-size: larger;
-	font-weight: bold;
-	padding: 2px;
-	border-bottom: solid grey 1px;
-	margin-bottom: 5px;
+	font-size: larger !important;
+	font-weight: bold !important;
+	padding: 2px !important;
+	border-bottom: solid grey 1px !important;
+	margin-bottom: 5px !important;
 }
 /*</crew headers>*/
 
+/*with #article*/
+#article .marathonCrewView,
+/*the same without #article*/
 .marathonCrewView {
 	
-	color: black;
+	color: black !important;
 }
 
+/*with #article*/
+#article .marathonCrewView input,
+/*the same without #article*/
 .marathonCrewView input {
-	margin: 2px;
+	margin: 2px !important;
 }
 
-.marathonCrewManage {
-	
-}
-
+/*with #article*/
+#article .marathonCrewManage .entry,
+/*the same without #article*/
 .marathonCrewManage .entry {
-	display: block;	
-	
+	display: block !important;	
 }
 
+/*with #article*/
+#article .marathonCrewManage .entry .subentryLabel, #article .marathonCrewManage .entry .subentryInput, #article .marathonCrewManage .entry .subentryError,
+/*the same without #article*/
 .marathonCrewManage .entry .subentryLabel, .marathonCrewManage .entry .subentryInput, .marathonCrewManage .entry .subentryError {
 
-	float: left;
-	padding-left: 10px;
+	float: left !important;
+	padding-left: 10px !important;
 }
 
+/*with #article*/
+#article .marathonCrewManage .entry .subentryLabel,
+/*the same without #article*/
 .marathonCrewManage .entry .subentryLabel {
-	width: 100px;
+	width: 100px !important;
 }
 
+/*with #article*/
+#article .marathonCrewManage .entry .subentryInput,
+/*the same without #article*/
 .marathonCrewManage .entry .subentryInput {
-	width: 200px;
+	width: 200px !important;
 }
 
+/*with #article*/
+#article .marathonCrewManage .entry .subentryError,
+/*the same without #article*/
 .marathonCrewManage .entry .subentryError {
-	width: 300px;
+	width: 300px !important;
 }
 
+/*with #article*/
+#article .marathonCrewManage .entry .error,
+/*the same without #article*/
 .marathonCrewManage .entry .error {
-	color: red;
-	font-size: small;
+	color: red !important;
+	font-size: small !important;
 }
 
+/*with #article*/
+#article .marathonCrewManage .errors, #article .marathonCrewMembersInivitation .errors,
+/*the same without #article*/
 .marathonCrewManage .errors, .marathonCrewMembersInivitation .errors {
 	
-	margin-left: 5px;
-	color: red;
-	display: block;
-	font-size: small;
+	margin-left: 5px !important;
+	color: red !important;
+	display: block !important;
+	font-size: small !important;
 }
 
+/*with #article*/
+#article .marathonCrewManage .buttons input,
+/*the same without #article*/
 .marathonCrewManage .buttons input {
 	
-	display: block;
-	margin: 2px;
-	width: 200px;
+	display: block !important;
+	margin: 2px !important;
+	width: 200px !important;
 }
 
+/*with #article*/
+#article .marathonCrewManage .buttons input.deleteCrew,
+/*the same without #article*/
 .marathonCrewManage .buttons input.deleteCrew {
-	margin-top: 22px;
+	margin-top: 22px !important;
 }
 
+/*with #article*/
+#article .marathonCrewMembersInivitation .buttons,
+/*the same without #article*/
 .marathonCrewMembersInivitation .buttons {
-	padding: 2px;
+	padding: 2px !important;
 }
 
+/*with #article*/
+#article .marathonCrewMembersInivitation .searchArea,
+/*the same without #article*/
 .marathonCrewMembersInivitation .searchArea {
 	
-	padding: 5px 0px 5px 0px;
+	padding: 5px 0px 5px 0px !important;
 }
 
+/*with #article*/
+#article .marathonCrewMembersInivitation .membersList,
+/*the same without #article*/
 .marathonCrewMembersInivitation .membersList {
-	border-bottom: solid #CCCCCC 1px;
-	margin-bottom: 5px;
+	border-bottom: solid #CCCCCC 1px !important;
+	margin-bottom: 5px !important;
 }
 
 /**** </marathon crews> */
