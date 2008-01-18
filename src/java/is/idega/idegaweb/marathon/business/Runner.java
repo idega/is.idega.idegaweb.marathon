@@ -1,5 +1,5 @@
 /*
- * $Id: Runner.java,v 1.15 2007/12/19 18:05:35 civilis Exp $ Created on May 16, 2005
+ * $Id: Runner.java,v 1.16 2008/01/18 12:12:15 civilis Exp $ Created on May 16, 2005
  * 
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
  * 
@@ -28,10 +28,10 @@ import com.idega.util.Age;
  * A holder class for information about runners and their selection when
  * registering.
  * 
- * Last modified: $Date: 2007/12/19 18:05:35 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/18 12:12:15 $ by $Author: civilis $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class Runner {
 
@@ -371,7 +371,8 @@ public class Runner {
 
 	public List getDisallowedDistancesPKs(List distances) {
 		
-		int age = new Age(getDateOfBirth()).getYears();
+		Date birthDate = getDateOfBirth() != null ? getDateOfBirth() : getUser().getDateOfBirth();
+		int age = new Age(birthDate).getYears();
 		List disallowed = new ArrayList();
 		
 		for (Iterator iterator = distances.iterator(); iterator.hasNext();) {
