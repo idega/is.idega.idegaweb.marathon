@@ -24,9 +24,9 @@ import com.idega.presentation.IWContext;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  *
- * Last modified: $Date: 2008/01/15 09:20:50 $ by $Author: civilis $
+ * Last modified: $Date: 2008/01/21 13:50:29 $ by $Author: civilis $
  *
  */
 public class UICrewsOverviewList extends IWBaseComponent {
@@ -62,6 +62,7 @@ public class UICrewsOverviewList extends IWBaseComponent {
 	private static final String marathonCrewsOverviewListStyleClass = "marathonCrewsOverviewList";
 	private static final String headerContainerStyleClass = "headerContainer";
 	private static final String headerStyleClass = "header";
+	private static final String infoTextStyleClass = "infoText";
 	private static final String createNewLinkStyleClass = "createNewLink";
 	private static final String contentsContainerStyleClass = "contentsContainer";
 	private static final String linksStyleClass = "links";
@@ -106,7 +107,19 @@ public class UICrewsOverviewList extends IWBaseComponent {
 		
 		HtmlOutputText headerText = (HtmlOutputText)context.getApplication().createComponent(HtmlOutputText.COMPONENT_TYPE);
 		headerText.setValue(iwrb.getLocalizedString("crew.overviewList.header", "Crews view"));
-		header.getChildren().add(headerText);		
+		header.getChildren().add(headerText);
+		
+		HtmlTag info = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
+		info.setId(context.getViewRoot().createUniqueId());
+		info.setValue(divTag);
+		info.setStyleClass(infoTextStyleClass);
+		div.getChildren().add(info);
+		
+		HtmlOutputText infoText = (HtmlOutputText)context.getApplication().createComponent(HtmlOutputText.COMPONENT_TYPE);
+		infoText.setEscape(false);
+		infoText.setValue(iwrb.getLocalizedString("run_reg.group_information_text_step_1", "Information text 1..."));
+		info.getChildren().add(infoText);
+		
 		
 		HtmlCommandLink startNewCrewRegLink = (HtmlCommandLink)application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
 		startNewCrewRegLink.setId(context.getViewRoot().createUniqueId());

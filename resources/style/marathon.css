@@ -41,12 +41,14 @@ div.distChWiz_changeSuccess input {
 	display: block;
 }
 
-div.distChWiz_creditCardInformation .header, div.distChWiz_assetsCart .header, div.distChWiz_distChangeArea .header, .marathonCrewMembersInivitation .header {
+.distChWiz_creditCardInformation .header, div.distChWiz_assetsCart .header, div.distChWiz_distChangeArea .header, .marathonCrewMembersInivitation .header {
 	
 	font: medium;
 	font-weight: bold;
 	border-bottom: 1px #CCCCCC solid;
 }
+
+
 
 div.distChWiz_assetsCart, div.distChWiz_creditCardInformation, div.distChWiz_distChangeArea {
 	position: relative;
@@ -149,6 +151,8 @@ div.marathonCrewsOverviewList {
 	color: white !important;
 }
 
+
+
 /*with #article*/
 #article .marathonCrewsOverviewList .contentsContainer th a,
 /*the same without #article*/
@@ -172,6 +176,12 @@ div.marathonCrewsOverviewList {
 	border: solid grey 1px !important;
 	padding: 2px !important;
 	display: inline !important;
+}
+
+.marathonCrewsOverviewList .infoText {
+	
+	border-bottom: solid grey 1px !important;
+	margin-bottom: 5px;
 }
 
 /*with #article*/
