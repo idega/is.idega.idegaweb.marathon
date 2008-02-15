@@ -21,6 +21,8 @@ import com.idega.business.IBOLookupException;
 import com.idega.data.IDOLookup;
 import com.idega.data.IDOLookupException;
 import com.idega.idegaweb.IWBundle;
+import com.idega.idegaweb.IWMainApplication;
+import com.idega.idegaweb.IWMainApplicationSettings;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.ui.CreditCardNumber;
@@ -30,9 +32,9 @@ import com.idega.util.LocaleUtil;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  *
- * Last modified: $Date: 2008/01/04 14:37:22 $ by $Author: civilis $
+ * Last modified: $Date: 2008/02/15 09:39:40 $ by $Author: alexis $
  *
  */
 public class DistanceChangeWizardBean {
@@ -202,15 +204,16 @@ public class DistanceChangeWizardBean {
 			IWContext iwc = IWContext.getIWContext(FacesContext.getCurrentInstance());
 			boolean isIcelandic = iwc.getCurrentLocale().equals(LocaleUtil.getIcelandicLocale());
 			
-			IWBundle bundle = iwc.getIWMainApplication().getBundle(IWBundleStarter.IW_BUNDLE_IDENTIFIER);
+			IWMainApplication iwma = IWMainApplication.getIWMainApplication(IWContext.getInstance());
+			IWMainApplicationSettings applicationSettings  = iwma.getSettings();
 			
 			if (isIcelandic) {
-				float price = Float.parseFloat(bundle.getProperty(PROPERTY_DISTANCE_PRICE_ISK, "0.01"));
+				float price = Float.parseFloat(applicationSettings.getProperty(PROPERTY_DISTANCE_PRICE_ISK, "0.01"));
 				distanceChangePrice = new Price(new Float(price), ISK_CURRENCY_LABEL, iwc.getCurrentLocale());
 				
 			} else {
 				
-				float price = Float.parseFloat(bundle.getProperty(PROPERTY_DISTANCE_PRICE_EUR, "0.01"));
+				float price = Float.parseFloat(applicationSettings.getProperty(PROPERTY_DISTANCE_PRICE_EUR, "0.01"));
 				distanceChangePrice = new Price(new Float(price), EUR_CURRENCY_LABEL, iwc.getCurrentLocale());
 			}
 		}
