@@ -24,6 +24,7 @@ public class ActiveRunDropDownMenu extends DropdownMenu {
 	private static final String PARAMETER_ACTIVE_RUNS = "prm_active_runs";
 	private Runner runner = null;
 	private String[] constrainedRunIds;
+	private boolean showAllThisYear = false;
 
 	public ActiveRunDropDownMenu() {
 		this(PARAMETER_ACTIVE_RUNS);
@@ -34,13 +35,14 @@ public class ActiveRunDropDownMenu extends DropdownMenu {
 	}
 
 	public ActiveRunDropDownMenu(String parameterName, Runner runner) {
-		this(parameterName,runner,null);
+		this(parameterName,runner,null, false);
 	}
 
-	public ActiveRunDropDownMenu(String parameterName, Runner runner, String[] constrainedRunIds) {
+	public ActiveRunDropDownMenu(String parameterName, Runner runner, String[] constrainedRunIds, boolean showAllThisYear) {
 		super(parameterName);
 		this.runner = runner;
 		this.constrainedRunIds=constrainedRunIds;
+		this.showAllThisYear = showAllThisYear;
 	}
 
 	public void main(IWContext iwc) throws Exception {
@@ -69,6 +71,9 @@ public class ActiveRunDropDownMenu extends DropdownMenu {
 				if (year != null && year.getLastRegistrationDate() != null) {
 					IWTimestamp lastRegistrationDate = new IWTimestamp(year.getLastRegistrationDate());
 					if (thisYearStamp.isEarlierThan(lastRegistrationDate)) {
+						finished = false;
+						show = true;
+					} else if (lastRegistrationDate.getYear() == thisYearStamp.getYear() && this.showAllThisYear) {
 						finished = false;
 						show = true;
 					}

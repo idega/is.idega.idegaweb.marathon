@@ -1,5 +1,5 @@
 /*
- * $Id: GroupRegistration.java,v 1.6 2007/07/30 13:49:50 sigtryggur Exp $
+ * $Id: GroupRegistration.java,v 1.7 2008/06/11 16:50:14 palli Exp $
  * Created on May 30, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -37,10 +37,10 @@ import com.idega.user.data.Group;
 
 
 /**
- * Last modified: $Date: 2007/07/30 13:49:50 $ by $Author: sigtryggur $
+ * Last modified: $Date: 2008/06/11 16:50:14 $ by $Author: palli $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class GroupRegistration extends RunBlock {
 
@@ -62,6 +62,7 @@ public class GroupRegistration extends RunBlock {
 	private String[] participants;
 	private Map participantMap;
 	private String runIds;
+	private boolean showAllThisYear;
 
 	public void main(IWContext iwc) throws Exception {
 		if (!iwc.isInEditMode()) {
@@ -404,10 +405,10 @@ public class GroupRegistration extends RunBlock {
 		ActiveRunDropDownMenu runDropdown = null;
 		String[] constrainedRunIds = getRunIdsArray();
 		if(constrainedRunIds==null){
-			runDropdown = (ActiveRunDropDownMenu) getStyledInterface(new ActiveRunDropDownMenu(PARAMETER_RUN));
+			runDropdown = (ActiveRunDropDownMenu) getStyledInterface(new ActiveRunDropDownMenu(PARAMETER_RUN, null, null, this.showAllThisYear));
 		}
 		else{
-			runDropdown = (ActiveRunDropDownMenu) getStyledInterface(new ActiveRunDropDownMenu(PARAMETER_RUN, null, constrainedRunIds));
+			runDropdown = (ActiveRunDropDownMenu) getStyledInterface(new ActiveRunDropDownMenu(PARAMETER_RUN, null, constrainedRunIds, this.showAllThisYear));
 		}
 		
 		runDropdown.setAsNotEmpty(localize("run_reg.must_select_run", "You have to select a run"));
@@ -440,5 +441,13 @@ public class GroupRegistration extends RunBlock {
 		}
 		
 		return null;
+	}
+	
+	public void setShowAllThisYear(boolean showAllThisYear) {
+		this.showAllThisYear = showAllThisYear;
+	}
+	
+	public boolean getShowAllThisYear() {
+		return this.showAllThisYear;
 	}
 }

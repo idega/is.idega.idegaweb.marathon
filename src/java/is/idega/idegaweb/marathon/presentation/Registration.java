@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.128 2007/12/17 13:48:13 civilis Exp $
+ * $Id: Registration.java,v 1.129 2008/06/11 16:50:16 palli Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -77,10 +77,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2007/12/17 13:48:13 $ by $Author: civilis $
+ * Last modified: $Date: 2008/06/11 16:50:16 $ by $Author: palli $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.128 $
+ * @version $Revision: 1.129 $
  */
 public class Registration extends RunBlock {
 	
@@ -169,6 +169,7 @@ public class Registration extends RunBlock {
 	private boolean hideShirtSize=false;
 	private boolean hidePrintviewLink=false;
 	private boolean hideRaceNumberColumn=false;
+	private boolean showAllThisYear=false;
 
 	public void main(IWContext iwc) throws Exception {
 		if (!iwc.isInEditMode()) {
@@ -798,10 +799,10 @@ public class Registration extends RunBlock {
 		ActiveRunDropDownMenu runDropdown = null;
 		String[] constrainedRunIds = getRunIdsArray();
 		if(constrainedRunIds==null){
-			runDropdown = (ActiveRunDropDownMenu) getStyledInterface(new ActiveRunDropDownMenu(PARAMETER_RUN, runner));
+			runDropdown = (ActiveRunDropDownMenu) getStyledInterface(new ActiveRunDropDownMenu(PARAMETER_RUN, runner, null, this.showAllThisYear));
 		}
 		else{
-			runDropdown = (ActiveRunDropDownMenu) getStyledInterface(new ActiveRunDropDownMenu(PARAMETER_RUN, runner,constrainedRunIds));
+			runDropdown = (ActiveRunDropDownMenu) getStyledInterface(new ActiveRunDropDownMenu(PARAMETER_RUN, runner,constrainedRunIds, this.showAllThisYear));
 		}
 		
 		runDropdown.setAsNotEmpty(localize("run_reg.must_select_run", "You have to select a run"));
@@ -2481,5 +2482,13 @@ public class Registration extends RunBlock {
 
 	public boolean isHidePrintviewLink() {
 		return hidePrintviewLink;
+	}
+	
+	public void setShowAllThisYear(boolean showAllThisYear) {
+		this.showAllThisYear = showAllThisYear;
+	}
+	
+	public boolean getShowAllThisYear() {
+		return this.showAllThisYear;
 	}
 }
