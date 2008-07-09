@@ -5,6 +5,12 @@
 	</properties>
 	<body>
 
+	<release version="3.1.33" date="2008-07-09">
+		<action dev="tryggvil" type="fix">
+			Fix to make setRunIds() property in Registration work again
+		</action>     
+	</release>
+
 	<release version="3.1.32" date="2008-06-11">
 		<action dev="palli" type="update">
 			Added the ability in the Registration class to show all runs for the year, regardsless of the last registration date. 
