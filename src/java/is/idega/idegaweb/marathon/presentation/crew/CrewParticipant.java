@@ -22,9 +22,9 @@ import is.idega.idegaweb.marathon.data.Participant;
  * Crews related wrapper around participant bean
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
- * Last modified: $Date: 2008/01/12 17:15:15 $ by $Author: civilis $
+ * Last modified: $Date: 2008/07/23 22:27:25 $ by $Author: palli $
  *
  */
 public class CrewParticipant {
@@ -202,7 +202,12 @@ public class CrewParticipant {
 		Participant participant = getParticipant();
 		
 		try {
-			Collection crewMembers = getRunBusiness().getParticipantsByYearAndCrewInOrCrewInvitationParticipantId(String.valueOf(participant.getRunYearGroupID()), new Integer(getParticipantId()));
+			Collection crewMembers = null;
+			try {
+				crewMembers = getRunBusiness().getParticipantsByYearAndCrewInOrCrewInvitationParticipantId(String.valueOf(participant.getRunYearGroupID()), new Integer(getParticipantId()));
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
 			
 			for (Iterator iterator = crewMembers.iterator(); iterator.hasNext();) {
 				Participant member = (Participant) iterator.next();
@@ -233,7 +238,12 @@ public class CrewParticipant {
 			if(searchParticipantId == null)
 				return Collections.EMPTY_LIST;
 			
-			return getRunBusiness().getParticipantsByYearAndCrewInOrCrewInvitationParticipantId(String.valueOf(participant.getRunYearGroupID()), searchParticipantId);
+			try {
+				return getRunBusiness().getParticipantsByYearAndCrewInOrCrewInvitationParticipantId(String.valueOf(participant.getRunYearGroupID()), searchParticipantId);
+			} catch (RemoteException e) {
+				e.printStackTrace();
+				return null;
+			}
 			
 		} catch (FinderException e) {
 			getLogger().log(Level.SEVERE, "Exception while resolving crew members. Participant id: "+getParticipantId());

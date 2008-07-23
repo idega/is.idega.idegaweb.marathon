@@ -9,9 +9,9 @@ import com.idega.presentation.wizard.WizardStep;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *
- * Last modified: $Date: 2008/01/08 19:20:50 $ by $Author: civilis $
+ * Last modified: $Date: 2008/07/23 22:27:25 $ by $Author: palli $
  *
  */
 public class UIDistanceChangeWizard extends Wizard {
@@ -20,6 +20,7 @@ public class UIDistanceChangeWizard extends Wizard {
 	
 	public static final String distanceChangeWizardBeanExp = 						"#{distanceChangeWizardBean}";
 	public static final String distanceChangeWizardBean_newDistanceExp = 			"#{distanceChangeWizardBean.newDistanceId}";
+	public static final String distanceChangeWizardBean_newShirtSizeExp = 			"#{distanceChangeWizardBean.newTShirtId}";
 	public static final String distanceChangeWizardBean_newDistanceNameExp = 		"#{distanceChangeWizardBean.newDistanceName}";
 	public static final String distanceChangeWizardBean_cardHolderNameExp = 		"#{distanceChangeWizardBean.cardHolderName}";
 	public static final String distanceChangeWizardBean_creditCardNumberExp = 		"#{distanceChangeWizardBean.creditCardNumber}";
@@ -33,12 +34,15 @@ public class UIDistanceChangeWizard extends Wizard {
 	public static final String distanceChangeStepBean_runLabelExp = 				"#{distanceChangeStepBean.runLabel}";
 	
 	public static final String distanceChangeStepBean_validateDistanceChangeExp = 	"#{distanceChangeStepBean.validateDistanceChange}";
+	public static final String distanceChangeStepBean_validateShirtSizeChangeExp = 	"#{distanceChangeStepBean.validateShirtSizeChange}";
 	public static final String distanceChangeStepBean_validateCCVNumberExp = 		"#{distanceChangeStepBean.validateCCVNumber}";
 	public static final String distanceChangeStepBean_validateCardExpiresDateExp = 	"#{distanceChangeStepBean.validateCardExpiresDate}";
 	
 	
 	public static final String distanceChangeStepBean_runDistancesExp = 			"#{distanceChangeStepBean.runDistances}";
+	public static final String distanceChangeStepBean_runShirtSizesExp = 			"#{distanceChangeStepBean.runShirtSizes}";
 	public static final String distanceChangeStepBean_chosenDistanceNameExp = 		"#{distanceChangeStepBean.chosenDistanceName}";
+	public static final String distanceChangeStepBean_chosenShirtSizeNameExp = 		"#{distanceChangeStepBean.chosenTShirtName}";
 	
 	public static final String distanceChangeWizard_cssPrefix = 					"distChWiz_";
 	

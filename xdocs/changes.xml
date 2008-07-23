@@ -5,6 +5,12 @@
 	</properties>
 	<body>
 
+	<release version="3.1.34" date="2008-07-23">
+		<action dev="palli" type="fix">
+			Lots of changes to my page and other stuff
+		</action>     
+	</release>
+
 	<release version="3.1.33" date="2008-07-09">
 		<action dev="tryggvil" type="fix">
 			Fix to make setRunIds() property in Registration work again

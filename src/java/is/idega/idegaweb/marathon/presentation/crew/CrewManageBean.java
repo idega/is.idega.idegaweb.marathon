@@ -6,6 +6,7 @@ import is.idega.idegaweb.marathon.business.RunBusiness;
 import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.data.Year;
 
+import java.rmi.RemoteException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,9 +33,9 @@ import com.idega.util.IWTimestamp;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *
- * Last modified: $Date: 2008/01/12 19:06:46 $ by $Author: civilis $
+ * Last modified: $Date: 2008/07/23 22:27:25 $ by $Author: palli $
  *
  */
 public class CrewManageBean {
@@ -211,7 +212,12 @@ public class CrewManageBean {
 	    Integer currentYear = new Integer(ts.getYear());
 	    
 	    RunBusiness runBusiness = getCrewEditWizardBean().getRunBusiness();
-	    boolean crewLabelExists = runBusiness.isCrewLabelAlreadyExistsForRun(runId.intValue(), currentYear.intValue(), crewLabel);
+	    boolean crewLabelExists = false;
+		try {
+			crewLabelExists = runBusiness.isCrewLabelAlreadyExistsForRun(runId.intValue(), currentYear.intValue(), crewLabel);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 	    
 	    if(crewLabelExists) {
 	    	

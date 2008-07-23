@@ -946,6 +946,15 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			throw new IBORuntimeException(ile);
 		}
 	}
+
+	public CharityBusiness getCharityBusiness() {
+		try {
+			return (CharityBusiness) getServiceInstance(CharityBusiness.class);
+		}
+		catch (IBOLookupException ile) {
+			throw new IBORuntimeException(ile);
+		}
+	}
 	
 	public Collection getCreditCardImages() {
 		try {
@@ -2007,6 +2016,10 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		
 		return distances;
 	}
+	
+	
+	
+	
 	public Group getDistanceByUserID(int userID) {
 		Group dis = null;
 		Collection groups = null;
@@ -2049,6 +2062,25 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		}
 		return dis;
 		
+	}
+
+	public Distance getDistanceByID(int ID) {
+		Group dis = null;
+		try {
+			dis = getGroupBiz().getGroupByGroupID(ID);
+			return ConverterUtility.getInstance().convertGroupToDistance(dis);
+		} catch (IBOLookupException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (FinderException e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	/**

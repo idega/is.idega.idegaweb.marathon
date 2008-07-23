@@ -27,9 +27,9 @@ import com.idega.presentation.wizard.WizardStep;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *
- * Last modified: $Date: 2007/12/31 11:18:53 $ by $Author: civilis $
+ * Last modified: $Date: 2008/07/23 22:27:25 $ by $Author: palli $
  *
  */
 public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep {
@@ -174,7 +174,64 @@ public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep 
 		selectItems.setValueBinding(valueAtt, application.createValueBinding(UIDistanceChangeWizard.distanceChangeStepBean_runDistancesExp));
 		label.setFor(distanceChooser.getId());
 		distanceChooser.getChildren().add(selectItems);
+		//distanceChooser.seton
 		span.getChildren().add(distanceChooser);
+
+//		currently chosen shirt size
+		entryDiv = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
+		entryDiv.setId(context.getViewRoot().createUniqueId());
+		entryDiv.setStyleClass(entryStyleClass);
+		entryDiv.setValue(divTag);
+		distanceChangeArea.getChildren().add(entryDiv);
+		
+//		currently chosen shirt size label
+		text = (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		text.setId(context.getViewRoot().createUniqueId());
+		text.setValue(iwrb.getLocalizedString("dist_ch.chosenShirtSize", "Currently chosen shirt size: "));
+		entryDiv.getChildren().add(text);
+		
+//		currently chosen shirt size value		
+		div = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
+		div.setId(context.getViewRoot().createUniqueId());
+		div.setValue(divTag);
+		entryDiv.getChildren().add(div);
+		
+		text = (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+		text.setId(context.getViewRoot().createUniqueId());
+		text.setValueBinding(valueAtt, application.createValueBinding(UIDistanceChangeWizard.distanceChangeStepBean_chosenShirtSizeNameExp));
+		div.getChildren().add(text);
+		
+//		choose new shirt size
+		entryDiv = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
+		entryDiv.setId(context.getViewRoot().createUniqueId());
+		entryDiv.setStyleClass(entryStyleClass);
+		entryDiv.setValue(divTag);
+		distanceChangeArea.getChildren().add(entryDiv);
+		
+//		choose new shirt size label
+		label = (HtmlOutputLabel)application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
+		label.setId(context.getViewRoot().createUniqueId());
+		label.setValue(iwrb.getLocalizedString("dist_ch.chooseNewShirtSize", "Choose new shirt size: "));
+		entryDiv.getChildren().add(label);
+
+//		choose new shirt size value
+		
+		span = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
+		span.setId(context.getViewRoot().createUniqueId());
+		span.setValue(spanTag);
+		span.setStyleClass(subentryStyleClass);
+		entryDiv.getChildren().add(span);
+		
+		HtmlSelectOneMenu shirtSizeChooser = (HtmlSelectOneMenu)application.createComponent(HtmlSelectOneMenu.COMPONENT_TYPE);
+		shirtSizeChooser.setValidator(application.createMethodBinding(UIDistanceChangeWizard.distanceChangeStepBean_validateShirtSizeChangeExp, new Class[] {FacesContext.class, UIComponent.class, Object.class}));
+		shirtSizeChooser.setId(context.getViewRoot().createUniqueId());
+		shirtSizeChooser.setValueBinding(valueAtt, application.createValueBinding(UIDistanceChangeWizard.distanceChangeWizardBean_newShirtSizeExp));
+		UISelectItems selectShirtItems = (UISelectItems)application.createComponent(UISelectItems.COMPONENT_TYPE);
+		selectShirtItems.setId(context.getViewRoot().createUniqueId());
+		selectShirtItems.setValueBinding(valueAtt, application.createValueBinding(UIDistanceChangeWizard.distanceChangeStepBean_runShirtSizesExp));
+		label.setFor(shirtSizeChooser.getId());
+		shirtSizeChooser.getChildren().add(selectShirtItems);
+		span.getChildren().add(shirtSizeChooser);
 		
 		HtmlTag errSpan = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		errSpan.setId(context.getViewRoot().createUniqueId());

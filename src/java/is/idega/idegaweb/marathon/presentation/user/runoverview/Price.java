@@ -8,9 +8,9 @@ import com.idega.util.CoreConstants;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
- * Last modified: $Date: 2007/12/29 15:42:13 $ by $Author: civilis $
+ * Last modified: $Date: 2008/07/23 22:27:25 $ by $Author: palli $
  *
  */
 public class Price {
@@ -18,9 +18,9 @@ public class Price {
 	public Price() {}
 	
 	public Price(Float price, String currencyLabel, Locale locale) {
-
 		this.price = price;
 		this.currencyLabel = currencyLabel;
+		this.locale = locale;
 	}
 	
 	private Float price;
@@ -41,7 +41,6 @@ public class Price {
 	}
 	
 	public String getPriceLabel() {
-		
 		return price != null && currencyLabel != null ? new StringBuffer(locale != null ? formatAmount(locale, price) : price.toString()).append(CoreConstants.SPACE).append(currencyLabel).toString() : CoreConstants.EMPTY; 
 	}
 
@@ -54,6 +53,11 @@ public class Price {
 	}
 	
 	private String formatAmount(Locale locale, Float amount) {
-		return NumberFormat.getInstance(locale).format(amount.floatValue());
-	}
+		NumberFormat format = NumberFormat.getInstance(locale);
+		if (locale.getLanguage().equals(new Locale("IS").getLanguage())) {
+			format.setMaximumFractionDigits(0);
+			format.setMinimumFractionDigits(0);
+		}
+		return format.format(amount.floatValue());
+	}	
 }
