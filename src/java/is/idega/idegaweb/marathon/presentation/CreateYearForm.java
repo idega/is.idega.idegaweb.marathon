@@ -47,13 +47,6 @@ public class CreateYearForm extends Block {
 		this.runID = runID;
 	}
 	
-	
-	/*switch (parseAction(iwc)) {
-	case ACTION_SAVE:
-		getRunBiz(iwc).createNewGroupYear(iwc, runID);
-		close();
-	}*/
-
 	private int parseAction(IWContext iwc) {
 		if (iwc.isParameterSet(PARAMETER_ACTION)) {
 			return Integer.parseInt(iwc.getParameter(PARAMETER_ACTION));

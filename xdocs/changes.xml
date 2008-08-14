@@ -4,209 +4,150 @@
 		<author email="gimmi@idega.com">Grimur Jonsson</author>
 	</properties>
 	<body>
-
-	<release version="3.1.34" date="2008-07-23">
-		<action dev="palli" type="fix">
-			Lots of changes to my page and other stuff
-		</action>     
-	</release>
-
-	<release version="3.1.33" date="2008-07-09">
-		<action dev="tryggvil" type="fix">
-			Fix to make setRunIds() property in Registration work again
-		</action>     
-	</release>
-
-	<release version="3.1.32" date="2008-06-11">
-		<action dev="palli" type="update">
-			Added the ability in the Registration class to show all runs for the year, regardsless of the last registration date. 
-		</action>     
-	</release>
-	<release version="3.1.30" date="2008-01-18">
-		<action dev="civilis" type="update">
-			marathon marathon css fixes regarding mysterious articles surroundings 
-		</action>     
-	</release>
-	<release version="3.1.29" date="2008-01-16">
-		<action dev="civilis" type="update">
-			marathon crews management 
-		</action>     
-	</release>
-	<release version="3.1.28" date="2008-01-07">
-		<action dev="civilis" type="update">
-			date input won't show day anymore 
-		</action>     
-	</release>
-	<release version="3.1.27" date="2008-01-04">
-		<action dev="civilis" type="update">
-			method authorizePayment added for RunBusiness 
-		</action>     
-	</release>
-	<release version="3.1.26" date="2008-01-04">
-		<action dev="civilis" type="update">
-			more sophisticated credit card authorization logging message 
-		</action>     
-	</release>
-	<release version="3.1.25" date="2008-01-04">
-		<action dev="civilis" type="update">
-			Failed distance change error message display 
-		</action>     
-	</release>
-	<release version="3.1.24" date="2008-01-03">
-		<action dev="civilis" type="update">
-			Localizations for distance change and final updates 
-		</action>     
-	</release>
-	<release version="3.1.23" date="2007-12-31">
-		<action dev="civilis" type="update">
-			Already registered distance can now be changed for payment 
-		</action>     
-	</release>
-	<release version="3.1.22" date="2007-12-17">
-		<action dev="civilis" type="update">
-			Age restriction for distances added in the user group tab 
-		</action>     
-	</release>
-
-	<release version="3.1.21" date="2007-12-17">
-		<action dev="civilis" type="update">
-			Age restriction for distances added 
-		</action>     
-	</release>
-
-	<release version="3.1.20" date="2007-10-30">
-		<action dev="sigtryggur" type="update">
-			New import for groups of marathon runners
-		</action>     
-	</release>
-	
-	<release version="3.1.19" date="2007-08-15">
-		<action dev="sigtryggur" type="update">
-			New modules for my page and various changes
-		</action>     
-	</release>
-
-	<release version="3.1.18" date="2007-07-31">
-		<action dev="tryggvil" type="update">
-			New code to call Glitnir webservice for customer registration
-		</action>     
-	</release>
-
-	<release version="3.1.17" date="2007-07-25">
-		<action dev="sigtryggur" type="update">
-			New code for "my-pages" modules
-		</action>     
-	</release>
-
-	<release version="3.1.16" date="2007-06-29">
-		<action dev="sigtryggur" type="update">
-			Various new config options for the Registration module
-			Refactor on localization. Norwegian translations added to the registration and the pledge wizard.
-			Removed dependency for the websearch bundle
-		</action>     
-	</release>
-
-	<release version="3.1.15" date="2007-06-08">
-		<action dev="sigtryggur" type="update">
-			New filter for run on Registration module and option to save charities per run-year
-		</action>     
-	</release>
-
-	<release version="3.1.14" date="2007-06-04">
-		<action dev="sigtryggur" type="update">
-			Additions to PledgeWizard
-			Uppdated dependency to com.idega.block.entity to 3.1.1
-		</action>     
-	</release>
-	
-	<release version="3.1.13" date="2007-06-02">
-		<action dev="sigtryggur" type="update">
-			Early version of PledgeWizard and an extra step for charity in the registration-wizard
-		</action>     
-	</release>
-
-	<release version="3.1.12" date="2007-03-28">
-		<action dev="sigtryggur" type="update">
-			New admin-view added to set up and edit runs
-		</action>     
-	</release>
-	<release version="3.1.11" date="2007-02-27">
-		<action dev="sigtryggur" type="update">
-			Added an optional extra step in the registration where users can select transport
-		</action>     
-	</release>
-	<release version="3.1.10" date="2007-02-05">
-		<action dev="sigtryggur" type="update">
-			Fixed few javascripts that were not working properly
-		</action>     
-	</release>
-	<release version="3.1.9" date="2007-01-29">
-		<action dev="sigtryggur" type="update">
-			Added new shirtsizedropdownmenu to the registration-form
-		</action>     
-	</release>
-	<release version="3.1.8" date="2007-01-26">
-		<action dev="sigtryggur" type="update">
-			Added numbercheck for the chip numbers and option to save different shirt sizes for each distance
-		</action>     
-	</release>
-	
-	<release version="3.1.7" date="2006-08-02">
-		<action dev="gimmi" type="fix">
-			Sibling discount fixed 1.5km run
-		</action>     
-		<action dev="gimmi" type="add">
-			Numbers added to 1.5km run
-		</action>     
-	</release>
-
-	<release version="3.1.6" date="2006-08-01">
-		<action dev="gimmi" type="update">
-			Sibling discount added to 1.5km run
-		</action>     
-	</release>
-
-	<release version="3.1.5" date="2006-08-01">
-		<action dev="gimmi" type="update">
-			Localization updates
-		</action>     
-		<action dev="gimmi" type="update">
-			updated to core 3.1.7
-		</action>     
-	</release>
-
-	<release version="3.1.4" date="2006-08-01">
-		<action dev="gimmi" type="update">
-			New distance 1.5 km for ages 11 and youner
-		</action>     
-	</release>
-
-	<release version="3.1.3" date="2006-07-27">
-		<action dev="laddi" type="update">
-			Fixed print window.
-		</action>     
-		<action dev="laddi" type="update">
-			Added trigger for run table when moving/creating users in User application.
-		</action>     
-	</release>
-
-	<release version="3.1.2" date="2006-07-24">
-		<action dev="laddi" type="update">
-			Changed localized names of run distances.
-		</action>     
-	</release>
-
-	<release version="3.1.1" date="2006-07-20">
-		<action dev="laddi" type="update">
-			Merged changes from PLATFORM_2
-		</action>     
-	</release>
-
-	<release version="3.1.0" date="2006-07-17">
-		<action dev="gimmi" type="update">
-			Released module built on ePlatform 3.1
-		</action>     
-	</release>
-
-  </body>
+		<release version="3.1.35" date="2008-08-14">
+			<action dev="palli" type="fix"> Fixed DistanceChangeWizard so that only the participant that is changing his distance is moved from the previous distance and not all participants in the group</action>
+		</release>
+		<release version="3.1.34" date="2008-07-23">
+			<action dev="palli" type="fix"> Lots of changes to my page and other
+				stuff</action>
+		</release>
+		<release version="3.1.33" date="2008-07-09">
+			<action dev="tryggvil" type="fix"> Fix to make setRunIds() property
+				in Registration work again</action>
+		</release>
+		<release version="3.1.32" date="2008-06-11">
+			<action dev="palli" type="update"> Added the ability in the
+				Registration class to show all runs for the year, regardsless of the
+				last registration date.</action>
+		</release>
+		<release version="3.1.30" date="2008-01-18">
+			<action dev="civilis" type="update"> marathon marathon css fixes
+				regarding mysterious articles surroundings</action>
+		</release>
+		<release version="3.1.29" date="2008-01-16">
+			<action dev="civilis" type="update"> marathon crews management</action>
+		</release>
+		<release version="3.1.28" date="2008-01-07">
+			<action dev="civilis" type="update"> date input won't show day anymore
+			</action>
+		</release>
+		<release version="3.1.27" date="2008-01-04">
+			<action dev="civilis" type="update"> method authorizePayment added for
+				RunBusiness</action>
+		</release>
+		<release version="3.1.26" date="2008-01-04">
+			<action dev="civilis" type="update"> more sophisticated credit card
+				authorization logging message</action>
+		</release>
+		<release version="3.1.25" date="2008-01-04">
+			<action dev="civilis" type="update"> Failed distance change error
+				message display</action>
+		</release>
+		<release version="3.1.24" date="2008-01-03">
+			<action dev="civilis" type="update"> Localizations for distance change
+				and final updates</action>
+		</release>
+		<release version="3.1.23" date="2007-12-31">
+			<action dev="civilis" type="update"> Already registered distance can
+				now be changed for payment</action>
+		</release>
+		<release version="3.1.22" date="2007-12-17">
+			<action dev="civilis" type="update"> Age restriction for distances
+				added in the user group tab</action>
+		</release>
+		<release version="3.1.21" date="2007-12-17">
+			<action dev="civilis" type="update"> Age restriction for distances
+				added</action>
+		</release>
+		<release version="3.1.20" date="2007-10-30">
+			<action dev="sigtryggur" type="update"> New import for groups of
+				marathon runners</action>
+		</release>
+		<release version="3.1.19" date="2007-08-15">
+			<action dev="sigtryggur" type="update"> New modules for my page and
+				various changes</action>
+		</release>
+		<release version="3.1.18" date="2007-07-31">
+			<action dev="tryggvil" type="update"> New code to call Glitnir
+				webservice for customer registration</action>
+		</release>
+		<release version="3.1.17" date="2007-07-25">
+			<action dev="sigtryggur" type="update"> New code for "my-pages" modules
+			</action>
+		</release>
+		<release version="3.1.16" date="2007-06-29">
+			<action dev="sigtryggur" type="update"> Various new config options for
+				the Registration module Refactor on localization. Norwegian
+				translations added to the registration and the pledge wizard.
+				Removed dependency for the websearch bundle</action>
+		</release>
+		<release version="3.1.15" date="2007-06-08">
+			<action dev="sigtryggur" type="update"> New filter for run on
+				Registration module and option to save charities per run-year
+			</action>
+		</release>
+		<release version="3.1.14" date="2007-06-04">
+			<action dev="sigtryggur" type="update"> Additions to PledgeWizard
+				Uppdated dependency to com.idega.block.entity to 3.1.1</action>
+		</release>
+		<release version="3.1.13" date="2007-06-02">
+			<action dev="sigtryggur" type="update"> Early version of PledgeWizard
+				and an extra step for charity in the registration-wizard</action>
+		</release>
+		<release version="3.1.12" date="2007-03-28">
+			<action dev="sigtryggur" type="update"> New admin-view added to set up
+				and edit runs</action>
+		</release>
+		<release version="3.1.11" date="2007-02-27">
+			<action dev="sigtryggur" type="update"> Added an optional extra step in
+				the registration where users can select transport</action>
+		</release>
+		<release version="3.1.10" date="2007-02-05">
+			<action dev="sigtryggur" type="update"> Fixed few javascripts that were
+				not working properly</action>
+		</release>
+		<release version="3.1.9" date="2007-01-29">
+			<action dev="sigtryggur" type="update"> Added new shirtsizedropdownmenu
+				to the registration-form</action>
+		</release>
+		<release version="3.1.8" date="2007-01-26">
+			<action dev="sigtryggur" type="update"> Added numbercheck for the chip
+				numbers and option to save different shirt sizes for each distance
+			</action>
+		</release>
+		<release version="3.1.7" date="2006-08-02">
+			<action dev="gimmi" type="fix"> Sibling discount fixed 1.5km run
+			</action>
+			<action dev="gimmi" type="add"> Numbers added to 1.5km run</action>
+		</release>
+		<release version="3.1.6" date="2006-08-01">
+			<action dev="gimmi" type="update"> Sibling discount added to 1.5km run
+			</action>
+		</release>
+		<release version="3.1.5" date="2006-08-01">
+			<action dev="gimmi" type="update"> Localization updates</action>
+			<action dev="gimmi" type="update"> updated to core 3.1.7</action>
+		</release>
+		<release version="3.1.4" date="2006-08-01">
+			<action dev="gimmi" type="update"> New distance 1.5 km for ages 11 and
+				youner</action>
+		</release>
+		<release version="3.1.3" date="2006-07-27">
+			<action dev="laddi" type="update"> Fixed print window.</action>
+			<action dev="laddi" type="update"> Added trigger for run table when
+				moving/creating users in User application.</action>
+		</release>
+		<release version="3.1.2" date="2006-07-24">
+			<action dev="laddi" type="update"> Changed localized names of run
+				distances.</action>
+		</release>
+		<release version="3.1.1" date="2006-07-20">
+			<action dev="laddi" type="update"> Merged changes from PLATFORM_2
+			</action>
+		</release>
+		<release version="3.1.0" date="2006-07-17">
+			<action dev="gimmi" type="update"> Released module built on ePlatform
+				3.1</action>
+		</release>
+	</body>
 </document>

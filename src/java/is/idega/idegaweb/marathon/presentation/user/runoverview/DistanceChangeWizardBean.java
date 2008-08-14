@@ -32,9 +32,9 @@ import com.idega.util.LocaleUtil;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  * 
- * Last modified: $Date: 2008/07/23 22:27:25 $ by $Author: palli $
+ * Last modified: $Date: 2008/08/14 14:48:02 $ by $Author: palli $
  * 
  */
 public class DistanceChangeWizardBean {
@@ -314,7 +314,7 @@ public class DistanceChangeWizardBean {
 				Group ageGenderGroup = getRunBusiness().getAgeGroup(
 						participant.getUser(), participant.getRunTypeGroup(),
 						participant.getRunDistanceGroup());
-				ageGenderGroup.removeGroup(participant.getUser());
+				ageGenderGroup.removeUser(participant.getUser(),participant.getUser());
 				ageGenderGroup = getRunBusiness().getAgeGroup(
 						participant.getUser(), participant.getRunTypeGroup(),
 						distanceGroup);
