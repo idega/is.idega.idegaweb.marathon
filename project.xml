@@ -194,6 +194,11 @@
       <name>3.1.35</name>
       <tag>MARATHON_3_1_35</tag>
     </version>
+    <version>
+      <id>3.1.36</id>
+      <name>3.1.36</name>
+      <tag>MARATHON_3_1_36</tag>
+    </version>
   </versions>
   <branches/>
   <developers>
