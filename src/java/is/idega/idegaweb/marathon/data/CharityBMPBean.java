@@ -5,7 +5,9 @@ import java.util.Collection;
 import javax.ejb.FinderException;
 
 import com.idega.data.GenericEntity;
+import com.idega.data.IDOAddRelationshipException;
 import com.idega.data.IDORelationshipException;
+import com.idega.data.IDORemoveRelationshipException;
 import com.idega.data.query.Column;
 import com.idega.data.query.MatchCriteria;
 import com.idega.data.query.SelectQuery;
@@ -50,6 +52,22 @@ public class CharityBMPBean extends GenericEntity implements Charity {
 
 	public void setOrganizationalID(String organizationalId) {
 		setColumn(COLUMN_NAME_ORGANIZATIONAL_ID, organizationalId);
+	}
+	
+	public void removeFromGroup(Group group) {
+		try {
+			super.idoRemoveFrom(group);
+		} catch (IDORemoveRelationshipException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void addToGroup(Group group) {
+		try {
+			super.idoAddTo(group);
+		} catch (IDOAddRelationshipException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public Collection ejbFindAllCharities() throws FinderException {

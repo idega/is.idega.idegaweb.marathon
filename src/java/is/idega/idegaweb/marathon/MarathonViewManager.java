@@ -1,5 +1,7 @@
 package is.idega.idegaweb.marathon;
 
+import is.idega.idegaweb.marathon.presentation.Charities;
+import is.idega.idegaweb.marathon.presentation.CharitiesRunYear;
 import is.idega.idegaweb.marathon.presentation.RunDistanceEditor;
 import is.idega.idegaweb.marathon.presentation.RunEditor;
 import is.idega.idegaweb.marathon.presentation.RunYearEditor;
@@ -68,6 +70,14 @@ public class MarathonViewManager {
 		distances.setName("#{localizedStrings['is.idega.idegaweb.marathon']['Distances']}");
 		distances.setComponentClass(RunDistanceEditor.class);
 
+		WorkspaceClassViewNode charities = new WorkspaceClassViewNode("charities",setupNode);
+		charities.setName("#{localizedStrings['is.idega.idegaweb.marathon']['Charities']}");
+		charities.setComponentClass(Charities.class);
+
+		WorkspaceClassViewNode runCharities = new WorkspaceClassViewNode("runCharities",setupNode);
+		runCharities.setName("#{localizedStrings['is.idega.idegaweb.marathon']['RunCharities']}");
+		runCharities.setComponentClass(CharitiesRunYear.class);
+		
 		return marathonNode;
 	}
 

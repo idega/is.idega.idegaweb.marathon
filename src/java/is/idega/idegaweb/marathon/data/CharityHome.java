@@ -1,11 +1,10 @@
 package is.idega.idegaweb.marathon.data;
 
 
+import com.idega.data.IDORelationshipException;
 import java.util.Collection;
 import javax.ejb.CreateException;
 import com.idega.data.IDOHome;
-import com.idega.data.IDORelationshipException;
-
 import javax.ejb.FinderException;
 
 public interface CharityHome extends IDOHome {
@@ -15,7 +14,9 @@ public interface CharityHome extends IDOHome {
 
 	public Collection findAllCharities() throws FinderException;
 
-	public Charity findCharityByOrganizationalId(String organizationalId) throws FinderException;
-	
-	public Collection findCharitiesByRunYearID(Integer runYearID) throws IDORelationshipException, FinderException;
+	public Charity findCharityByOrganizationalId(String organizationalId)
+			throws FinderException;
+
+	public Collection findCharitiesByRunYearID(Integer runYearID)
+			throws IDORelationshipException, FinderException;
 }

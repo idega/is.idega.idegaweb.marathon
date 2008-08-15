@@ -4,6 +4,9 @@
 		<author email="gimmi@idega.com">Grimur Jonsson</author>
 	</properties>
 	<body>
+		<release version="3.1.36" date="2008-08-15">
+			<action dev="palli" type="update"> Added gui to create/edit charity and to add charity to run</action>
+		</release>
 		<release version="3.1.35" date="2008-08-14">
 			<action dev="palli" type="fix"> Fixed DistanceChangeWizard so that only the participant that is changing his distance is moved from the previous distance and not all participants in the group</action>
 		</release>
