@@ -4,6 +4,9 @@
 		<author email="gimmi@idega.com">Grimur Jonsson</author>
 	</properties>
 	<body>
+		<release version="3.1.37" date="2008-08-20">
+			<action dev="tryggvil" type="fix">Fixed problem with constraining runs which caused Lazytown to show up in the Glitnir special registration</action>
+		</release>
 		<release version="3.1.36" date="2008-08-15">
 			<action dev="palli" type="update"> Added gui to create/edit charity and to add charity to run</action>
 		</release>
