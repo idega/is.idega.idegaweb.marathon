@@ -2,7 +2,6 @@ package is.idega.idegaweb.marathon.presentation.user.runoverview;
 
 import is.idega.idegaweb.marathon.IWBundleStarter;
 import is.idega.idegaweb.marathon.business.ConverterUtility;
-import is.idega.idegaweb.marathon.data.Distance;
 import is.idega.idegaweb.marathon.data.Participant;
 
 import java.rmi.RemoteException;
@@ -24,18 +23,17 @@ import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 import com.idega.user.data.Group;
 import com.idega.util.CoreConstants;
-import com.idega.util.ListUtil;
 
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  * 
- * Last modified: $Date: 2008/07/23 22:27:25 $ by $Author: palli $
+ * Last modified: $Date: 2009/01/06 09:41:37 $ by $Author: palli $
  * 
  */
 public class DistanceChangeStepBean {
-	private static final String PARAMETER_SHIRT_SIZES_PER_RUN = "shirt_sizes_per_run";
+	//private static final String PARAMETER_SHIRT_SIZES_PER_RUN = "shirt_sizes_per_run";
 
 	private DistanceChangeWizardBean wizardBean;
 	private boolean wizardMode;
@@ -45,7 +43,7 @@ public class DistanceChangeStepBean {
 	 */
 	private List runDistances;
 
-	private List runShirtSizes;
+	//private List runShirtSizes;
 
 	public String getChosenDistanceName() {
 
@@ -205,7 +203,7 @@ public class DistanceChangeStepBean {
 			this.runDistances = runDistances;
 	}
 
-	public List getRunShirtSizes() {
+	/*public List getRunShirtSizes() {
 		Distance distance = null;
 		if (getWizardBean().getNewDistanceId() != null) {
 			try {
@@ -259,13 +257,13 @@ public class DistanceChangeStepBean {
 		}
 
 		return runShirtSizes;
-	}
+	}*/
 
-	public void setRunShirtSizes(List runShirtSizes) {
+	/*public void setRunShirtSizes(List runShirtSizes) {
 
 		if (runShirtSizes != null)
 			this.runShirtSizes = runShirtSizes;
-	}
+	}*/
 
 	public DistanceChangeWizardBean getWizardBean() {
 		return wizardBean;

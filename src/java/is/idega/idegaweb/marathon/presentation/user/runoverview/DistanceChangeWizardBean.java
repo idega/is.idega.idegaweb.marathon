@@ -32,9 +32,9 @@ import com.idega.util.LocaleUtil;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  * 
- * Last modified: $Date: 2008/08/14 14:48:02 $ by $Author: palli $
+ * Last modified: $Date: 2009/01/06 09:41:37 $ by $Author: palli $
  * 
  */
 public class DistanceChangeWizardBean {
@@ -42,7 +42,7 @@ public class DistanceChangeWizardBean {
 	private String participantId;
 	private Participant participant;
 	private RunBusiness runBusiness;
-	private String newTShirtId;
+	//private String newTShirtId;
 	private String newDistanceId;
 	private String newDistanceName;
 	private String cardHolderName;
@@ -73,19 +73,19 @@ public class DistanceChangeWizardBean {
 		}
 	}
 
-	public String getNewTShirtId() {
+	/*public String getNewTShirtId() {
 		if (newTShirtId == null)
 			newTShirtId = getParticipant().getShirtSize();
 		;
 
 		return newTShirtId;
-	}
+	}*/
 
-	public void setNewTShirtId(String shirtSize) {
+	/*public void setNewTShirtId(String shirtSize) {
 		if (shirtSize != null) {
 			this.newTShirtId = shirtSize;
 		}
-	}
+	}*/
 
 	public String getParticipantId() {
 		return participantId;
@@ -101,7 +101,7 @@ public class DistanceChangeWizardBean {
 		cardExpirationDate = null;
 		distanceChangePrice = null;
 		this.participantId = participantId;
-		newTShirtId = null;
+		//newTShirtId = null;
 	}
 
 	public Participant getParticipant() {
@@ -303,7 +303,7 @@ public class DistanceChangeWizardBean {
 					referenceNumber);
 
 			String newDistanceId = getNewDistanceId();
-			String tShirtSize = getNewTShirtId();
+			//String tShirtSize = getNewTShirtId();
 			Distance distance = getDistanceByGroupId(newDistanceId);
 			Group distanceGroup = getRunBusiness().getUserBiz().getGroupBusiness().getGroupByGroupID(Integer.parseInt(newDistanceId)); 
 			Participant participant = getParticipant();
@@ -323,7 +323,7 @@ public class DistanceChangeWizardBean {
 				participant.setRunGroupGroup(ageGenderGroup);
 				participant.setPayedAmount(String.valueOf(distance.getPrice(iwc.getCurrentLocale())));
 			}
-			participant.setShirtSize(tShirtSize);
+			//participant.setShirtSize(tShirtSize);
 			participant.store();
 			setParticipantId(participant.getPrimaryKey().toString());
 

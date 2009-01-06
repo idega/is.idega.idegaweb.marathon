@@ -27,9 +27,9 @@ import com.idega.presentation.wizard.WizardStep;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  *
- * Last modified: $Date: 2008/07/23 22:27:25 $ by $Author: palli $
+ * Last modified: $Date: 2009/01/06 09:41:37 $ by $Author: palli $
  *
  */
 public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep {
@@ -177,6 +177,7 @@ public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep 
 		//distanceChooser.seton
 		span.getChildren().add(distanceChooser);
 
+		/*
 //		currently chosen shirt size
 		entryDiv = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		entryDiv.setId(context.getViewRoot().createUniqueId());
@@ -231,7 +232,7 @@ public class UIDistanceChangeStep extends IWBaseComponent implements WizardStep 
 		selectShirtItems.setValueBinding(valueAtt, application.createValueBinding(UIDistanceChangeWizard.distanceChangeStepBean_runShirtSizesExp));
 		label.setFor(shirtSizeChooser.getId());
 		shirtSizeChooser.getChildren().add(selectShirtItems);
-		span.getChildren().add(shirtSizeChooser);
+		span.getChildren().add(shirtSizeChooser);*/
 		
 		HtmlTag errSpan = (HtmlTag)application.createComponent(HtmlTag.COMPONENT_TYPE);
 		errSpan.setId(context.getViewRoot().createUniqueId());
