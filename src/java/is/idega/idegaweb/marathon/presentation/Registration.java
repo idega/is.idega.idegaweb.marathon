@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.131 2009/01/08 08:59:16 palli Exp $
+ * $Id: Registration.java,v 1.132 2009/01/08 17:04:42 palli Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -77,10 +77,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2009/01/08 08:59:16 $ by $Author: palli $
+ * Last modified: $Date: 2009/01/08 17:04:42 $ by $Author: palli $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.131 $
+ * @version $Revision: 1.132 $
  */
 public class Registration extends RunBlock {
 	
@@ -1523,22 +1523,23 @@ public class Registration extends RunBlock {
 			//Run not found
 		}
 
-		if (selectedRun != null) {
-			table.setHeight(row++, 16);
-			table.add(getHeader(localizeForRun("run_reg.delivery_of_race_material_headline", "Further information about the run is available on:")), 1, row++);
-			String informationPage;
-			if (this.isIcelandic) {	
-				informationPage= selectedRun.getRunInformationPage();
-			} else {
-				informationPage = selectedRun.getEnglishRunInformationPage();
-			}
-			table.add(getText("<a href=" + informationPage + ">" + localize(selectedRun.getName(),selectedRun.getName()) + "</a> (" + informationPage + ")"), 1, row++);
-		}
 
 		table.setHeight(row++, 16);
 		table.add(getHeader(localize("run_reg.receipt_info_headline", "Receipt - Please print it out")), 1, row++);
 		table.add(getText(localizeForRun("run_reg.receipt_info_headline_body", "This document is your receipt, please print it out and bring it with you when you collect your race material.")), 1, row++);
 
+		if (selectedRun != null) {
+			table.setHeight(row++, 16);
+			table.add(getHeader(localizeForRun("run_reg.delivery_of_race_material_headline", "Further information about the run is available on:")), 1, row++);
+			/*String informationPage;
+			if (this.isIcelandic) {	
+				informationPage= selectedRun.getRunInformationPage();
+			} else {
+				informationPage = selectedRun.getEnglishRunInformationPage();
+			}
+			table.add(getText("<a href=" + informationPage + ">" + localize(selectedRun.getName(),selectedRun.getName()) + "</a> (" + informationPage + ")"), 1, row++);*/
+		}
+		
 		table.setHeight(row++, 16);
 		table.add(getText(localize("run_reg.best_regards", "Best regards,")), 1, row++);
 

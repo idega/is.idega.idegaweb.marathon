@@ -121,22 +121,23 @@ public class RegistrationReceivedPrintable extends Window {
 			//Run not found
 		}
 
-		if (selectedRun != null) {
-			table.setHeight(row++, 16);
-			table.add(getHeader(iwrb.getLocalizedString("run_reg.delivery_of_race_material_headline", "Further information about the run is available on:")), 1, row++);
-			String informationPage;
-			if (iwc.getCurrentLocale().equals(LocaleUtil.getIcelandicLocale())) {	
-				informationPage= selectedRun.getRunInformationPage();
-			} else {
-				informationPage = selectedRun.getEnglishRunInformationPage();
-			}
-			table.add(getText("<a href=" + informationPage + ">" + iwrb.getLocalizedString(selectedRun.getName(),selectedRun.getName()) + "</a> (" + informationPage + ")"), 1, row++);
-		}
 		
 		table.setHeight(row++, 16);
 		table.add(getHeader(iwrb.getLocalizedString("run_reg.receipt_info_headline", "Receipt - Please print it out")), 1, row++);
 		table.add(getText(iwrb.getLocalizedString("run_reg.receipt_info_headline_body", "This document is your receipt, please print it out and bring it with you when you collect your race material.")), 1, row++);
 
+		if (selectedRun != null) {
+			table.setHeight(row++, 16);
+			table.add(getHeader(iwrb.getLocalizedString("run_reg.delivery_of_race_material_headline", "Further information about the run is available on:")), 1, row++);
+			/*String informationPage;
+			if (iwc.getCurrentLocale().equals(LocaleUtil.getIcelandicLocale())) {	
+				informationPage= selectedRun.getRunInformationPage();
+			} else {
+				informationPage = selectedRun.getEnglishRunInformationPage();
+			}
+			table.add(getText("<a href=" + informationPage + ">" + iwrb.getLocalizedString(selectedRun.getName(),selectedRun.getName()) + "</a> (" + informationPage + ")"), 1, row++);*/
+		}
+		
 		table.setHeight(row++, 16);
 		table.add(getText(iwrb.getLocalizedString("run_reg.best_regards", "Best regards,")), 1, row++);
 
