@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.130 2008/07/09 08:33:21 tryggvil Exp $
+ * $Id: Registration.java,v 1.131 2009/01/08 08:59:16 palli Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -77,10 +77,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2008/07/09 08:33:21 $ by $Author: tryggvil $
+ * Last modified: $Date: 2009/01/08 08:59:16 $ by $Author: palli $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.130 $
+ * @version $Revision: 1.131 $
  */
 public class Registration extends RunBlock {
 	
@@ -858,7 +858,7 @@ public class Registration extends RunBlock {
 		table.setBottomCellBorder(1, row, 1, "#D7D7D7", "solid");
 		table.setCellpaddingBottom(1, row++, 6);
 		
-		RadioButton ownChip = getRadioButton(PARAMETER_CHIP, IWMarathonConstants.CHIP_OWN);
+		/*RadioButton ownChip = getRadioButton(PARAMETER_CHIP, IWMarathonConstants.CHIP_OWN);
 		ownChip.setSelected(getRunner().isOwnChip());
 		TextInput chipNumber = (TextInput) getStyledInterface(new TextInput(PARAMETER_CHIP_NUMBER));
 		chipNumber.setLength(7);
@@ -874,7 +874,7 @@ public class Registration extends RunBlock {
 		table.add(Text.getNonBrakingSpace(), 1, row);
 		table.add(chipNumber, 1, row);
 		table.setBottomCellBorder(1, row, 1, "#D7D7D7", "solid");
-		table.setCellpaddingBottom(1, row++, 6);
+		table.setCellpaddingBottom(1, row++, 6);*/
 		
 		
 		if(!isDisableChipBuy()){

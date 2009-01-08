@@ -176,6 +176,7 @@ results.number=Nr.
 results.run_time=Run time
 results.split_time_1=Split time 1
 results.split_time_2=Split time 2
+runDistance.choiceNotAvailableBecauseOfAge=(Not available for your age)
 runDistance.chosenDistance=Currently chosen distance\: 
 run_category_dd.select_category=Select department...
 run_charity_dd.select_charity=Select charity organization...
