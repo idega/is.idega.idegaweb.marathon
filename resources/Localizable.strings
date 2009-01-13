@@ -458,3 +458,7 @@ userRunOverview.distance=Distance
 userRunOverview.participant_number=Participant number
 userRunOverview.run=Run
 userRunOverview.user_run_overview=Run overview
+run_reg.allow_email_step_4=Information about emails in step 4...
+run_reg.allow_emails_text=I allow emails
+run_reg.not_allow_emails_text=I don't allow emails.
+run_reg.must_select_email_option=You must select email option.

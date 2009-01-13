@@ -40,6 +40,7 @@ import com.idega.user.data.User;
  */
 public class ParticipantBMPBean extends GenericEntity implements Participant {
 
+	private static final String COLUMN_ALLOWS_EMAIL_FROM_RM = "allows_emails";
 	
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -92,7 +93,9 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		addAttribute(getColumnApplyForInternationalTravelSupport(), "International Travel support", true, true, Boolean.class);
 		addAttribute(getColumnSponsoredRunner(), "Sponsored runner", true, true, Boolean.class);
 		addAttribute(getColumnIsCustomer(), "Is Customer", true, true, Boolean.class);
-		addAttribute(getColumnPaymentGroup(), "PaymentGroup", true, true, String.class);		
+		addAttribute(getColumnPaymentGroup(), "PaymentGroup", true, true, String.class);	
+		
+		addAttribute(COLUMN_ALLOWS_EMAIL_FROM_RM, "Allows emails", Boolean.class);
 	}
 
 	public static String getEntityTableName() {
@@ -547,6 +550,14 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 	
 	public int getCategoryId() {
 		return getIntColumnValue(getColumnNameCategoryId());
+	}
+	
+	public void setAllowsEmails(boolean allowsEmails) {
+		setColumn(COLUMN_ALLOWS_EMAIL_FROM_RM, allowsEmails);
+	}
+	
+	public boolean getAllowsEmails() {
+		return getBooleanColumnValue(COLUMN_ALLOWS_EMAIL_FROM_RM, false);
 	}
 	
 	public Collection ejbFindAll() throws FinderException {

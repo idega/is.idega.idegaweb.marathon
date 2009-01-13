@@ -26,6 +26,7 @@ import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.Form;
 import com.idega.presentation.ui.Label;
 import com.idega.presentation.ui.SubmitButton;
+import com.idega.presentation.ui.TextArea;
 import com.idega.presentation.ui.TextInput;
 import com.idega.user.business.GroupBusiness;
 import com.idega.user.data.Group;
@@ -37,6 +38,10 @@ public class RunEditor extends RunBlock {
 	private static final String PARAMETER_RUN_HOME_PAGE = "prm_run_home_page";
 	private static final String PARAMETER_RUN_INFORMATION_PAGE = "prm_run_information_page";
 	private static final String PARAMETER_ENGLISH_RUN_INFORMATION_PAGE = "prm_english_run_information_page";
+	private static final String PARAMETER_RUN_REGISTRATION_RECEIPT_GREETING = "prm_run_registration_receipt_greeting";
+	private static final String PARAMETER_RUN_REGISTRATION_RECEIPT_GREETING_ENGLISH = "prm_run_registration_receipt_greeting_english";
+	private static final String PARAMETER_RUN_REGISTRATION_RECEIPT_INFO = "prm_run_registration_receipt_info";
+	private static final String PARAMETER_RUN_REGISTRATION_RECEIPT_INFO_ENGLISH = "prm_run_registration_receipt_info_english";
 
 	private static final int ACTION_VIEW = 1;
 	private static final int ACTION_EDIT = 2;
@@ -154,6 +159,42 @@ public class RunEditor extends RunBlock {
 		form.add(layer);
 		form.add(new Break());
 
+		layer = new Layer(Layer.DIV);
+		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
+		TextArea runRegistrationReceiptGreetingInput = new TextArea(PARAMETER_RUN_REGISTRATION_RECEIPT_GREETING);
+		Label runRegistrationReceiptGreetingLabel = new Label(localize("run_tab.run_registration_receipt_greeting", "Receipt greeting"), runRegistrationReceiptGreetingInput);
+		layer.add(runRegistrationReceiptGreetingLabel);
+		layer.add(runRegistrationReceiptGreetingInput);
+		form.add(layer);
+		form.add(new Break());
+
+		layer = new Layer(Layer.DIV);
+		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
+		TextArea runRegistrationReceiptGreetingEnglishInput = new TextArea(PARAMETER_RUN_REGISTRATION_RECEIPT_GREETING_ENGLISH);
+		Label runRegistrationReceiptGreetingEnglishLabel = new Label(localize("run_tab.run_registration_receipt_greeting_english", "English receipt greeting"), runRegistrationReceiptGreetingEnglishInput);
+		layer.add(runRegistrationReceiptGreetingEnglishLabel);
+		layer.add(runRegistrationReceiptGreetingEnglishInput);
+		form.add(layer);
+		form.add(new Break());
+
+		layer = new Layer(Layer.DIV);
+		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
+		TextArea runRegistrationReceiptInfoInput = new TextArea(PARAMETER_RUN_REGISTRATION_RECEIPT_INFO);
+		Label runRegistrationReceiptInfoLabel = new Label(localize("run_tab.run_registration_receipt_info", "Receipt info"), runRegistrationReceiptInfoInput);
+		layer.add(runRegistrationReceiptInfoLabel);
+		layer.add(runRegistrationReceiptInfoInput);
+		form.add(layer);
+		form.add(new Break());
+
+		layer = new Layer(Layer.DIV);
+		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
+		TextArea runRegistrationReceiptInfoEnglishInput = new TextArea(PARAMETER_RUN_REGISTRATION_RECEIPT_INFO_ENGLISH);
+		Label runRegistrationReceiptInfoEnglishLabel = new Label(localize("run_tab.run_registration_receipt_info_english", "English receipt info"), runRegistrationReceiptInfoEnglishInput);
+		layer.add(runRegistrationReceiptInfoEnglishLabel);
+		layer.add(runRegistrationReceiptInfoEnglishInput);
+		form.add(layer);
+		form.add(new Break());
+
 
 		SubmitButton save = (SubmitButton) getButton(new SubmitButton(localize("save", "Save"), PARAMETER_ACTION, String.valueOf(ACTION_SAVE)));
 		SubmitButton cancel = (SubmitButton) getButton(new SubmitButton(localize("cancel", "Cancel"), PARAMETER_ACTION, String.valueOf(ACTION_VIEW)));
@@ -171,6 +212,10 @@ public class RunEditor extends RunBlock {
 				runHomePageInput.setValue(selectedRun.getRunHomePage());
 				runInformationPageInput.setValue(selectedRun.getRunInformationPage());
 				englishRunInformationPageInput.setValue(selectedRun.getEnglishRunInformationPage());
+				runRegistrationReceiptGreetingInput.setValue(selectedRun.getRunRegistrationReceiptGreeting());
+				runRegistrationReceiptGreetingEnglishInput.setValue(selectedRun.getRunRegistrationReceiptGreetingEnglish());
+				runRegistrationReceiptInfoInput.setValue(selectedRun.getRunRegistrationReceiptInfo());
+				runRegistrationReceiptInfoEnglishInput.setValue(selectedRun.getRunRegistrationReceiptInfoEnglish());
 			} catch (FinderException e) {
 				//run not found
 			}
@@ -198,6 +243,10 @@ public class RunEditor extends RunBlock {
 				run.setRunHomePage(iwc.getParameter(PARAMETER_RUN_HOME_PAGE));
 				run.setRunInformationPage(iwc.getParameter(PARAMETER_RUN_INFORMATION_PAGE));
 				run.setEnglishRunInformationPage(iwc.getParameter(PARAMETER_ENGLISH_RUN_INFORMATION_PAGE));
+				run.setRunRegistrationReceiptGreeting(iwc.getParameter(PARAMETER_RUN_REGISTRATION_RECEIPT_GREETING));
+				run.setRunRegistrationReceiptGreetingEnglish(iwc.getParameter(PARAMETER_RUN_REGISTRATION_RECEIPT_GREETING_ENGLISH));
+				run.setRunRegistrationReceiptInfo(iwc.getParameter(PARAMETER_RUN_REGISTRATION_RECEIPT_INFO));
+				run.setRunRegistrationReceiptInfoEnglish(iwc.getParameter(PARAMETER_RUN_REGISTRATION_RECEIPT_INFO_ENGLISH));
 				run.store();
 			}
 		}

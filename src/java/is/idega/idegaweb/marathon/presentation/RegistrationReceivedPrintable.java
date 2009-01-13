@@ -57,6 +57,8 @@ public class RegistrationReceivedPrintable extends Window {
 		table.setWidth(Table.HUNDRED_PERCENT);
 		int row = 1;
 		
+		boolean isIcelandic = iwc.getCurrentLocale().equals(LocaleUtil.getIcelandicLocale());
+		
 		Collection runners = (Collection) iwc.getSessionAttribute(Registration.SESSION_ATTRIBUTE_PARTICIPANTS);
 		if (runners == null) {
 			add(new Text(iwrb.getLocalizedString("session_has_expired", "The session has expired")));
@@ -66,7 +68,30 @@ public class RegistrationReceivedPrintable extends Window {
 		String cardNumber = (String) iwc.getSessionAttribute(Registration.SESSION_ATTRIBUTE_CARD_NUMBER);
 		IWTimestamp stamp = (IWTimestamp) iwc.getSessionAttribute(Registration.SESSION_ATTRIBUTE_PAYMENT_DATE);
 
-		table.add(getHeader(iwrb.getLocalizedString("run_reg.hello_participant", "Hello participant")), 1, row++);
+		Group run = null;
+		Run selectedRun = null;
+		Iterator it = runners.iterator();
+		if (it.hasNext()) {
+			Participant participant = (Participant) it.next();
+			run = participant.getRunTypeGroup();
+			try {
+				selectedRun = ConverterUtility.getInstance().convertGroupToRun(run);
+			} catch (FinderException e) {
+			}
+		}
+
+		table.setHeight(row++, 18);
+
+		String greeting = iwrb.getLocalizedString("run_reg.hello_participant", "Dear participant");
+		if (selectedRun != null) {
+			if (isIcelandic) {	
+				greeting = selectedRun.getRunRegistrationReceiptGreeting();
+			} else {
+				greeting = selectedRun.getRunRegistrationReceiptGreetingEnglish();
+			}			
+		}
+		
+		table.add(getHeader(greeting), 1, row++);
 		table.setHeight(row++, 16);
 
 		table.add(getText(iwrb.getLocalizedString("run_reg.payment_received", "You have registered for the following:")), 1, row++);
@@ -83,7 +108,6 @@ public class RegistrationReceivedPrintable extends Window {
 		int runRow = 2;
 		int transportToBuy = 0;
 		Iterator iter = runners.iterator();
-		Group run = null;
 		while (iter.hasNext()) {
 			Participant participant = (Participant) iter.next();
 			run = participant.getRunTypeGroup();
@@ -113,15 +137,7 @@ public class RegistrationReceivedPrintable extends Window {
 		creditCardTable.add(getText(formatAmount(iwc.getCurrentLocale(), (float) amount)), 2, 3);
 		table.setHeight(row++, 16);
 		table.add(creditCardTable, 1, row++);
-		
-		Run selectedRun = null;
-		try {
-			selectedRun = ConverterUtility.getInstance().convertGroupToRun(run);
-		} catch (FinderException e) {
-			//Run not found
-		}
-
-		
+				
 		table.setHeight(row++, 16);
 		table.add(getHeader(iwrb.getLocalizedString("run_reg.receipt_info_headline", "Receipt - Please print it out")), 1, row++);
 		table.add(getText(iwrb.getLocalizedString("run_reg.receipt_info_headline_body", "This document is your receipt, please print it out and bring it with you when you collect your race material.")), 1, row++);
@@ -129,13 +145,13 @@ public class RegistrationReceivedPrintable extends Window {
 		if (selectedRun != null) {
 			table.setHeight(row++, 16);
 			table.add(getHeader(iwrb.getLocalizedString("run_reg.delivery_of_race_material_headline", "Further information about the run is available on:")), 1, row++);
-			/*String informationPage;
-			if (iwc.getCurrentLocale().equals(LocaleUtil.getIcelandicLocale())) {	
-				informationPage= selectedRun.getRunInformationPage();
+			String informationText;
+			if (isIcelandic) {	
+				informationText= selectedRun.getRunRegistrationReceiptInfo();
 			} else {
-				informationPage = selectedRun.getEnglishRunInformationPage();
+				informationText = selectedRun.getRunRegistrationReceiptInfoEnglish();
 			}
-			table.add(getText("<a href=" + informationPage + ">" + iwrb.getLocalizedString(selectedRun.getName(),selectedRun.getName()) + "</a> (" + informationPage + ")"), 1, row++);*/
+			table.add(getText(informationText), 1, row++);
 		}
 		
 		table.setHeight(row++, 16);

@@ -504,6 +504,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					participant.setApplyForDomesticTravelSupport(runner.isApplyForDomesticTravelSupport());
 					participant.setApplyForInternationalTravelSupport(runner.isApplyForInternationalTravelSupport());
 					participant.setSponsoredRunner(runner.isSponsoredRunner());
+					participant.setAllowsEmails(runner.getAllowsEmails());
 					//check customer:
 					boolean enableCustomerWebservice = "true".equalsIgnoreCase(getIWMainApplication().getSettings().getProperty("MARATHON_ENABLE_CUSTOMER_WS","false"));
 					if (personalId != null && enableCustomerWebservice) {
@@ -1557,7 +1558,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			}
 			else if (age > 49 && age <= 59) {
 				if (genderID == 2) {
-					nameOfGroup = IWMarathonConstants.FEMALE_50;
+					nameOfGroup = IWMarathonConstants.FEMALE_50_59;
 				}
 				else {
 					nameOfGroup = IWMarathonConstants.MALE_50_59;
@@ -1565,7 +1566,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			}
 			else if (age > 59) {
 				if (genderID == 2) {
-					nameOfGroup = IWMarathonConstants.FEMALE_50;
+					nameOfGroup = IWMarathonConstants.FEMALE_60;
 				}
 				else {
 					nameOfGroup = IWMarathonConstants.MALE_60;
@@ -1679,7 +1680,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		String[] grForOsloMarathon = { IWMarathonConstants.FEMALE_18_22, IWMarathonConstants.FEMALE_23_34, IWMarathonConstants.FEMALE_35_39, IWMarathonConstants.FEMALE_40_44, IWMarathonConstants.FEMALE_45_49, IWMarathonConstants.FEMALE_50_54, IWMarathonConstants.FEMALE_55_59, IWMarathonConstants.FEMALE_60_64, IWMarathonConstants.FEMALE_65_69, IWMarathonConstants.FEMALE_70_74, IWMarathonConstants.FEMALE_75_79, IWMarathonConstants.FEMALE_80_84, IWMarathonConstants.FEMALE_85_99, IWMarathonConstants.MALE_18_22, IWMarathonConstants.MALE_23_34, IWMarathonConstants.MALE_35_39, IWMarathonConstants.MALE_40_44, IWMarathonConstants.MALE_45_49, IWMarathonConstants.MALE_50_54, IWMarathonConstants.MALE_55_59, IWMarathonConstants.MALE_60_64, IWMarathonConstants.MALE_65_69, IWMarathonConstants.MALE_70_74, IWMarathonConstants.MALE_75_79, IWMarathonConstants.MALE_80_84, IWMarathonConstants.MALE_85_99 };
 		String[] grForLazyTown = { IWMarathonConstants.FEMALE_9, IWMarathonConstants.MALE_9 };
 		String[] grForLazyTownOslo = { IWMarathonConstants.FEMALE_9, IWMarathonConstants.MALE_9 };
-		String[] grForLaugavegur = { IWMarathonConstants.FEMALE_18_29, IWMarathonConstants.FEMALE_30_39, IWMarathonConstants.FEMALE_40_49, IWMarathonConstants.FEMALE_50, IWMarathonConstants.MALE_18_29, IWMarathonConstants.MALE_30_39, IWMarathonConstants.MALE_40_49, IWMarathonConstants.MALE_50_59, IWMarathonConstants.MALE_60 };
+		String[] grForLaugavegur = { IWMarathonConstants.FEMALE_18_29, IWMarathonConstants.FEMALE_30_39, IWMarathonConstants.FEMALE_40_49, IWMarathonConstants.FEMALE_50_59, IWMarathonConstants.FEMALE_60, IWMarathonConstants.MALE_18_29, IWMarathonConstants.MALE_30_39, IWMarathonConstants.MALE_40_49, IWMarathonConstants.MALE_50_59, IWMarathonConstants.MALE_60 };
 		String[] grForMidnight = { IWMarathonConstants.FEMALE_18, IWMarathonConstants.FEMALE_19_39, IWMarathonConstants.FEMALE_40_49, IWMarathonConstants.FEMALE_50, IWMarathonConstants.MALE_18, IWMarathonConstants.MALE_19_39, IWMarathonConstants.MALE_40_49, IWMarathonConstants.MALE_50 };
 		//TODO: remove this hack - set metadata on the groups containing the
 		// specific run...

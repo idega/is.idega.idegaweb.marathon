@@ -1,5 +1,5 @@
 /*
- * $Id: Runner.java,v 1.16 2008/01/18 12:12:15 civilis Exp $ Created on May 16, 2005
+ * $Id: Runner.java,v 1.17 2009/01/13 09:38:28 palli Exp $ Created on May 16, 2005
  * 
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
  * 
@@ -28,10 +28,10 @@ import com.idega.util.Age;
  * A holder class for information about runners and their selection when
  * registering.
  * 
- * Last modified: $Date: 2008/01/18 12:12:15 $ by $Author: civilis $
+ * Last modified: $Date: 2009/01/13 09:38:28 $ by $Author: palli $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class Runner {
 
@@ -46,6 +46,8 @@ public class Runner {
 	private boolean transportOrdered;
 	private boolean noTransportOrdered;
 	private String shirtSize;
+	private boolean allowsEmails;
+	private boolean notAllowsEmails;
 
 	private String name;
 	private String personalID;
@@ -367,6 +369,24 @@ public class Runner {
 
 	public void setSponsoredRunner(boolean sponsoredRunner) {
 		this.sponsoredRunner = sponsoredRunner;
+	}
+
+	public boolean getAllowsEmails() {
+		return this.allowsEmails;
+	}
+	
+	public void setAllowsEmails(boolean allowsEmails) {
+		this.allowsEmails = allowsEmails;
+		this.notAllowsEmails = !allowsEmails;
+	}
+
+	public boolean getNotAllowsEmails() {
+		return this.notAllowsEmails;
+	}
+	
+	public void setNotAllowsEmails(boolean notAllowsEmails) {
+		this.notAllowsEmails = notAllowsEmails;
+		this.allowsEmails = !notAllowsEmails;
 	}
 
 	public List getDisallowedDistancesPKs(List distances) {

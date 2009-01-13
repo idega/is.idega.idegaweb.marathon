@@ -2,11 +2,11 @@ package is.idega.idegaweb.marathon.data;
 
 
 import com.idega.user.data.Group;
+import java.util.Collection;
 import com.idega.user.data.User;
 import com.idega.data.IDOEntity;
 
 public interface Participant extends IDOEntity {
-
 	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getRunID
 	 */
@@ -41,6 +41,11 @@ public interface Participant extends IDOEntity {
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getRunDistanceGroup
 	 */
 	public Distance getRunDistanceGroup();
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getPaymentGroupsForYear
+	 */
+	public Collection getPaymentGroupsForYear();
 
 	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getRunGroupGroupID
@@ -108,9 +113,19 @@ public interface Participant extends IDOEntity {
 	public String getShirtSize();
 
 	/**
-	 * this is actually crew name
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getRunGroupName
 	 */
 	public String getRunGroupName();
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getCrewInvitedParticipantId
+	 */
+	public Integer getCrewInvitedParticipantId();
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getCrewInParticipantId
+	 */
+	public Integer getCrewInParticipantId();
 
 	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getBestTime
@@ -238,9 +253,19 @@ public interface Participant extends IDOEntity {
 	public void setShirtSize(String tShirtSize);
 
 	/**
-	 * this is actually crew name
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setRunGroupName
 	 */
 	public void setRunGroupName(String runGrName);
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setCrewInvitedParticipantId
+	 */
+	public void setCrewInvitedParticipantId(Integer crewInvitedParticipantId);
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setCrewInParticipantId
+	 */
+	public void setCrewInParticipantId(Integer crewInParticipantId);
 
 	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setBestTime
@@ -308,6 +333,16 @@ public interface Participant extends IDOEntity {
 	public int getCategoryId();
 
 	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setAllowsEmails
+	 */
+	public void setAllowsEmails(boolean allowsEmails);
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getAllowsEmails
+	 */
+	public boolean getAllowsEmails();
+
+	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#isApplyForDomesticTravelSupport
 	 */
 	public boolean isApplyForDomesticTravelSupport();
@@ -315,7 +350,8 @@ public interface Participant extends IDOEntity {
 	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setApplyForDomesticTravelSupport
 	 */
-	public void setApplyForDomesticTravelSupport(boolean applyForDomesticTravelSupport);
+	public void setApplyForDomesticTravelSupport(
+			boolean applyForDomesticTravelSupport);
 
 	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#isApplyForInternationalTravelSupport
@@ -325,7 +361,8 @@ public interface Participant extends IDOEntity {
 	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setApplyForInternationalTravelSupport
 	 */
-	public void setApplyForInternationalTravelSupport(boolean applyForInternationalTravelSupport);
+	public void setApplyForInternationalTravelSupport(
+			boolean applyForInternationalTravelSupport);
 
 	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#isSponsoredRunner
@@ -336,37 +373,24 @@ public interface Participant extends IDOEntity {
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setSponsoredRunner
 	 */
 	public void setSponsoredRunner(boolean sponsoredRunner);
-	
+
 	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#isCustomer
 	 */
 	public boolean isCustomer();
-	
+
 	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setCustomer
 	 */
 	public void setCustomer(boolean isCustomer);
-	
+
 	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getPaymentGroup
 	 */
 	public String getPaymentGroup();
-	
+
 	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setPaymentGroup
 	 */
 	public void setPaymentGroup(String paymentGroup);
-	
-	/**
-	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getPaymentGroupsForYear
-	 */
-	public java.util.Collection getPaymentGroupsForYear();
-	
-	public Integer getCrewInvitedParticipantId();
-	
-	public void setCrewInvitedParticipantId(Integer crewInvitedParticipantId);
-	
-	public void setCrewInParticipantId(Integer crewInParticipantId);
-	
-	public Integer getCrewInParticipantId();
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: RunBMPBean.java,v 1.33 2007/09/26 08:05:23 laddi Exp $
+ * $Id: RunBMPBean.java,v 1.34 2009/01/13 09:38:28 palli Exp $
  * Created on May 22, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -22,10 +22,10 @@ import com.idega.util.IWTimestamp;
 
 
 /**
- * Last modified: $Date: 2007/09/26 08:05:23 $ by $Author: laddi $
+ * Last modified: $Date: 2009/01/13 09:38:28 $ by $Author: palli $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  */
 public class RunBMPBean extends GroupBMPBean  implements Run{
 
@@ -38,6 +38,13 @@ public class RunBMPBean extends GroupBMPBean  implements Run{
 	private static final String METADATA_RUN_INFORMATION_PAGE = "run_information_page";
 	private static final String METADATA_ENGLISH_RUN_INFORMATION_PAGE = "english_run_information_page";
 
+	private static final String METADATA_RUN_REGISTRATION_RECEIPT_GREETING = "run_receipt_greeting";
+	private static final String METADATA_RUN_REGISTRATION_RECEIPT_GREETING_ENGLISH = "run_receipt_greeting_en";
+	
+	private static final String METADATA_RUN_REGISTRATION_RECEIPT_INFO = "run_receipt_info";
+	private static final String METADATA_RUN_REGISTRATION_RECEIPT_INFO_ENGLISH = "run_receipt_info_en";
+
+	
 	public float getFamilyDiscount() {
 		String discount = this.getMetaData(METADATA_FAMILY_DISCOUNT);
 		if (discount != null) {
@@ -74,6 +81,38 @@ public class RunBMPBean extends GroupBMPBean  implements Run{
 		setMetaData(METADATA_ENGLISH_RUN_INFORMATION_PAGE, englishRunInformationPage);
 	}
 
+	public void setRunRegistrationReceiptGreeting(String greeting) {
+		setMetaData(METADATA_RUN_REGISTRATION_RECEIPT_GREETING, greeting);
+	}
+	
+	public String getRunRegistrationReceiptGreeting() {
+		return this.getMetaData(METADATA_RUN_REGISTRATION_RECEIPT_GREETING);
+	}
+
+	public void setRunRegistrationReceiptGreetingEnglish(String greeting) {
+		setMetaData(METADATA_RUN_REGISTRATION_RECEIPT_GREETING_ENGLISH, greeting);
+	}
+	
+	public String getRunRegistrationReceiptGreetingEnglish() {
+		return this.getMetaData(METADATA_RUN_REGISTRATION_RECEIPT_GREETING_ENGLISH);
+	}
+
+	public void setRunRegistrationReceiptInfo(String info) {
+		setMetaData(METADATA_RUN_REGISTRATION_RECEIPT_INFO, info);
+	}
+	
+	public String getRunRegistrationReceiptInfo() {
+		return this.getMetaData(METADATA_RUN_REGISTRATION_RECEIPT_INFO);
+	}
+
+	public void setRunRegistrationReceiptInfoEnglish(String info) {
+		setMetaData(METADATA_RUN_REGISTRATION_RECEIPT_INFO_ENGLISH, info);
+	}
+	
+	public String getRunRegistrationReceiptInfoEnglish() {
+		return this.getMetaData(METADATA_RUN_REGISTRATION_RECEIPT_INFO_ENGLISH);
+	}
+	
 	public Year getCurrentRegistrationYear() {
 		IWTimestamp thisYearStamp = IWTimestamp.RightNow();
 		String yearString = String.valueOf(thisYearStamp.getYear());
