@@ -2,8 +2,7 @@
 
 <projectDescription>
   <name>is.idega.idegaweb.marathon</name>
-  <comment>
-  </comment>
+  <comment></comment>
   <projects>
     <project>com.idega.core</project>
     <project>com.idega.user</project>
@@ -19,8 +18,7 @@
   <buildSpec>
     <buildCommand>
       <name>org.eclipse.jdt.core.javabuilder</name>
-      <arguments>
-      </arguments>
+      <arguments></arguments>
     </buildCommand>
   </buildSpec>
   <natures>

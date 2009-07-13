@@ -3,7 +3,7 @@ package is.idega.idegaweb.marathon.business;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.idega.block.importer.data.GenericImportFile;
+import com.idega.block.importer.data.ExcelImportFile;
 import com.idega.block.importer.presentation.Importer;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWResourceBundle;
@@ -53,7 +53,7 @@ public class MarathonGroupUsersImportPlugin implements ToolbarElement {
 	 */
 	public Map getParameterMap(IWContext iwc) {
 		Map map = new HashMap();
-		map.put(Importer.PARAMETER_IMPORT_FILE,  GenericImportFile.class.getName());
+		map.put(Importer.PARAMETER_IMPORT_FILE,  ExcelImportFile.class.getName());
 		map.put(Importer.PARAMETER_IMPORT_HANDLER, MarathonGroupUsersImportBean.class.getName());
 		return map;
 	}

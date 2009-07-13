@@ -1,5 +1,5 @@
 /*
- * $Id: Registration.java,v 1.133 2009/01/13 09:38:28 palli Exp $
+ * $Id: Registration.java,v 1.134 2009/07/13 10:26:27 palli Exp $
  * Created on May 16, 2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -77,10 +77,10 @@ import com.idega.util.LocaleUtil;
 
 
 /**
- * Last modified: $Date: 2009/01/13 09:38:28 $ by $Author: palli $
+ * Last modified: $Date: 2009/07/13 10:26:27 $ by $Author: palli $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.133 $
+ * @version $Revision: 1.134 $
  */
 public class Registration extends RunBlock {
 	
@@ -94,7 +94,7 @@ public class Registration extends RunBlock {
 	private static final String PROPERTY_CHIP_PRICE_EUR = "chip_price_EUR";
 	private static final String PROPERTY_CHIP_DISCOUNT_ISK = "chip_discount_ISK";
 	private static final String PROPERTY_CHIP_DISCOUNT_EUR = "chip_discount_EUR";
-	private static final String PROPERTY_CHILD_DISCOUNT_ISK = "chip_discount_ISK";
+	private static final String PROPERTY_CHILD_DISCOUNT_ISK = "child_discount_ISK";
 	
 	private static final String PARAMETER_RUN = "prm_run";
 	private static final String PARAMETER_DISTANCE = "prm_distance";
@@ -781,6 +781,8 @@ public class Registration extends RunBlock {
 				e.printStackTrace();
 			}
 			add(rshShirts);
+			
+			//Link tShirtInfo = new Link();
 		}
 
 		if (!isHideShirtSize()) {

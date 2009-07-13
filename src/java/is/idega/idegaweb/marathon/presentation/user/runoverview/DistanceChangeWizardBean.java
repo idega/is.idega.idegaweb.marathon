@@ -32,9 +32,9 @@ import com.idega.util.LocaleUtil;
 /**
  * 
  * @author <a href="civilis@idega.com">Vytautas Čivilis</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  * 
- * Last modified: $Date: 2009/01/06 09:41:37 $ by $Author: palli $
+ * Last modified: $Date: 2009/07/13 10:26:27 $ by $Author: palli $
  * 
  */
 public class DistanceChangeWizardBean {
@@ -50,6 +50,7 @@ public class DistanceChangeWizardBean {
 	private String ccvNumber;
 	private Date cardExpirationDate;
 	private Price distanceChangePrice;
+	private boolean skipPaymentStep = false;
 
 	private static final String PROPERTY_DISTANCE_PRICE_ISK = "distance_change_price_ISK";
 	private static final String PROPERTY_DISTANCE_PRICE_EUR = "distance_change_price_EUR";
@@ -278,6 +279,8 @@ public class DistanceChangeWizardBean {
 					EUR_CURRENCY_LABEL, iwc.getCurrentLocale());
 		}
 
+		this.skipPaymentStep = applicationSettings.getBoolean("SKIP_PAYMENT_STEP_FOR_USER", false);
+		
 		return distanceChangePrice;
 	}
 
@@ -286,27 +289,39 @@ public class DistanceChangeWizardBean {
 		// fixed price
 	}
 
-	public void submitDistanceChange() {
-
+	public void submitDistanceChange() {		
 		try {
 			FacesContext context = FacesContext.getCurrentInstance();
 			IWContext iwc = IWContext.getIWContext(context);
 			String referenceNumber = getParticipant().getUser().getPersonalID()
 					.replaceAll("-", CoreConstants.EMPTY);
 
-			String properties = getRunBusiness().authorizePayment(
+			String properties = "";
+			System.out.println("skip payment = " + skipPaymentStep);
+
+			if (!skipPaymentStep) {
+				System.out.println("Shouldn't be getting here!!!!");
+				properties = getRunBusiness().authorizePayment(
 					getCardHolderName(),
 					getCreditCardNumber().getFullNumber(CoreConstants.EMPTY),
 					getCardExpirationDate(), getCcvNumber(),
 					getDistanceChangePrice().getPrice().floatValue(),
 					getDistanceChangePrice().getCurrencyLabel(),
 					referenceNumber);
+			}
+			System.out.println("1 skip payment = " + skipPaymentStep);
 
 			String newDistanceId = getNewDistanceId();
+			System.out.println("2 skip payment = " + skipPaymentStep);
 			//String tShirtSize = getNewTShirtId();
 			Distance distance = getDistanceByGroupId(newDistanceId);
-			Group distanceGroup = getRunBusiness().getUserBiz().getGroupBusiness().getGroupByGroupID(Integer.parseInt(newDistanceId)); 
+			System.out.println("3 skip payment = " + skipPaymentStep);
+
+			Group distanceGroup = getRunBusiness().getUserBiz().getGroupBusiness().getGroupByGroupID(Integer.parseInt(newDistanceId));
+			System.out.println("4 skip payment = " + skipPaymentStep);
+
 			Participant participant = getParticipant();
+			System.out.println("5 skip payment = " + skipPaymentStep);
 
 			if (!distance.getPrimaryKey().toString().equals(
 					participant.getRunDistanceGroup().getPrimaryKey()
@@ -323,11 +338,20 @@ public class DistanceChangeWizardBean {
 				participant.setRunGroupGroup(ageGenderGroup);
 				participant.setPayedAmount(String.valueOf(distance.getPrice(iwc.getCurrentLocale())));
 			}
+			System.out.println("6 skip payment = " + skipPaymentStep);
+
 			//participant.setShirtSize(tShirtSize);
 			participant.store();
+			System.out.println("7 skip payment = " + skipPaymentStep);
 			setParticipantId(participant.getPrimaryKey().toString());
-
-			getRunBusiness().finishPayment(properties);
+			
+			System.out.println("before finish, skip = " + skipPaymentStep);
+			System.out.println("properties = " + properties);
+			
+			if (!skipPaymentStep) {
+				System.out.println("Shouldn't be getting here either!!!!");
+				getRunBusiness().finishPayment(properties);
+			}
 		} catch (CreditCardAuthorizationException e) {
 
 			FacesContext context = FacesContext.getCurrentInstance();
