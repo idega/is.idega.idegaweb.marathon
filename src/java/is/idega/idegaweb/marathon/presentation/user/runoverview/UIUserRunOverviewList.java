@@ -2,12 +2,15 @@ package is.idega.idegaweb.marathon.presentation.user.runoverview;
 
 import is.idega.idegaweb.marathon.data.Charity;
 import is.idega.idegaweb.marathon.data.Participant;
+import is.idega.idegaweb.marathon.data.Year;
+import is.idega.idegaweb.marathon.data.YearHome;
 import is.idega.idegaweb.marathon.presentation.RunBlock;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 
-
+import com.idega.data.IDOLookup;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
 import com.idega.presentation.Table2;
@@ -18,6 +21,8 @@ import com.idega.presentation.text.Heading1;
 import com.idega.presentation.text.Link;
 import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.Form;
+import com.idega.user.data.Group;
+import com.idega.util.IWTimestamp;
 
 public class UIUserRunOverviewList extends RunBlock {
 
@@ -78,7 +83,7 @@ public class UIUserRunOverviewList extends RunBlock {
 		cell = row.createHeaderCell();
 		cell.setStyleClass("runnerChangeDistanceCellHeader");
 		cell.setStyleClass("lastColumn");
-		cell.add(new Text(getResourceBundle().getLocalizedString("blahblah", "Change distance")));
+		cell.add(Text.getNonBrakingSpace());
 		
 		group = table.createBodyRowGroup();
 		int iRow = 1;
@@ -95,6 +100,23 @@ public class UIUserRunOverviewList extends RunBlock {
 			while (iter.hasNext()) {
 				row = group.createRow();
 				Participant participant = (Participant)iter.next();
+				Group run = participant.getRunTypeGroup();
+				Group yearGroup = participant.getRunYearGroup();
+				String yearString = yearGroup.getName();
+				
+				IWTimestamp stamp = new IWTimestamp();
+				boolean show = false;
+				boolean finished = true;
+				Map yearMap = getRunBusiness(iwc).getYearsMap(run);
+				Year year = (Year) yearMap.get(yearString);
+				if (year != null && year.getLastRegistrationDate() != null) {
+					IWTimestamp lastRegistrationDate = new IWTimestamp(year.getLastRegistrationDate());
+					if (stamp.isEarlierThan(lastRegistrationDate)) {
+						finished = false;
+						show = true;
+					}
+				}
+				
 				if (iRow == 1) {
 					row.setStyleClass("firstRow");
 				}
@@ -139,9 +161,14 @@ public class UIUserRunOverviewList extends RunBlock {
 				cell = row.createCell();
 				cell.setStyleClass("runnerChangeDistanceCell");
 				cell.setStyleClass("lastColumn");
-				Link link = getLink(localize("edit", "Edit"));
-				link.addParameter(PARTICIPANT_PARAM, participant.getPrimaryKey().toString());
-				cell.add(link);
+				if (show) {
+					Link link = getLink(localize("edit", "Edit"));
+					link.addParameter(PARTICIPANT_PARAM, participant.getPrimaryKey().toString());
+					cell.add(link);
+				}
+				else {
+					cell.add(Text.getNonBrakingSpace());
+				}
 	
 				if (iRow % 2 == 0) {
 					row.setStyleClass("evenRow");
