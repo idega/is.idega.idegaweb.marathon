@@ -3,14 +3,13 @@ package is.idega.idegaweb.marathon.presentation.user.runoverview;
 import is.idega.idegaweb.marathon.data.Charity;
 import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.data.Year;
-import is.idega.idegaweb.marathon.data.YearHome;
 import is.idega.idegaweb.marathon.presentation.RunBlock;
 
+import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.idega.data.IDOLookup;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Layer;
 import com.idega.presentation.Table2;
@@ -52,7 +51,7 @@ public class UIUserRunOverviewList extends RunBlock {
 		add(form);
 	}
 	
-	private Table2 getRunOverviewTable(IWContext iwc) {
+	private Table2 getRunOverviewTable(IWContext iwc) throws RemoteException {
 		
 		Table2 table = new Table2();
 		table.setStyleClass("listTable");
