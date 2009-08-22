@@ -233,9 +233,15 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 				}
 				try {
 					if (charity != null && !charity.trim().equals("")) {
-						Charity charityOgranization = this.charityBusiness.getCharityHome().findByPrimaryKey(Integer.valueOf(charity.trim()));
-						if (charityOgranization!= null) {
-							participant.setCharityId(charityOgranization.getOrganizationalID());
+						Charity charityOrganization = null;
+						try {
+							charityOrganization = this.charityBusiness.getCharityHome().findByPrimaryKey(Integer.valueOf(charity.trim()));
+						}
+						catch (FinderException fe) {
+							charityOrganization = this.charityBusiness.getCharityHome().findCharityByOrganizationalId(charity.trim());
+						}
+						if (charityOrganization!= null) {
+							participant.setCharityId(charityOrganization.getOrganizationalID());
 						}
 					}
 				} catch (FinderException e) {
