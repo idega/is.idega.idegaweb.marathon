@@ -120,7 +120,7 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 			boolean found = false;
 			while (iter.hasNext() && !found) {
 				country = (Country) iter.next();
-				if (nationality.equals(country.getIsoAbbreviation())) {
+				if (nationality.equals(country.getIsoAbbreviation()) || nationality.equals(country.getName())) {
 					break;
 				}
 			}
