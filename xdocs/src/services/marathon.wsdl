@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://ws.isb.is" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="http://ws.isb.is" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://ws.isb.is">
+      <s:element name="ErIVidskiptumVidGlitni">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="kennitala" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ErIVidskiptumVidGlitniResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ErIVidskiptumVidGlitniResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ErIVidskiptumVidGlitni2">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="kennitolur" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ErIVidskiptumVidGlitni2Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ErIVidskiptumVidGlitni2Result" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="ErIVidskiptumVidGlitniSoapIn">
+    <wsdl:part name="parameters" element="tns:ErIVidskiptumVidGlitni" />
+  </wsdl:message>
+  <wsdl:message name="ErIVidskiptumVidGlitniSoapOut">
+    <wsdl:part name="parameters" element="tns:ErIVidskiptumVidGlitniResponse" />
+  </wsdl:message>
+  <wsdl:message name="ErIVidskiptumVidGlitni2SoapIn">
+    <wsdl:part name="parameters" element="tns:ErIVidskiptumVidGlitni2" />
+  </wsdl:message>
+  <wsdl:message name="ErIVidskiptumVidGlitni2SoapOut">
+    <wsdl:part name="parameters" element="tns:ErIVidskiptumVidGlitni2Response" />
+  </wsdl:message>
+  <wsdl:portType name="MarathonWS2Soap">
+    <wsdl:operation name="ErIVidskiptumVidGlitni">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Athugar hvort kennitala sé skráð í virkum viðskiptum við Glitnir Banka</documentation>
+      <wsdl:input message="tns:ErIVidskiptumVidGlitniSoapIn" />
+      <wsdl:output message="tns:ErIVidskiptumVidGlitniSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ErIVidskiptumVidGlitni2">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Athugar hvort kennitolur séu skráðar í virkum viðskiptum hjá Glitnir Banka</documentation>
+      <wsdl:input message="tns:ErIVidskiptumVidGlitni2SoapIn" />
+      <wsdl:output message="tns:ErIVidskiptumVidGlitni2SoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="MarathonWS2Soap" type="tns:MarathonWS2Soap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    <wsdl:operation name="ErIVidskiptumVidGlitni">
+      <soap:operation soapAction="http://ws.isb.is/ErIVidskiptumVidGlitni" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ErIVidskiptumVidGlitni2">
+      <soap:operation soapAction="http://ws.isb.is/ErIVidskiptumVidGlitni2" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="MarathonWS2">
+    <documentation xmlns="http://schemas.xmlsoap.org/wsdl/" />
+    <wsdl:port name="MarathonWS2Soap" binding="tns:MarathonWS2Soap">
+      <soap:address location="http://localhost/Isb.Netbanki.Web.Services/Marathon/MarathonWS2.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

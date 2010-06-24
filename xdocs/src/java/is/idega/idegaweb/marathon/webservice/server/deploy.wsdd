@@ -1,0 +1,34 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from CharityServiceService WSDL service -->
+
+  <service name="CharityService" provider="java:RPC" style="rpc" use="encoded">
+      <parameter name="wsdlTargetNamespace" value="http://illuminati.is"/>
+      <parameter name="wsdlServiceElement" value="CharityServiceService"/>
+      <parameter name="schemaUnqualified" value="http://illuminati.is"/>
+      <parameter name="wsdlServicePort" value="CharityService"/>
+      <parameter name="className" value="is.idega.idegaweb.marathon.webservice.server.CharityServiceSoapBindingSkeleton"/>
+      <parameter name="wsdlPortType" value="CharityService"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <parameter name="allowedMethods" value="*"/>
+
+      <typeMapping
+        xmlns:ns="http://illuminati.is"
+        qname="ns:CharityInformation"
+        type="java:is.idega.idegaweb.marathon.webservice.server.CharityInformation"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+  </service>
+</deployment>
