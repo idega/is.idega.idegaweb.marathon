@@ -280,7 +280,10 @@ public class DistanceChangeWizardBean {
 		}
 
 		this.skipPaymentStep = applicationSettings.getBoolean("SKIP_PAYMENT_STEP_FOR_USER", false);
-		
+		if (distanceChangePrice.getPrice().floatValue() <= 0.0f) {
+			this.skipPaymentStep = true;
+		}
+				
 		return distanceChangePrice;
 	}
 

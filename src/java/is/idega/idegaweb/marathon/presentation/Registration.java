@@ -877,7 +877,7 @@ public class Registration extends RunBlock {
 		emailField2.setAsNotEmpty(localize("run_reg.continue_without_email2",
 				"You can not continue without repeating the e-mail"));
 		// emailField.setWidth(Table.HUNDRED_PERCENT);
-		if (getRunner().getEmail2() != null) {
+		/*if (getRunner().getEmail2() != null) {
 			emailField2.setContent(getRunner().getEmail2());
 		} else if (getRunner().getUser() != null) {
 			try {
@@ -887,7 +887,7 @@ public class Registration extends RunBlock {
 			} catch (NoEmailFoundException nefe) {
 				// No email registered...
 			}
-		}
+		}*/
 
 		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_ADDRESS,
 				"Address")), 1, iRow);

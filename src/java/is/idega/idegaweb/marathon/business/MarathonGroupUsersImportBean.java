@@ -696,7 +696,9 @@ public class MarathonGroupUsersImportBean extends IBOServiceBean implements
 
 	public String parseShirtSize(String shirtSize) {
 		// Shirt size handling
-		if (shirtSize.startsWith("S c") || shirtSize.startsWith("S b")) {
+		if (shirtSize.startsWith("XS c") || shirtSize.startsWith("XS b")) {
+			shirtSize = "xsmall_kids";
+		} else if (shirtSize.startsWith("S c") || shirtSize.startsWith("S b")) {
 			shirtSize = "small_kids";
 		} else if (shirtSize.startsWith("M c") || shirtSize.startsWith("M b")) {
 			shirtSize = "medium_kids";
@@ -726,7 +728,19 @@ public class MarathonGroupUsersImportBean extends IBOServiceBean implements
 		} else if (shirtSize.startsWith("XXL m")
 				|| shirtSize.startsWith("XXL ka")) {
 			shirtSize = "xxlarge_male";
-		}
+		} else if (shirtSize.equals("XL")) {
+			shirtSize = "xlarge";			
+		} else if (shirtSize.equals("L")) {
+			shirtSize = "large";			
+		} else if (shirtSize.equals("M")) {
+			shirtSize = "medium";			
+		} else if (shirtSize.equals("S")) {
+			shirtSize = "small";			
+		} else if (shirtSize.equals("XS")) {
+			shirtSize = "xsmall";			
+		} else if (shirtSize.equals("XXS")) {
+			shirtSize = "xxsmall";			
+		} 
 
 		return shirtSize;
 	}

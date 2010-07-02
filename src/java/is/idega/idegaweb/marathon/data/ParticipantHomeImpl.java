@@ -1,16 +1,13 @@
 package is.idega.idegaweb.marathon.data;
 
-
-import java.util.Collection;
-
-import javax.ejb.CreateException;
-import javax.ejb.FinderException;
-
-import com.idega.data.IDOEntity;
-import com.idega.data.IDOException;
 import com.idega.data.IDOFactory;
-import com.idega.user.data.Group;
+import javax.ejb.CreateException;
+import com.idega.data.IDOEntity;
 import com.idega.user.data.User;
+import javax.ejb.FinderException;
+import com.idega.data.IDOException;
+import java.util.Collection;
+import com.idega.user.data.Group;
 
 public class ParticipantHomeImpl extends IDOFactory implements ParticipantHome {
 	public Class getEntityInterfaceClass() {
@@ -197,7 +194,7 @@ public class ParticipantHomeImpl extends IDOFactory implements ParticipantHome {
 		this.idoCheckInPooledEntity(entity);
 		return crewLabelExists;
 	}
-	
+
 	public Collection findAllByRunGroupIdAndYear(int runId, int year)
 			throws FinderException {
 		IDOEntity entity = this.idoCheckOutPooledEntity();

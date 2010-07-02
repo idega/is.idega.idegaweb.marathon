@@ -238,6 +238,11 @@ public interface Participant extends IDOEntity {
 	public String getTransportOrdered();
 
 	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getIsDeleted
+	 */
+	public boolean getIsDeleted();
+
+	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setRunTypeGroupID
 	 */
 	public void setRunTypeGroupID(int runTypeGroupID);
@@ -456,6 +461,11 @@ public interface Participant extends IDOEntity {
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setTransportOrdered
 	 */
 	public void setTransportOrdered(String transportOrdered);
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setIsDeleted
+	 */
+	public void setIsDeleted(boolean deleted);
 
 	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setCharityId

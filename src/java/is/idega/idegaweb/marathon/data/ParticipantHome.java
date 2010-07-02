@@ -1,15 +1,13 @@
 package is.idega.idegaweb.marathon.data;
 
 
-import java.util.Collection;
-
 import javax.ejb.CreateException;
-import javax.ejb.FinderException;
-
-import com.idega.data.IDOException;
 import com.idega.data.IDOHome;
-import com.idega.user.data.Group;
 import com.idega.user.data.User;
+import javax.ejb.FinderException;
+import com.idega.data.IDOException;
+import java.util.Collection;
+import com.idega.user.data.Group;
 
 public interface ParticipantHome extends IDOHome {
 	public Participant create() throws CreateException;

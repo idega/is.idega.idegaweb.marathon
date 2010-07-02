@@ -72,6 +72,8 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 	private static final String COLUMN_RELAY3_EMAIL = "rel3_email";
 	private static final String COLUMN_RELAY3_SHIRT_SIZE = "rel3_shirt_size";
 	private static final String COLUMN_RELAY3_LEG = "rel3_leg";
+	
+	private static final String COLUMN_DELETED = "deleted";
 
 	
 	/**
@@ -160,6 +162,7 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		addAttribute(COLUMN_RELAY3_SHIRT_SIZE, "", String.class);
 		addAttribute(COLUMN_RELAY3_LEG, "", String.class);
 
+		addAttribute(COLUMN_DELETED, "Deleted", Boolean.class);
 	}
 
 	public static String getEntityTableName() {
@@ -530,6 +533,10 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		return getStringColumnValue(getColumnNameTransportOrdered());
 	}
 
+	public boolean getIsDeleted() {
+		return getBooleanColumnValue(COLUMN_DELETED, false);
+	}
+	
 	//SET
 	public void setRunTypeGroupID(int runTypeGroupID) {
 		setColumn(getColumnNameRunTypeGroupID(), runTypeGroupID);
@@ -710,6 +717,10 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		setColumn(getColumnNameTransportOrdered(),transportOrdered);
 	}
 
+	public void setIsDeleted(boolean deleted) {
+		setColumn(COLUMN_DELETED, deleted);
+	}
+	
 	public void setCharityId(String charityId) {
 		setColumn(getColumnNameCharityId(),charityId);
 	}

@@ -79,7 +79,9 @@ public class RunPluginBusinessBean extends IBOServiceBean implements RunPluginBu
 			
 			try {
 				distanceGroup = runBiz.getRunGroupOfTypeForGroup(parentGroup, IWMarathonConstants.GROUP_TYPE_RUN_DISTANCE);
-				distance = ConverterUtility.getInstance().convertGroupToDistance(distanceGroup);
+				if (distanceGroup != null) {
+					distance = ConverterUtility.getInstance().convertGroupToDistance(distanceGroup);
+				}
 			}
 			catch (RemoteException e) {
 				e.printStackTrace();
@@ -98,6 +100,7 @@ public class RunPluginBusinessBean extends IBOServiceBean implements RunPluginBu
 				if (distance != null && oldDistance != null && ((Integer)distance.getPrimaryKey()).intValue() != ((Integer)oldDistance.getPrimaryKey()).intValue()) {
 					runEntry.setParticipantNumber(runBiz.getNextAvailableParticipantNumber(distance));
 				}
+				runEntry.setIsDeleted(false);
 				runEntry.store();
 			}
 		}
@@ -159,7 +162,8 @@ public class RunPluginBusinessBean extends IBOServiceBean implements RunPluginBu
 				System.out.println("run != null");
 				Participant runEntry = getRunBiz(iwc).getParticipantByRunAndYear(user, run, year);
 				System.out.println("participant id = " + runEntry.getPrimaryKey().toString());
-				runEntry.remove();
+				runEntry.setIsDeleted(true);
+				runEntry.store();
 			}
 			System.out.println("done");
 		}
