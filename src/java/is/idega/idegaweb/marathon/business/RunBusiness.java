@@ -62,14 +62,6 @@ public interface RunBusiness extends IBOService {
 	public int getAgeFromPersonalID(String personalID) throws RemoteException;
 
 	/**
-	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#saveRun
-	 */
-/*	public void saveRun(int userID, String run, String distance, String year,
-			String nationality, String tshirt, String chipOwnershipStatus,
-			String chipNumber, String groupName, String bestTime,
-			String goalTime, Locale locale) throws RemoteException;*/
-
-	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#importParticipant
 	 */
 	public Participant importParticipant(User user, Group run, Group year,
@@ -218,6 +210,13 @@ public interface RunBusiness extends IBOService {
 	 */
 	public Participant getParticipantByRunAndYear(User user, Group run,
 			Group year) throws FinderException, RemoteException;
+
+	/**
+	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getParticipantPartnerByRunAndYear
+	 */
+	public Participant getParticipantPartnerByRunAndYear(String personalID,
+			Group run, Group year, int partnerNumber) throws FinderException,
+			RemoteException;
 
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getRunGroupByGroupId

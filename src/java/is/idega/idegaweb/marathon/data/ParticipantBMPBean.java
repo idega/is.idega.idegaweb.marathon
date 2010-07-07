@@ -1001,6 +1001,31 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		query.appendAndEquals(getColumnNameRunYearGroupID(),year);
 		return (Integer) super.idoFindOnePKByQuery(query);
 	}
+
+	public Integer ejbFindByPartnerAndRun(String partnerPersonalID, Group run, Group year, int partnerNumber) throws FinderException{
+		IDOQuery query = idoQuery();
+		query.appendSelect();
+		query.append(getIDColumnName());
+		query.appendFrom();
+		query.append(this.getEntityName());
+		if (partnerNumber == 1) {
+			query.appendWhereEquals(COLUMN_RELAY1_PERSONAL_ID, partnerPersonalID);			
+		} else if (partnerNumber == 2) {
+			query.appendWhereEquals(COLUMN_RELAY2_PERSONAL_ID, partnerPersonalID);			
+		} else if (partnerNumber == 3) {
+			query.appendWhereEquals(COLUMN_RELAY3_PERSONAL_ID, partnerPersonalID);			
+		} else {
+			return null;
+		}
+		
+		query.appendAndEquals(getColumnNameRunTypeGroupID(),run);
+		query.appendAndEquals(getColumnNameRunYearGroupID(),year);
+		
+		System.out.println("query = " + query.toString());
+		
+		return (Integer) super.idoFindOnePKByQuery(query);
+	}
+
 	
 	public Collection ejbFindByUserAndParentGroup(int userID, int runGroupID, int yearGroupID, int distanceGroupID) throws FinderException{
 		IDOQuery query = idoQueryGetSelect();

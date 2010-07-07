@@ -1,5 +1,6 @@
 package is.idega.idegaweb.marathon.data;
 
+
 import com.idega.data.IDOFactory;
 import javax.ejb.CreateException;
 import com.idega.data.IDOEntity;
@@ -150,6 +151,15 @@ public class ParticipantHomeImpl extends IDOFactory implements ParticipantHome {
 		return this.findByPrimaryKey(pk);
 	}
 
+	public Participant findByPartnerAndRun(String partnerPersonalID, Group run,
+			Group year, int partnerNumber) throws FinderException {
+		IDOEntity entity = this.idoCheckOutPooledEntity();
+		Object pk = ((ParticipantBMPBean) entity).ejbFindByPartnerAndRun(
+				partnerPersonalID, run, year, partnerNumber);
+		this.idoCheckInPooledEntity(entity);
+		return this.findByPrimaryKey(pk);
+	}
+
 	public Collection findByUserAndParentGroup(int userID, int runGroupID,
 			int yearGroupID, int distanceGroupID) throws FinderException {
 		IDOEntity entity = this.idoCheckOutPooledEntity();
@@ -187,12 +197,11 @@ public class ParticipantHomeImpl extends IDOFactory implements ParticipantHome {
 
 	public boolean findCrewLabelAlreadyExistsForRun(int runId, int yearId,
 			String crewLabel) throws FinderException {
-
-		IDOEntity entity = this.idoCheckOutPooledEntity();
-		boolean crewLabelExists = ((ParticipantBMPBean) entity)
-				.ejbFindCrewLabelAlreadyExistsForRun(runId, yearId, crewLabel);
-		this.idoCheckInPooledEntity(entity);
-		return crewLabelExists;
+		 IDOEntity entity = this.idoCheckOutPooledEntity();
+		 boolean crewLabelExists = ((ParticipantBMPBean) entity)
+		 .ejbFindCrewLabelAlreadyExistsForRun(runId, yearId, crewLabel);
+		 this.idoCheckInPooledEntity(entity);
+		 return crewLabelExists;
 	}
 
 	public Collection findAllByRunGroupIdAndYear(int runId, int year)

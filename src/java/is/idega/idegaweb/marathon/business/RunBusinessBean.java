@@ -1096,6 +1096,16 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			throw new IBORuntimeException(e);
 		}
 	}
+
+	public Participant getParticipantPartnerByRunAndYear(String personalID, Group run, Group year, int partnerNumber) throws FinderException {
+		try {
+			ParticipantHome runHome = (ParticipantHome) getIDOHome(Participant.class);
+			return runHome.findByPartnerAndRun(personalID, run, year, partnerNumber);
+		}
+		catch (RemoteException e) {
+			throw new IBORuntimeException(e);
+		}
+	}
 	
 	public Group getRunGroupByGroupId(Integer groupId) {
 		try {

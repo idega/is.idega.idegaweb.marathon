@@ -29,24 +29,31 @@ public class CharityServiceSoapBindingImpl implements
 		is.idega.idegaweb.marathon.webservice.server.CharityService_PortType {
 	public is.idega.idegaweb.marathon.webservice.server.CharityInformation getCharityInformation(
 			java.lang.String personalID) throws java.rmi.RemoteException {
+		
+		User user = null;
+		Group run = null;
+		Group year = null;
+		Participant runner = null;
+		
 		try {
-			User user = getUserBusiness().getUser(personalID);
-			Group run = getRunBusiness().getRunGroupByGroupId(new Integer(4));
-			Group year = getRunBusiness().getRunGroupByGroupId(new Integer(416257));
+			run = getRunBusiness().getRunGroupByGroupId(new Integer(4));
+			year = getRunBusiness().getRunGroupByGroupId(new Integer(416257));
+			user = getUserBusiness().getUser(personalID);
 
-			Participant runner = getRunBusiness().getParticipantByRunAndYear(
+			runner = getRunBusiness().getParticipantByRunAndYear(
 					user, run, year);
 
-			if (runner.getCharityId() == null
-					|| runner.getCharityId().equals("")) {
-				return null;
+			Charity charity = null;
+			if (runner.getCharityId() != null
+					&& !runner.getCharityId().equals("")) {
+				charity = getCharityBusiness().getCharityByOrganisationalID(runner.getCharityId());
 			}
 
-			Charity charity = getCharityBusiness()
-					.getCharityByOrganisationalID(runner.getCharityId());
 			CharityInformation info = new CharityInformation();
-			info.setCharityID(runner.getCharityId());
-			info.setCharityName(charity.getName());
+			if (charity != null) {
+				info.setCharityID(runner.getCharityId());
+				info.setCharityName(charity.getName());
+			}
 			info.setName(user.getName());
 			info.setPersonalID(user.getPersonalID());
 			Address address = null;
@@ -100,9 +107,50 @@ public class CharityServiceSoapBindingImpl implements
 			return info;
 
 		} catch (FinderException e) {
-		}
+			if (run == null || year == null) {
+				return null;
+			}
+			
+			boolean partner1 = false;
+			boolean partner2 = false;
+			boolean partner3 = false;
+			
+			try {
+				runner = getRunBusiness().getParticipantPartnerByRunAndYear(personalID, run, year, 1);
+				partner1 = true;
+			} catch (FinderException e1) {
+				try {
+					runner = getRunBusiness().getParticipantPartnerByRunAndYear(personalID, run, year, 1);
+					partner2 = true;
+				} catch (FinderException e2) {
+					try {
+						runner = getRunBusiness().getParticipantPartnerByRunAndYear(personalID, run, year, 1);
+						partner3 = true;
+					} catch (FinderException e3) {
+						return null;
+					}
+				}
+			}
+			
+			CharityInformation info = new CharityInformation();
+			info.setDistance(runner.getRunDistanceGroup().getName());
+			
+			if (partner1) {
+				info.setName(runner.getRelayPartner1Name());
+				info.setPersonalID(runner.getRelayPartner1SSN());
+				info.setEmail(runner.getRelayPartner1Email());
+			} else if (partner2) {
+				info.setName(runner.getRelayPartner2Name());
+				info.setPersonalID(runner.getRelayPartner2SSN());
+				info.setEmail(runner.getRelayPartner2Email());
+			} else if (partner3) {
+				info.setName(runner.getRelayPartner3Name());
+				info.setPersonalID(runner.getRelayPartner3SSN());
+				info.setEmail(runner.getRelayPartner3Email());				
+			}
 
-		return null;
+			return info;			
+		}
 	}
 
 	private RunBusiness getRunBusiness() throws IBOLookupException {

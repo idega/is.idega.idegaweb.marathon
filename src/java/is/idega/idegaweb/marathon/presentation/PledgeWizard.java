@@ -414,7 +414,7 @@ public class PledgeWizard extends RunBlock {
 		TextInput ccv = (TextInput) getStyledInterface(new TextInput(PARAMETER_CCV));
 		ccv.setLength(3);
 		ccv.setMaxlength(3);
-		ccv.setMininumLength(3, localize("run_reg.not_valid_ccv", "Not a valid CCV number"));
+		//ccv.setMininumLength(3, localize("run_reg.not_valid_ccv", "Not a valid CCV number"));
 		ccv.setAsIntegers(localize("run_reg.not_valid_ccv", "Not a valid CCV number"));
 		ccv.setAsNotEmpty(localize("run_reg.must_supply_ccv", "You must enter the CCV number"));
 		ccv.keepStatusOnAction(true);
