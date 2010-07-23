@@ -40,14 +40,17 @@ public class CharityServiceSoapBindingImpl implements
 			year = getRunBusiness().getRunGroupByGroupId(new Integer(416257));
 			user = getUserBusiness().getUser(personalID);
 
+			System.out.println("1");
 			runner = getRunBusiness().getParticipantByRunAndYear(
 					user, run, year);
+			System.out.println("2");
 
 			Charity charity = null;
 			if (runner.getCharityId() != null
 					&& !runner.getCharityId().equals("")) {
 				charity = getCharityBusiness().getCharityByOrganisationalID(runner.getCharityId());
 			}
+			System.out.println("3");
 
 			CharityInformation info = new CharityInformation();
 			if (charity != null) {
@@ -104,13 +107,21 @@ public class CharityServiceSoapBindingImpl implements
 				info.setEmail(email.getEmailAddress());
 			}
 
+			System.out.println("4");
+
 			return info;
 
 		} catch (FinderException e) {
+			System.out.println("5");
+
 			if (run == null || year == null) {
+				System.out.println("6");
+
 				return null;
 			}
 			
+			System.out.println("7");
+
 			boolean partner1 = false;
 			boolean partner2 = false;
 			boolean partner3 = false;
@@ -118,36 +129,65 @@ public class CharityServiceSoapBindingImpl implements
 			try {
 				runner = getRunBusiness().getParticipantPartnerByRunAndYear(personalID, run, year, 1);
 				partner1 = true;
+				System.out.println("8");
+
 			} catch (FinderException e1) {
 				try {
-					runner = getRunBusiness().getParticipantPartnerByRunAndYear(personalID, run, year, 1);
+					runner = getRunBusiness().getParticipantPartnerByRunAndYear(personalID, run, year, 2);
 					partner2 = true;
+					System.out.println("9");
+
 				} catch (FinderException e2) {
 					try {
-						runner = getRunBusiness().getParticipantPartnerByRunAndYear(personalID, run, year, 1);
+						runner = getRunBusiness().getParticipantPartnerByRunAndYear(personalID, run, year, 3);
 						partner3 = true;
+						System.out.println("10");
+
 					} catch (FinderException e3) {
+						System.out.println("11");
+
 						return null;
 					}
 				}
 			}
 			
+			System.out.println("12");
+
 			CharityInformation info = new CharityInformation();
 			info.setDistance(runner.getRunDistanceGroup().getName());
 			
 			if (partner1) {
+				System.out.println("13");
+
 				info.setName(runner.getRelayPartner1Name());
 				info.setPersonalID(runner.getRelayPartner1SSN());
 				info.setEmail(runner.getRelayPartner1Email());
 			} else if (partner2) {
+				System.out.println("14");
+
 				info.setName(runner.getRelayPartner2Name());
 				info.setPersonalID(runner.getRelayPartner2SSN());
 				info.setEmail(runner.getRelayPartner2Email());
 			} else if (partner3) {
+				System.out.println("15");
+
 				info.setName(runner.getRelayPartner3Name());
 				info.setPersonalID(runner.getRelayPartner3SSN());
 				info.setEmail(runner.getRelayPartner3Email());				
 			}
+
+			Charity charity = null;
+			if (runner.getCharityId() != null
+					&& !runner.getCharityId().equals("")) {
+				charity = getCharityBusiness().getCharityByOrganisationalID(runner.getCharityId());
+			}
+			if (charity != null) {
+				info.setCharityID(runner.getCharityId());
+				info.setCharityName(charity.getName());
+			}
+
+			
+			System.out.println("16");
 
 			return info;			
 		}
