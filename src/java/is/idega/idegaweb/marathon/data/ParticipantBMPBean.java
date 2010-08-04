@@ -1009,11 +1009,11 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		query.appendFrom();
 		query.append(this.getEntityName());
 		if (partnerNumber == 1) {
-			query.appendWhereEquals(COLUMN_RELAY1_PERSONAL_ID, partnerPersonalID);			
+			query.appendWhereEqualsQuoted(COLUMN_RELAY1_PERSONAL_ID, partnerPersonalID);			
 		} else if (partnerNumber == 2) {
-			query.appendWhereEquals(COLUMN_RELAY2_PERSONAL_ID, partnerPersonalID);			
+			query.appendWhereEqualsQuoted(COLUMN_RELAY2_PERSONAL_ID, partnerPersonalID);			
 		} else if (partnerNumber == 3) {
-			query.appendWhereEquals(COLUMN_RELAY3_PERSONAL_ID, partnerPersonalID);			
+			query.appendWhereEqualsQuoted(COLUMN_RELAY3_PERSONAL_ID, partnerPersonalID);			
 		} else {
 			return null;
 		}
