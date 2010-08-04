@@ -2058,10 +2058,8 @@ public class Registration extends RunBlock {
 		table.setHeight(row++, 18);
 		int runRow = 2;
 		
-		System.out.println("Getting siblings, children and prices");
 		
 		int numberOfChildren = this.isIcelandic ? getRunBusiness(iwc).getNumberOfChildren(runners.values()) : 0;
-		System.out.println("children = " + numberOfChildren);
 		boolean useChildDiscount = false;
 		if (numberOfChildren > 1 && numberOfChildren != runners.size()) {
 			useChildDiscount = true;
@@ -2084,7 +2082,6 @@ public class Registration extends RunBlock {
 				childNumber++;
 			}
 			
-			System.out.println("childnumber = " + childNumber);
 			runnerTable.add(getText(localize(runner.getRun().getName(), runner.getRun().getName())), 2, runRow);
 			runnerTable.add(getText(localize(runner.getDistance().getName(), runner.getDistance().getName())), 3, runRow);
 			float runPrice = getRunBusiness(iwc).getPriceForRunner(runner, iwc.getCurrentLocale(), this.chipDiscount, 0);
@@ -2093,9 +2090,6 @@ public class Registration extends RunBlock {
 			if (useChildDiscount &&  childNumber > 1 && runPrice > 0) {
 				runPrice -= this.childDiscount;
 			}
-			
-			System.out.println("totalAmount = " + totalAmount);
-			System.out.println("runPrice = " + runPrice);
 			
 			if (runner.isBuyChip()) {
 				chipsToBuy++;
@@ -2399,9 +2393,6 @@ public class Registration extends RunBlock {
 							iwc.getCurrentLocale());
 			getParentPage().setAlertOnLoad(
 					ccae.getLocalizedMessage(creditCardBundle));
-			// ccae.printStackTrace();
-			System.out
-					.println("CreditCardAuthorizationException in Registration.stepReceipt");
 			loadPreviousStep(iwc);
 		}
 	}
