@@ -77,10 +77,6 @@ public class UIUserRunOverviewList extends RunBlock {
 		cell.add(new Text(getResourceBundle().getLocalizedString(KEY_PREFIX + "participant_number", "Participant number")));
 		
 		cell = row.createHeaderCell();
-		cell.setStyleClass("runnerCharity");
-		cell.add(new Text(getResourceBundle().getLocalizedString(KEY_PREFIX + "charity", "Charity")));
-		
-		cell = row.createHeaderCell();
 		cell.setStyleClass("runnerChangeDistanceCellHeader");
 		cell.setStyleClass("lastColumn");
 		cell.add(new Text(getResourceBundle().getLocalizedString("blahblah", "Change distance")));
@@ -119,24 +115,7 @@ public class UIUserRunOverviewList extends RunBlock {
 				cell = row.createCell();
 				cell.setStyleClass("runnerParticipantNumber");
 				cell.add(new Text(String.valueOf(participant.getParticipantNumber())));
-				
-				String charityString = "";
-				if (participant.getCharityId() != null) {
-					try {
-						Charity charity = getCharityBusiness(iwc).getCharityByOrganisationalID(participant.getCharityId());
-						charityString = charity.getName();
-					} catch (Exception e) {
-						//charity not found
-						System.err.println(e.getMessage());
-					}
-				}
-				
-				cell = row.createCell();
-				cell.setStyleClass("runnerCharity");
-				cell.add(new Text(charityString));
-	
-				cell.add(Text.getNonBrakingSpace());
-				
+							
 				cell = row.createCell();
 				cell.setStyleClass("runnerChangeDistanceCell");
 				cell.setStyleClass("lastColumn");
