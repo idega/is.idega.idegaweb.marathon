@@ -138,6 +138,10 @@ public class UIUserRunOverviewList extends RunBlock {
 					e.printStackTrace();
 				}
 				
+				if (participant.getPayedAmount() == null || "".equals(participant.getPayedAmount())) {
+					showEditButton = false;
+				}
+				
 				if (showEditButton) {
 					Link link = getLink(localize("edit", "Edit"));
 					link.addParameter(PARTICIPANT_PARAM, participant.getPrimaryKey().toString());

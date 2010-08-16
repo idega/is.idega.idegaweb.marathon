@@ -97,7 +97,7 @@ public class RegistrationReceivedPrintable extends Window {
 		table.add(getText(iwrb.getLocalizedString("run_reg.payment_received", "You have registered for the following:")), 1, row++);
 		table.setHeight(row++, 8);
 
-		Table runnerTable = new Table(5, runners.size() + 3);
+		Table runnerTable = new Table(5, runners.size() + 4);
 		runnerTable.setWidth(Table.HUNDRED_PERCENT);
 		runnerTable.add(getHeader(iwrb.getLocalizedString("run_reg.runner_name", "Runner name")), 1, 1);
 		runnerTable.add(getHeader(iwrb.getLocalizedString("run_reg.run", "Run")), 2, 1);

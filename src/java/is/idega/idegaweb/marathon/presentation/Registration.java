@@ -2445,7 +2445,7 @@ public class Registration extends RunBlock {
 				"You have registered for the following:")), 1, row++);
 		table.setHeight(row++, 8);
 
-		Table runnerTable = new Table(5, runners.size() + 3);
+		Table runnerTable = new Table(5, runners.size() + 4);
 		runnerTable.setWidth(Table.HUNDRED_PERCENT);
 		int col = 1;
 		runnerTable.add(
