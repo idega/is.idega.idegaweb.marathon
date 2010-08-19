@@ -12,7 +12,6 @@ import is.idega.idegaweb.marathon.data.ParticipantHome;
 import is.idega.idegaweb.marathon.data.Run;
 import is.idega.idegaweb.marathon.data.Year;
 import is.idega.idegaweb.marathon.data.YearBMPBean;
-import is.idega.idegaweb.marathon.glitnirws.MarathonWS2Client;
 import is.idega.idegaweb.marathon.presentation.CreateYearForm;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
@@ -69,7 +68,6 @@ import com.idega.user.data.User;
 import com.idega.util.Age;
 import com.idega.util.IWTimestamp;
 import com.idega.util.LocaleUtil;
-import com.idega.util.Timer;
 import com.idega.util.text.Name;
 
 /**
@@ -289,7 +287,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			participant.setRunYearGroup(year);
 			participant.setRunGroupGroup(ageGenderGroup);
 			
-			boolean enableCustomerWebservice = "true".equalsIgnoreCase(getIWMainApplication().getSettings().getProperty("MARATHON_ENABLE_CUSTOMER_WS","false"));
+			/*boolean enableCustomerWebservice = "true".equalsIgnoreCase(getIWMainApplication().getSettings().getProperty("MARATHON_ENABLE_CUSTOMER_WS","false"));
 			if (user.getPersonalID() != null && enableCustomerWebservice) {
 				Timer wsTimer = new Timer();
 				wsTimer.start();
@@ -313,7 +311,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				}
 				wsTimer.stop();
 				System.out.println("Time to execute GlitnirCustomerWebService was: " + wsTimer.getTimeString());
-			}
+			}*/
 
 			participant.store();
 			
@@ -433,7 +431,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					participant.setQuestion3Year(runner.getQuestion3Year());
 					participant.setQuestion3NeverRan(runner.getQuestion3NeverRan());
 					//check customer:
-					boolean enableCustomerWebservice = "true".equalsIgnoreCase(getIWMainApplication().getSettings().getProperty("MARATHON_ENABLE_CUSTOMER_WS","false"));
+					/*boolean enableCustomerWebservice = "true".equalsIgnoreCase(getIWMainApplication().getSettings().getProperty("MARATHON_ENABLE_CUSTOMER_WS","false"));
 					if (personalId != null && enableCustomerWebservice) {
 						Timer wsTimer = new Timer();
 						wsTimer.start();
@@ -457,7 +455,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 						}
 						wsTimer.stop();
 						System.out.println("Time to execute GlitnirCustomerWebService was: " + wsTimer.getTimeString());
-					}
+					}*/
 
 					
 					if (runner.getRelayLeg() != null & !"".equals(runner.getRelayLeg())) {
