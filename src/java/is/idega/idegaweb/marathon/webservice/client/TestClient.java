@@ -17,7 +17,7 @@ public class TestClient {
 			CharityServiceServiceLocator locator = new CharityServiceServiceLocator();
 			CharityService_PortType port = locator.getCharityService();
 			
-			CharityInformation info = port.getCharityInformation("1708724369");
+			CharityInformation info = port.getCharityInformation("2908022290");
 
 			if (info != null) {
 				System.out.println(info.getAddress());

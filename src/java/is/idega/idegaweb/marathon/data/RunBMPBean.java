@@ -133,6 +133,8 @@ public class RunBMPBean extends GroupBMPBean  implements Run{
 				if (thisYearStamp.isLaterThanOrEquals(new IWTimestamp(year.getLastRegistrationDate()))) {
 					finished = true;
 				}
+			} else {
+				finished = true;
 			}
 			Year nextYear = (Year) yearMap.get(nextYearString);
 			if (finished && nextYear != null && nextYear.getLastRegistrationDate() != null && thisYearStamp.isEarlierThan(new IWTimestamp(nextYear.getLastRegistrationDate()))) {

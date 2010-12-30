@@ -82,6 +82,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 	private static final String RUN_ROLLER_SKATE = "Roller Skate";
 	private static final String RUN_MIDNIGHT_RUN = "Midnight Run";
 	private static final String RUN_LAUGAVEGUR = "Laugavegur";
+	private static final String RUN_LAUGAVEGUR_PREREGISTRATION = "Laugavegur - Forskraning";
 	private static final String RUN_RVK_MARATHON = "Reykjavik Marathon";
 	private static final String RUN_OSLO_MARATHON = "Oslo Marathon";
 	private static final String RUN_LAZY_TOWN_RUN = "Lazy Town Run";
@@ -322,6 +323,97 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		}
 	}
 	
+	public Participant storeParticipantRegistration(Runner runner, Locale locale, String runPrefix) throws IDOCreateException {
+		Participant participant = null;
+		
+		UserTransaction trans = getSessionContext().getUserTransaction();
+		try {
+			trans.begin();
+				User user = runner.getUser();
+				String personalId = null;
+				if (user == null) {
+					personalId = runner.getPersonalID();
+					user = saveUser(runner.getName(), personalId, new IWTimestamp(runner.getDateOfBirth()), runner.getGender(), runner.getAddress(), runner.getPostalCode(), runner.getCity(), runner.getCountry());
+				} else {
+					personalId = user.getPersonalID();
+				}
+				
+				Group ageGenderGroup = getAgeGroup(user, runner.getRun(), runner.getDistance());
+				ageGenderGroup.addGroup(user);
+				Group yearGroup = (Group) runner.getDistance().getParentNode();
+				Group run = runner.getRun();
+				Group distance = runner.getDistance();
+				Run selectedRun = null;
+				try {
+					selectedRun = ConverterUtility.getInstance().convertGroupToRun(run);
+				} catch (FinderException e) {
+					//Run not found
+				}
+				
+				try {
+					ParticipantHome runHome = (ParticipantHome) getIDOHome(Participant.class);
+					participant = runHome.create();
+					participant.setUser(user);
+					participant.setRunTypeGroup(run);
+					participant.setRunDistanceGroup(distance);
+					participant.setRunYearGroup(yearGroup);
+					participant.setRunGroupGroup(ageGenderGroup);
+					
+					//participant.setShirtSize(runner.getShirtSize());
+					participant.setUserNationality(runner.getNationality().getName());
+					if (runner.getDistance() != null) {
+						participant.setParticipantNumber(getNextAvailableParticipantNumber(runner.getDistance()));
+					}
+					//participant.setAllowsEmails(runner.getAllowsEmails());
+					participant.setQuestion1Hour(runner.getQuestion1Hour());
+					participant.setQuestion1Minute(runner.getQuestion1Minute());
+					participant.setQuestion1Year(runner.getQuestion1Year());
+					participant.setQuestion1NeverRan(runner.getQuestion1NeverRan());
+					//participant.setQuestion2Hour(runner.getQuestion2Hour());
+					//participant.setQuestion2Minute(runner.getQuestion2Minute());
+					participant.setQuestion3Hour(runner.getQuestion3Hour());
+					participant.setQuestion3Minute(runner.getQuestion3Minute());
+					participant.setQuestion3Year(runner.getQuestion3Year());
+					participant.setQuestion3NeverRan(runner.getQuestion3NeverRan());
+					
+					participant.store();
+					
+					getUserBiz().updateUserHomePhone(user, runner.getHomePhone());
+					getUserBiz().updateUserMobilePhone(user, runner.getMobilePhone());
+					getUserBiz().updateUserMail(user, runner.getEmail());
+
+					if (runner.getEmail() != null) {
+						IWResourceBundle iwrb = getIWApplicationContext().getIWMainApplication().getBundle(IWMarathonConstants.IW_BUNDLE_IDENTIFIER).getResourceBundle(locale);
+						String distanceString = iwrb.getLocalizedString(distance.getName(),distance.getName());
+						Object[] args = { user.getName(), iwrb.getLocalizedString(run.getName(),run.getName()) + " " + yearGroup.getName() };
+						String subject = iwrb.getLocalizedString(runPrefix + "registration_received_subject_mail", "Your registration has been received.");
+						String body = MessageFormat.format(iwrb.getLocalizedString(runPrefix + "registration_received_body_mail", "Your registration has been received."), args);
+						sendMessage(runner.getEmail(), subject, body);
+					}
+				}
+				catch (CreateException ce) {
+					ce.printStackTrace();
+				}
+				catch (RemoteException re) {
+					throw new IBORuntimeException(re);
+				}
+			
+			trans.commit();
+		}
+		catch (Exception ex) {
+			try {
+				trans.rollback();
+			}
+			catch (javax.transaction.SystemException e) {
+				throw new IDOCreateException(e.getMessage());
+			}
+			ex.printStackTrace();
+			throw new IDOCreateException(ex);
+		}
+
+		return participant;
+	}
+	
 	public Collection saveParticipants(Collection runners, String email, String hiddenCardNumber, double amount, IWTimestamp date, Locale locale, boolean disableSendPaymentConfirmation) throws IDOCreateException {
 		Collection participants = new ArrayList();
 
@@ -533,7 +625,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					
 
 					
-					sendSponsorEmail(runner,locale);
+					//sendSponsorEmail(runner,locale);
 				}
 				catch (CreateException ce) {
 					ce.printStackTrace();
@@ -572,7 +664,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		return participants;
 	}
 	
-	private void sendSponsorEmail(Runner runner,Locale locale) {
+/*	private void sendSponsorEmail(Runner runner,Locale locale) {
 		
 		if(runner.isMaySponsorContactRunner()){
 			try{
@@ -609,7 +701,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			}
 		}
 		
-	}
+	}*/
 
 	public synchronized int getNextAvailableParticipantNumber(Distance distance) {
 		int number = distance.getNextAvailableParticipantNumber();
@@ -1455,7 +1547,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				}
 			}
 		}
-		else if (runName.equals(RUN_LAUGAVEGUR)) {
+		else if (runName.equals(RUN_LAUGAVEGUR) || runName.equals(RUN_LAUGAVEGUR_PREREGISTRATION)) {
 			if (age > 17 && age <= 29) {
 				if (genderID == 2) {
 					nameOfGroup = IWMarathonConstants.FEMALE_18_29;
@@ -1525,7 +1617,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		else if (runName.equals(RUN_MIDNIGHT_RUN)) {
 			return disForMidnight;
 		}
-		else if (runName.equals(RUN_LAUGAVEGUR)) {
+		else if (runName.equals(RUN_LAUGAVEGUR) || runName.equals(RUN_LAUGAVEGUR_PREREGISTRATION)) {
 			return disForLaugavegur;
 		}
 		else if (runName.equals(RUN_ROLLER_SKATE)) {
@@ -1623,7 +1715,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		else if (runName.equals(RUN_MIDNIGHT_RUN)) {
 			generateSubGroups(iwc, group, getDistancesForRun(run), grForMidnight, priceISK, priceEUR, useChips, childrenPriceISK, childrenPriceEUR, familyDiscount, allowsGroups, numberOfSplits, offersTransport);
 		}
-		else if (runName.equals(RUN_LAUGAVEGUR)) {
+		else if (runName.equals(RUN_LAUGAVEGUR) || runName.equals(RUN_LAUGAVEGUR_PREREGISTRATION)) {
 			generateSubGroups(iwc, group, getDistancesForRun(run), grForLaugavegur, priceISK, priceEUR, useChips, childrenPriceISK, childrenPriceEUR, familyDiscount, allowsGroups, numberOfSplits, offersTransport);
 		}
 		else if (runName.equals(RUN_ROLLER_SKATE)) {
