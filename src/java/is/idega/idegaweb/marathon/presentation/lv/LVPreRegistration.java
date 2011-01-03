@@ -89,25 +89,25 @@ public class LVPreRegistration extends RunBlock {
 	private static final int ACTION_CANCEL = 80;
 
 	private static final double MILLISECONDS_IN_YEAR = 31557600000d;
-	
-	//private static final String ULTRA_MARATHON_GROUP_ID = "5";
+
+	// private static final String ULTRA_MARATHON_GROUP_ID = "5";
 	private static final String ULTRA_MARATHON_PREREGISTRATION_GROUP_ID = "425734";
 
-	private boolean isIcelandic = false;
+	private boolean isIcelandicPersonalID = false;
 	private Runner setRunner;
 	boolean showQuestionsError = false;
 
 	public void main(IWContext iwc) throws Exception {
 		if (!iwc.isInEditMode()) {
-			this.isIcelandic = iwc.getCurrentLocale().equals(
+			this.isIcelandicPersonalID = iwc.getCurrentLocale().equals(
 					LocaleUtil.getIcelandicLocale());
 
-			if (!this.isIcelandic) {
+			if (!this.isIcelandicPersonalID) {
 				if (getRunner() != null) {
 					if (getRunner().getPersonalID() != null) {
-						this.isIcelandic = true;
+						this.isIcelandicPersonalID = true;
 					}
-				} 
+				}
 			}
 			loadCurrentStep(iwc, parseAction(iwc));
 		}
@@ -165,7 +165,7 @@ public class LVPreRegistration extends RunBlock {
 						"Information text 1...")), 1, row++);
 		table.setHeight(row++, 6);
 
-		table.setCellpadding(1, row, 24);
+		// table.setCellpadding(1, row, 24);
 		table.add(
 				getHeader(localize("lv_reg.personal_id", "Personal ID") + ":"),
 				1, row);
@@ -178,14 +178,14 @@ public class LVPreRegistration extends RunBlock {
 		input.setLength(10);
 		input.setMaxlength(10);
 		input.setInFocusOnPageLoad(true);
-		if (this.isIcelandic) {
+		if (this.isIcelandicPersonalID) {
 			input.setAsNotEmpty(localize("lv_reg.not_valid_personal_id",
 					"The personal ID you have entered is not valid"));
 		}
 		table.add(input, 1, row++);
 
-		if (!this.isIcelandic) {
-			table.setCellpadding(1, row, 24);
+		if (!this.isIcelandicPersonalID) {
+			// table.setCellpadding(1, row, 24);
 			Layer noIcelandicSSNLayer = new Layer(Layer.DIV);
 
 			CheckBox noIcelandicSSNCheck = getCheckBox(
@@ -257,7 +257,7 @@ public class LVPreRegistration extends RunBlock {
 		if (getRunner().getName() != null) {
 			nameField.setContent(getRunner().getName());
 		}
-		if (this.isIcelandic) {
+		if (this.isIcelandicPersonalID) {
 			nameField.setDisabled(true);
 			if (getRunner().getUser() != null) {
 				nameField.setContent(getRunner().getUser().getName());
@@ -289,7 +289,7 @@ public class LVPreRegistration extends RunBlock {
 			genderField.setSelectedElement(getRunner().getGender()
 					.getPrimaryKey().toString());
 		}
-		if (this.isIcelandic) {
+		if (this.isIcelandicPersonalID) {
 			genderField.setDisabled(true);
 			if (getRunner().getUser() != null) {
 				genderField.setSelectedElement(getRunner().getUser()
@@ -303,13 +303,13 @@ public class LVPreRegistration extends RunBlock {
 		choiceTable.add(
 				getHeader(localize(IWMarathonConstants.RR_NAME, "Name")), 1,
 				iRow);
-		if (!this.isIcelandic) {
+		if (!this.isIcelandicPersonalID) {
 			choiceTable.add(redStar, 1, iRow);
 		}
 		choiceTable.add(
 				getHeader(localize(IWMarathonConstants.RR_GENDER, "Gender")),
 				3, iRow);
-		if (!this.isIcelandic) {
+		if (!this.isIcelandicPersonalID) {
 			choiceTable.add(redStar, 3, iRow++);
 		} else {
 			iRow++;
@@ -321,7 +321,7 @@ public class LVPreRegistration extends RunBlock {
 		TextInput ssnISField = (TextInput) getStyledInterface(new TextInput(
 				PARAMETER_PERSONAL_ID));
 		ssnISField.setLength(10);
-		if (this.isIcelandic) {
+		if (this.isIcelandicPersonalID) {
 			ssnISField.setDisabled(true);
 			if (getRunner().getUser() != null) {
 				ssnISField.setContent(getRunner().getUser().getPersonalID());
@@ -411,7 +411,7 @@ public class LVPreRegistration extends RunBlock {
 			countryField = (DropdownMenu) util.getSelectorFromIDOEntities(
 					countryField, countries, "getName");
 		}
-		if (this.isIcelandic) {
+		if (this.isIcelandicPersonalID) {
 			countryField.setDisabled(true);
 			Country icelandicNationality = null;
 			try {
@@ -434,7 +434,7 @@ public class LVPreRegistration extends RunBlock {
 		nationalityField.setAsNotEmpty(localize(
 				"lv_reg.must_select_nationality",
 				"You must select your nationality"));
-		if (!this.isIcelandic) {
+		if (!this.isIcelandicPersonalID) {
 			countryField.setAsNotEmpty(localize("lv_reg.must_select_country",
 					"You must select your country"));
 		}
@@ -449,14 +449,14 @@ public class LVPreRegistration extends RunBlock {
 
 		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_SSN, "SSN")),
 				1, iRow);
-		if (!this.isIcelandic) {
+		if (!this.isIcelandicPersonalID) {
 			choiceTable.add(redStar, 1, iRow);
 		}
 		choiceTable.add(
 				getHeader(localize(IWMarathonConstants.RR_EMAIL, "Email")), 3,
 				iRow);
 		choiceTable.add(redStar, 3, iRow++);
-		if (this.isIcelandic) {
+		if (this.isIcelandicPersonalID) {
 			choiceTable.add(ssnISField, 1, iRow);
 		} else {
 			choiceTable.add(ssnField, 1, iRow);
@@ -466,14 +466,14 @@ public class LVPreRegistration extends RunBlock {
 
 		TextInput addressField = (TextInput) getStyledInterface(new TextInput(
 				PARAMETER_ADDRESS));
-		if (!this.isIcelandic) {
+		if (!this.isIcelandicPersonalID) {
 			addressField.setAsNotEmpty(localize("lv_reg.must_provide_address",
 					"You must enter your address."));
 		}
 		if (getRunner().getAddress() != null) {
 			addressField.setContent(getRunner().getAddress());
 		}
-		if (this.isIcelandic) {
+		if (this.isIcelandicPersonalID) {
 			addressField.setDisabled(true);
 			if (getRunner().getUser() != null) {
 				Address address = getUserBusiness(iwc).getUsersMainAddress(
@@ -493,7 +493,7 @@ public class LVPreRegistration extends RunBlock {
 		choiceTable.add(
 				getHeader(localize(IWMarathonConstants.RR_ADDRESS, "Address")),
 				1, iRow);
-		if (!this.isIcelandic) {
+		if (!this.isIcelandicPersonalID) {
 			choiceTable.add(redStar, 1, iRow);
 		}
 		choiceTable.add(
@@ -506,14 +506,14 @@ public class LVPreRegistration extends RunBlock {
 
 		TextInput cityField = (TextInput) getStyledInterface(new TextInput(
 				PARAMETER_CITY));
-		if (!this.isIcelandic) {
+		if (!this.isIcelandicPersonalID) {
 			cityField.setAsNotEmpty(localize("lv_reg.must_provide_city",
 					"You must enter your city of living."));
 		}
 		if (getRunner().getCity() != null) {
 			cityField.setContent(getRunner().getCity());
 		}
-		if (this.isIcelandic) {
+		if (this.isIcelandicPersonalID) {
 			cityField.setDisabled(true);
 			if (getRunner().getUser() != null) {
 				Address address = getUserBusiness(iwc).getUsersMainAddress(
@@ -542,7 +542,7 @@ public class LVPreRegistration extends RunBlock {
 		choiceTable.add(
 				getHeader(localize(IWMarathonConstants.RR_CITY, "City")), 1,
 				iRow);
-		if (!this.isIcelandic) {
+		if (!this.isIcelandicPersonalID) {
 			choiceTable.add(redStar, 1, iRow);
 		}
 		choiceTable.add(
@@ -554,7 +554,7 @@ public class LVPreRegistration extends RunBlock {
 
 		TextInput postalField = (TextInput) getStyledInterface(new TextInput(
 				PARAMETER_POSTAL_CODE));
-		if (!this.isIcelandic) {
+		if (!this.isIcelandicPersonalID) {
 			postalField.setAsNotEmpty(localize("lv_reg.must_provide_postal",
 					"You must enter your postal address."));
 		}
@@ -563,7 +563,7 @@ public class LVPreRegistration extends RunBlock {
 		if (getRunner().getPostalCode() != null) {
 			postalField.setContent(getRunner().getPostalCode());
 		}
-		if (this.isIcelandic) {
+		if (this.isIcelandicPersonalID) {
 			postalField.setDisabled(true);
 			if (getRunner().getUser() != null) {
 				Address address = getUserBusiness(iwc).getUsersMainAddress(
@@ -595,7 +595,7 @@ public class LVPreRegistration extends RunBlock {
 		choiceTable
 				.add(getHeader(localize(IWMarathonConstants.RR_POSTAL,
 						"Postal Code")), 1, iRow);
-		if (!this.isIcelandic) {
+		if (!this.isIcelandicPersonalID) {
 			choiceTable.add(redStar, 1, iRow);
 		}
 		choiceTable.add(
@@ -608,7 +608,7 @@ public class LVPreRegistration extends RunBlock {
 		choiceTable.add(
 				getHeader(localize(IWMarathonConstants.RR_COUNTRY, "Country")),
 				1, iRow);
-		if (!this.isIcelandic) {
+		if (!this.isIcelandicPersonalID) {
 			choiceTable.add(redStar, 1, iRow);
 		}
 		choiceTable.add(
@@ -841,8 +841,7 @@ public class LVPreRegistration extends RunBlock {
 		Run selectedRun = null;
 		run = participant.getRunTypeGroup();
 		try {
-			selectedRun = ConverterUtility.getInstance().convertGroupToRun(
-					run);
+			selectedRun = ConverterUtility.getInstance().convertGroupToRun(run);
 		} catch (FinderException e) {
 		}
 
@@ -851,7 +850,7 @@ public class LVPreRegistration extends RunBlock {
 		String greeting = localize("lv_reg.hello_participant",
 				"Dear participant");
 		if (selectedRun != null) {
-			if (this.isIcelandic) {
+			if (iwc.getCurrentLocale().equals(LocaleUtil.getIcelandicLocale())) {
 				greeting = selectedRun.getRunRegistrationReceiptGreeting();
 			} else {
 				greeting = selectedRun
@@ -879,26 +878,23 @@ public class LVPreRegistration extends RunBlock {
 
 		table.add(runnerTable, 1, row++);
 		int runRow = 2;
-			run = participant.getRunTypeGroup();
-			Group distance = participant.getRunDistanceGroup();
-			col = 1;
-			runnerTable.add(getText(participant.getUser().getName()), col++,
-					runRow);
-			runnerTable.add(getText(localize(run.getName(), run.getName())
-					+ " " + participant.getRunYearGroup().getName()), col++,
-					runRow);
-			runnerTable.add(
-					getText(localize(distance.getName(), distance.getName())),
-					col++, runRow);
-
+		run = participant.getRunTypeGroup();
+		Group distance = participant.getRunDistanceGroup();
+		col = 1;
+		runnerTable
+				.add(getText(participant.getUser().getName()), col++, runRow);
+		runnerTable.add(getText(localize(run.getName(), run.getName()) + " "
+				+ participant.getRunYearGroup().getName()), col++, runRow);
+		runnerTable.add(
+				getText(localize(distance.getName(), distance.getName())),
+				col++, runRow);
 
 		table.setHeight(row++, 16);
-	
+
 		if (selectedRun != null) {
 			String informationText = "";
 
-			if (iwc.getCurrentLocale().equals(
-					LocaleUtil.getIcelandicLocale())) {
+			if (iwc.getCurrentLocale().equals(LocaleUtil.getIcelandicLocale())) {
 				informationText = selectedRun.getRunRegistrationReceiptInfo();
 			} else {
 				informationText = selectedRun
@@ -952,19 +948,31 @@ public class LVPreRegistration extends RunBlock {
 
 		if (runner == null) {
 			runner = new Runner();
+			User user = null;
 			if (personalID != null && personalID.length() > 0) {
 				runner.setPersonalID(personalID);
-				User user = null;
 				try {
 					user = getUserBusiness(iwc).getUser(personalID);
 				} catch (RemoteException e) {
 					e.printStackTrace();
 				}
-				runner.setUser(user);
 			} else if (dateOfBirth != null && dateOfBirth.length() > 0) {
 				IWTimestamp dob = new IWTimestamp(dateOfBirth);
-				runner.setDateOfBirth(dob.getDate());				
+				runner.setDateOfBirth(dob.getDate());
+				if (iwc.isParameterSet(PARAMETER_NAME)) {
+					runner.setName(iwc.getParameter(PARAMETER_NAME));
+				}
+				try {
+					user = getUserBusiness(iwc).getUserHome()
+							.findByDateOfBirthAndName(dob.getSQLDate(),
+									runner.getName());
+				} catch (Exception fe) {
+					System.out
+							.println("User not found by name and date_of_birth");
+				}
 			}
+
+			runner.setUser(user);
 		}
 
 		if (runner.getRun() == null) {
@@ -1082,7 +1090,7 @@ public class LVPreRegistration extends RunBlock {
 		if (personalID != null) {
 			addRunner(iwc, personalID, runner);
 		} else if (dateOfBirth != null) {
-			addRunner(iwc, dateOfBirth, runner);			
+			addRunner(iwc, dateOfBirth, runner);
 		}
 
 		return runner;
@@ -1126,12 +1134,27 @@ public class LVPreRegistration extends RunBlock {
 		}
 
 		if (runner != null && runner.getUser() != null) {
-			//check if runner already registered and display error if registered
+			if (this.getRunBusiness(iwc).isRegisteredInRun(
+					runner.getYear().getYearString(), runner.getRun(),
+					runner.getUser())) {
+				getParentPage()
+						.setAlertOnLoad(
+								localize(
+										"lv_reg.already_registered",
+										"You are already registered in this run."));
+				if (this.isIcelandicPersonalID) {
+					initializeSteps(iwc);
+					return ACTION_STEP_PERSONLOOKUP;
+				} else {
+					return ACTION_STEP_PERSONALDETAILS;
+				}
+
+			}
 		}
-		
-		if (runner != null && runner.getDateOfBirth() != null || runner != null
-				&& runner.getUser() != null
-				&& runner.getUser().getDateOfBirth() != null) {
+
+		if ((runner != null && runner.getDateOfBirth() != null)
+				|| (runner != null && runner.getUser() != null && runner
+						.getUser().getDateOfBirth() != null)) {
 			Date dateOfBirth;
 			if (runner.getDateOfBirth() != null) {
 				dateOfBirth = runner.getDateOfBirth();
@@ -1154,8 +1177,30 @@ public class LVPreRegistration extends RunBlock {
 													"lv_reg.invalid_date_of_birth_exeeding",
 													"Invalid date of birth.  You have to be {0} or younger to register"),
 													args));
-					// initializeSteps(iwc);
-					return ACTION_STEP_PERSONALDETAILS;
+					if (this.isIcelandicPersonalID) {
+						initializeSteps(iwc);
+						return ACTION_STEP_PERSONLOOKUP;
+					} else {
+						return ACTION_STEP_PERSONALDETAILS;
+					}
+				}
+
+				int minimumAgeForRun = runner.getYear().getMinimumAgeForRun();
+				if (minimumAgeForRun != -1 && age < minimumAgeForRun) {
+					Object[] args = { String.valueOf(minimumAgeForRun) };
+					getParentPage()
+							.setAlertOnLoad(
+									MessageFormat
+											.format(localize(
+													"lv_reg.invalid_date_of_birth",
+													"Invalid date of birth.  You have to be {0} or older to register"),
+													args));
+					if (this.isIcelandicPersonalID) {
+						initializeSteps(iwc);
+						return ACTION_STEP_PERSONLOOKUP;
+					} else {
+						return ACTION_STEP_PERSONALDETAILS;
+					}
 				}
 			}
 		}
@@ -1196,7 +1241,6 @@ public class LVPreRegistration extends RunBlock {
 		return nextStep;
 
 	}
-
 
 	private DropdownMenu createYearDropDown(String name, int yearFrom,
 			int yearTo, String selected) {
