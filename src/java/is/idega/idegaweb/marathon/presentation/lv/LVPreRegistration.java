@@ -8,7 +8,6 @@ import is.idega.idegaweb.marathon.data.Year;
 import is.idega.idegaweb.marathon.presentation.RunBlock;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
-import java.math.BigDecimal;
 import java.rmi.RemoteException;
 import java.sql.Date;
 import java.text.MessageFormat;
@@ -357,21 +356,21 @@ public class LVPreRegistration extends RunBlock {
 
 		ssnField.setYearRange(newestYearStamp.getYear(),
 				earliestYearStamp.getYear());
-		Object[] maximumArgs = { String.valueOf(maximumAgeForRun) };
-		ssnField.setEarliestPossibleDate(
-				maximumAgeStamp.getDate(),
-				MessageFormat
-						.format(localize(
-								"lv_reg.invalid_date_of_birth_exeeding",
-								"Invalid date of birth.  You have to be {0} or younger to register"),
-								maximumArgs));
-		Object[] minimumArgs = { String.valueOf(minimumAgeForRun) };
-		ssnField.setLatestPossibleDate(
-				minimumAgeStamp.getDate(),
-				MessageFormat
-						.format(localize("lv_reg.invalid_date_of_birth",
-								"Invalid date of birth.  You have to be {0} years old to register"),
-								minimumArgs));
+		//Object[] maximumArgs = { String.valueOf(maximumAgeForRun) };
+		//ssnField.setEarliestPossibleDate(
+		//		maximumAgeStamp.getDate(),
+		//		MessageFormat
+		//				.format(localize(
+		//						"lv_reg.invalid_date_of_birth_exeeding",
+		//						"Invalid date of birth.  You have to be {0} or younger to register"),
+		//						maximumArgs));
+		//Object[] minimumArgs = { String.valueOf(minimumAgeForRun) };
+		//ssnField.setLatestPossibleDate(
+		//		minimumAgeStamp.getDate(),
+		//		MessageFormat
+		//				.format(localize("lv_reg.invalid_date_of_birth",
+		//						"Invalid date of birth.  You have to be {0} years old to register"),
+		//						minimumArgs));
 
 		if (getRunner().getDateOfBirth() != null) {
 			ssnField.setDate(getRunner().getDateOfBirth());
@@ -934,6 +933,24 @@ public class LVPreRegistration extends RunBlock {
 		if (!iwc.isParameterSet(PARAMETER_PERSONAL_ID)
 				&& !iwc.isParameterSet(PARAMETER_DATE_OF_BIRTH)) {
 			Runner runner = new Runner();
+			runner.setRunId(LVPreRegistration.ULTRA_MARATHON_PREREGISTRATION_GROUP_ID);
+			Year year = runner.getYear();
+			String runnerYearString = year.getYearString();
+
+			try {
+				Collection distancesGroups = getRunBusiness(iwc)
+						.getDistancesMap(runner.getRun(), runnerYearString);
+				if (distancesGroups != null) {
+					Iterator it = distancesGroups.iterator();
+					if (it.hasNext()) {
+						runner.setDistance(ConverterUtility.getInstance()
+								.convertGroupToDistance((Group) it.next()));
+					}
+				}
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+
 			return runner;
 		}
 
@@ -1137,11 +1154,9 @@ public class LVPreRegistration extends RunBlock {
 			if (this.getRunBusiness(iwc).isRegisteredInRun(
 					runner.getYear().getYearString(), runner.getRun(),
 					runner.getUser())) {
-				getParentPage()
-						.setAlertOnLoad(
-								localize(
-										"lv_reg.already_registered",
-										"You are already registered in this run."));
+				getParentPage().setAlertOnLoad(
+						localize("lv_reg.already_registered",
+								"You are already registered in this run."));
 				if (this.isIcelandicPersonalID) {
 					initializeSteps(iwc);
 					return ACTION_STEP_PERSONLOOKUP;
@@ -1152,23 +1167,23 @@ public class LVPreRegistration extends RunBlock {
 			}
 		}
 
-		if ((runner != null && runner.getDateOfBirth() != null)
+		if ((runner != null && runner.getDateOfBirth() != null && isIcelandicPersonalID)
 				|| (runner != null && runner.getUser() != null && runner
-						.getUser().getDateOfBirth() != null)) {
+						.getUser().getDateOfBirth() != null && isIcelandicPersonalID)) {
 			Date dateOfBirth;
 			if (runner.getDateOfBirth() != null) {
 				dateOfBirth = runner.getDateOfBirth();
 			} else {
 				dateOfBirth = runner.getUser().getDateOfBirth();
 			}
-			long ageInMillisecs = IWTimestamp.getMilliSecondsBetween(
-					new IWTimestamp(dateOfBirth), new IWTimestamp());
-			BigDecimal ageObject = new BigDecimal(ageInMillisecs
-					/ MILLISECONDS_IN_YEAR);
-			int age = ageObject.intValue();
+			
+			IWTimestamp dob = new IWTimestamp(dateOfBirth);
+			
 			if (runner.getYear() != null) {
+				int year = Integer.parseInt(runner.getYear().getYearString());
 				int maximumAgeForRun = runner.getYear().getMaximumAgeForRun();
-				if (maximumAgeForRun != -1 && age > maximumAgeForRun) {
+				
+				if (maximumAgeForRun != -1 && year - dob.getYear() > maximumAgeForRun) {
 					Object[] args = { String.valueOf(maximumAgeForRun) };
 					getParentPage()
 							.setAlertOnLoad(
@@ -1177,16 +1192,12 @@ public class LVPreRegistration extends RunBlock {
 													"lv_reg.invalid_date_of_birth_exeeding",
 													"Invalid date of birth.  You have to be {0} or younger to register"),
 													args));
-					if (this.isIcelandicPersonalID) {
 						initializeSteps(iwc);
 						return ACTION_STEP_PERSONLOOKUP;
-					} else {
-						return ACTION_STEP_PERSONALDETAILS;
-					}
 				}
 
 				int minimumAgeForRun = runner.getYear().getMinimumAgeForRun();
-				if (minimumAgeForRun != -1 && age < minimumAgeForRun) {
+				if (minimumAgeForRun != -1 && year - dob.getYear() < minimumAgeForRun) {
 					Object[] args = { String.valueOf(minimumAgeForRun) };
 					getParentPage()
 							.setAlertOnLoad(
@@ -1195,12 +1206,8 @@ public class LVPreRegistration extends RunBlock {
 													"lv_reg.invalid_date_of_birth",
 													"Invalid date of birth.  You have to be {0} or older to register"),
 													args));
-					if (this.isIcelandicPersonalID) {
 						initializeSteps(iwc);
 						return ACTION_STEP_PERSONLOOKUP;
-					} else {
-						return ACTION_STEP_PERSONALDETAILS;
-					}
 				}
 			}
 		}
