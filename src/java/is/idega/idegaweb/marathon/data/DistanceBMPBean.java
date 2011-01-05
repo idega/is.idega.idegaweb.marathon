@@ -190,7 +190,7 @@ public class DistanceBMPBean extends GroupBMPBean  implements Group, Distance{
 	public int getNextAvailableParticipantNumber() {
 		String number = this.getMetaData(METADATA_NEXT_PARTICIPANT_NUMBER);
 		if (number != null) {
-			return Integer.parseInt(number);
+			return Integer.parseInt(number.trim());
 		}
 		return -1;
 	}

@@ -674,7 +674,7 @@ public class LVPreRegistration extends RunBlock {
 				createMinuteDropDown(PARAMETER_QUESTION1_MINUTE, getRunner()
 						.getQuestion1Minute()), 1, row);
 		table.add(
-				createYearDropDown(PARAMETER_QUESTION1_YEAR, 1996, 2009,
+				createYearDropDown(PARAMETER_QUESTION1_YEAR, 1996, 2010,
 						getRunner().getQuestion1Year()), 1, row++);
 		CheckBox neverBefore = getCheckBox(PARAMETER_QUESTION1_NEVER,
 				Boolean.TRUE.toString());
