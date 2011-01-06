@@ -661,6 +661,8 @@ public class LVPreRegistration extends RunBlock {
 		Text redStar = getHeader(" *");
 		redStar.setFontColor("#ff0000");
 
+		IWTimestamp currentYear = new IWTimestamp();
+		
 		table.add(
 				getText((localize(
 						"lv_reg.question1",
@@ -674,7 +676,7 @@ public class LVPreRegistration extends RunBlock {
 				createMinuteDropDown(PARAMETER_QUESTION1_MINUTE, getRunner()
 						.getQuestion1Minute()), 1, row);
 		table.add(
-				createYearDropDown(PARAMETER_QUESTION1_YEAR, 1996, 2010,
+				createYearDropDown(PARAMETER_QUESTION1_YEAR, 1996, currentYear.getYear(),
 						getRunner().getQuestion1Year()), 1, row++);
 		CheckBox neverBefore = getCheckBox(PARAMETER_QUESTION1_NEVER,
 				Boolean.TRUE.toString());
@@ -698,7 +700,7 @@ public class LVPreRegistration extends RunBlock {
 				createMinuteDropDown(PARAMETER_QUESTION3_MINUTE, getRunner()
 						.getQuestion3Minute()), 1, row);
 		table.add(
-				createYearDropDown(PARAMETER_QUESTION3_YEAR, 1990, 2010,
+				createYearDropDown(PARAMETER_QUESTION3_YEAR, 1990, currentYear.getYear(),
 						getRunner().getQuestion3Year()), 1, row++);
 		CheckBox neverBefore2 = getCheckBox(PARAMETER_QUESTION3_NEVER,
 				Boolean.TRUE.toString());
@@ -978,14 +980,14 @@ public class LVPreRegistration extends RunBlock {
 				runner.setDateOfBirth(dob.getDate());
 				if (iwc.isParameterSet(PARAMETER_NAME)) {
 					runner.setName(iwc.getParameter(PARAMETER_NAME));
-				}
-				try {
-					user = getUserBusiness(iwc).getUserHome()
-							.findByDateOfBirthAndName(dob.getSQLDate(),
-									runner.getName());
-				} catch (Exception fe) {
-					System.out
-							.println("User not found by name and date_of_birth");
+					/*try {
+						user = getUserBusiness(iwc).getUserHome()
+								.findByDateOfBirthAndName(dob.getSQLDate(),
+										runner.getName());
+					} catch (Exception fe) {
+						System.out
+								.println("User not found by name and date_of_birth");
+					}*/
 				}
 			}
 
