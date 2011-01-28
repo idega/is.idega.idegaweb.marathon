@@ -63,11 +63,9 @@ public class RunInputCollectionHandler extends PresentationObject implements Rem
 	}
 	
 	private RemoteScriptingResults handleDistanceUpdate(IWContext iwc, String sourceName, String runIdString) {
-		System.out.println("run = " + runIdString);
 		IWResourceBundle iwrb = getResourceBundle(iwc);
 		
 		if (runIdString != null) {
-			System.out.println("1");
 			Integer runId = Integer.valueOf(runIdString);
 		    RunBusiness runBiz = getRunBiz(iwc);
 			IWTimestamp ts = IWTimestamp.RightNow();
@@ -76,24 +74,18 @@ public class RunInputCollectionHandler extends PresentationObject implements Rem
 		    IWTimestamp stamp = new IWTimestamp();
 		    stamp.addYears(1);
 		    String nextYearString = String.valueOf(stamp.getYear());
-			System.out.println("2");
 		    
 			try {
-				System.out.println("3");
 				Collection distancesGroups = null;
 				
 				if (runId.intValue() != -1) {
-					System.out.println("4");
-					
 					Group run = runBiz.getRunGroupByGroupId(runId);
-					System.out.println("5");
 
 					String runnerYearString = yearString;
 					boolean finished = false;
 					boolean foundYear = false;
 					Map yearMap = runBiz.getYearsMap(run);
 					Year year = (Year) yearMap.get(yearString);
-					System.out.println("6");
 					
 					if (year != null && year.getLastRegistrationDate() != null && ts.isLaterThanOrEquals(new IWTimestamp(year.getLastRegistrationDate()))) {
 						finished = true;
@@ -101,7 +93,6 @@ public class RunInputCollectionHandler extends PresentationObject implements Rem
 						foundYear = true;
 					}
 					Year nextYear = (Year) yearMap.get(nextYearString);
-					System.out.println("7");
 					
 					if (finished && nextYear != null && nextYear.getLastRegistrationDate() != null && ts.isEarlierThan(new IWTimestamp(nextYear.getLastRegistrationDate()))) {
 						runnerYearString = nextYearString;
@@ -110,40 +101,29 @@ public class RunInputCollectionHandler extends PresentationObject implements Rem
 					if (foundYear) {
 						distancesGroups = runBiz.getDistancesMap(run, runnerYearString);
 					}
-					System.out.println("8");
 				}
 		
 			    Vector ids = new Vector();
 			    Vector names = new Vector();
 			    
-				System.out.println("9");
-			    if (distancesGroups != null) {
-			    	
+			    if (distancesGroups != null) {			    	
 				    if (!distancesGroups.isEmpty()) {
 				    	
 				    	ids.add("-1");
 				    	names.add(iwrb.getLocalizedString("run_year_ddd.select_distance","Select distance..."));
-						System.out.println("10");
 				    	
 				    	Map runners = (Map) iwc.getSessionAttribute(Registration.SESSION_ATTRIBUTE_RUNNER_MAP);
 					    String runnerPersonalId = iwc.getParameter(RUNNER_PERSONAL_ID);
-						System.out.println("11");
 					    
 						Runner runner = runners == null || runnerPersonalId == null || CoreConstants.EMPTY.equals(runnerPersonalId) ? null :
 										(Runner)runners.get(runnerPersonalId);
-						System.out.println("12");
 						
 				    	List disallowedDistances;
 						
 						if(runner == null) {
-							System.out.println("13");
 							Logger.getLogger(this.getClassName()).log(Level.WARNING, "No runner resolved, therefore no filtering for distances drop down list");
-							disallowedDistances = new ArrayList();
-							System.out.println("14");
-							
+							disallowedDistances = new ArrayList();							
 						} else {
-							System.out.println("15");
-							
 							List distances = new ArrayList(distancesGroups.size());
 							ConverterUtility converterUtility = ConverterUtility.getInstance();
 							
@@ -151,17 +131,12 @@ public class RunInputCollectionHandler extends PresentationObject implements Rem
 								distances.add(converterUtility.convertGroupToDistance((Group) distancesGroupsIterator.next()));
 
 							disallowedDistances = runner.getDisallowedDistancesPKs(distances);
-							System.out.println("16");
 						}
 						
-						System.out.println("17");
-						for (Iterator iterator = distancesGroups.iterator(); iterator.hasNext();) {
-							
+						for (Iterator iterator = distancesGroups.iterator(); iterator.hasNext();) {							
 							Group distanceGroup = (Group) iterator.next();
 							
-							if(disallowedDistances.contains(distanceGroup.getPrimaryKey().toString())) {
-								System.out.println("18");
-							
+							if(disallowedDistances.contains(distanceGroup.getPrimaryKey().toString())) {							
 						    	ids.add("-1");
 						    	names.add(
 						    			new StringBuffer(iwrb.getLocalizedString(distanceGroup.getName(), distanceGroup.getName()))
@@ -169,35 +144,22 @@ public class RunInputCollectionHandler extends PresentationObject implements Rem
 						    			.append(iwrb.getLocalizedString("runDistance.choiceNotAvailableBecauseOfAge", "(Not available for your age)"))
 						    			.toString()
 						    	);
-								System.out.println("19");
-							
 							} else {
-								System.out.println("20");
-								
 						    	ids.add(distanceGroup.getPrimaryKey().toString());
 						    	names.add(iwrb.getLocalizedString(distanceGroup.getName(), distanceGroup.getName()));
-								System.out.println("21");
 							}
-						}
-					    	
+						}					    	
 				    } else {
-						System.out.println("22");
-				    	
 				    	ids.add("-1");
 			    		names.add(iwrb.getLocalizedString("unavailable","Unavailable"));
-						System.out.println("23");
 				    }
 			    } else {
-					System.out.println("24");
 			    	ids.add("-1");
 			    	names.add(iwrb.getLocalizedString("unavailable","Unavailable"));
-					System.out.println("25");
 			    }
 			    
-				System.out.println("26");
 			    RemoteScriptingResults rsr = new RemoteScriptingResults(RemoteScriptHandler.getLayerName(sourceName, "id"), ids);
 			    rsr.addLayer(RemoteScriptHandler.getLayerName(sourceName, "name"), names);
-				System.out.println("27");
 		
 			    return rsr;
 			} catch (Exception e) {

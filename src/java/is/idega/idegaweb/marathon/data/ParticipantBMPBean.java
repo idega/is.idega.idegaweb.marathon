@@ -999,6 +999,12 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		query.appendWhereEquals(getColumnNameUserID(),user);
 		query.appendAndEquals(getColumnNameRunTypeGroupID(),run);
 		query.appendAndEquals(getColumnNameRunYearGroupID(),year);
+		query.appendLeftParenthesis();
+		query.append(COLUMN_DELETED);
+		query.append(" is null ");
+		query.appendOrEquals(COLUMN_DELETED, false);
+		query.appendRightParenthesis();
+
 		return (Integer) super.idoFindOnePKByQuery(query);
 	}
 
@@ -1020,9 +1026,7 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		
 		query.appendAndEquals(getColumnNameRunTypeGroupID(),run);
 		query.appendAndEquals(getColumnNameRunYearGroupID(),year);
-		
-		System.out.println("query = " + query.toString());
-		
+				
 		return (Integer) super.idoFindOnePKByQuery(query);
 	}
 

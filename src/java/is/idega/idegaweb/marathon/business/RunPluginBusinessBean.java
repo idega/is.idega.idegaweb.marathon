@@ -157,15 +157,11 @@ public class RunPluginBusinessBean extends IBOServiceBean implements RunPluginBu
 		}
 
 		try {
-			System.out.println("trying to remove participant entry");
 			if (run != null) {
-				System.out.println("run != null");
 				Participant runEntry = getRunBiz(iwc).getParticipantByRunAndYear(user, run, year);
-				System.out.println("participant id = " + runEntry.getPrimaryKey().toString());
 				runEntry.setIsDeleted(true);
 				runEntry.store();
 			}
-			System.out.println("done");
 		}
 		catch (FinderException e) {
 			e.printStackTrace();
