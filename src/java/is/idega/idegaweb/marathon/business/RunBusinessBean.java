@@ -429,7 +429,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 
 	public Collection saveParticipants(Collection runners, String email,
 			String hiddenCardNumber, double amount, IWTimestamp date,
-			Locale locale, boolean disableSendPaymentConfirmation)
+			Locale locale, boolean disableSendPaymentConfirmation, String runPrefix)
 			throws IDOCreateException {
 		Collection participants = new ArrayList();
 
@@ -504,8 +504,6 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					participant.setRunDistanceGroup(distance);
 					participant.setRunYearGroup(yearGroup);
 					participant.setRunGroupGroup(ageGenderGroup);
-					participant.setMaySponsorContact(runner
-							.isMaySponsorContactRunner());
 					if (runner.isParticipateInCharity()) {
 						Charity charity = runner.getCharity();
 						if (charity != null) {
@@ -523,17 +521,6 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					}
 
 					participant.setShirtSize(runner.getShirtSize());
-					if (runner.isOwnChip()) {
-						participant
-								.setChipOwnershipStatus(IWMarathonConstants.CHIP_OWN);
-					} else if (runner.isRentChip()) {
-						participant
-								.setChipOwnershipStatus(IWMarathonConstants.CHIP_RENT);
-					} else if (runner.isBuyChip()) {
-						participant
-								.setChipOwnershipStatus(IWMarathonConstants.CHIP_BUY);
-					}
-					participant.setChipNumber(runner.getChipNumber());
 					participant.setUserNationality(runner.getNationality()
 							.getName());
 					if (runner.getDistance() != null) {
@@ -541,14 +528,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 								.setParticipantNumber(getNextAvailableParticipantNumber(runner
 										.getDistance()));
 					}
-					participant.setTransportOrdered(String.valueOf(runner
-							.isTransportOrdered()));
-					participant.setApplyForDomesticTravelSupport(runner
-							.isApplyForDomesticTravelSupport());
-					participant.setApplyForInternationalTravelSupport(runner
-							.isApplyForInternationalTravelSupport());
-					participant.setSponsoredRunner(runner.isSponsoredRunner());
-					participant.setAllowsEmails(runner.getAllowsEmails());
+
 					participant.setQuestion1Hour(runner.getQuestion1Hour());
 					participant.setQuestion1Minute(runner.getQuestion1Minute());
 					participant.setQuestion1Year(runner.getQuestion1Year());
@@ -561,29 +541,6 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					participant.setQuestion3Year(runner.getQuestion3Year());
 					participant.setQuestion3NeverRan(runner
 							.getQuestion3NeverRan());
-					// check customer:
-					/*
-					 * boolean enableCustomerWebservice =
-					 * "true".equalsIgnoreCase
-					 * (getIWMainApplication().getSettings
-					 * ().getProperty("MARATHON_ENABLE_CUSTOMER_WS","false"));
-					 * if (personalId != null && enableCustomerWebservice) {
-					 * Timer wsTimer = new Timer(); wsTimer.start(); try{
-					 * MarathonWS2Client wsClient = new
-					 * MarathonWS2Client(getIWMainApplication()); if
-					 * (getUserBiz().hasValidIcelandicSSN(user)) {
-					 * 
-					 * if(wsClient.erIVidskiptumVidGlitni(user.getPersonalID())){
-					 * participant.setCustomer(true); } else{
-					 * participant.setCustomer(false); } } else {
-					 * participant.setCustomer(false); } } catch(Exception e){
-					 * System.out.println(
-					 * "Lookup to the GlitnirCustomerWebService failed: " +
-					 * e.getMessage()); //e.printStackTrace(); } wsTimer.stop();
-					 * System.out.println(
-					 * "Time to execute GlitnirCustomerWebService was: " +
-					 * wsTimer.getTimeString()); }
-					 */
 
 					if (runner.getRelayLeg() != null
 							& !"".equals(runner.getRelayLeg())) {
@@ -650,13 +607,6 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 								.getResourceBundle(locale);
 						String distanceString = iwrb.getLocalizedString(
 								distance.getName(), distance.getName());
-						if (runner.isTransportOrdered()) {
-							distanceString = distanceString
-									+ " ("
-									+ iwrb.getLocalizedString(
-											"run_reg.with_bus_trip",
-											"with bus trip") + ")";
-						}
 						String informationPageString = "";
 						String greeting = "";
 						String runHomePageString = "";
@@ -703,16 +653,12 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 								runHomePageString, informationPageString,
 								userNameString, passwordString, greeting,
 								receiptInfo };
-						String subject = iwrb.getLocalizedString(
-								"registration_received_subject_mail_"
-										+ selectedRun.getPrimaryKey()
-												.toString(),
+						String subject = iwrb.getLocalizedString(runPrefix +
+								"registration_received_subject_mail",
 								"Your registration has been received.");
 						String body = MessageFormat.format(
-								localizeForRun(
-										"registration_received_body_mail_"
-												+ selectedRun.getPrimaryKey()
-														.toString(),
+								localizeForRun(runPrefix +
+										"registration_received_body_mail",												
 										"Your registration has been received.",
 										runner, iwrb), args);
 						sendMessage(runner.getEmail(), subject, body);
@@ -744,10 +690,10 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 						date.getLocaleDateAndTime(locale, IWTimestamp.SHORT,
 								IWTimestamp.SHORT), runName, runHomePage };
 				String subject = iwrb
-						.getLocalizedString("receipt_subject_mail",
+						.getLocalizedString(runPrefix + "receipt_subject_mail",
 								"Your receipt for registration");
 				String body = MessageFormat.format(iwrb.getLocalizedString(
-						"receipt_body_mail",
+						runPrefix + "receipt_body_mail",
 						"Your registration has been received."), args);
 				sendMessage(email, subject, body);
 			}
@@ -989,25 +935,9 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		}
 	}
 
-	public float getPriceForRunner(Runner runner, Locale locale,
-			float chipDiscount, float chipPrice) {
+	public float getPriceForRunner(Runner runner, Locale locale) {
 		Age age = null;
 		if (runner.getUser() != null) {
-			int groupID = Integer.parseInt(getIWApplicationContext()
-					.getApplicationSettings()
-					.getProperty(IWMarathonConstants.PROPERTY_SPONSOR_GROUP_ID,
-							"-1"));
-			if (groupID != -1 && runner.getYear().isSponsoredRun()) {
-				try {
-					if (getUserBiz().isMemberOfGroup(groupID, runner.getUser())) {
-						runner.setSponsoredRunner(true);
-						return 0;
-					}
-				} catch (RemoteException e) {
-					e.printStackTrace();
-				}
-			}
-
 			age = new Age(runner.getUser().getDateOfBirth());
 		} else {
 			age = new Age(runner.getDateOfBirth());
@@ -1016,12 +946,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 
 		float runnerPrice = isChild ? runner.getDistance().getChildrenPrice(
 				locale) : runner.getDistance().getPrice(locale);
-		if (runner.isOwnChip() || runner.isBuyChip()) {
-			runnerPrice = runnerPrice - chipDiscount;
-			if (runner.isBuyChip()) {
-				runnerPrice += chipPrice;
-			}
-		}
+
 		return runnerPrice;
 	}
 
@@ -1082,8 +1007,11 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			} else {
 				age = new Age(runner.getDateOfBirth());
 			}
-			if (age.getYears() <= 12) {
-				numberOfChildren++;
+			
+			if (age.getYears() <= 16) {
+				if (runner.getDistance().isFamilyDiscount()) {
+					numberOfChildren++;
+				}
 			}
 		}
 

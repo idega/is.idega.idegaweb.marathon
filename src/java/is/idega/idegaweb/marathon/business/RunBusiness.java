@@ -83,7 +83,7 @@ public interface RunBusiness extends IBOService {
 	 */
 	public Collection saveParticipants(Collection runners, String email,
 			String hiddenCardNumber, double amount, IWTimestamp date,
-			Locale locale, boolean disableSendPaymentConfirmation)
+			Locale locale, boolean disableSendPaymentConfirmation, String runPrefix)
 			throws IDOCreateException, RemoteException;
 
 	/**
@@ -135,8 +135,7 @@ public interface RunBusiness extends IBOService {
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getPriceForRunner
 	 */
-	public float getPriceForRunner(Runner runner, Locale locale,
-			float chipDiscount, float chipPrice) throws RemoteException;
+	public float getPriceForRunner(Runner runner, Locale locale) throws RemoteException;
 
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getNumberOfSiblings

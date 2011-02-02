@@ -88,7 +88,7 @@ public class DistanceDropDownMenu extends DropdownMenu {
 					List distances = new ArrayList(distancesGroups.size());
 					ConverterUtility converterUtility = ConverterUtility.getInstance();
 					
-					for (Iterator distancesIterator = distances.iterator(); distancesIterator.hasNext();)
+					for (Iterator distancesIterator = distancesGroups.iterator(); distancesIterator.hasNext();)
 						distances.add(converterUtility.convertGroupToDistance((Group) distancesIterator.next()));
 
 					disallowedDistances = runner.getDisallowedDistancesPKs(distances);

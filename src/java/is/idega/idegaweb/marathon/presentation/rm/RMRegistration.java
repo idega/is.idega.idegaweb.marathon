@@ -11,7 +11,6 @@ import is.idega.idegaweb.marathon.presentation.DistanceDropDownMenu;
 import is.idega.idegaweb.marathon.presentation.DistanceMenuShirtSizeMenuInputCollectionHandler;
 import is.idega.idegaweb.marathon.presentation.RegistrationReceivedPrintable;
 import is.idega.idegaweb.marathon.presentation.RunBlock;
-import is.idega.idegaweb.marathon.presentation.RunInputCollectionHandler;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
 import java.rmi.RemoteException;
@@ -28,14 +27,12 @@ import java.util.Map;
 import javax.ejb.FinderException;
 import javax.faces.component.UIComponent;
 
-import com.idega.block.creditcard.business.CreditCardAuthorizationException;
 import com.idega.core.contact.data.Email;
 import com.idega.core.contact.data.Phone;
 import com.idega.core.location.data.Address;
 import com.idega.core.location.data.Country;
 import com.idega.core.location.data.PostalCode;
 import com.idega.data.IDOCreateException;
-import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
@@ -71,10 +68,14 @@ import com.idega.util.LocaleUtil;
 public class RMRegistration extends RunBlock {
 
 	public static final String SESSION_ATTRIBUTE_RUNNER_MAP = "sa_runner_map";
+	public static final String SESSION_ATTRIBUTE_ICELANDIC_PERSONAL_ID_RUNNERS = "sa_icelandic_runners";
 	public static final String SESSION_ATTRIBUTE_PARTICIPANTS = "sa_participants";
 	public static final String SESSION_ATTRIBUTE_AMOUNT = "sa_amount";
 	public static final String SESSION_ATTRIBUTE_CARD_NUMBER = "sa_card_number";
 	public static final String SESSION_ATTRIBUTE_PAYMENT_DATE = "sa_payment_date";
+
+	private static final String PROPERTY_CHILD_DISCOUNT_ISK = "child_discount_ISK";
+	private static final String PROPERTY_CHILD_DISCOUNT_EUR = "child_discount_EUR";
 
 	private static final String PARAMETER_PERSONAL_ID = "prm_personal_id";
 	private static final String PARAMETER_DATE_OF_BIRTH = "prm_date_of_birth";
@@ -159,12 +160,260 @@ public class RMRegistration extends RunBlock {
 					}
 				}
 			}
+
+			if (this.isIcelandicPersonalID) {
+				this.childDiscount = Float.parseFloat(getBundle().getProperty(
+						PROPERTY_CHILD_DISCOUNT_ISK, "400"));
+			} else {
+				this.childDiscount = Float.parseFloat(getBundle().getProperty(
+						PROPERTY_CHILD_DISCOUNT_EUR, "4"));
+			}
+
 			loadCurrentStep(iwc, parseAction(iwc));
 		}
 	}
 
 	private void loadCurrentStep(IWContext iwc, int action)
 			throws RemoteException {
+
+		if (action == ACTION_STEP_DISCLAIMER) {
+			Runner runner = getRunner();
+
+			if (runner.getDistance().isRelayDistance()) {
+				boolean leg1 = false;
+				boolean leg2 = false;
+				boolean leg3 = false;
+				boolean leg4 = false;
+
+				if (runner.getRelayLeg() == null
+						|| "".equals(runner.getRelayLeg())) {
+					action = ACTION_STEP_RELAY;
+					showRelayError = true;
+				} else {
+					String leg = runner.getRelayLeg();
+
+					if (leg.indexOf("1") > -1) {
+						leg1 = true;
+					}
+
+					if (leg.indexOf("2") > -1) {
+						leg2 = true;
+					}
+
+					if (leg.indexOf("3") > -1) {
+						leg3 = true;
+					}
+
+					if (leg.indexOf("4") > -1) {
+						leg4 = true;
+					}
+
+				}
+
+				if (runner.getPartner1SSN() != null
+						&& !"".equals(runner.getPartner1SSN())) {
+					if (runner.getPartner1Name() == null
+							|| "".equals(runner.getPartner1Name())) {
+						action = ACTION_STEP_RELAY;
+						showRelayError = true;
+					}
+
+					if (runner.getPartner1Email() == null
+							|| "".equals(runner.getPartner1Email())) {
+						action = ACTION_STEP_RELAY;
+						showRelayError = true;
+					}
+
+					if (runner.getPartner1ShirtSize() == null
+							|| "".equals(runner.getPartner1ShirtSize())
+							|| "-1".equals(runner.getPartner1ShirtSize())) {
+						action = ACTION_STEP_RELAY;
+						showRelayError = true;
+					}
+
+					if (runner.getPartner1Leg() == null
+							|| "".equals(runner.getPartner1Leg())) {
+						action = ACTION_STEP_RELAY;
+						showRelayError = true;
+					} else {
+						String leg = runner.getPartner1Leg();
+
+						if (leg.indexOf("1") > -1) {
+							if (leg1) {
+								action = ACTION_STEP_RELAY;
+								showRelayError = true;
+							}
+
+							leg1 = true;
+						}
+
+						if (leg.indexOf("2") > -1) {
+							if (leg2) {
+								action = ACTION_STEP_RELAY;
+								showRelayError = true;
+							}
+
+							leg2 = true;
+						}
+
+						if (leg.indexOf("3") > -1) {
+							if (leg3) {
+								action = ACTION_STEP_RELAY;
+								showRelayError = true;
+							}
+
+							leg3 = true;
+						}
+
+						if (leg.indexOf("4") > -1) {
+							if (leg4) {
+								action = ACTION_STEP_RELAY;
+								showRelayError = true;
+							}
+
+							leg4 = true;
+						}
+					}
+
+					if (runner.getPartner2SSN() != null
+							&& !"".equals(runner.getPartner2SSN())) {
+						if (runner.getPartner2Name() == null
+								|| "".equals(runner.getPartner2Name())) {
+							action = ACTION_STEP_RELAY;
+							showRelayError = true;
+						}
+
+						if (runner.getPartner2Email() == null
+								|| "".equals(runner.getPartner2Email())) {
+							action = ACTION_STEP_RELAY;
+							showRelayError = true;
+						}
+
+						if (runner.getPartner2ShirtSize() == null
+								|| "".equals(runner.getPartner2ShirtSize())
+								|| "-1".equals(runner.getPartner2ShirtSize())) {
+							action = ACTION_STEP_RELAY;
+							showRelayError = true;
+						}
+
+						if (runner.getPartner2Leg() == null
+								|| "".equals(runner.getPartner2Leg())) {
+							action = ACTION_STEP_RELAY;
+							showRelayError = true;
+						} else {
+							String leg = runner.getPartner2Leg();
+
+							if (leg.indexOf("1") > -1) {
+								if (leg1) {
+									action = ACTION_STEP_RELAY;
+									showRelayError = true;
+								}
+
+								leg1 = true;
+							}
+
+							if (leg.indexOf("2") > -1) {
+								if (leg2) {
+									action = ACTION_STEP_RELAY;
+									showRelayError = true;
+								}
+
+								leg2 = true;
+							}
+
+							if (leg.indexOf("3") > -1) {
+								if (leg3) {
+									action = ACTION_STEP_RELAY;
+									showRelayError = true;
+								}
+
+								leg3 = true;
+							}
+
+							if (leg.indexOf("4") > -1) {
+								if (leg4) {
+									action = ACTION_STEP_RELAY;
+									showRelayError = true;
+								}
+
+								leg4 = true;
+							}
+						}
+					}
+
+					if (runner.getPartner3SSN() != null
+							&& !"".equals(runner.getPartner3SSN())) {
+						if (runner.getPartner3Name() == null
+								|| "".equals(runner.getPartner3Name())) {
+							action = ACTION_STEP_RELAY;
+							showRelayError = true;
+						}
+
+						if (runner.getPartner3Email() == null
+								|| "".equals(runner.getPartner3Email())) {
+							action = ACTION_STEP_RELAY;
+							showRelayError = true;
+						}
+
+						if (runner.getPartner3ShirtSize() == null
+								|| "".equals(runner.getPartner3ShirtSize())
+								|| "-1".equals(runner.getPartner3ShirtSize())) {
+							action = ACTION_STEP_RELAY;
+							showRelayError = true;
+						}
+
+						if (runner.getPartner3Leg() == null
+								|| "".equals(runner.getPartner3Leg())) {
+							action = ACTION_STEP_RELAY;
+							showRelayError = true;
+						} else {
+							String leg = runner.getPartner3Leg();
+
+							if (leg.indexOf("1") > -1) {
+								if (leg1) {
+									action = ACTION_STEP_RELAY;
+									showRelayError = true;
+								}
+
+								leg1 = true;
+							}
+
+							if (leg.indexOf("2") > -1) {
+								if (leg2) {
+									action = ACTION_STEP_RELAY;
+									showRelayError = true;
+								}
+
+								leg2 = true;
+							}
+
+							if (leg.indexOf("3") > -1) {
+								if (leg3) {
+									action = ACTION_STEP_RELAY;
+									showRelayError = true;
+								}
+
+								leg3 = true;
+							}
+
+							if (leg.indexOf("4") > -1) {
+								if (leg4) {
+									action = ACTION_STEP_RELAY;
+									showRelayError = true;
+								}
+
+								leg4 = true;
+							}
+						}
+					}
+				}
+
+				if (!leg1 || !leg2 || !leg3 || !leg4) {
+					action = ACTION_STEP_RELAY;
+					showRelayError = true;
+				}
+			}
+		}
 
 		switch (action) {
 
@@ -190,7 +439,7 @@ public class RMRegistration extends RunBlock {
 			stepPayment(iwc);
 			break;
 		case ACTION_STEP_RECEIPT:
-			stepRegister(iwc);
+			stepReceipt(iwc);
 			break;
 		case ACTION_CANCEL:
 			cancel(iwc);
@@ -200,8 +449,6 @@ public class RMRegistration extends RunBlock {
 
 	private void stepPersonalLookup(IWContext iwc) {
 		Form form = new Form();
-		form.maintainParameter(PARAMETER_PERSONAL_ID);
-		form.maintainParameter(PARAMETER_DATE_OF_BIRTH);
 
 		form.addParameter(PARAMETER_ACTION, ACTION_NEXT);
 		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_PERSONLOOKUP);
@@ -214,6 +461,15 @@ public class RMRegistration extends RunBlock {
 		table.setWidth(Table.HUNDRED_PERCENT);
 		form.add(table);
 		int row = 1;
+
+		boolean allowNoPersonalID = true;
+		if (!isRunnerMapEmpty(iwc)) {
+			Boolean previousIcelandic = (Boolean) iwc
+					.getSessionAttribute(SESSION_ATTRIBUTE_ICELANDIC_PERSONAL_ID_RUNNERS);
+			if (previousIcelandic != null && previousIcelandic.booleanValue()) {
+				allowNoPersonalID = false;
+			}
+		}
 
 		table.setHeight(row++, 12);
 
@@ -238,10 +494,13 @@ public class RMRegistration extends RunBlock {
 		if (this.isIcelandicPersonalID) {
 			input.setAsNotEmpty(localize("rm_reg.not_valid_personal_id",
 					"The personal ID you have entered is not valid"));
+		} else if (!allowNoPersonalID) {
+			input.setAsNotEmpty(localize("rm_reg.not_valid_personal_id",
+					"The personal ID you have entered is not valid"));
 		}
 		table.add(input, 1, row++);
 
-		if (!this.isIcelandicPersonalID) {
+		if (!this.isIcelandicPersonalID && allowNoPersonalID) {
 			// table.setCellpadding(1, row, 24);
 			Layer noIcelandicSSNLayer = new Layer(Layer.DIV);
 
@@ -258,8 +517,6 @@ public class RMRegistration extends RunBlock {
 			noIcelandicSSNLayer.add(noIcelandicSSNLabel);
 
 			table.add(noIcelandicSSNLayer, 1, row++);
-			
-			
 		}
 
 		UIComponent buttonsContainer = getButtonsFooter(iwc, false, true);
@@ -272,23 +529,23 @@ public class RMRegistration extends RunBlock {
 			advert.setWidth(Table.HUNDRED_PERCENT);
 			form.add(advert);
 
-
 			advert.setHeight(1, 18);
 
 			Link image = new Link(this.iwrb.getImage("icelandtotalcom.png"));
 			image.setURL("http://www.icelandtotal.com/?utm_source=Rvk_Marathon&utm_medium=WebsiteBanner&utm_campaign=Reykjavikurmarathon");
 			image.setTarget("_new");
 			advert.add(image, 1, 2);
-			advert.add(localize("rm_reg.iceland_total","Reykjavik Marathon is proud of...."), 2, 2);
+			advert.add(
+					localize("rm_reg.iceland_total",
+							"Reykjavik Marathon is proud of...."), 2, 2);
 		}
-		
+
 		add(form);
 	}
 
 	private void stepPersonalDetails(IWContext iwc) throws RemoteException {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
-		form.maintainParameter(PARAMETER_DATE_OF_BIRTH);
 
 		form.addParameter(PARAMETER_ACTION, "-1");
 		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_PERSONALDETAILS);
@@ -743,20 +1000,101 @@ public class RMRegistration extends RunBlock {
 						runRow);
 				runnerTable.add(
 						getText(localize(runner.getDistance().getName(), runner
-								.getDistance().getName())), 3, runRow++);
+								.getDistance().getName())), 3, runRow);
+				if (runner.getPartner1SSN() != null
+						&& !"".equals(runner.getPartner1SSN())) {
+					if (!addedLegHeader) {
+						runnerTable.add(
+								getHeader(localize("rm_reg.relay_leg", "Leg")),
+								4, 1);
+						addedLegHeader = true;
+					}
+
+					runnerTable.add(getText(runner.getRelayLeg()), 4, runRow++);
+
+					runnerTable.add(getText(runner.getPartner1Name()), 1,
+							runRow);
+					runnerTable
+							.add(getText(localize(runner.getRun().getName(),
+									runner.getRun().getName())
+									+ " "
+									+ runner.getDistance().getYear().getName()),
+									2, runRow);
+					runnerTable
+							.add(getText(localize(runner.getDistance()
+									.getName(), runner.getDistance().getName())),
+									3, runRow);
+					runnerTable.add(getText(runner.getPartner1Leg()), 4,
+							runRow++);
+
+					if (runner.getPartner2SSN() != null
+							&& !"".equals(runner.getPartner2SSN())) {
+						runnerTable.add(getText(runner.getPartner2Name()), 1,
+								runRow);
+						runnerTable.add(
+								getText(localize(runner.getRun().getName(),
+										runner.getRun().getName())
+										+ " "
+										+ runner.getDistance().getYear()
+												.getName()), 2, runRow);
+						runnerTable.add(
+								getText(localize(
+										runner.getDistance().getName(), runner
+												.getDistance().getName())), 3,
+								runRow);
+						runnerTable.add(getText(runner.getPartner2Leg()), 4,
+								runRow++);
+
+						if (runner.getPartner3SSN() != null
+								&& !"".equals(runner.getPartner3SSN())) {
+							runnerTable.add(getText(runner.getPartner3Name()),
+									1, runRow);
+							runnerTable.add(
+									getText(localize(runner.getRun().getName(),
+											runner.getRun().getName())
+											+ " "
+											+ runner.getDistance().getYear()
+													.getName()), 2, runRow);
+							runnerTable.add(
+									getText(localize(runner.getDistance()
+											.getName(), runner.getDistance()
+											.getName())), 3, runRow);
+							runnerTable.add(getText(runner.getPartner3Leg()),
+									4, runRow++);
+						}
+					}
+				} else {
+					runRow++;
+				}
+
 			} else {
-				removeRunner(iwc, runner.getPersonalID());
+				if (this.isIcelandicPersonalID) {
+					removeRunner(iwc, runner.getPersonalID());
+				} else {
+					removeRunner(iwc, runner.getDateOfBirth().toString());
+				}
 			}
 		}
 
 		UIComponent buttonsContainer = getButtonsFooter(iwc, false, false);
 
 		SubmitButton previous = getPreviousButton();
+		SubmitButton registerOther = (SubmitButton) getButton(new SubmitButton(
+				localize("run_reg.register_other", "Register other")));
+		registerOther.setValueOnClick(PARAMETER_ACTION,
+				String.valueOf(ACTION_START));
+		if (this.isIcelandicPersonalID) {
+			registerOther.setValueOnClick(PARAMETER_PERSONAL_ID, "");
+		} else {
+			registerOther.setValueOnClick(PARAMETER_DATE_OF_BIRTH, "");
+		}
+
 		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize(
 				"rm_reg.finish_registration", "Register")));
 		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_NEXT));
 
 		buttonsContainer.getChildren().add(previous);
+		buttonsContainer.getChildren().add(registerOther);
 		buttonsContainer.getChildren().add(next);
 
 		form.add(buttonsContainer);
@@ -764,128 +1102,10 @@ public class RMRegistration extends RunBlock {
 		add(form);
 	}
 
-	private void stepRegister(IWContext iwc) throws RemoteException {
-		try {
-			if (getRunner().getRun() == null) {
-				getParentPage()
-						.setAlertOnLoad(
-								localize(
-										"rm_reg.session_has_expired_payment",
-										"Session has expired and information from earlier steps is lost. \\nYou will have to enter the information again."));
-				stepPersonalDetails(iwc);
-				return;
-			}
-
-			String email = getRunner().getEmail();
-
-			IWTimestamp paymentStamp = new IWTimestamp();
-
-			Participant participant = getRunBusiness(iwc)
-					.storeParticipantRegistration(getRunner(),
-							iwc.getCurrentLocale(), "rm_reg.");
-			iwc.removeSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP);
-
-			showRegistration(iwc, participant);
-		} catch (IDOCreateException ice) {
-			getParentPage()
-					.setAlertOnLoad(
-							localize("rm_reg.save_failed",
-									"There was an error when trying to finish registration."));
-			ice.printStackTrace();
-			loadPreviousStep(iwc);
-		}
-	}
-
-	private void showRegistration(IWContext iwc, Participant participant) {
-		add(getStepsHeader(iwc, ACTION_STEP_RECEIPT));
-
-		Table table = new Table();
-		table.setCellpadding(0);
-		table.setCellspacing(0);
-		table.setWidth(Table.HUNDRED_PERCENT);
-		int row = 1;
-		iwc.setSessionAttribute(SESSION_ATTRIBUTE_PARTICIPANTS, participant);
-
-		Group run = null;
-		Run selectedRun = null;
-		run = participant.getRunTypeGroup();
-		try {
-			selectedRun = ConverterUtility.getInstance().convertGroupToRun(run);
-		} catch (FinderException e) {
-		}
-
-		table.setHeight(row++, 18);
-
-		String greeting = localize("rm_reg.hello_participant",
-				"Dear participant");
-		if (selectedRun != null) {
-			if (iwc.getCurrentLocale().equals(LocaleUtil.getIcelandicLocale())) {
-				greeting = selectedRun.getRunRegistrationReceiptGreeting();
-			} else {
-				greeting = selectedRun
-						.getRunRegistrationReceiptGreetingEnglish();
-			}
-		}
-
-		table.add(getHeader(greeting), 1, row++);
-		table.setHeight(row++, 16);
-
-		table.add(
-				getText(localize("rm_reg.payment_received",
-						"You have registered for the following:")), 1, row++);
-		table.setHeight(row++, 8);
-
-		Table runnerTable = new Table(5, 5);
-		runnerTable.setWidth(Table.HUNDRED_PERCENT);
-		int col = 1;
-		runnerTable.add(
-				getHeader(localize("rm_reg.runner_name", "Runner name")),
-				col++, 1);
-		runnerTable.add(getHeader(localize("rm_reg.run", "Run")), col++, 1);
-		runnerTable.add(getHeader(localize("rm_reg.distance", "Distance")),
-				col++, 1);
-
-		table.add(runnerTable, 1, row++);
-		int runRow = 2;
-		run = participant.getRunTypeGroup();
-		Group distance = participant.getRunDistanceGroup();
-		col = 1;
-		runnerTable
-				.add(getText(participant.getUser().getName()), col++, runRow);
-		runnerTable.add(getText(localize(run.getName(), run.getName()) + " "
-				+ participant.getRunYearGroup().getName()), col++, runRow);
-		runnerTable.add(
-				getText(localize(distance.getName(), distance.getName())),
-				col++, runRow);
-
-		table.setHeight(row++, 16);
-
-		if (selectedRun != null) {
-			String informationText = "";
-
-			if (iwc.getCurrentLocale().equals(LocaleUtil.getIcelandicLocale())) {
-				informationText = selectedRun.getRunRegistrationReceiptInfo();
-			} else {
-				informationText = selectedRun
-						.getRunRegistrationReceiptInfoEnglish();
-			}
-			table.add(getText(informationText), 1, row++);
-		}
-
-		table.setHeight(row++, 16);
-		table.add(getText(localize("rm_reg.best_regards", "Best regards,")), 1,
-				row++);
-
-		if (selectedRun != null) {
-			table.add(getText(selectedRun.getRunHomePage()), 1, row++);
-		}
-
-		add(table);
-	}
-
 	private void stepRunDetails(IWContext iwc) throws RemoteException {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
+		form.maintainParameter(PARAMETER_DATE_OF_BIRTH);
 
 		form.addParameter(PARAMETER_ACTION, "-1");
 		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_RUNDETAILS);
@@ -923,23 +1143,6 @@ public class RMRegistration extends RunBlock {
 		int iRow = 1;
 		Runner runner = getRunner();
 
-		ActiveRunDropDownMenu runDropdown = getRunDropdown(iwc, runner);
-		if (runDropdown.getChildCount() == 1) {
-			getParentPage().setAlertOnLoad(
-					localize("rm_reg.no_runs_available",
-							"There are no runs you can register for."));
-			if (this.isIcelandicPersonalID) {
-				removeRunner(iwc, getRunner().getPersonalID());
-				stepPersonalLookup(iwc);
-				return;
-			} else {
-				removeRunner(iwc, getRunner().getDateOfBirth().toString());
-				stepPersonalDetails(iwc);
-				return;
-			}
-		}
-		runDropdown.clearChildren();
-
 		choiceTable.add(
 				getHeader(localize(IWMarathonConstants.RR_PRIMARY_DD, "Run")),
 				1, iRow);
@@ -947,8 +1150,6 @@ public class RMRegistration extends RunBlock {
 				getHeader(localize(runner.getRun().getName(), runner.getRun()
 						.getName())
 						+ " " + runner.getYear().getName()), 3, iRow++);
-		choiceTable.add(runDropdown, 1, 0);
-		runDropdown.setVisible(false);
 
 		choiceTable.setHeight(iRow++, 5);
 
@@ -962,24 +1163,6 @@ public class RMRegistration extends RunBlock {
 						"Distance")), 1, iRow);
 		choiceTable.add(redStar, 1, iRow);
 		choiceTable.add(distanceDropdown, 3, iRow++);
-
-		RemoteScriptHandler rsh = new RemoteScriptHandler(runDropdown,
-				distanceDropdown);
-		try {
-			rsh.setRemoteScriptCollectionClass(RunInputCollectionHandler.class);
-			rsh.addParameter(RunInputCollectionHandler.RUNNER_PERSONAL_ID,
-					getRunner().getPersonalID());
-
-			if (getRunner().getUser() != null) {
-				rsh.addParameter(RunInputCollectionHandler.PARAMETER_USER_ID,
-						getRunner().getUser().getPrimaryKey().toString());
-			}
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
-		add(rsh);
 
 		choiceTable.setHeight(iRow++, 5);
 
@@ -1046,6 +1229,7 @@ public class RMRegistration extends RunBlock {
 	private void stepRelay(IWContext iwc) {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
+		form.maintainParameter(PARAMETER_DATE_OF_BIRTH);
 		form.addParameter(PARAMETER_ACTION, "-1");
 		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_RELAY);
 
@@ -1138,18 +1322,21 @@ public class RMRegistration extends RunBlock {
 			relPart3Leg.setValue(getRunner().getPartner3Leg());
 		}
 
-		relPart1ShirtSize.addMenuElement(
-				"-1",
-				localize("rm_reg.select_tee_shirt_size",
-						"Select shirt size..."));
-		relPart2ShirtSize.addMenuElement(
-				"-1",
-				localize("rm_reg.select_tee_shirt_size",
-						"Select shirt size..."));
-		relPart3ShirtSize.addMenuElement(
-				"-1",
-				localize("rm_reg.select_tee_shirt_size",
-						"Select shirt size..."));
+		relPart1ShirtSize
+				.addMenuElement(
+						"-1",
+						localize("rm_reg.select_tee_shirt_size",
+								"Select shirt size..."));
+		relPart2ShirtSize
+				.addMenuElement(
+						"-1",
+						localize("rm_reg.select_tee_shirt_size",
+								"Select shirt size..."));
+		relPart3ShirtSize
+				.addMenuElement(
+						"-1",
+						localize("rm_reg.select_tee_shirt_size",
+								"Select shirt size..."));
 		if (getRunner().getDistance() != null) {
 			String shirtSizeMetadata = getRunner().getDistance().getMetaData(
 					PARAMETER_SHIRT_SIZES_PER_RUN);
@@ -1211,8 +1398,7 @@ public class RMRegistration extends RunBlock {
 		choiceTable.add("#", 1, choiceRow);
 		choiceTable.add(localize("rm_reg.relay_ssn", "SSN"), 2, choiceRow);
 		choiceTable.add(localize("rm_reg.relay_name", "Name"), 3, choiceRow);
-		choiceTable
-				.add(localize("rm_reg.relay_email", "E-mail"), 4, choiceRow);
+		choiceTable.add(localize("rm_reg.relay_email", "E-mail"), 4, choiceRow);
 		choiceTable.add(localize("rm_reg.relay_shirt_size", "Shirt size"), 5,
 				choiceRow);
 		choiceTable.add(localize("rm_reg.relay_leg", "Leg"), 6, choiceRow++);
@@ -1264,6 +1450,7 @@ public class RMRegistration extends RunBlock {
 	private void stepDisclaimer(IWContext iwc) {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
+		form.maintainParameter(PARAMETER_DATE_OF_BIRTH);
 
 		form.addParameter(PARAMETER_ACTION, "-1");
 		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_DISCLAIMER);
@@ -1325,6 +1512,7 @@ public class RMRegistration extends RunBlock {
 	private void stepPayment(IWContext iwc) throws RemoteException {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
+		form.maintainParameter(PARAMETER_DATE_OF_BIRTH);
 		form.addParameter(PARAMETER_ACTION, "-1");
 		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_PAYMENT);
 
@@ -1337,9 +1525,6 @@ public class RMRegistration extends RunBlock {
 		form.add(table);
 		int row = 1;
 
-		// table.add(getPhasesTable(this.isIcelandic ? 7 : 6, this.isIcelandic ?
-		// 8 : 6, "rm_reg.payment_info", "Payment info"), 1, row++);
-		// table.add(getStepsHeader(iwc, ACTION_STEP_PAYMENT),1,row++);
 		table.setHeight(row++, 12);
 
 		table.add(
@@ -1352,9 +1537,8 @@ public class RMRegistration extends RunBlock {
 		Table runnerTable = new Table();
 		runnerTable.setWidth(Table.HUNDRED_PERCENT);
 		runnerTable.setCellspacing(0);
-		runnerTable
-				.add(getHeader(localize("rm_reg.runner_name", "Runner name")),
-						1, 1);
+		runnerTable.add(
+				getHeader(localize("rm_reg.runner_name", "Runner name")), 1, 1);
 		runnerTable.add(getHeader(localize("rm_reg.run", "Run")), 2, 1);
 		runnerTable.add(getHeader(localize("rm_reg.distance", "Distance")), 3,
 				1);
@@ -1380,9 +1564,6 @@ public class RMRegistration extends RunBlock {
 			} else {
 				runnerTable.add(getText(runner.getName()), 1, runRow);
 			}
-			if (isChild(runner)) {
-				childNumber++;
-			}
 
 			runnerTable.add(
 					getText(localize(runner.getRun().getName(), runner.getRun()
@@ -1390,22 +1571,49 @@ public class RMRegistration extends RunBlock {
 			runnerTable.add(
 					getText(localize(runner.getDistance().getName(), runner
 							.getDistance().getName())), 3, runRow);
-			float runPrice = getRunBusiness(iwc).getPriceForRunner(runner,
-					iwc.getCurrentLocale(), 0, 0);
+			float runPrice = 0.0f;
+			if (this.isIcelandicPersonalID) {
+				runPrice = getRunBusiness(iwc).getPriceForRunner(runner,
+						LocaleUtil.getIcelandicLocale());
+			} else {
+				runPrice = getRunBusiness(iwc).getPriceForRunner(runner,
+						iwc.getCurrentLocale());
+			}
 			totalAmount += runPrice;
-			runnerTable.add(
-					getText(formatAmount(iwc.getCurrentLocale(), runPrice)), 4,
-					runRow++);
-			if (useChildDiscount && childNumber > 1 && runPrice > 0) {
-				runPrice -= this.childDiscount;
+			if (this.isIcelandicPersonalID) {
+				runnerTable.add(
+						getText(formatAmount(LocaleUtil.getIcelandicLocale(),
+								runPrice)), 4, runRow++);
+			} else {
+				runnerTable
+						.add(getText(formatAmount(iwc.getCurrentLocale(),
+								runPrice)), 4, runRow++);
+			}
+
+			if (isChild(runner) && runner.getDistance().isFamilyDiscount()) {
+				childNumber++;
+				if (useChildDiscount && childNumber > 1 && runPrice > 0) {
+					runPrice -= this.childDiscount;
+				}
 			}
 
 			runner.setAmount(runPrice);
-			addRunner(iwc, runner.getPersonalID(), runner);
+
+			if (this.isIcelandicPersonalID) {
+				addRunner(iwc, runner.getPersonalID(), runner);
+			} else {
+				addRunner(iwc, runner.getDateOfBirth().toString(), runner);
+			}
 
 			if (first) {
-				runnerTable.add(new HiddenInput(PARAMETER_REFERENCE_NUMBER,
-						runner.getPersonalID().replaceAll("-", "")));
+				if (this.isIcelandicPersonalID) {
+					runnerTable.add(new HiddenInput(PARAMETER_REFERENCE_NUMBER,
+							runner.getPersonalID().replaceAll("-", "")));
+				} else {
+					runnerTable.add(new HiddenInput(PARAMETER_REFERENCE_NUMBER,
+							runner.getDateOfBirth().toString()
+									.replaceAll("-", "")));
+				}
 				first = false;
 			}
 		}
@@ -1415,20 +1623,20 @@ public class RMRegistration extends RunBlock {
 			return;
 		}
 
-		if (this.isIcelandicPersonalID) {
-			if (useChildDiscount) {
-				float childrenDiscount = -((numberOfChildren - 1) * this.childDiscount);
-				totalAmount += childrenDiscount;
+		// if (this.isIcelandicPersonalID) {
+		if (useChildDiscount) {
+			float childrenDiscount = -((numberOfChildren - 1) * this.childDiscount);
+			totalAmount += childrenDiscount;
 
-				runnerTable.setHeight(runRow++, 12);
-				runnerTable.add(
-						getText(localize("rm_reg.family_discount",
-								"Family discount")), 1, runRow);
-				runnerTable.add(
-						getText(formatAmount(iwc.getCurrentLocale(),
-								childrenDiscount)), 4, runRow++);
-			}
+			runnerTable.setHeight(runRow++, 12);
+			runnerTable.add(
+					getText(localize("rm_reg.family_discount",
+							"Family discount")), 1, runRow);
+			runnerTable.add(
+					getText(formatAmount(iwc.getCurrentLocale(),
+							childrenDiscount)), 4, runRow++);
 		}
+		// }
 
 		runnerTable.setHeight(runRow++, 12);
 		runnerTable.add(
@@ -1481,8 +1689,7 @@ public class RMRegistration extends RunBlock {
 
 		TextInput nameField = (TextInput) getStyledInterface(new TextInput(
 				PARAMETER_NAME_ON_CARD));
-		nameField.setAsNotEmpty(localize(
-				"rm_reg.must_supply_card_holder_name",
+		nameField.setAsNotEmpty(localize("rm_reg.must_supply_card_holder_name",
 				"You must supply card holder name"));
 		nameField.keepStatusOnAction(true);
 		if (getRunner().getUser() != null) {
@@ -1495,8 +1702,6 @@ public class RMRegistration extends RunBlock {
 				PARAMETER_CCV));
 		ccv.setLength(3);
 		ccv.setMaxlength(3);
-		// ccv.setMininumLength(3, localize("rm_reg.not_valid_ccv",
-		// "Not a valid CCV number"));
 		ccv.setAsIntegers(localize("rm_reg.not_valid_ccv",
 				"Not a valid CCV number"));
 		ccv.setAsNotEmpty(localize("rm_reg.must_supply_ccv",
@@ -1543,8 +1748,7 @@ public class RMRegistration extends RunBlock {
 							"Not a valid card number"));
 			cardNumber.setAsIntegers(localize("rm_reg.not_valid_card_number",
 					"Not a valid card number"));
-			cardNumber.setAsNotEmpty(localize(
-					"rm_reg.must_supply_card_number",
+			cardNumber.setAsNotEmpty(localize("rm_reg.must_supply_card_number",
 					"You must enter the credit card number"));
 			cardNumber.keepStatusOnAction(true);
 
@@ -1593,21 +1797,11 @@ public class RMRegistration extends RunBlock {
 				creditRow);
 		creditCardTable.add(
 				getText(localize("rm_reg.read_conditions",
-						"Please read before you finish your payment")),
-				1, creditRow);
-
-		/*Help help = new Help();
-		help.setHelpTextBundle(IWMarathonConstants.IW_BUNDLE_IDENTIFIER);
-		help.setHelpTextKey("terms_and_conditions");
-		help.setShowAsText(true);
-		help.setLinkText(localize("rm_reg.terms_and_conditions",
-				"Terms and conditions"));
-		creditCardTable.add(help, 1, creditRow++);*/
+						"Please read before you finish your payment")), 1,
+				creditRow);
 
 		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize(
 				"rm_reg.pay", "Pay fee")));
-		// next.setValueOnClick(PARAMETER_ACTION,
-		// String.valueOf(ACTION_STEP_RECEIPT));
 		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_NEXT));
 		next.setDisabled(true);
 
@@ -1625,10 +1819,7 @@ public class RMRegistration extends RunBlock {
 				.add(getHeader(localize("rm_reg.agree_terms_and_conditions",
 						"I agree to the terms and conditions")), 1, creditRow++);
 
-		// SubmitButton previous = getPreviousButton();
-
 		UIComponent buttonsContainer = getButtonsFooter(iwc, true, false);
-		// buttonsContainer.getChildren().add(previous);
 		buttonsContainer.getChildren().add(next);
 		form.add(buttonsContainer);
 
@@ -1696,19 +1887,21 @@ public class RMRegistration extends RunBlock {
 			}
 
 			String properties = null;
-			if (doPayment) {
-				properties = getRunBusiness(iwc).authorizePayment(nameOnCard,
-						cardNumber, expiresMonth, expiresYear, ccVerifyNumber,
-						amount, this.isIcelandicPersonalID ? "ISK" : "EUR",
-						referenceNumber);
-			}
+			/*
+			 * if (doPayment) { properties =
+			 * getRunBusiness(iwc).authorizePayment(nameOnCard, cardNumber,
+			 * expiresMonth, expiresYear, ccVerifyNumber, amount,
+			 * this.isIcelandicPersonalID ? "ISK" : "EUR", referenceNumber); }
+			 */
 			Collection participants = getRunBusiness(iwc).saveParticipants(
 					runners, email, hiddenCardNumber, amount, paymentStamp,
-					iwc.getCurrentLocale(), isDisablePaymentAndOverviewSteps());
-			if (doPayment) {
-				getRunBusiness(iwc).finishPayment(properties);
-			}
+					iwc.getCurrentLocale(), isDisablePaymentAndOverviewSteps(),
+					"rm_reg.");
+			/*
+			 * if (doPayment) { getRunBusiness(iwc).finishPayment(properties); }
+			 */
 			iwc.removeSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP);
+			iwc.removeApplicationAttribute(SESSION_ATTRIBUTE_ICELANDIC_PERSONAL_ID_RUNNERS);
 
 			showReceipt(iwc, participants, amount, hiddenCardNumber,
 					paymentStamp, doPayment);
@@ -1719,14 +1912,14 @@ public class RMRegistration extends RunBlock {
 									"There was an error when trying to finish registration."));
 			ice.printStackTrace();
 			loadPreviousStep(iwc);
-		} catch (CreditCardAuthorizationException ccae) {
-			IWResourceBundle creditCardBundle = iwc.getIWMainApplication()
-					.getBundle("com.idega.block.creditcard")
-					.getResourceBundle(iwc.getCurrentLocale());
-			getParentPage().setAlertOnLoad(
-					ccae.getLocalizedMessage(creditCardBundle));
-			loadPreviousStep(iwc);
-		}
+		} /*
+		 * catch (CreditCardAuthorizationException ccae) { IWResourceBundle
+		 * creditCardBundle = iwc.getIWMainApplication()
+		 * .getBundle("com.idega.block.creditcard")
+		 * .getResourceBundle(iwc.getCurrentLocale());
+		 * getParentPage().setAlertOnLoad(
+		 * ccae.getLocalizedMessage(creditCardBundle)); loadPreviousStep(iwc); }
+		 */
 	}
 
 	private void showReceipt(IWContext iwc, Collection runners, double amount,
@@ -1790,12 +1983,10 @@ public class RMRegistration extends RunBlock {
 		runnerTable.add(
 				getHeader(localize("rm_reg.race_number", "Race number")),
 				col++, 1);
-		runnerTable.add(
-				getHeader(localize("rm_reg.shirt_size", "Shirt size")), col++,
-				1);
+		runnerTable.add(getHeader(localize("rm_reg.shirt_size", "Shirt size")),
+				col++, 1);
 		table.add(runnerTable, 1, row++);
 		int runRow = 2;
-		int transportToBuy = 0;
 		Iterator iter = runners.iterator();
 		while (iter.hasNext()) {
 			Participant participant = (Participant) iter.next();
@@ -1930,7 +2121,7 @@ public class RMRegistration extends RunBlock {
 							"Further information about the run is available on:")),
 					1, row++);
 			String informationText;
-			if (this.isIcelandicPersonalID) {
+			if (iwc.getCurrentLocale().equals(LocaleUtil.getIcelandicLocale())) {
 				informationText = selectedRun.getRunRegistrationReceiptInfo();
 			} else {
 				informationText = selectedRun
@@ -1940,13 +2131,19 @@ public class RMRegistration extends RunBlock {
 		}
 
 		table.setHeight(row++, 16);
-		table.add(getText(localize("rm_reg.best_regards", "Best regards,")),
-				1, row++);
+		table.add(getText(localize("rm_reg.best_regards", "Best regards,")), 1,
+				row++);
 
 		if (selectedRun != null) {
 			// table.add(getText(localize(selectedRun.getName(), selectedRun
 			// .getName())), 1, row++);
-			table.add(getText(selectedRun.getRunHomePage()), 1, row++);
+			if (iwc.getCurrentLocale().equals(LocaleUtil.getIcelandicLocale())) {
+				table.add(getText(selectedRun.getRunInformationPage()), 1,
+						row++);
+			} else {
+				table.add(getText(selectedRun.getEnglishRunInformationPage()),
+						1, row++);
+			}
 		}
 
 		add(table);
@@ -2066,12 +2263,19 @@ public class RMRegistration extends RunBlock {
 				runner.setDateOfBirth(dob.getDate());
 				if (iwc.isParameterSet(PARAMETER_NAME)) {
 					runner.setName(iwc.getParameter(PARAMETER_NAME));
-					/*
-					 * try { user = getUserBusiness(iwc).getUserHome()
-					 * .findByDateOfBirthAndName(dob.getSQLDate(),
-					 * runner.getName()); } catch (Exception fe) { System.out
-					 * .println("User not found by name and date_of_birth"); }
-					 */
+					if (runner.getDateOfBirth() != null
+							&& runner.getName() != null
+							&& runner.getName().trim().length() > 0) {
+						try {
+							user = getUserBusiness(iwc).getUserHome()
+									.findByDateOfBirthAndName(dob.getSQLDate(),
+											runner.getName());
+						} catch (Exception fe) {
+							System.out
+									.println("User not found by name and date_of_birth");
+						}
+
+					}
 				}
 			}
 
@@ -2080,23 +2284,14 @@ public class RMRegistration extends RunBlock {
 
 		if (runner.getRun() == null) {
 			runner.setRunId(RMRegistration.REYKJAVIK_MARATHON_GROUP_ID);
-			Year year = runner.getYear();
-			String runnerYearString = year.getYearString();
-
-			try {
-				Collection distancesGroups = getRunBusiness(iwc)
-						.getDistancesMap(runner.getRun(), runnerYearString);
-				if (distancesGroups != null) {
-					Iterator it = distancesGroups.iterator();
-					if (it.hasNext()) {
-						runner.setDistance(ConverterUtility.getInstance()
-								.convertGroupToDistance((Group) it.next()));
-					}
-				}
-			} catch (RemoteException e) {
-				e.printStackTrace();
-			}
 		}
+
+		if (iwc.isParameterSet(PARAMETER_DISTANCE)) {
+			runner.setDistance(ConverterUtility.getInstance()
+					.convertGroupToDistance(
+							new Integer(iwc.getParameter(PARAMETER_DISTANCE))));
+		}
+
 		if (iwc.isParameterSet(PARAMETER_NAME)) {
 			runner.setName(iwc.getParameter(PARAMETER_NAME));
 		}
@@ -2158,11 +2353,97 @@ public class RMRegistration extends RunBlock {
 		if (iwc.isParameterSet(PARAMETER_MOBILE_PHONE)) {
 			runner.setMobilePhone(iwc.getParameter(PARAMETER_MOBILE_PHONE));
 		}
+		if (iwc.isParameterSet(PARAMETER_SHIRT_SIZE)) {
+			runner.setShirtSize(iwc.getParameter(PARAMETER_SHIRT_SIZE));
+		}
 
 		if (personalID != null) {
 			addRunner(iwc, personalID, runner);
 		} else if (dateOfBirth != null) {
 			addRunner(iwc, dateOfBirth, runner);
+		}
+
+		if (iwc.isParameterSet(PARAMETER_RELAY_LEG)) {
+			runner.setRelayLeg(iwc.getParameter(PARAMETER_RELAY_LEG));
+		}
+
+		if (iwc.isParameterSet(PARAMETER_RELAY_PARTNER_1_SSN)) {
+			runner.setPartner1SSN(iwc
+					.getParameter(PARAMETER_RELAY_PARTNER_1_SSN));
+		}
+
+		if (iwc.isParameterSet(PARAMETER_RELAY_PARTNER_1_NAME)) {
+			runner.setPartner1Name(iwc
+					.getParameter(PARAMETER_RELAY_PARTNER_1_NAME));
+		}
+
+		if (iwc.isParameterSet(PARAMETER_RELAY_PARTNER_1_EMAIL)) {
+			runner.setPartner1Email(iwc
+					.getParameter(PARAMETER_RELAY_PARTNER_1_EMAIL));
+		}
+
+		if (iwc.isParameterSet(PARAMETER_RELAY_PARTNER_1_SHIRT_SIZE)) {
+			runner.setPartner1ShirtSize(iwc
+					.getParameter(PARAMETER_RELAY_PARTNER_1_SHIRT_SIZE));
+		}
+
+		if (iwc.isParameterSet(PARAMETER_RELAY_PARTNER_1_LEG)) {
+			runner.setPartner1Leg(iwc
+					.getParameter(PARAMETER_RELAY_PARTNER_1_LEG));
+		}
+
+		if (iwc.isParameterSet(PARAMETER_RELAY_PARTNER_2_SSN)) {
+			runner.setPartner2SSN(iwc
+					.getParameter(PARAMETER_RELAY_PARTNER_2_SSN));
+		}
+
+		if (iwc.isParameterSet(PARAMETER_RELAY_PARTNER_2_NAME)) {
+			runner.setPartner2Name(iwc
+					.getParameter(PARAMETER_RELAY_PARTNER_2_NAME));
+		}
+
+		if (iwc.isParameterSet(PARAMETER_RELAY_PARTNER_2_EMAIL)) {
+			runner.setPartner2Email(iwc
+					.getParameter(PARAMETER_RELAY_PARTNER_2_EMAIL));
+		}
+
+		if (iwc.isParameterSet(PARAMETER_RELAY_PARTNER_2_SHIRT_SIZE)) {
+			runner.setPartner2ShirtSize(iwc
+					.getParameter(PARAMETER_RELAY_PARTNER_2_SHIRT_SIZE));
+		}
+
+		if (iwc.isParameterSet(PARAMETER_RELAY_PARTNER_2_LEG)) {
+			runner.setPartner2Leg(iwc
+					.getParameter(PARAMETER_RELAY_PARTNER_2_LEG));
+		}
+
+		if (iwc.isParameterSet(PARAMETER_RELAY_PARTNER_3_SSN)) {
+			runner.setPartner3SSN(iwc
+					.getParameter(PARAMETER_RELAY_PARTNER_3_SSN));
+		}
+
+		if (iwc.isParameterSet(PARAMETER_RELAY_PARTNER_3_NAME)) {
+			runner.setPartner3Name(iwc
+					.getParameter(PARAMETER_RELAY_PARTNER_3_NAME));
+		}
+
+		if (iwc.isParameterSet(PARAMETER_RELAY_PARTNER_3_EMAIL)) {
+			runner.setPartner3Email(iwc
+					.getParameter(PARAMETER_RELAY_PARTNER_3_EMAIL));
+		}
+
+		if (iwc.isParameterSet(PARAMETER_RELAY_PARTNER_3_SHIRT_SIZE)) {
+			runner.setPartner3ShirtSize(iwc
+					.getParameter(PARAMETER_RELAY_PARTNER_3_SHIRT_SIZE));
+		}
+
+		if (iwc.isParameterSet(PARAMETER_RELAY_PARTNER_3_LEG)) {
+			runner.setPartner3Leg(iwc
+					.getParameter(PARAMETER_RELAY_PARTNER_3_LEG));
+		}
+
+		if (iwc.isParameterSet(PARAMETER_AGREE)) {
+			runner.setAgree(true);
 		}
 
 		return runner;
@@ -2178,8 +2459,28 @@ public class RMRegistration extends RunBlock {
 	}
 
 	private void addRunner(IWContext iwc, String key, Runner runner) {
-		Map runnerMap = new HashMap();
+		Map runnerMap = (Map) iwc
+				.getSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP);
+		if (runnerMap == null) {
+			runnerMap = new HashMap();
+		}
 		runnerMap.put(key, runner);
+
+		if (iwc.getSessionAttribute(SESSION_ATTRIBUTE_ICELANDIC_PERSONAL_ID_RUNNERS) == null) {
+			if (runner.getPersonalID() != null
+					|| runner.getDateOfBirth() != null) {
+				if (runner.getPersonalID() != null) {
+					iwc.setSessionAttribute(
+							SESSION_ATTRIBUTE_ICELANDIC_PERSONAL_ID_RUNNERS,
+							new Boolean(true));
+				} else {
+					iwc.setSessionAttribute(
+							SESSION_ATTRIBUTE_ICELANDIC_PERSONAL_ID_RUNNERS,
+							new Boolean(false));
+				}
+			}
+		}
+
 		iwc.setSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP, runnerMap);
 	}
 
@@ -2190,7 +2491,21 @@ public class RMRegistration extends RunBlock {
 			runnerMap = new HashMap();
 		}
 		runnerMap.remove(key);
+		if (runnerMap.isEmpty()) {
+			iwc.removeApplicationAttribute(SESSION_ATTRIBUTE_ICELANDIC_PERSONAL_ID_RUNNERS);
+		}
 		iwc.setSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP, runnerMap);
+	}
+
+	private boolean isRunnerMapEmpty(IWContext iwc) {
+		Map runnerMap = (Map) iwc
+				.getSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP);
+
+		if (runnerMap == null || runnerMap.isEmpty()) {
+			return true;
+		}
+
+		return false;
 	}
 
 	protected int parseAction(IWContext iwc) throws RemoteException {
@@ -2224,7 +2539,7 @@ public class RMRegistration extends RunBlock {
 
 		if ((runner != null && runner.getDateOfBirth() != null && isIcelandicPersonalID)
 				|| (runner != null && runner.getUser() != null
-						&& runner.getUser().getDateOfBirth() != null && isIcelandicPersonalID)) {
+						&& runner.getUser().getDateOfBirth() != null && !isIcelandicPersonalID)) {
 			Date dateOfBirth;
 			if (runner.getDateOfBirth() != null) {
 				dateOfBirth = runner.getDateOfBirth();
@@ -2294,8 +2609,22 @@ public class RMRegistration extends RunBlock {
 	 * Called by StepsBlock
 	 */
 	protected void initializeSteps(IWContext iwc) {
-		addStep(iwc, ACTION_STEP_PERSONLOOKUP,
-				localize("rm_reg.registration", "Registration"));
+		boolean showPersonalLookupStep = true;
+		if (!this.isIcelandicPersonalID) {
+			if (!isRunnerMapEmpty(iwc)) {
+				Boolean previousIcelandic = (Boolean) iwc
+						.getSessionAttribute(SESSION_ATTRIBUTE_ICELANDIC_PERSONAL_ID_RUNNERS);
+				if (previousIcelandic != null
+						&& !previousIcelandic.booleanValue()) {
+					showPersonalLookupStep = false;
+				}
+			}
+		}
+
+		if (showPersonalLookupStep) {
+			addStep(iwc, ACTION_STEP_PERSONLOOKUP,
+					localize("rm_reg.registration", "Registration"));
+		}
 
 		addStep(iwc, ACTION_STEP_PERSONALDETAILS,
 				localize("rm_reg.registration", "Registration details"));

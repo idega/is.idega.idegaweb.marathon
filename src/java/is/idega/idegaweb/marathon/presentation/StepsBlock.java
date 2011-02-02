@@ -263,14 +263,6 @@ public class StepsBlock extends Block {
 	
 	protected int parseAction(IWContext iwc) throws RemoteException {
 		
-		/*int action = this.isIcelandic ? ACTION_STEP_PERSONLOOKUP : ACTION_STEP_PERSONALDETAILS;
-		
-		if (iwc.isParameterSet(PARAMETER_ACTION)) {
-			try{
-				action = Integer.parseInt(iwc.getParameter(PARAMETER_ACTION));
-			}catch(Exception e){e.printStackTrace();}
-		}*/
-		
 		initializeSteps(iwc);
 		
 		String sFromAction = iwc.getParameter(PARAMETER_FROM_ACTION);

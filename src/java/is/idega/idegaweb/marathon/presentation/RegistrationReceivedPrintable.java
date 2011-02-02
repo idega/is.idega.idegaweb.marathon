@@ -106,7 +106,6 @@ public class RegistrationReceivedPrintable extends Window {
 		runnerTable.add(getHeader(iwrb.getLocalizedString("run_reg.shirt_size", "Shirt size")), 5, 1);
 		table.add(runnerTable, 1, row++);
 		int runRow = 2;
-		int transportToBuy = 0;
 		Iterator iter = runners.iterator();
 		while (iter.hasNext()) {
 			Participant participant = (Participant) iter.next();
@@ -118,9 +117,6 @@ public class RegistrationReceivedPrintable extends Window {
 			runnerTable.add(getText(iwrb.getLocalizedString(distance.getName(), distance.getName())), 3, runRow);
 			runnerTable.add(getText(String.valueOf(participant.getParticipantNumber())), 4, runRow);
 			runnerTable.add(getText(iwrb.getLocalizedString("shirt_size." + participant.getShirtSize(), participant.getShirtSize())), 5, runRow++);
-			if (participant.getTransportOrdered().equalsIgnoreCase(Boolean.TRUE.toString())) {
-				transportToBuy++;
-			}
 			
 			if (participant.getRelayPartner1SSN() != null && !"".equals(participant.getRelayPartner1SSN())) {
 				runnerTable.add(participant.getRelayPartner1Name(), 1, runRow);
@@ -145,11 +141,6 @@ public class RegistrationReceivedPrintable extends Window {
 					}
 				}				
 			}
-		}
-		if (transportToBuy > 0) {
-			runRow++;
-			runnerTable.mergeCells(1, runRow, 5, runRow);
-			runnerTable.add(getText(transportToBuy + " x " + iwrb.getLocalizedString("run_reg.transport_to_race_starting_point", "Bus trip to race starting point and back again")), 1, runRow);
 		}
 		
 		Table creditCardTable = new Table(2, 3);

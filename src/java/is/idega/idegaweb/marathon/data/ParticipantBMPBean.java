@@ -999,9 +999,10 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		query.appendWhereEquals(getColumnNameUserID(),user);
 		query.appendAndEquals(getColumnNameRunTypeGroupID(),run);
 		query.appendAndEquals(getColumnNameRunYearGroupID(),year);
+		query.appendAnd();
 		query.appendLeftParenthesis();
 		query.append(COLUMN_DELETED);
-		query.append(" is null ");
+		query.appendIsNull();
 		query.appendOrEquals(COLUMN_DELETED, false);
 		query.appendRightParenthesis();
 

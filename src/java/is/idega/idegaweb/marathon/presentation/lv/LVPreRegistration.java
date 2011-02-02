@@ -356,21 +356,6 @@ public class LVPreRegistration extends RunBlock {
 
 		ssnField.setYearRange(newestYearStamp.getYear(),
 				earliestYearStamp.getYear());
-		//Object[] maximumArgs = { String.valueOf(maximumAgeForRun) };
-		//ssnField.setEarliestPossibleDate(
-		//		maximumAgeStamp.getDate(),
-		//		MessageFormat
-		//				.format(localize(
-		//						"lv_reg.invalid_date_of_birth_exeeding",
-		//						"Invalid date of birth.  You have to be {0} or younger to register"),
-		//						maximumArgs));
-		//Object[] minimumArgs = { String.valueOf(minimumAgeForRun) };
-		//ssnField.setLatestPossibleDate(
-		//		minimumAgeStamp.getDate(),
-		//		MessageFormat
-		//				.format(localize("lv_reg.invalid_date_of_birth",
-		//						"Invalid date of birth.  You have to be {0} years old to register"),
-		//						minimumArgs));
 
 		if (getRunner().getDateOfBirth() != null) {
 			ssnField.setDate(getRunner().getDateOfBirth());

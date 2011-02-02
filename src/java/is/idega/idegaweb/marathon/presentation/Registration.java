@@ -2084,7 +2084,7 @@ public class Registration extends RunBlock {
 			
 			runnerTable.add(getText(localize(runner.getRun().getName(), runner.getRun().getName())), 2, runRow);
 			runnerTable.add(getText(localize(runner.getDistance().getName(), runner.getDistance().getName())), 3, runRow);
-			float runPrice = getRunBusiness(iwc).getPriceForRunner(runner, iwc.getCurrentLocale(), this.chipDiscount, 0);
+			float runPrice = getRunBusiness(iwc).getPriceForRunner(runner, iwc.getCurrentLocale());
 			totalAmount += runPrice;
 			runnerTable.add(getText(formatAmount(iwc.getCurrentLocale(), runPrice)), 4, runRow++);
 			if (useChildDiscount &&  childNumber > 1 && runPrice > 0) {
@@ -2372,7 +2372,7 @@ public class Registration extends RunBlock {
 			}
 			Collection participants = getRunBusiness(iwc).saveParticipants(
 					runners, email, hiddenCardNumber, amount, paymentStamp,
-					iwc.getCurrentLocale(), isDisablePaymentAndOverviewSteps());
+					iwc.getCurrentLocale(), isDisablePaymentAndOverviewSteps(), "");
 			if (doPayment) {
 				getRunBusiness(iwc).finishPayment(properties);
 			}
