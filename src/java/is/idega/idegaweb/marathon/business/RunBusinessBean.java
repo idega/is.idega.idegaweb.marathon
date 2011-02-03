@@ -199,6 +199,36 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		}
 	}
 
+	public boolean isRegisteredInRunPreviousYear(Group run, User user) {
+		try {
+			String year = "";
+			Group runYear = null;
+			String[] types = { IWMarathonConstants.GROUP_TYPE_RUN_YEAR };
+			Collection years = getGroupBiz().getChildGroups(run, types, true);
+			Iterator iter = years.iterator();
+			while (iter.hasNext()) {
+				Group yearGroup = (Group) iter.next();
+				if (yearGroup.getName().equals(year)) {
+					runYear = yearGroup;
+					break;
+				}
+			}
+
+			if (runYear == null) {
+				return false;
+			}
+
+			((ParticipantHome) IDOLookup.getHome(Participant.class))
+					.findByUserAndRun(user, run, runYear);
+			return true;
+		} catch (FinderException fe) {
+			return false;
+		} catch (RemoteException ile) {
+			throw new IBORuntimeException(ile);
+		}
+	}
+
+	
 	public boolean doesGroupExist(Object distancePK, String groupName) {
 		try {
 			return ((ParticipantHome) IDOLookup.getHome(Participant.class))

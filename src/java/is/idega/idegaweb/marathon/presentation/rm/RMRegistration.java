@@ -155,7 +155,7 @@ public class RMRegistration extends RunBlock {
 
 			if (!this.isIcelandicPersonalID) {
 				if (getRunner() != null) {
-					if (getRunner().getPersonalID() != null) {
+					if (getRunner().getPersonalID() != null && !"".equals(getRunner().getPersonalID().trim())) {
 						this.isIcelandicPersonalID = true;
 					}
 				}
@@ -176,6 +176,12 @@ public class RMRegistration extends RunBlock {
 	private void loadCurrentStep(IWContext iwc, int action)
 			throws RemoteException {
 
+		/*if (action == ACTION_STEP_PERSONALDETAILS) {
+			if (!iwc.isParameterSet(PARAMETER_NO_PERSONAL_ID)) {
+				String personalID = iwc.getpara
+			}
+		}*/
+		
 		if (action == ACTION_STEP_DISCLAIMER) {
 			Runner runner = getRunner();
 
@@ -2357,7 +2363,7 @@ public class RMRegistration extends RunBlock {
 			runner.setShirtSize(iwc.getParameter(PARAMETER_SHIRT_SIZE));
 		}
 
-		if (personalID != null) {
+		if (personalID != null && !"".equals(personalID.trim())) {
 			addRunner(iwc, personalID, runner);
 		} else if (dateOfBirth != null) {
 			addRunner(iwc, dateOfBirth, runner);
@@ -2469,7 +2475,7 @@ public class RMRegistration extends RunBlock {
 		if (iwc.getSessionAttribute(SESSION_ATTRIBUTE_ICELANDIC_PERSONAL_ID_RUNNERS) == null) {
 			if (runner.getPersonalID() != null
 					|| runner.getDateOfBirth() != null) {
-				if (runner.getPersonalID() != null) {
+				if (runner.getPersonalID() != null && !"".equals(runner.getPersonalID().trim())) {
 					iwc.setSessionAttribute(
 							SESSION_ATTRIBUTE_ICELANDIC_PERSONAL_ID_RUNNERS,
 							new Boolean(true));
