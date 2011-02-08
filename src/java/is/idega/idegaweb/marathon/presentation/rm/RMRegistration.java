@@ -9,6 +9,7 @@ import is.idega.idegaweb.marathon.data.Year;
 import is.idega.idegaweb.marathon.presentation.ActiveRunDropDownMenu;
 import is.idega.idegaweb.marathon.presentation.DistanceDropDownMenu;
 import is.idega.idegaweb.marathon.presentation.DistanceMenuShirtSizeMenuInputCollectionHandler;
+import is.idega.idegaweb.marathon.presentation.Registration;
 import is.idega.idegaweb.marathon.presentation.RegistrationReceivedPrintable;
 import is.idega.idegaweb.marathon.presentation.RunBlock;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
@@ -27,12 +28,14 @@ import java.util.Map;
 import javax.ejb.FinderException;
 import javax.faces.component.UIComponent;
 
+import com.idega.block.creditcard.business.CreditCardAuthorizationException;
 import com.idega.core.contact.data.Email;
 import com.idega.core.contact.data.Phone;
 import com.idega.core.location.data.Address;
 import com.idega.core.location.data.Country;
 import com.idega.core.location.data.PostalCode;
 import com.idega.data.IDOCreateException;
+import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
@@ -58,6 +61,7 @@ import com.idega.util.Age;
 import com.idega.util.IWTimestamp;
 import com.idega.util.ListUtil;
 import com.idega.util.LocaleUtil;
+import com.idega.util.text.SocialSecurityNumber;
 
 /**
  * Registration class for the Reykjavik Marathon.
@@ -69,10 +73,10 @@ public class RMRegistration extends RunBlock {
 
 	public static final String SESSION_ATTRIBUTE_RUNNER_MAP = "sa_runner_map";
 	public static final String SESSION_ATTRIBUTE_ICELANDIC_PERSONAL_ID_RUNNERS = "sa_icelandic_runners";
-	public static final String SESSION_ATTRIBUTE_PARTICIPANTS = "sa_participants";
-	public static final String SESSION_ATTRIBUTE_AMOUNT = "sa_amount";
-	public static final String SESSION_ATTRIBUTE_CARD_NUMBER = "sa_card_number";
-	public static final String SESSION_ATTRIBUTE_PAYMENT_DATE = "sa_payment_date";
+	public static final String SESSION_ATTRIBUTE_PARTICIPANTS = Registration.SESSION_ATTRIBUTE_PARTICIPANTS;
+	public static final String SESSION_ATTRIBUTE_AMOUNT = Registration.SESSION_ATTRIBUTE_AMOUNT;
+	public static final String SESSION_ATTRIBUTE_CARD_NUMBER = Registration.SESSION_ATTRIBUTE_CARD_NUMBER;
+	public static final String SESSION_ATTRIBUTE_PAYMENT_DATE = Registration.SESSION_ATTRIBUTE_PAYMENT_DATE;
 
 	private static final String PROPERTY_CHILD_DISCOUNT_ISK = "child_discount_ISK";
 	private static final String PROPERTY_CHILD_DISCOUNT_EUR = "child_discount_EUR";
@@ -155,8 +159,13 @@ public class RMRegistration extends RunBlock {
 
 			if (!this.isIcelandicPersonalID) {
 				if (getRunner() != null) {
-					if (getRunner().getPersonalID() != null && !"".equals(getRunner().getPersonalID().trim())) {
-						this.isIcelandicPersonalID = true;
+					if (getRunner().getPersonalID() != null
+							&& !"".equals(getRunner().getPersonalID().trim())) {
+						if (SocialSecurityNumber
+								.isValidIcelandicSocialSecurityNumber(getRunner()
+										.getPersonalID())) {
+							this.isIcelandicPersonalID = true;
+						}
 					}
 				}
 			}
@@ -176,12 +185,12 @@ public class RMRegistration extends RunBlock {
 	private void loadCurrentStep(IWContext iwc, int action)
 			throws RemoteException {
 
-		/*if (action == ACTION_STEP_PERSONALDETAILS) {
-			if (!iwc.isParameterSet(PARAMETER_NO_PERSONAL_ID)) {
-				String personalID = iwc.getpara
-			}
-		}*/
-		
+		/*
+		 * if (action == ACTION_STEP_PERSONALDETAILS) { if
+		 * (!iwc.isParameterSet(PARAMETER_NO_PERSONAL_ID)) { String personalID =
+		 * iwc.getpara } }
+		 */
+
 		if (action == ACTION_STEP_DISCLAIMER) {
 			Runner runner = getRunner();
 
@@ -1485,12 +1494,9 @@ public class RMRegistration extends RunBlock {
 			next.setDisabled(true);
 		}
 
-		// table.add(getText(localize(key, "Information text 4...")), 1, row++);
-		String[] attributes = { localize(getRunner().getRun().getName(),
-				getRunner().getRun().getName()) };
-		table.add(getText(MessageFormat.format(
+		table.add(getInformationTable(
 				localize("rm_reg.information_text_step_4",
-						"Information text 4..."), attributes)), 1, row++);
+						"Information text 4...")), 1, row++);
 
 		Layer disclaimerLayer = new Layer(Layer.DIV);
 		CheckBox agreeCheck = getCheckBox(PARAMETER_AGREE,
@@ -1893,19 +1899,23 @@ public class RMRegistration extends RunBlock {
 			}
 
 			String properties = null;
-			/*
-			 * if (doPayment) { properties =
-			 * getRunBusiness(iwc).authorizePayment(nameOnCard, cardNumber,
-			 * expiresMonth, expiresYear, ccVerifyNumber, amount,
-			 * this.isIcelandicPersonalID ? "ISK" : "EUR", referenceNumber); }
-			 */
+
+			if (doPayment) {
+				properties = getRunBusiness(iwc).authorizePayment(nameOnCard,
+						cardNumber, expiresMonth, expiresYear, ccVerifyNumber,
+						amount, this.isIcelandicPersonalID ? "ISK" : "EUR",
+						referenceNumber);
+			}
+
 			Collection participants = getRunBusiness(iwc).saveParticipants(
 					runners, email, hiddenCardNumber, amount, paymentStamp,
 					iwc.getCurrentLocale(), isDisablePaymentAndOverviewSteps(),
 					"rm_reg.");
-			/*
-			 * if (doPayment) { getRunBusiness(iwc).finishPayment(properties); }
-			 */
+
+			if (doPayment) {
+				getRunBusiness(iwc).finishPayment(properties);
+			}
+
 			iwc.removeSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP);
 			iwc.removeApplicationAttribute(SESSION_ATTRIBUTE_ICELANDIC_PERSONAL_ID_RUNNERS);
 
@@ -1918,14 +1928,15 @@ public class RMRegistration extends RunBlock {
 									"There was an error when trying to finish registration."));
 			ice.printStackTrace();
 			loadPreviousStep(iwc);
-		} /*
-		 * catch (CreditCardAuthorizationException ccae) { IWResourceBundle
-		 * creditCardBundle = iwc.getIWMainApplication()
-		 * .getBundle("com.idega.block.creditcard")
-		 * .getResourceBundle(iwc.getCurrentLocale());
-		 * getParentPage().setAlertOnLoad(
-		 * ccae.getLocalizedMessage(creditCardBundle)); loadPreviousStep(iwc); }
-		 */
+		} catch (CreditCardAuthorizationException ccae) {
+			IWResourceBundle creditCardBundle = iwc.getIWMainApplication()
+					.getBundle("com.idega.block.creditcard")
+					.getResourceBundle(iwc.getCurrentLocale());
+			getParentPage().setAlertOnLoad(
+					ccae.getLocalizedMessage(creditCardBundle));
+			loadPreviousStep(iwc);
+		}
+
 	}
 
 	private void showReceipt(IWContext iwc, Collection runners, double amount,
@@ -2163,10 +2174,6 @@ public class RMRegistration extends RunBlock {
 
 	}
 
-	private String formatAmount(IWContext iwc, float amount) {
-		return NumberFormat.getInstance(iwc.getCurrentLocale()).format(amount);
-	}
-
 	private String formatAmount(Locale locale, float amount) {
 		return NumberFormat.getInstance(locale).format(amount) + " "
 				+ (this.isIcelandicPersonalID ? "ISK" : "EUR");
@@ -2363,12 +2370,6 @@ public class RMRegistration extends RunBlock {
 			runner.setShirtSize(iwc.getParameter(PARAMETER_SHIRT_SIZE));
 		}
 
-		if (personalID != null && !"".equals(personalID.trim())) {
-			addRunner(iwc, personalID, runner);
-		} else if (dateOfBirth != null) {
-			addRunner(iwc, dateOfBirth, runner);
-		}
-
 		if (iwc.isParameterSet(PARAMETER_RELAY_LEG)) {
 			runner.setRelayLeg(iwc.getParameter(PARAMETER_RELAY_LEG));
 		}
@@ -2452,6 +2453,12 @@ public class RMRegistration extends RunBlock {
 			runner.setAgree(true);
 		}
 
+		if (personalID != null && !"".equals(personalID.trim())) {
+			addRunner(iwc, personalID, runner);
+		} else if (dateOfBirth != null) {
+			addRunner(iwc, dateOfBirth, runner);
+		}
+
 		return runner;
 	}
 
@@ -2475,7 +2482,8 @@ public class RMRegistration extends RunBlock {
 		if (iwc.getSessionAttribute(SESSION_ATTRIBUTE_ICELANDIC_PERSONAL_ID_RUNNERS) == null) {
 			if (runner.getPersonalID() != null
 					|| runner.getDateOfBirth() != null) {
-				if (runner.getPersonalID() != null && !"".equals(runner.getPersonalID().trim())) {
+				if (runner.getPersonalID() != null
+						&& !"".equals(runner.getPersonalID().trim())) {
 					iwc.setSessionAttribute(
 							SESSION_ATTRIBUTE_ICELANDIC_PERSONAL_ID_RUNNERS,
 							new Boolean(true));
@@ -2659,7 +2667,7 @@ public class RMRegistration extends RunBlock {
 		}
 
 		addStep(iwc, ACTION_STEP_DISCLAIMER,
-				localize("rm_reg.overview", "Overview"));
+				localize("rm_reg.disclaimer", "Disclaimer"));
 
 		addStep(iwc, ACTION_STEP_OVERVIEW,
 				localize("rm_reg.overview", "Overview"));

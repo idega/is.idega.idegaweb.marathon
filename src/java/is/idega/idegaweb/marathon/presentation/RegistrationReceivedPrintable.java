@@ -27,6 +27,7 @@ import com.idega.presentation.ui.Window;
 import com.idega.user.data.Group;
 import com.idega.util.IWTimestamp;
 import com.idega.util.LocaleUtil;
+import com.idega.util.text.SocialSecurityNumber;
 
 
 /**
@@ -34,6 +35,7 @@ import com.idega.util.LocaleUtil;
  *
  */
 public class RegistrationReceivedPrintable extends Window {
+	private boolean isIcelandicPersonalID = false;
 	
 	public RegistrationReceivedPrintable() {
 		setResizable(true);
@@ -77,6 +79,17 @@ public class RegistrationReceivedPrintable extends Window {
 			try {
 				selectedRun = ConverterUtility.getInstance().convertGroupToRun(run);
 			} catch (FinderException e) {
+			}
+
+			if (participant.getUser() != null
+					&& participant.getUser().getPersonalID() != null
+					&& !"".equals(participant.getUser().getPersonalID()
+							.trim())) {
+				if (SocialSecurityNumber
+						.isValidIcelandicSocialSecurityNumber(participant
+								.getUser().getPersonalID())) {
+					this.isIcelandicPersonalID = true;
+				}
 			}
 		}
 
@@ -187,7 +200,8 @@ public class RegistrationReceivedPrintable extends Window {
 	}
 	
 	private String formatAmount(Locale locale, float amount) {
-		return NumberFormat.getInstance(locale).format(amount) + " " + (locale.equals(LocaleUtil.getIcelandicLocale()) ? "ISK" : "EUR");
+		return NumberFormat.getInstance(locale).format(amount) + " "
+		+ (this.isIcelandicPersonalID ? "ISK" : "EUR");
 	}
 	
 	private Text getHeader(String s) {

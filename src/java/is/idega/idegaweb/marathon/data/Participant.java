@@ -243,6 +243,21 @@ public interface Participant extends IDOEntity {
 	public boolean getIsDeleted();
 
 	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getIsAllowedToRun
+	 */
+	public boolean getIsAllowedToRun();
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getHasPayedConfirmation
+	 */
+	public boolean getHasPayedConfirmation();
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getHasPayedFee
+	 */
+	public boolean getHasPayedFee();
+
+	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setRunTypeGroupID
 	 */
 	public void setRunTypeGroupID(int runTypeGroupID);
@@ -466,6 +481,21 @@ public interface Participant extends IDOEntity {
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setIsDeleted
 	 */
 	public void setIsDeleted(boolean deleted);
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setIsAllowedToRun
+	 */
+	public void setIsAllowedToRun(boolean allowedToTun);
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setHasPayedConfirmation
+	 */
+	public void setHasPayedConfirmation(boolean payed);
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setHasPayedFee
+	 */
+	public void setHasPayedFee(boolean payed);
 
 	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setCharityId

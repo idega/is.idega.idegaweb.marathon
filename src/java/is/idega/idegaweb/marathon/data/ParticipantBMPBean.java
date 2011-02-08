@@ -74,6 +74,10 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 	private static final String COLUMN_RELAY3_LEG = "rel3_leg";
 	
 	private static final String COLUMN_DELETED = "deleted";
+	
+	private static final String COLUMN_ALLOWED_TO_RUN = "allowed_run";
+	private static final String COLUMN_PAYED_CONFIRMATION = "payed_confirmation";
+	private static final String COLUMN_PAYED_FEE = "payed_fee";
 
 	
 	/**
@@ -163,6 +167,10 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		addAttribute(COLUMN_RELAY3_LEG, "", String.class);
 
 		addAttribute(COLUMN_DELETED, "Deleted", Boolean.class);
+		
+		addAttribute(COLUMN_ALLOWED_TO_RUN, "Allowed to run", Boolean.class);
+		addAttribute(COLUMN_PAYED_CONFIRMATION, "Payed confirmation", Boolean.class);
+		addAttribute(COLUMN_PAYED_FEE, "Payed fee", Boolean.class);		
 	}
 
 	public static String getEntityTableName() {
@@ -537,6 +545,18 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		return getBooleanColumnValue(COLUMN_DELETED, false);
 	}
 	
+	public boolean getIsAllowedToRun() {
+		return getBooleanColumnValue(COLUMN_ALLOWED_TO_RUN, false);		
+	}
+
+	public boolean getHasPayedConfirmation() {
+		return getBooleanColumnValue(COLUMN_PAYED_CONFIRMATION, false);		
+	}
+
+	public boolean getHasPayedFee() {
+		return getBooleanColumnValue(COLUMN_PAYED_FEE, false);		
+	}
+
 	//SET
 	public void setRunTypeGroupID(int runTypeGroupID) {
 		setColumn(getColumnNameRunTypeGroupID(), runTypeGroupID);
@@ -720,7 +740,19 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 	public void setIsDeleted(boolean deleted) {
 		setColumn(COLUMN_DELETED, deleted);
 	}
-	
+
+	public void setIsAllowedToRun(boolean allowedToTun) {
+		setColumn(COLUMN_ALLOWED_TO_RUN, allowedToTun);
+	}
+
+	public void setHasPayedConfirmation(boolean payed) {
+		setColumn(COLUMN_PAYED_CONFIRMATION, payed);
+	}
+
+	public void setHasPayedFee(boolean payed) {
+		setColumn(COLUMN_PAYED_FEE, payed);
+	}
+
 	public void setCharityId(String charityId) {
 		setColumn(getColumnNameCharityId(),charityId);
 	}
@@ -1072,6 +1104,15 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		Collection existing = super.idoFindPKsByQuery(query);
 		return existing != null && !existing.isEmpty();
 	}
+
+	public Collection ejbFindAllAllowedToRun() throws FinderException{
+		IDOQuery query = idoQueryGetSelect();
+		//query.appendWhereEquals(getColumnNameUserID(),user);
+		query.appendWhereEquals(COLUMN_ALLOWED_TO_RUN, true);
+
+		return super.idoFindPKsByQuery(query);
+	}
+	
 	
 	public Collection ejbFindAllByRunGroupIdAndYear(int runId, int year) throws FinderException{
 		

@@ -1,32 +1,28 @@
 package is.idega.idegaweb.marathon.business;
 
 
-import is.idega.idegaweb.marathon.data.Distance;
-import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.data.ParticipantHome;
-
-import java.rmi.RemoteException;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.ejb.CreateException;
-import javax.ejb.FinderException;
-
-import com.idega.block.creditcard.business.CreditCardAuthorizationException;
-import com.idega.business.IBOLookupException;
-import com.idega.business.IBOService;
 import com.idega.core.location.data.AddressHome;
-import com.idega.core.location.data.Country;
+import java.util.Map;
+import is.idega.idegaweb.marathon.data.Participant;
+import java.rmi.RemoteException;
+import java.util.List;
 import com.idega.data.IDOCreateException;
+import is.idega.idegaweb.marathon.data.Distance;
+import com.idega.block.creditcard.business.CreditCardAuthorizationException;
+import com.idega.business.IBOService;
+import com.idega.business.IBOLookupException;
 import com.idega.presentation.IWContext;
 import com.idega.user.business.UserBusiness;
-import com.idega.user.data.Gender;
 import com.idega.user.data.Group;
-import com.idega.user.data.User;
+import com.idega.user.data.Gender;
+import javax.ejb.CreateException;
 import com.idega.util.IWTimestamp;
+import com.idega.user.data.User;
+import java.util.Locale;
+import javax.ejb.FinderException;
+import com.idega.core.location.data.Country;
+import java.util.Collection;
 
 public interface RunBusiness extends IBOService {
 	/**
@@ -46,6 +42,12 @@ public interface RunBusiness extends IBOService {
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#isRegisteredInRun
 	 */
 	public boolean isRegisteredInRun(String year, Group run, User user)
+			throws RemoteException;
+
+	/**
+	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#isRegisteredInRunPreviousYear
+	 */
+	public boolean isRegisteredInRunPreviousYear(Group run, User user)
 			throws RemoteException;
 
 	/**
@@ -79,12 +81,21 @@ public interface RunBusiness extends IBOService {
 			RemoteException;
 
 	/**
+	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#storeParticipantConfirmationPayment
+	 */
+	public void storeParticipantConfirmationPayment(Collection participans,
+			String email, String hiddenCardNumber, double amount,
+			IWTimestamp date, Locale locale,
+			boolean disableSendPaymentConfirmation, String runPrefix)
+			throws IDOCreateException, RemoteException;
+
+	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#saveParticipants
 	 */
 	public Collection saveParticipants(Collection runners, String email,
 			String hiddenCardNumber, double amount, IWTimestamp date,
-			Locale locale, boolean disableSendPaymentConfirmation, String runPrefix)
-			throws IDOCreateException, RemoteException;
+			Locale locale, boolean disableSendPaymentConfirmation,
+			String runPrefix) throws IDOCreateException, RemoteException;
 
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getNextAvailableParticipantNumber
@@ -128,14 +139,15 @@ public interface RunBusiness extends IBOService {
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#authorizePayment
 	 */
 	public String authorizePayment(String nameOnCard, String cardNumber,
-			Date expiresDate, String ccVerifyNumber, double amount,
+			java.util.Date expiresDate, String ccVerifyNumber, double amount,
 			String currency, String referenceNumber)
 			throws CreditCardAuthorizationException, RemoteException;
 
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getPriceForRunner
 	 */
-	public float getPriceForRunner(Runner runner, Locale locale) throws RemoteException;
+	public float getPriceForRunner(Runner runner, Locale locale)
+			throws RemoteException;
 
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getNumberOfSiblings
@@ -380,4 +392,9 @@ public interface RunBusiness extends IBOService {
 	 */
 	public List getDisallowedDistancesPKs(User user, List distances)
 			throws RemoteException;
+
+	/**
+	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getConfirmedParticipants
+	 */
+	public Collection getConfirmedParticipants() throws RemoteException;
 }

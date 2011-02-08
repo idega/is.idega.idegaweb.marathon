@@ -44,6 +44,7 @@ import com.idega.user.data.Group;
 import com.idega.user.data.User;
 import com.idega.util.IWTimestamp;
 import com.idega.util.LocaleUtil;
+import com.idega.util.text.SocialSecurityNumber;
 
 /**
  * Registration class for the Laugavegur Ultra Marathon.
@@ -104,7 +105,9 @@ public class LVPreRegistration extends RunBlock {
 			if (!this.isIcelandicPersonalID) {
 				if (getRunner() != null) {
 					if (getRunner().getPersonalID() != null) {
-						this.isIcelandicPersonalID = true;
+						if (SocialSecurityNumber.isValidIcelandicSocialSecurityNumber(getRunner().getPersonalID())) {
+							this.isIcelandicPersonalID = true;
+						}
 					}
 				}
 			}
@@ -140,8 +143,6 @@ public class LVPreRegistration extends RunBlock {
 
 	private void stepPersonalLookup(IWContext iwc) {
 		Form form = new Form();
-		form.maintainParameter(PARAMETER_PERSONAL_ID);
-		form.maintainParameter(PARAMETER_DATE_OF_BIRTH);
 		form.maintainParameter(PARAMETER_QUESTION1_NEVER);
 		form.maintainParameter(PARAMETER_QUESTION3_NEVER);
 
@@ -211,7 +212,6 @@ public class LVPreRegistration extends RunBlock {
 	private void stepPersonalDetails(IWContext iwc) throws RemoteException {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
-		form.maintainParameter(PARAMETER_DATE_OF_BIRTH);
 		form.maintainParameter(PARAMETER_QUESTION1_NEVER);
 		form.maintainParameter(PARAMETER_QUESTION3_NEVER);
 
