@@ -1109,6 +1109,14 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		IDOQuery query = idoQueryGetSelect();
 		//query.appendWhereEquals(getColumnNameUserID(),user);
 		query.appendWhereEquals(COLUMN_ALLOWED_TO_RUN, true);
+		query.appendLeftParenthesis();
+		query.append(COLUMN_PAYED_CONFIRMATION);
+		query.append(" is null ");
+		query.appendOr();
+		query.appendEquals(COLUMN_PAYED_CONFIRMATION, false);
+		query.appendRightParenthesis();
+		
+		System.out.println("sql = " + query.toString());
 
 		return super.idoFindPKsByQuery(query);
 	}

@@ -761,7 +761,7 @@ public class LVConfirmRegistration extends RunBlock {
 	private void stepReceipt(IWContext iwc, boolean doPayment)
 			throws RemoteException {
 		try {
-			if (getParticipant() == null) {
+			if (getParticipant().getShirtSize() == null || "".equals(getParticipant().getShirtSize())) {
 				getParentPage()
 						.setAlertOnLoad(
 								localize(

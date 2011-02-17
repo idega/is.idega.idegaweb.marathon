@@ -1857,7 +1857,7 @@ public class RMRegistration extends RunBlock {
 	private void stepReceipt(IWContext iwc, boolean doPayment)
 			throws RemoteException {
 		try {
-			if (getRunner().getRun() == null) {
+			if (getRunner().getDistance() == null) {
 				getParentPage()
 						.setAlertOnLoad(
 								localize(
@@ -2235,7 +2235,7 @@ public class RMRegistration extends RunBlock {
 			Year year = runner.getYear();
 			String runnerYearString = year.getYearString();
 
-			try {
+			/*try {
 				Collection distancesGroups = getRunBusiness(iwc)
 						.getDistancesMap(runner.getRun(), runnerYearString);
 				if (distancesGroups != null) {
@@ -2247,7 +2247,7 @@ public class RMRegistration extends RunBlock {
 				}
 			} catch (RemoteException e) {
 				e.printStackTrace();
-			}
+			}*/
 
 			return runner;
 		}
