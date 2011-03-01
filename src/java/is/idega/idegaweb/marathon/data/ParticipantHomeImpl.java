@@ -211,6 +211,14 @@ public class ParticipantHomeImpl extends IDOFactory implements ParticipantHome {
 		return this.getEntityCollectionForPrimaryKeys(ids);
 	}
 
+	public Collection findAllPaidConfirmation() throws FinderException {
+		IDOEntity entity = this.idoCheckOutPooledEntity();
+		Collection ids = ((ParticipantBMPBean) entity)
+				.ejbFindAllPaidConfirmation();
+		this.idoCheckInPooledEntity(entity);
+		return this.getEntityCollectionForPrimaryKeys(ids);
+	}
+
 	public Collection findAllByRunGroupIdAndYear(int runId, int year)
 			throws FinderException {
 		IDOEntity entity = this.idoCheckOutPooledEntity();

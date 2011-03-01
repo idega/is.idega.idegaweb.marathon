@@ -90,6 +90,14 @@ public interface RunBusiness extends IBOService {
 			throws IDOCreateException, RemoteException;
 
 	/**
+	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#markParticipantAsPaid
+	 */
+	public void markParticipantAsPaid(Collection participans, String email,
+			String hiddenCardNumber, double amount, IWTimestamp date,
+			Locale locale, boolean disableSendPaymentConfirmation,
+			String runPrefix) throws IDOCreateException, RemoteException;
+
+	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#saveParticipants
 	 */
 	public Collection saveParticipants(Collection runners, String email,

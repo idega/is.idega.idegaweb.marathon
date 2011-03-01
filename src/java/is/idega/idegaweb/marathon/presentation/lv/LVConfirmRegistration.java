@@ -522,6 +522,7 @@ public class LVConfirmRegistration extends RunBlock {
 			}
 
 			participant.setPayedAmount(String.valueOf(runPrice));
+			participant.setConfirmationFeeAmount((int)runPrice);
 			addParticipant(iwc, (Integer) participant.getPrimaryKey(),
 					participant);
 

@@ -79,6 +79,8 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 	private static final String COLUMN_PAYED_CONFIRMATION = "payed_confirmation";
 	private static final String COLUMN_PAYED_FEE = "payed_fee";
 
+	private static final String COLUMN_CONF_FEE_AMOUNT = "conf_fee_amount";
+	private static final String COLUMN_FEE_AMOUNT = "fee_amount";
 	
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -171,6 +173,9 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		addAttribute(COLUMN_ALLOWED_TO_RUN, "Allowed to run", Boolean.class);
 		addAttribute(COLUMN_PAYED_CONFIRMATION, "Payed confirmation", Boolean.class);
 		addAttribute(COLUMN_PAYED_FEE, "Payed fee", Boolean.class);		
+		
+		addAttribute(COLUMN_CONF_FEE_AMOUNT, "Confirmation fee amount paid", Integer.class);
+		addAttribute(COLUMN_FEE_AMOUNT, "Fee amount paid", Integer.class);
 	}
 
 	public static String getEntityTableName() {
@@ -698,6 +703,14 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		setColumn(COLUMN_RELAY_LEG, leg);
 	}
 	
+	public void setConfirmationFeeAmount(int amount) {
+		setColumn(COLUMN_CONF_FEE_AMOUNT, amount);
+	}
+
+	public void setFeeAmount(int amount) {
+		setColumn(COLUMN_FEE_AMOUNT, amount);
+	}
+
 	/**
 	 * this is actually crew name
 	 */
@@ -872,6 +885,14 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 	
 	public void setQuestion3NeverRan(boolean neverRan) {
 		setColumn(COLUMN_QUESTION3_NEVER_RAN, neverRan);
+	}
+
+	public int getConfirmationFeeAmount() {
+		return getIntColumnValue(COLUMN_CONF_FEE_AMOUNT, 0);
+	}
+
+	public int getFeeAmount(int amount) {
+		return getIntColumnValue(COLUMN_FEE_AMOUNT, 0);
 	}
 
 	public Collection ejbFindAll() throws FinderException {
@@ -1121,7 +1142,24 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 
 		return super.idoFindPKsByQuery(query);
 	}
-	
+
+	public Collection ejbFindAllPaidConfirmation() throws FinderException{
+		IDOQuery query = idoQueryGetSelect();
+		//query.appendWhereEquals(getColumnNameUserID(),user);
+		query.appendWhereEquals(COLUMN_PAYED_CONFIRMATION, true);
+		query.appendAnd();
+		query.appendLeftParenthesis();
+		query.append(COLUMN_PAYED_FEE);
+		query.append(" is null ");
+		query.appendOr();
+		query.appendEquals(COLUMN_PAYED_FEE, false);
+		query.appendRightParenthesis();
+		
+		System.out.println("sql = " + query.toString());
+
+		return super.idoFindPKsByQuery(query);
+	}
+
 	
 	public Collection ejbFindAllByRunGroupIdAndYear(int runId, int year) throws FinderException{
 		

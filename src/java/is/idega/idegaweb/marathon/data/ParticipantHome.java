@@ -74,6 +74,8 @@ public interface ParticipantHome extends IDOHome {
 
 	public Collection findAllAllowedToRun() throws FinderException;
 
+	public Collection findAllPaidConfirmation() throws FinderException;
+
 	public Collection findAllByRunGroupIdAndYear(int runId, int year)
 			throws FinderException;
 }

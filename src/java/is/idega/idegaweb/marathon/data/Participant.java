@@ -433,6 +433,16 @@ public interface Participant extends IDOEntity {
 	public void setRelayLeg(String leg);
 
 	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setConfirmationFeeAmount
+	 */
+	public void setConfirmationFeeAmount(int amount);
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setFeeAmount
+	 */
+	public void setFeeAmount(int amount);
+
+	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setRunGroupName
 	 */
 	public void setRunGroupName(String runGrName);
@@ -641,6 +651,16 @@ public interface Participant extends IDOEntity {
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#setQuestion3NeverRan
 	 */
 	public void setQuestion3NeverRan(boolean neverRan);
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getConfirmationFeeAmount
+	 */
+	public int getConfirmationFeeAmount();
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#getFeeAmount
+	 */
+	public int getFeeAmount(int amount);
 
 	/**
 	 * @see is.idega.idegaweb.marathon.data.ParticipantBMPBean#isApplyForDomesticTravelSupport

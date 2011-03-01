@@ -540,6 +540,87 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		}
 	}
 
+	public void markParticipantAsPaid(Collection participans,
+			String email, String hiddenCardNumber, double amount,
+			IWTimestamp date, Locale locale,
+			boolean disableSendPaymentConfirmation, String runPrefix)
+			throws IDOCreateException {
+		Collection participants = new ArrayList();
+
+		UserTransaction trans = getSessionContext().getUserTransaction();
+		try {
+			trans.begin();
+			Iterator iter = participans.iterator();
+			while (iter.hasNext()) {
+				Participant participant = (Participant) iter.next();
+				User user = participant.getUser();
+
+				participant.setHasPayedFee(true);
+				participant.store();
+
+				Email participantEmail = null;
+				try {
+					participantEmail = this.getUserBiz()
+							.getUsersMainEmail(user);
+				} catch (NoEmailFoundException nefe) {
+				} catch (RemoteException e) {
+				}
+
+				if (participantEmail != null) {
+					IWResourceBundle iwrb = getIWApplicationContext()
+							.getIWMainApplication()
+							.getBundle(IWMarathonConstants.IW_BUNDLE_IDENTIFIER)
+							.getResourceBundle(locale);
+					Object[] args = {
+							user.getName(),
+							iwrb.getLocalizedString(participant.getRunTypeGroup().getName(),
+									participant.getRunTypeGroup().getName())
+									+ " " + participant.getRunYearGroup().getName(),
+							iwrb.getLocalizedString(
+									"shirt_size." + participant.getShirtSize(),
+									participant.getShirtSize()) };
+					String subject = iwrb.getLocalizedString(runPrefix
+							+ "confirmation_payment_subject_mail",
+							"Your registration has been received.");
+					String body = MessageFormat.format(iwrb.getLocalizedString(
+							runPrefix + "confirmation_payment_body_mail",
+							"Your registration has been received."), args);
+					sendMessage(participantEmail.getEmailAddress(), subject,
+							body);
+				}
+
+			}
+			if (email != null && !disableSendPaymentConfirmation && amount > 0) {
+				IWResourceBundle iwrb = getIWApplicationContext()
+						.getIWMainApplication()
+						.getBundle(IWMarathonConstants.IW_BUNDLE_IDENTIFIER)
+						.getResourceBundle(locale);
+
+				Object[] args = {
+						hiddenCardNumber,
+						String.valueOf(amount),
+						date.getLocaleDateAndTime(locale, IWTimestamp.SHORT,
+								IWTimestamp.SHORT) };
+				String subject = iwrb.getLocalizedString(runPrefix
+						+ "receipt_subject_mail",
+						"Your receipt for registration");
+				String body = MessageFormat.format(iwrb.getLocalizedString(
+						runPrefix + "receipt_body_mail",
+						"Your registration has been received."), args);
+				sendMessage(email, subject, body);
+			}
+			trans.commit();
+		} catch (Exception ex) {
+			try {
+				trans.rollback();
+			} catch (javax.transaction.SystemException e) {
+				throw new IDOCreateException(e.getMessage());
+			}
+			ex.printStackTrace();
+			throw new IDOCreateException(ex);
+		}
+	}
+	
 	public Collection saveParticipants(Collection runners, String email,
 			String hiddenCardNumber, double amount, IWTimestamp date,
 			Locale locale, boolean disableSendPaymentConfirmation,
@@ -2453,7 +2534,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 	
 	public Collection getConfirmedParticipants() {		
 		try {
-			return getParticipantHome().findAllAllowedToRun();
+			return getParticipantHome().findAllPaidConfirmation();
 		} catch (FinderException e) {
 		}
 		
