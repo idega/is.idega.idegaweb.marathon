@@ -39,6 +39,8 @@ import com.idega.block.creditcard.business.CreditCardClient;
 import com.idega.block.creditcard.data.CreditCardMerchant;
 import com.idega.block.creditcard.data.KortathjonustanMerchant;
 import com.idega.block.creditcard.data.KortathjonustanMerchantHome;
+import com.idega.block.creditcard.data.TPosMerchant;
+import com.idega.block.creditcard.data.TPosMerchantHome;
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
 import com.idega.business.IBORuntimeException;
@@ -1250,6 +1252,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				return ((KortathjonustanMerchantHome) IDOLookup
 						.getHome(KortathjonustanMerchant.class))
 						.findByPrimaryKey(new Integer(merchantPK));
+				//return ((TPosMerchantHome) IDOLookup.getHome(TPosMerchant.class)).findByPrimaryKey(new Integer(merchantPK));
 			} catch (IDOLookupException ile) {
 				throw new IBORuntimeException(ile);
 			}

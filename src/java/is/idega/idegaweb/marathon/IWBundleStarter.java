@@ -9,17 +9,17 @@
  */
 package is.idega.idegaweb.marathon;
 
-import java.io.IOException;
-import java.rmi.RemoteException;
-
 import is.idega.idegaweb.marathon.presentation.StepsBlock;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
+
+import java.io.IOException;
+import java.rmi.RemoteException;
 
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
 
-import com.idega.block.creditcard.data.KortathjonustanMerchant;
-import com.idega.block.creditcard.data.KortathjonustanMerchantHome;
+import com.idega.block.creditcard.data.TPosMerchant;
+import com.idega.block.creditcard.data.TPosMerchantHome;
 import com.idega.business.IBOLookup;
 import com.idega.core.business.ICApplicationBindingBusiness;
 import com.idega.data.IDOLookup;
@@ -59,12 +59,12 @@ public class IWBundleStarter implements IWBundleStartable {
 			}
 			
 			try {
-				KortathjonustanMerchant merchant = null;
+				TPosMerchant merchant = null;
 				if (merchantPK == null) {
-					merchant = ((KortathjonustanMerchantHome) IDOLookup.getHome(KortathjonustanMerchant.class)).create();
+					merchant = ((TPosMerchantHome) IDOLookup.getHome(TPosMerchant.class)).create();
 				}
 				else {
-					merchant = ((KortathjonustanMerchantHome) IDOLookup.getHome(KortathjonustanMerchant.class)).findByPrimaryKey(new Integer(merchantPK));
+					merchant = ((TPosMerchantHome) IDOLookup.getHome(TPosMerchant.class)).findByPrimaryKey(new Integer(merchantPK));
 				}
 				
 				merchant.setName("Marathon.is");
