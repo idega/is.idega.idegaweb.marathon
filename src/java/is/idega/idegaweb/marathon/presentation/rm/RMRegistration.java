@@ -1494,8 +1494,8 @@ public class RMRegistration extends RunBlock {
 			next.setDisabled(true);
 		}
 
-		table.add(getInformationTable(
-				localize("rm_reg.information_text_step_4",
+		table.add(
+				getInformationTable(localize("rm_reg.information_text_step_4",
 						"Information text 4...")), 1, row++);
 
 		Layer disclaimerLayer = new Layer(Layer.DIV);
@@ -2235,19 +2235,15 @@ public class RMRegistration extends RunBlock {
 			Year year = runner.getYear();
 			String runnerYearString = year.getYearString();
 
-			/*try {
-				Collection distancesGroups = getRunBusiness(iwc)
-						.getDistancesMap(runner.getRun(), runnerYearString);
-				if (distancesGroups != null) {
-					Iterator it = distancesGroups.iterator();
-					if (it.hasNext()) {
-						runner.setDistance(ConverterUtility.getInstance()
-								.convertGroupToDistance((Group) it.next()));
-					}
-				}
-			} catch (RemoteException e) {
-				e.printStackTrace();
-			}*/
+			/*
+			 * try { Collection distancesGroups = getRunBusiness(iwc)
+			 * .getDistancesMap(runner.getRun(), runnerYearString); if
+			 * (distancesGroups != null) { Iterator it =
+			 * distancesGroups.iterator(); if (it.hasNext()) {
+			 * runner.setDistance(ConverterUtility.getInstance()
+			 * .convertGroupToDistance((Group) it.next())); } } } catch
+			 * (RemoteException e) { e.printStackTrace(); }
+			 */
 
 			return runner;
 		}
@@ -2669,12 +2665,14 @@ public class RMRegistration extends RunBlock {
 		addStep(iwc, ACTION_STEP_DISCLAIMER,
 				localize("rm_reg.disclaimer", "Disclaimer"));
 
-		addStep(iwc, ACTION_STEP_OVERVIEW,
-				localize("rm_reg.overview", "Overview"));
+		if (!isDisablePaymentAndOverviewSteps()) {
+			addStep(iwc, ACTION_STEP_OVERVIEW,
+					localize("rm_reg.overview", "Overview"));
 
-		addStep(iwc, ACTION_STEP_PAYMENT,
-				localize("rm_reg.receipt", "Registration saved"));
-
+			addStep(iwc, ACTION_STEP_PAYMENT,
+					localize("rm_reg.receipt", "Registration saved"));
+		}
+		
 		addStep(iwc, ACTION_STEP_RECEIPT,
 				localize("rm_reg.receipt", "Registration saved"));
 	}

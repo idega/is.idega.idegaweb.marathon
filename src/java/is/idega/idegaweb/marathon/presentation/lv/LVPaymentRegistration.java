@@ -310,9 +310,9 @@ public class LVPaymentRegistration extends RunBlock {
 							.getName())), 3, runRow);
 			float runPrice = 0.0f;
 			if (this.isIcelandicPersonalID) {
-				runPrice = 21400.0f; // TODO Fix
+				runPrice = 33400.0f; // TODO Fix
 			} else {
-				runPrice = 185;
+				runPrice = 345;
 			}
 			totalAmount += runPrice;
 			if (this.isIcelandicPersonalID) {
