@@ -1306,21 +1306,21 @@ public class MRRegistration extends RunBlock {
 
 			String properties = null;
 
-			if (doPayment) {
+/*			if (doPayment) {
 				properties = getRunBusiness(iwc).authorizePayment(nameOnCard,
 						cardNumber, expiresMonth, expiresYear, ccVerifyNumber,
 						amount, this.isIcelandicPersonalID ? "ISK" : "EUR",
 						referenceNumber);
-			}
+			}*/
 
 			Collection participants = getRunBusiness(iwc).saveParticipants(
 					runners, email, hiddenCardNumber, amount, paymentStamp,
 					iwc.getCurrentLocale(), isDisablePaymentAndOverviewSteps(),
 					"mr_reg.");
 
-			if (doPayment) {
+/*			if (doPayment) {
 				getRunBusiness(iwc).finishPayment(properties);
-			}
+			}*/
 
 			iwc.removeSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP);
 			iwc.removeApplicationAttribute(SESSION_ATTRIBUTE_ICELANDIC_PERSONAL_ID_RUNNERS);
@@ -1334,14 +1334,14 @@ public class MRRegistration extends RunBlock {
 									"There was an error when trying to finish registration."));
 			ice.printStackTrace();
 			loadPreviousStep(iwc);
-		} catch (CreditCardAuthorizationException ccae) {
+		}/* catch (CreditCardAuthorizationException ccae) {
 			IWResourceBundle creditCardBundle = iwc.getIWMainApplication()
 					.getBundle("com.idega.block.creditcard")
 					.getResourceBundle(iwc.getCurrentLocale());
 			getParentPage().setAlertOnLoad(
 					ccae.getLocalizedMessage(creditCardBundle));
 			loadPreviousStep(iwc);
-		}
+		}*/
 
 	}
 
@@ -1406,8 +1406,6 @@ public class MRRegistration extends RunBlock {
 		runnerTable.add(
 				getHeader(localize("mr_reg.race_number", "Race number")),
 				col++, 1);
-		runnerTable.add(getHeader(localize("mr_reg.shirt_size", "Shirt size")),
-				col++, 1);
 		table.add(runnerTable, 1, row++);
 		int runRow = 2;
 		Iterator iter = runners.iterator();
@@ -1427,82 +1425,6 @@ public class MRRegistration extends RunBlock {
 			runnerTable
 					.add(getText(String.valueOf(participant
 							.getParticipantNumber())), col++, runRow);
-			runnerTable.add(
-					getText(localize(
-							"shirt_size." + participant.getShirtSize(),
-							participant.getShirtSize())), col++, runRow++);
-
-			if (participant.getRelayPartner1SSN() != null
-					&& !"".equals(participant.getRelayPartner1SSN())) {
-				col = 1;
-				runnerTable.add(getText(participant.getRelayPartner1Name()),
-						col++, runRow);
-				runnerTable.add(getText(localize(run.getName(), run.getName())
-						+ " " + participant.getRunYearGroup().getName()),
-						col++, runRow);
-				runnerTable
-						.add(getText(localize(distance.getName(),
-								distance.getName())), col++, runRow);
-				runnerTable.add(getText(String.valueOf(participant
-						.getParticipantNumber())), col++, runRow);
-				runnerTable.add(
-						getText(localize(
-								"shirt_size."
-										+ participant
-												.getRelayPartner1ShirtSize(),
-								participant.getRelayPartner1ShirtSize())),
-						col++, runRow++);
-
-				if (participant.getRelayPartner2SSN() != null
-						&& !"".equals(participant.getRelayPartner2SSN())) {
-					col = 1;
-					runnerTable.add(
-							getText(participant.getRelayPartner2Name()), col++,
-							runRow);
-					runnerTable.add(
-							getText(localize(run.getName(), run.getName())
-									+ " "
-									+ participant.getRunYearGroup().getName()),
-							col++, runRow);
-					runnerTable.add(
-							getText(localize(distance.getName(),
-									distance.getName())), col++, runRow);
-					runnerTable.add(getText(String.valueOf(participant
-							.getParticipantNumber())), col++, runRow);
-					runnerTable
-							.add(getText(localize(
-									"shirt_size."
-											+ participant
-													.getRelayPartner2ShirtSize(),
-									participant.getRelayPartner2ShirtSize())),
-									col++, runRow++);
-
-					if (participant.getRelayPartner3SSN() != null
-							&& !"".equals(participant.getRelayPartner3SSN())) {
-						col = 1;
-						runnerTable.add(
-								getText(participant.getRelayPartner3Name()),
-								col++, runRow);
-						runnerTable.add(
-								getText(localize(run.getName(), run.getName())
-										+ " "
-										+ participant.getRunYearGroup()
-												.getName()), col++, runRow);
-						runnerTable.add(
-								getText(localize(distance.getName(),
-										distance.getName())), col++, runRow);
-						runnerTable.add(getText(String.valueOf(participant
-								.getParticipantNumber())), col++, runRow);
-						runnerTable
-								.add(getText(localize(
-										"shirt_size."
-												+ participant
-														.getRelayPartner3ShirtSize(),
-										participant.getRelayPartner3ShirtSize())),
-										col++, runRow++);
-					}
-				}
-			}
 		}
 
 		if (doPayment) {
@@ -1573,6 +1495,7 @@ public class MRRegistration extends RunBlock {
 
 		Link print = new Link(localize("print", "Print receipt"));
 		print.setPublicWindowToOpen(RegistrationReceivedPrintable.class);
+		print.setParameter(RegistrationReceivedPrintable.PARAM_HIDE_TSHIRT, "hide_it");
 
 		UIComponent buttonsContainer = getButtonsFooter(iwc, false, false);
 		buttonsContainer.getChildren().add(print);
@@ -1640,16 +1563,6 @@ public class MRRegistration extends RunBlock {
 			runner.setRunId(MRRegistration.MIDNIGHT_RUN_GROUP_ID);
 			Year year = runner.getYear();
 			String runnerYearString = year.getYearString();
-
-			/*
-			 * try { Collection distancesGroups = getRunBusiness(iwc)
-			 * .getDistancesMap(runner.getRun(), runnerYearString); if
-			 * (distancesGroups != null) { Iterator it =
-			 * distancesGroups.iterator(); if (it.hasNext()) {
-			 * runner.setDistance(ConverterUtility.getInstance()
-			 * .convertGroupToDistance((Group) it.next())); } } } catch
-			 * (RemoteException e) { e.printStackTrace(); }
-			 */
 
 			return runner;
 		}

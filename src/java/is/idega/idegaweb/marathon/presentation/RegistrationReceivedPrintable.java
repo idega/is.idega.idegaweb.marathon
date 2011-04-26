@@ -36,6 +36,7 @@ import com.idega.util.text.SocialSecurityNumber;
  */
 public class RegistrationReceivedPrintable extends Window {
 	private boolean isIcelandicPersonalID = false;
+	public static final String PARAM_HIDE_TSHIRT = "show_tshirt";
 	
 	public RegistrationReceivedPrintable() {
 		setResizable(true);
@@ -60,6 +61,10 @@ public class RegistrationReceivedPrintable extends Window {
 		int row = 1;
 		
 		boolean isIcelandic = iwc.getCurrentLocale().equals(LocaleUtil.getIcelandicLocale());
+		boolean showTShirt = true;
+		if (iwc.isParameterSet(PARAM_HIDE_TSHIRT)) {
+			showTShirt = false;
+		}
 		
 		Collection runners = (Collection) iwc.getSessionAttribute(Registration.SESSION_ATTRIBUTE_PARTICIPANTS);
 		if (runners == null) {
@@ -116,7 +121,9 @@ public class RegistrationReceivedPrintable extends Window {
 		runnerTable.add(getHeader(iwrb.getLocalizedString("run_reg.run", "Run")), 2, 1);
 		runnerTable.add(getHeader(iwrb.getLocalizedString("run_reg.distance", "Distance")), 3, 1);
 		runnerTable.add(getHeader(iwrb.getLocalizedString("run_reg.race_number", "Race number")), 4, 1);
-		runnerTable.add(getHeader(iwrb.getLocalizedString("run_reg.shirt_size", "Shirt size")), 5, 1);
+		if (showTShirt) {
+			runnerTable.add(getHeader(iwrb.getLocalizedString("run_reg.shirt_size", "Shirt size")), 5, 1);
+		}
 		table.add(runnerTable, 1, row++);
 		int runRow = 2;
 		Iterator iter = runners.iterator();
@@ -129,28 +136,36 @@ public class RegistrationReceivedPrintable extends Window {
 			runnerTable.add(getText(iwrb.getLocalizedString(run.getName(), run.getName())), 2, runRow);
 			runnerTable.add(getText(iwrb.getLocalizedString(distance.getName(), distance.getName())), 3, runRow);
 			runnerTable.add(getText(String.valueOf(participant.getParticipantNumber())), 4, runRow);
-			runnerTable.add(getText(iwrb.getLocalizedString("shirt_size." + participant.getShirtSize(), participant.getShirtSize())), 5, runRow++);
+			if (showTShirt) {
+				runnerTable.add(getText(iwrb.getLocalizedString("shirt_size." + participant.getShirtSize(), participant.getShirtSize())), 5, runRow++);
+			}
 			
 			if (participant.getRelayPartner1SSN() != null && !"".equals(participant.getRelayPartner1SSN())) {
 				runnerTable.add(participant.getRelayPartner1Name(), 1, runRow);
 				runnerTable.add(iwrb.getLocalizedString(run.getName(), run.getName()), 2, runRow);
 				runnerTable.add(getText(iwrb.getLocalizedString(distance.getName(), distance.getName())), 3, runRow);
 				runnerTable.add(getText(String.valueOf(participant.getParticipantNumber())), 4, runRow);
-				runnerTable.add(getText(iwrb.getLocalizedString("shirt_size." + participant.getRelayPartner1ShirtSize(), participant.getRelayPartner1ShirtSize())), 5, runRow++);
+				if (showTShirt) {
+					runnerTable.add(getText(iwrb.getLocalizedString("shirt_size." + participant.getRelayPartner1ShirtSize(), participant.getRelayPartner1ShirtSize())), 5, runRow++);
+				}
 
 				if (participant.getRelayPartner2SSN() != null && !"".equals(participant.getRelayPartner2SSN())) {
 					runnerTable.add(participant.getRelayPartner2Name(), 1, runRow);
 					runnerTable.add(iwrb.getLocalizedString(run.getName(), run.getName()), 2, runRow);
 					runnerTable.add(getText(iwrb.getLocalizedString(distance.getName(), distance.getName())), 3, runRow);
 					runnerTable.add(getText(String.valueOf(participant.getParticipantNumber())), 4, runRow);
-					runnerTable.add(getText(iwrb.getLocalizedString("shirt_size." + participant.getRelayPartner2ShirtSize(), participant.getRelayPartner2ShirtSize())), 5, runRow++);
+					if (showTShirt) {
+						runnerTable.add(getText(iwrb.getLocalizedString("shirt_size." + participant.getRelayPartner2ShirtSize(), participant.getRelayPartner2ShirtSize())), 5, runRow++);
+					}
 					
 					if (participant.getRelayPartner3SSN() != null && !"".equals(participant.getRelayPartner3SSN())) {
 						runnerTable.add(participant.getRelayPartner3Name(), 1, runRow);
 						runnerTable.add(iwrb.getLocalizedString(run.getName(), run.getName()), 2, runRow);
 						runnerTable.add(getText(iwrb.getLocalizedString(distance.getName(), distance.getName())), 3, runRow);
 						runnerTable.add(getText(String.valueOf(participant.getParticipantNumber())), 4, runRow);
-						runnerTable.add(getText(iwrb.getLocalizedString("shirt_size." + participant.getRelayPartner3ShirtSize(), participant.getRelayPartner3ShirtSize())), 5, runRow++);
+						if (showTShirt) {
+							runnerTable.add(getText(iwrb.getLocalizedString("shirt_size." + participant.getRelayPartner3ShirtSize(), participant.getRelayPartner3ShirtSize())), 5, runRow++);
+						}
 					}
 				}				
 			}
