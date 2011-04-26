@@ -299,6 +299,10 @@ public class DistanceChangeWizardBean {
 			String referenceNumber = getParticipant().getUser().getPersonalID()
 					.replaceAll("-", CoreConstants.EMPTY);
 
+			if (referenceNumber == null || "".equals(referenceNumber.trim())) {
+				referenceNumber = getParticipant().getUser().getPrimaryKey().toString();
+			}
+			
 			String properties = "";
 
 			if (!skipPaymentStep) {
