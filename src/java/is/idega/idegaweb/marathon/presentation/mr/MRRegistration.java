@@ -666,7 +666,6 @@ public class MRRegistration extends RunBlock {
 
 		add(form);
 	}
-
 	private void stepOverview(IWContext iwc) {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
@@ -1306,21 +1305,21 @@ public class MRRegistration extends RunBlock {
 
 			String properties = null;
 
-/*			if (doPayment) {
+			if (doPayment) {
 				properties = getRunBusiness(iwc).authorizePayment(nameOnCard,
 						cardNumber, expiresMonth, expiresYear, ccVerifyNumber,
 						amount, this.isIcelandicPersonalID ? "ISK" : "EUR",
 						referenceNumber);
-			}*/
+			}
 
 			Collection participants = getRunBusiness(iwc).saveParticipants(
 					runners, email, hiddenCardNumber, amount, paymentStamp,
 					iwc.getCurrentLocale(), isDisablePaymentAndOverviewSteps(),
 					"mr_reg.");
 
-/*			if (doPayment) {
+			if (doPayment) {
 				getRunBusiness(iwc).finishPayment(properties);
-			}*/
+			}
 
 			iwc.removeSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP);
 			iwc.removeApplicationAttribute(SESSION_ATTRIBUTE_ICELANDIC_PERSONAL_ID_RUNNERS);
@@ -1334,14 +1333,14 @@ public class MRRegistration extends RunBlock {
 									"There was an error when trying to finish registration."));
 			ice.printStackTrace();
 			loadPreviousStep(iwc);
-		}/* catch (CreditCardAuthorizationException ccae) {
+		} catch (CreditCardAuthorizationException ccae) {
 			IWResourceBundle creditCardBundle = iwc.getIWMainApplication()
 					.getBundle("com.idega.block.creditcard")
 					.getResourceBundle(iwc.getCurrentLocale());
 			getParentPage().setAlertOnLoad(
 					ccae.getLocalizedMessage(creditCardBundle));
 			loadPreviousStep(iwc);
-		}*/
+		}
 
 	}
 
@@ -1378,7 +1377,7 @@ public class MRRegistration extends RunBlock {
 		String greeting = localize("mr_reg.hello_participant",
 				"Dear participant");
 		if (selectedRun != null) {
-			if (this.isIcelandicPersonalID) {
+			if (iwc.getCurrentLocale().equals(LocaleUtil.getIcelandicLocale())) {
 				greeting = selectedRun.getRunRegistrationReceiptGreeting();
 			} else {
 				greeting = selectedRun

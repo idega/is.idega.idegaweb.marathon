@@ -1972,7 +1972,7 @@ public class RMRegistration extends RunBlock {
 		String greeting = localize("rm_reg.hello_participant",
 				"Dear participant");
 		if (selectedRun != null) {
-			if (this.isIcelandicPersonalID) {
+			if (iwc.getCurrentLocale().equals(LocaleUtil.getIcelandicLocale())) {
 				greeting = selectedRun.getRunRegistrationReceiptGreeting();
 			} else {
 				greeting = selectedRun
