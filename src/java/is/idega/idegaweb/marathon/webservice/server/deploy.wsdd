@@ -30,5 +30,21 @@
         deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
         encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
       />
+      <typeMapping
+        xmlns:ns="http://illuminati.is"
+        qname="ns:SessionTimedOutException"
+        type="java:is.idega.idegaweb.marathon.webservice.server.SessionTimedOutException"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://illuminati.is"
+        qname="ns:Session"
+        type="java:is.idega.idegaweb.marathon.webservice.server.Session"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
   </service>
 </deployment>
