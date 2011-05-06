@@ -21,7 +21,9 @@ import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
 import com.idega.business.IBORuntimeException;
 import com.idega.business.IBOServiceBean;
+import com.idega.core.accesscontrol.business.AccessController;
 import com.idega.core.accesscontrol.business.LoginBusinessBean;
+import com.idega.core.accesscontrol.business.LoginDBHandler;
 import com.idega.core.accesscontrol.data.LoginTable;
 import com.idega.core.accesscontrol.data.LoginTableHome;
 import com.idega.core.contact.data.Email;
@@ -31,6 +33,7 @@ import com.idega.core.location.data.Address;
 import com.idega.data.IDOLookup;
 import com.idega.data.IDOLookupException;
 import com.idega.idegaweb.IWMainApplication;
+import com.idega.presentation.IWContext;
 import com.idega.user.business.UserBusiness;
 import com.idega.user.data.Group;
 import com.idega.user.data.User;
@@ -218,6 +221,18 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 
 				// verify password and create new ws session
 				if (loginBean.verifyPassword(loginTable, password)) {
+					
+					//check if user has the correct role to use the web services
+					IWContext iwc = IWContext.getInstance();
+					AccessController acc = iwc.getAccessController();
+					try {
+					if (!acc.hasPermissionForGroup("CharityService", loginTable.getUser().getPrimaryGroup(), iwc)) {
+						return new is.idega.idegaweb.marathon.webservice.server.Session("-1");
+					}
+					} catch(Exception e) {
+						return new is.idega.idegaweb.marathon.webservice.server.Session("-1");
+					}
+					
 					WebServiceLoginSession loginSession = getWebServiceLoginSessionHome()
 							.create();
 					IWTimestamp now = IWTimestamp.RightNow();
@@ -331,6 +346,15 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 			throw new SessionTimedOutException();
 		}
 		
+		try {
+			User user = getUserBusiness().getUser(personalID);
+			if (getUserBusiness().hasUserLogin(user)) {
+				LoginTable login = LoginDBHandler.getUserLogin(user);
+				LoginDBHandler.changePassword(login, password);
+			}
+		} catch (Exception e) {
+		}
+		
 		return false;
 	}
 
@@ -343,6 +367,17 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 			throw new SessionTimedOutException();
 		}
 
+		try {
+			User user = getUserBusiness().getUser(personalID);
+			Charity charity = getCharityBusiness().getCharityByOrganisationalID(charityPersonalID);
+			Group run = getRunBusiness().getRunGroupByGroupId(new Integer(4));
+			Group year = getRunBusiness().getRunGroupByGroupId(new Integer(426626)); // TODO			
+			Participant participant = getRunBusiness().getParticipantByRunAndYear(user, run, year);
+			participant.setCharityId(charityPersonalID);
+			participant.store();
+		} catch (FinderException e) {
+		}
+
 		return false;
 	}
 
@@ -352,6 +387,14 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 		if (loginSession != null) {
 		} else {
 			throw new SessionTimedOutException();
+		}
+
+		try {
+			User user = getUserBusiness().getUser(personalID);
+			getUserBusiness().updateUserMail(user, email);
+			
+			return true;
+		} catch (Exception e) {
 		}
 
 		return false;

@@ -2,11 +2,14 @@ package is.idega.idegaweb.marathon.presentation.rm;
 
 import is.idega.idegaweb.marathon.business.ConverterUtility;
 import is.idega.idegaweb.marathon.business.Runner;
+import is.idega.idegaweb.marathon.data.Charity;
+import is.idega.idegaweb.marathon.data.CharityHome;
 import is.idega.idegaweb.marathon.data.Distance;
 import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.data.Run;
 import is.idega.idegaweb.marathon.data.Year;
 import is.idega.idegaweb.marathon.presentation.ActiveRunDropDownMenu;
+import is.idega.idegaweb.marathon.presentation.CharitiesForRunDropDownMenu;
 import is.idega.idegaweb.marathon.presentation.DistanceDropDownMenu;
 import is.idega.idegaweb.marathon.presentation.DistanceMenuShirtSizeMenuInputCollectionHandler;
 import is.idega.idegaweb.marathon.presentation.Registration;
@@ -35,10 +38,12 @@ import com.idega.core.location.data.Address;
 import com.idega.core.location.data.Country;
 import com.idega.core.location.data.PostalCode;
 import com.idega.data.IDOCreateException;
+import com.idega.data.IDOLookup;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;
 import com.idega.presentation.Layer;
+import com.idega.presentation.Script;
 import com.idega.presentation.Table;
 import com.idega.presentation.remotescripting.RemoteScriptHandler;
 import com.idega.presentation.text.Link;
@@ -96,6 +101,10 @@ public class RMRegistration extends RunBlock {
 	private static final String PARAMETER_HOME_PHONE = "prm_home_phone";
 	private static final String PARAMETER_MOBILE_PHONE = "prm_mobile_phone";
 
+	private static final String PARAMETER_ACCEPT_CHARITY = "prm_accept_charity";
+	private static final String PARAMETER_NOT_ACCEPT_CHARITY = "prm_not_accept_charity";
+	private static final String PARAMETER_CHARITY_ID = "prm_charity_id";
+	
 	private static final String PARAMETER_DISTANCE = "prm_distance";
 	private static final String PARAMETER_SHIRT_SIZE = "prm_shirt_size";
 	private static final String PARAMETER_SHIRT_SIZES_PER_RUN = "shirt_sizes_per_run";
@@ -135,6 +144,7 @@ public class RMRegistration extends RunBlock {
 	private static final int ACTION_STEP_PERSONALDETAILS = 20;
 	private static final int ACTION_STEP_RUNDETAILS = 30;
 	private static final int ACTION_STEP_RELAY = 40;
+	private static final int ACTION_STEP_CHARITY = 45;
 	private static final int ACTION_STEP_DISCLAIMER = 50;
 	private static final int ACTION_STEP_OVERVIEW = 60;
 	private static final int ACTION_STEP_PAYMENT = 70;
@@ -443,6 +453,9 @@ public class RMRegistration extends RunBlock {
 			break;
 		case ACTION_STEP_RELAY:
 			stepRelay(iwc);
+			break;
+		case ACTION_STEP_CHARITY:
+			stepCharity(iwc);
 			break;
 		case ACTION_STEP_DISCLAIMER:
 			stepDisclaimer(iwc);
@@ -1462,6 +1475,139 @@ public class RMRegistration extends RunBlock {
 		add(form);
 	}
 
+	private void stepCharity(IWContext iwc) {
+		Form form = new Form();
+		form.maintainParameter(PARAMETER_PERSONAL_ID);
+		form.maintainParameter(PARAMETER_DATE_OF_BIRTH);
+		form.addParameter(PARAMETER_ACTION, "-1");
+		form.addParameter(PARAMETER_FROM_ACTION, ACTION_STEP_CHARITY);
+
+		form.add(getStepsHeader(iwc, ACTION_STEP_CHARITY));
+
+		Table table = new Table();
+		table.setCellpadding(0);
+		table.setCellspacing(0);
+		table.setWidth(Table.HUNDRED_PERCENT);
+		form.add(table);
+		int row = 1;
+
+		Script script = new Script();
+		add(script);
+		script
+				.addFunction(
+						"toggleCharitySelection",
+						"function toggleCharitySelection(){ var checkbox = findObj('"
+								+ PARAMETER_ACCEPT_CHARITY
+								+ "');  var hiddencheck = findObj('"
+								+ PARAMETER_NOT_ACCEPT_CHARITY
+								+ "'); if(checkbox.checked){ hiddencheck.value='false';}else if(!checkbox.checked){ hiddencheck.value='true';}  }");
+
+		table.setHeight(row++, 12);
+
+		SubmitButton previous = (SubmitButton) getButton(new SubmitButton(
+				localize("previous", "Previous")));
+
+		String previousActionValue = String.valueOf(ACTION_PREVIOUS);
+		previous.setValueOnClick(PARAMETER_ACTION, previousActionValue);
+		SubmitButton next = (SubmitButton) getButton(new SubmitButton(localize(
+				"next", "Next")));
+		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_NEXT));
+
+		table
+				.add(
+						new Text(
+								localize(
+										"run_reg.charity_headertext",
+										"Now every runner can run for a good cause for a charity of his/her choice. It is now possible to search among all the runners that have registered and make a pledge.")),
+						1, row++);
+
+		Runner runner = getRunner();
+		DropdownMenu charities = (CharitiesForRunDropDownMenu) (getStyledInterface(new CharitiesForRunDropDownMenu(
+				PARAMETER_CHARITY_ID, (Integer) runner.getYear()
+						.getPrimaryKey())));
+		charities.setWidth("300");
+
+		Layer acceptCharityDiv = new Layer(Layer.DIV);
+		CheckBox acceptCharityCheck = getCheckBox(PARAMETER_ACCEPT_CHARITY,
+				Boolean.TRUE.toString());
+		acceptCharityCheck.setChecked(true);
+		acceptCharityCheck.setToEnableWhenChecked(charities);
+		acceptCharityCheck.setToDisableWhenUnchecked(charities);
+
+		HiddenInput notAcceptCharityCheck = new HiddenInput(
+				PARAMETER_NOT_ACCEPT_CHARITY);
+
+		acceptCharityCheck.setOnClick("toggleCharitySelection();");
+		// acceptCharityCheck.setOnChange(action)
+		Label accepCharityLabel = new Label(
+				localize(
+						"run_reg.agree_charity_participation",
+						"I agree to participate in running for a charity and searchable by others in a pledge form"),
+				acceptCharityCheck);
+		acceptCharityDiv.add(acceptCharityCheck);
+		acceptCharityDiv.add(accepCharityLabel);
+		acceptCharityDiv.add(notAcceptCharityCheck);
+		table.setHeight(row++, 18);
+		table.add(acceptCharityDiv, 1, row++);
+
+		acceptCharityCheck.setChecked(getRunner().isParticipateInCharity());
+		notAcceptCharityCheck.setValue(new Boolean(!getRunner()
+				.isParticipateInCharity()).toString());
+
+		table.setHeight(row++, 18);
+		table.add(charities, 1, row++);
+		table.setHeight(row++, 18);
+
+		Distance distance = runner.getDistance();
+		Year year = distance.getYear();
+
+		if (year.isSponsoredRun()) {
+			Layer charityEnquiryDiv = new Layer(Layer.DIV);
+			Text charityEnquiryText = new Text(
+					localize(
+							"run_reg.charity_enquiry",
+							"If you charity organization is not on the list, please send enquiry to godgerdarmal@glitnir.is"));
+			charityEnquiryDiv.add(charityEnquiryText);
+			table.add(charityEnquiryDiv, 1, row++);
+		}
+
+		table.add(new Text(localize("run_reg.charity_footer_info",
+									"You can select a charity later on your pages.")), 1, row++);
+		table.setHeight(row++, 12);
+
+		Layer infoLayer = new Layer(Layer.DIV);
+		Text infoText = new Text(localize("", ""));
+
+		UIComponent buttonsContainer = getButtonsFooter(iwc);
+		form.add(buttonsContainer);
+
+		add(form);
+
+		String selectCharitiesMessage = localize("run_reg.must_select_charity",
+				"Please select a valid charity");
+		charities
+				.setOnSubmitFunction(
+						"checkCharities",
+						"function checkCharities(){ var checkbox = findObj('"
+								+ PARAMETER_ACCEPT_CHARITY
+								+ "'); var charities = findObj('"
+								+ PARAMETER_CHARITY_ID
+								+ "');  if(checkbox.checked){if(charities.options[charities.selectedIndex].value=='-1'){ alert('"
+								+ selectCharitiesMessage
+								+ "'); return false;} } return true;}");
+
+		if (getRunner().isParticipateInCharity()) {
+			Charity charity = getRunner().getCharity();
+			if (charity != null) {
+				charities.setSelectedElement(getRunner().getCharity()
+						.getOrganizationalID());
+			}
+		} else {
+			charities.setDisabled(true);
+		}
+
+	}
+
 	private void stepDisclaimer(IWContext iwc) {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
@@ -2449,6 +2595,41 @@ public class RMRegistration extends RunBlock {
 			runner.setAgree(true);
 		}
 
+		if (iwc.isParameterSet(PARAMETER_ACCEPT_CHARITY)) {
+			String participate = iwc.getParameter(PARAMETER_ACCEPT_CHARITY);
+			if (participate.equals(Boolean.TRUE.toString())) {
+				runner.setParticipateInCharity(true);
+			} else if (participate.equals(Boolean.FALSE.toString())) {
+				runner.setParticipateInCharity(false);
+			}
+		} else {
+			if (iwc.isParameterSet(PARAMETER_NOT_ACCEPT_CHARITY)) {
+				String notParticipate = iwc
+						.getParameter(PARAMETER_NOT_ACCEPT_CHARITY);
+				if (notParticipate.equals(Boolean.TRUE.toString())) {
+					runner.setParticipateInCharity(false);
+				}
+			}
+		}
+
+		if (iwc.isParameterSet(PARAMETER_CHARITY_ID)) {
+			String organizationalId = iwc
+					.getParameter(PARAMETER_CHARITY_ID);
+			try {
+				CharityHome cHome = (CharityHome) IDOLookup
+						.getHome(Charity.class);
+				if ((organizationalId != null)
+						&& (!organizationalId.equals("-1"))) {
+					Charity charity = cHome
+							.findCharityByOrganizationalId(organizationalId);
+					runner.setCharity(charity);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		
 		if (personalID != null && !"".equals(personalID.trim())) {
 			addRunner(iwc, personalID, runner);
 		} else if (dateOfBirth != null) {
@@ -2662,6 +2843,10 @@ public class RMRegistration extends RunBlock {
 			}
 		}
 
+		//if (this.isIcelandicPersonalID) {
+		//	addStep(iwc, ACTION_STEP_CHARITY, localize("rm_reg.charity_step", "Select charity"));
+		//}
+		
 		addStep(iwc, ACTION_STEP_DISCLAIMER,
 				localize("rm_reg.disclaimer", "Disclaimer"));
 
