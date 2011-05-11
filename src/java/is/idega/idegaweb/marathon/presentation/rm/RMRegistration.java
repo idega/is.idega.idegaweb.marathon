@@ -973,7 +973,7 @@ public class RMRegistration extends RunBlock {
 
 			choiceTable.add(countryField, 1, iRow);
 			choiceTable.add(nationalityField, 3, iRow++);
-			choiceTable.setHeight(iRow++, 3);			
+			choiceTable.setHeight(iRow++, 3);
 		}
 
 		UIComponent buttonsContainer = getButtonsFooter(iwc, false, true);
@@ -2857,7 +2857,9 @@ public class RMRegistration extends RunBlock {
 		}
 
 		if (this.isIcelandicPersonalID) {
-			addStep(iwc, ACTION_STEP_CHARITY, localize("rm_reg.charity_step", "Select charity"));
+			if (runner != null && runner.getYear().isCharityEnabled()) {
+				addStep(iwc, ACTION_STEP_CHARITY, localize("rm_reg.charity_step", "Select charity"));
+			}
 		}
 		
 		addStep(iwc, ACTION_STEP_DISCLAIMER,
