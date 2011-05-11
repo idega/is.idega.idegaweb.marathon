@@ -30,7 +30,6 @@ import com.idega.core.contact.data.Email;
 import com.idega.core.contact.data.Phone;
 import com.idega.core.location.data.Address;
 import com.idega.core.location.data.Country;
-import com.idega.core.location.data.PostalCode;
 import com.idega.data.IDOCreateException;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
