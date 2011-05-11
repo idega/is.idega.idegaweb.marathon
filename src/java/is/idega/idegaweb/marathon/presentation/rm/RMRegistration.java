@@ -648,16 +648,16 @@ public class RMRegistration extends RunBlock {
 			genderField.setSelectedElement(getRunner().getGender()
 					.getPrimaryKey().toString());
 		}
-		if (this.isIcelandicPersonalID) {
+		/*if (this.isIcelandicPersonalID) {
 			genderField.setDisabled(true);
 			if (getRunner().getUser() != null) {
 				genderField.setSelectedElement(getRunner().getUser()
 						.getGenderID());
 			}
-		} else {
+		} else {*/
 			genderField.setAsNotEmpty(localize("rm_reg.gender_not_empty",
 					"Gender can not be empty"));
-		}
+		//}
 
 		choiceTable.add(
 				getHeader(localize(IWMarathonConstants.RR_NAME, "Name")), 1,
@@ -668,11 +668,11 @@ public class RMRegistration extends RunBlock {
 		choiceTable.add(
 				getHeader(localize(IWMarathonConstants.RR_GENDER, "Gender")),
 				3, iRow);
-		if (!this.isIcelandicPersonalID) {
+		//if (!this.isIcelandicPersonalID) {
 			choiceTable.add(redStar, 3, iRow++);
-		} else {
+		/*} else {
 			iRow++;
-		}
+		}*/
 		choiceTable.add(nameField, 1, iRow);
 		choiceTable.add(genderField, 3, iRow++);
 		choiceTable.setHeight(iRow++, 3);
@@ -808,166 +808,180 @@ public class RMRegistration extends RunBlock {
 		choiceTable.add(emailField, 3, iRow++);
 		choiceTable.setHeight(iRow++, 3);
 
-		TextInput addressField = (TextInput) getStyledInterface(new TextInput(
-				PARAMETER_ADDRESS));
-		if (!this.isIcelandicPersonalID) {
+		if (this.isIcelandicPersonalID) {
+			TextInput emailField2 = (TextInput) getStyledInterface(new TextInput(
+					PARAMETER_EMAIL2));
+			emailField2.setAsEmail(localize("rm_reg.email_err_msg",
+					"Not a valid email address"));
+			emailField2.setAsNotEmpty(localize("rm_reg.continue_without_email2",
+					"You can not continue without repeating the e-mail"));
+			choiceTable.add(
+					getHeader(localize(IWMarathonConstants.RR_NATIONALITY,
+							"Nationality")), 1, iRow);
+
+			choiceTable.add(redStar, 1, iRow);
+			choiceTable.add(
+					getHeader(localize(IWMarathonConstants.RR_EMAIL2,
+							"Email repeated")), 3, iRow);
+			choiceTable.add(redStar, 3, iRow++);
+			choiceTable.add(nationalityField, 1, iRow);
+			choiceTable.add(emailField2, 3, iRow++);
+			choiceTable.setHeight(iRow++, 3);
+
+
+			TextInput telField = (TextInput) getStyledInterface(new TextInput(
+					PARAMETER_HOME_PHONE));
+			if (getRunner().getHomePhone() != null) {
+				telField.setContent(getRunner().getHomePhone());
+			} else if (getRunner().getUser() != null) {
+				try {
+					Phone phone = getUserBusiness(iwc).getUsersHomePhone(
+							getRunner().getUser());
+					telField.setContent(phone.getNumber());
+				} catch (NoPhoneFoundException nefe) {
+					// No phone registered...
+				}
+			}
+
+			TextInput mobileField = (TextInput) getStyleObject(new TextInput(
+					PARAMETER_MOBILE_PHONE), STYLENAME_INTERFACE);
+			if (getRunner().getMobilePhone() != null) {
+				mobileField.setContent(getRunner().getMobilePhone());
+			} else if (getRunner().getUser() != null) {
+				try {
+					Phone phone = getUserBusiness(iwc).getUsersMobilePhone(
+							getRunner().getUser());
+					mobileField.setContent(phone.getNumber());
+				} catch (NoPhoneFoundException nefe) {
+					// No phone registered...
+				}
+			}
+
+			choiceTable.add(
+					getHeader(localize(IWMarathonConstants.RR_TEL, "Telephone")),
+					1, iRow);
+			choiceTable.add(
+					getHeader(localize(IWMarathonConstants.RR_MOBILE,
+							"Mobile Phone")), 3, iRow++);
+			choiceTable.add(telField, 1, iRow);
+			choiceTable.add(mobileField, 3, iRow++);
+			choiceTable.setHeight(iRow++, 3);
+		} else {
+			TextInput addressField = (TextInput) getStyledInterface(new TextInput(
+					PARAMETER_ADDRESS));
 			addressField.setAsNotEmpty(localize("rm_reg.must_provide_address",
 					"You must enter your address."));
-		}
-		if (getRunner().getAddress() != null) {
-			addressField.setContent(getRunner().getAddress());
-		}
-		if (this.isIcelandicPersonalID) {
-			addressField.setDisabled(true);
-			if (getRunner().getUser() != null) {
-				Address address = getUserBusiness(iwc).getUsersMainAddress(
-						getRunner().getUser());
-				if (address != null) {
-					addressField.setContent(address.getStreetAddress());
-				}
+			if (getRunner().getAddress() != null) {
+				addressField.setContent(getRunner().getAddress());
 			}
-		}
 
-		TextInput emailField2 = (TextInput) getStyledInterface(new TextInput(
-				PARAMETER_EMAIL2));
-		emailField2.setAsEmail(localize("rm_reg.email_err_msg",
-				"Not a valid email address"));
-		emailField2.setAsNotEmpty(localize("rm_reg.continue_without_email2",
-				"You can not continue without repeating the e-mail"));
-		choiceTable.add(
-				getHeader(localize(IWMarathonConstants.RR_ADDRESS, "Address")),
-				1, iRow);
-		if (!this.isIcelandicPersonalID) {
+			TextInput emailField2 = (TextInput) getStyledInterface(new TextInput(
+					PARAMETER_EMAIL2));
+			emailField2.setAsEmail(localize("rm_reg.email_err_msg",
+					"Not a valid email address"));
+			emailField2.setAsNotEmpty(localize("rm_reg.continue_without_email2",
+					"You can not continue without repeating the e-mail"));
+			choiceTable.add(
+					getHeader(localize(IWMarathonConstants.RR_ADDRESS, "Address")),
+					1, iRow);
 			choiceTable.add(redStar, 1, iRow);
-		}
-		choiceTable.add(
-				getHeader(localize(IWMarathonConstants.RR_EMAIL2,
-						"Email repeated")), 3, iRow);
-		choiceTable.add(redStar, 3, iRow++);
-		choiceTable.add(addressField, 1, iRow);
-		choiceTable.add(emailField2, 3, iRow++);
-		choiceTable.setHeight(iRow++, 3);
+			choiceTable.add(
+					getHeader(localize(IWMarathonConstants.RR_EMAIL2,
+							"Email repeated")), 3, iRow);
+			choiceTable.add(redStar, 3, iRow++);
+			choiceTable.add(addressField, 1, iRow);
+			choiceTable.add(emailField2, 3, iRow++);
+			choiceTable.setHeight(iRow++, 3);
 
-		TextInput cityField = (TextInput) getStyledInterface(new TextInput(
-				PARAMETER_CITY));
-		if (!this.isIcelandicPersonalID) {
+			TextInput cityField = (TextInput) getStyledInterface(new TextInput(
+					PARAMETER_CITY));
 			cityField.setAsNotEmpty(localize("rm_reg.must_provide_city",
 					"You must enter your city of living."));
-		}
-		if (getRunner().getCity() != null) {
-			cityField.setContent(getRunner().getCity());
-		}
-		if (this.isIcelandicPersonalID) {
-			cityField.setDisabled(true);
-			if (getRunner().getUser() != null) {
-				Address address = getUserBusiness(iwc).getUsersMainAddress(
-						getRunner().getUser());
-				if (address != null) {
-					cityField.setContent(address.getCity());
+			if (getRunner().getCity() != null) {
+				cityField.setContent(getRunner().getCity());
+			}
+
+			TextInput telField = (TextInput) getStyledInterface(new TextInput(
+					PARAMETER_HOME_PHONE));
+			// telField.setWidth(Table.HUNDRED_PERCENT);
+			if (getRunner().getHomePhone() != null) {
+				telField.setContent(getRunner().getHomePhone());
+			} else if (getRunner().getUser() != null) {
+				try {
+					Phone phone = getUserBusiness(iwc).getUsersHomePhone(
+							getRunner().getUser());
+					telField.setContent(phone.getNumber());
+				} catch (NoPhoneFoundException nefe) {
+					// No phone registered...
 				}
 			}
-		}
 
-		TextInput telField = (TextInput) getStyledInterface(new TextInput(
-				PARAMETER_HOME_PHONE));
-		// telField.setWidth(Table.HUNDRED_PERCENT);
-		if (getRunner().getHomePhone() != null) {
-			telField.setContent(getRunner().getHomePhone());
-		} else if (getRunner().getUser() != null) {
-			try {
-				Phone phone = getUserBusiness(iwc).getUsersHomePhone(
-						getRunner().getUser());
-				telField.setContent(phone.getNumber());
-			} catch (NoPhoneFoundException nefe) {
-				// No phone registered...
-			}
-		}
-
-		choiceTable.add(
-				getHeader(localize(IWMarathonConstants.RR_CITY, "City")), 1,
-				iRow);
-		if (!this.isIcelandicPersonalID) {
+			choiceTable.add(
+					getHeader(localize(IWMarathonConstants.RR_CITY, "City")), 1,
+					iRow);
 			choiceTable.add(redStar, 1, iRow);
-		}
-		choiceTable.add(
-				getHeader(localize(IWMarathonConstants.RR_TEL, "Telephone")),
-				3, iRow++);
-		choiceTable.add(cityField, 1, iRow);
-		choiceTable.add(telField, 3, iRow++);
-		choiceTable.setHeight(iRow++, 3);
+			choiceTable.add(
+					getHeader(localize(IWMarathonConstants.RR_TEL, "Telephone")),
+					3, iRow++);
+			choiceTable.add(cityField, 1, iRow);
+			choiceTable.add(telField, 3, iRow++);
+			choiceTable.setHeight(iRow++, 3);
 
-		TextInput postalField = (TextInput) getStyledInterface(new TextInput(
-				PARAMETER_POSTAL_CODE));
-		if (!this.isIcelandicPersonalID) {
+			TextInput postalField = (TextInput) getStyledInterface(new TextInput(
+					PARAMETER_POSTAL_CODE));
 			postalField.setAsNotEmpty(localize("rm_reg.must_provide_postal",
 					"You must enter your postal address."));
-		}
-		postalField.setMaxlength(10);
-		postalField.setLength(10);
-		if (getRunner().getPostalCode() != null) {
-			postalField.setContent(getRunner().getPostalCode());
-		}
-		if (this.isIcelandicPersonalID) {
-			postalField.setDisabled(true);
-			if (getRunner().getUser() != null) {
-				Address address = getUserBusiness(iwc).getUsersMainAddress(
-						getRunner().getUser());
-				if (address != null) {
-					PostalCode postal = address.getPostalCode();
-					if (postal != null) {
-						postalField.setContent(postal.getPostalCode());
-					}
+			postalField.setMaxlength(10);
+			postalField.setLength(10);
+			if (getRunner().getPostalCode() != null) {
+				postalField.setContent(getRunner().getPostalCode());
+			}
+
+			TextInput mobileField = (TextInput) getStyleObject(new TextInput(
+					PARAMETER_MOBILE_PHONE), STYLENAME_INTERFACE);
+			// mobileField.setWidth(Table.HUNDRED_PERCENT);
+			if (getRunner().getMobilePhone() != null) {
+				mobileField.setContent(getRunner().getMobilePhone());
+			} else if (getRunner().getUser() != null) {
+				try {
+					Phone phone = getUserBusiness(iwc).getUsersMobilePhone(
+							getRunner().getUser());
+					mobileField.setContent(phone.getNumber());
+				} catch (NoPhoneFoundException nefe) {
+					// No phone registered...
 				}
 			}
-		}
 
-		TextInput mobileField = (TextInput) getStyleObject(new TextInput(
-				PARAMETER_MOBILE_PHONE), STYLENAME_INTERFACE);
-		// mobileField.setWidth(Table.HUNDRED_PERCENT);
-		if (getRunner().getMobilePhone() != null) {
-			mobileField.setContent(getRunner().getMobilePhone());
-		} else if (getRunner().getUser() != null) {
-			try {
-				Phone phone = getUserBusiness(iwc).getUsersMobilePhone(
-						getRunner().getUser());
-				mobileField.setContent(phone.getNumber());
-			} catch (NoPhoneFoundException nefe) {
-				// No phone registered...
-			}
-		}
-
-		choiceTable
-				.add(getHeader(localize(IWMarathonConstants.RR_POSTAL,
-						"Postal Code")), 1, iRow);
-		if (!this.isIcelandicPersonalID) {
+			choiceTable
+					.add(getHeader(localize(IWMarathonConstants.RR_POSTAL,
+							"Postal Code")), 1, iRow);
 			choiceTable.add(redStar, 1, iRow);
-		}
-		choiceTable.add(
-				getHeader(localize(IWMarathonConstants.RR_MOBILE,
-						"Mobile Phone")), 3, iRow++);
-		choiceTable.add(postalField, 1, iRow);
-		choiceTable.add(mobileField, 3, iRow++);
-		choiceTable.setHeight(iRow++, 3);
+			choiceTable.add(
+					getHeader(localize(IWMarathonConstants.RR_MOBILE,
+							"Mobile Phone")), 3, iRow++);
+			choiceTable.add(postalField, 1, iRow);
+			choiceTable.add(mobileField, 3, iRow++);
+			choiceTable.setHeight(iRow++, 3);
 
-		choiceTable.add(
-				getHeader(localize(IWMarathonConstants.RR_COUNTRY, "Country")),
-				1, iRow);
-		if (!this.isIcelandicPersonalID) {
+			choiceTable.add(
+					getHeader(localize(IWMarathonConstants.RR_COUNTRY, "Country")),
+					1, iRow);
 			choiceTable.add(redStar, 1, iRow);
-		}
-		choiceTable.add(
-				getHeader(localize(IWMarathonConstants.RR_NATIONALITY,
-						"Nationality")), 3, iRow);
-		choiceTable.add(redStar, 3, iRow++);
+			choiceTable.add(
+					getHeader(localize(IWMarathonConstants.RR_NATIONALITY,
+							"Nationality")), 3, iRow);
+			choiceTable.add(redStar, 3, iRow++);
 
-		choiceTable.add(countryField, 1, iRow);
-		choiceTable.add(nationalityField, 3, iRow++);
-		choiceTable.setHeight(iRow++, 3);
+			choiceTable.add(countryField, 1, iRow);
+			choiceTable.add(nationalityField, 3, iRow++);
+			choiceTable.setHeight(iRow++, 3);			
+		}
 
 		UIComponent buttonsContainer = getButtonsFooter(iwc, false, true);
 		form.add(buttonsContainer);
 
 		add(form);
+
 	}
 
 	private void stepOverview(IWContext iwc) {
@@ -1108,7 +1122,7 @@ public class RMRegistration extends RunBlock {
 
 		SubmitButton previous = getPreviousButton();
 		SubmitButton registerOther = (SubmitButton) getButton(new SubmitButton(
-				localize("run_reg.register_other", "Register other")));
+				localize("rm_reg.register_other", "Register other")));
 		registerOther.setValueOnClick(PARAMETER_ACTION,
 				String.valueOf(ACTION_START));
 		if (this.isIcelandicPersonalID) {
@@ -1517,7 +1531,7 @@ public class RMRegistration extends RunBlock {
 				.add(
 						new Text(
 								localize(
-										"run_reg.charity_headertext",
+										"rm_reg.charity_headertext",
 										"Now every runner can run for a good cause for a charity of his/her choice. It is now possible to search among all the runners that have registered and make a pledge.")),
 						1, row++);
 
@@ -1541,7 +1555,7 @@ public class RMRegistration extends RunBlock {
 		// acceptCharityCheck.setOnChange(action)
 		Label accepCharityLabel = new Label(
 				localize(
-						"run_reg.agree_charity_participation",
+						"rm_reg.agree_charity_participation",
 						"I agree to participate in running for a charity and searchable by others in a pledge form"),
 				acceptCharityCheck);
 		acceptCharityDiv.add(acceptCharityCheck);
@@ -1565,13 +1579,13 @@ public class RMRegistration extends RunBlock {
 			Layer charityEnquiryDiv = new Layer(Layer.DIV);
 			Text charityEnquiryText = new Text(
 					localize(
-							"run_reg.charity_enquiry",
+							"rm_reg.charity_enquiry",
 							"If you charity organization is not on the list, please send enquiry to godgerdarmal@glitnir.is"));
 			charityEnquiryDiv.add(charityEnquiryText);
 			table.add(charityEnquiryDiv, 1, row++);
 		}
 
-		table.add(new Text(localize("run_reg.charity_footer_info",
+		table.add(new Text(localize("rm_reg.charity_footer_info",
 									"You can select a charity later on your pages.")), 1, row++);
 		table.setHeight(row++, 12);
 
@@ -1583,7 +1597,7 @@ public class RMRegistration extends RunBlock {
 
 		add(form);
 
-		String selectCharitiesMessage = localize("run_reg.must_select_charity",
+		String selectCharitiesMessage = localize("rm_reg.must_select_charity",
 				"Please select a valid charity");
 		charities
 				.setOnSubmitFunction(
@@ -2843,9 +2857,9 @@ public class RMRegistration extends RunBlock {
 			}
 		}
 
-		//if (this.isIcelandicPersonalID) {
-		//	addStep(iwc, ACTION_STEP_CHARITY, localize("rm_reg.charity_step", "Select charity"));
-		//}
+		if (this.isIcelandicPersonalID) {
+			addStep(iwc, ACTION_STEP_CHARITY, localize("rm_reg.charity_step", "Select charity"));
+		}
 		
 		addStep(iwc, ACTION_STEP_DISCLAIMER,
 				localize("rm_reg.disclaimer", "Disclaimer"));
