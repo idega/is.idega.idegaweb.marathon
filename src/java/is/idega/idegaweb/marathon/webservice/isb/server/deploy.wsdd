@@ -1,0 +1,57 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from ISBServiceService WSDL service -->
+
+  <service name="ISBService" provider="java:RPC" style="rpc" use="encoded">
+      <parameter name="wsdlTargetNamespace" value="http://illuminati.is"/>
+      <parameter name="wsdlServiceElement" value="ISBServiceService"/>
+      <parameter name="schemaUnqualified" value="http://illuminati.is"/>
+      <parameter name="wsdlServicePort" value="ISBService"/>
+      <parameter name="className" value="is.idega.idegaweb.marathon.webservice.isb.server.ISBServiceSoapBindingSkeleton"/>
+      <parameter name="wsdlPortType" value="ISBService"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <parameter name="allowedMethods" value="*"/>
+
+      <arrayMapping
+        xmlns:ns="http://illuminati.is"
+        qname="ns:ArrayOfRelayPartnerInfo"
+        type="java:is.idega.idegaweb.marathon.webservice.isb.server.RelayPartnerInfo[]"
+        innerType="cmp-ns:RelayPartnerInfo" xmlns:cmp-ns="http://illuminati.is"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://illuminati.is"
+        qname="ns:SessionTimedOutException"
+        type="java:is.idega.idegaweb.marathon.webservice.isb.server.SessionTimedOutException"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://illuminati.is"
+        qname="ns:RelayPartnerInfo"
+        type="java:is.idega.idegaweb.marathon.webservice.isb.server.RelayPartnerInfo"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://illuminati.is"
+        qname="ns:Session"
+        type="java:is.idega.idegaweb.marathon.webservice.isb.server.Session"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+  </service>
+</deployment>
