@@ -36,7 +36,7 @@ public class ISBServiceSoapBindingSkeleton implements is.idega.idegaweb.marathon
         };
         _oper = new org.apache.axis.description.OperationDesc("authenticateUser", _params, new javax.xml.namespace.QName("", "authenticateUserReturn"));
         _oper.setReturnType(new javax.xml.namespace.QName("http://illuminati.is", "Session"));
-        _oper.setElementQName(new javax.xml.namespace.QName("http://illuminati.is", "authenticateUser"));
+        _oper.setElementQName(new javax.xml.namespace.QName("", "authenticateUser"));
         _oper.setSoapAction("");
         _myOperationsList.add(_oper);
         if (_myOperations.get("authenticateUser") == null) {
@@ -57,7 +57,7 @@ public class ISBServiceSoapBindingSkeleton implements is.idega.idegaweb.marathon
         };
         _oper = new org.apache.axis.description.OperationDesc("registerRunner", _params, new javax.xml.namespace.QName("", "registerRunnerReturn"));
         _oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
-        _oper.setElementQName(new javax.xml.namespace.QName("http://illuminati.is", "registerRunner"));
+        _oper.setElementQName(new javax.xml.namespace.QName("", "registerRunner"));
         _oper.setSoapAction("");
         _myOperationsList.add(_oper);
         if (_myOperations.get("registerRunner") == null) {

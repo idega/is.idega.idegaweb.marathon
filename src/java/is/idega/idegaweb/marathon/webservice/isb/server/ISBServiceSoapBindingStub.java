@@ -32,7 +32,7 @@ public class ISBServiceSoapBindingStub extends org.apache.axis.client.Stub imple
         oper.setReturnType(new javax.xml.namespace.QName("http://illuminati.is", "Session"));
         oper.setReturnClass(is.idega.idegaweb.marathon.webservice.isb.server.Session.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "authenticateUserReturn"));
-        oper.setStyle(org.apache.axis.constants.Style.RPC);
+        oper.setStyle(org.apache.axis.constants.Style.DOCUMENT);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
         _operations[0] = oper;
 
@@ -61,7 +61,7 @@ public class ISBServiceSoapBindingStub extends org.apache.axis.client.Stub imple
         oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
         oper.setReturnClass(boolean.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "registerRunnerReturn"));
-        oper.setStyle(org.apache.axis.constants.Style.RPC);
+        oper.setStyle(org.apache.axis.constants.Style.DOCUMENT);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
         oper.addFault(new org.apache.axis.description.FaultDesc(
                       new javax.xml.namespace.QName("http://illuminati.is", "fault"),
@@ -208,7 +208,7 @@ public class ISBServiceSoapBindingStub extends org.apache.axis.client.Stub imple
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("http://illuminati.is", "authenticateUser"));
+        _call.setOperationName(new javax.xml.namespace.QName("", "authenticateUser"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
@@ -239,7 +239,7 @@ public class ISBServiceSoapBindingStub extends org.apache.axis.client.Stub imple
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("http://illuminati.is", "registerRunner"));
+        _call.setOperationName(new javax.xml.namespace.QName("", "registerRunner"));
 
         setRequestHeaders(_call);
         setAttachments(_call);

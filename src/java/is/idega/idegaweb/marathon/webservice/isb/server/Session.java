@@ -79,7 +79,7 @@ public class Session  implements java.io.Serializable {
         typeDesc.setXmlType(new javax.xml.namespace.QName("http://illuminati.is", "Session"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("sessionID");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "sessionID"));
+        elemField.setXmlName(new javax.xml.namespace.QName("http://illuminati.is", "sessionID"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"));
         elemField.setNillable(true);
         typeDesc.addFieldDesc(elemField);

@@ -22,7 +22,7 @@ public class CharityServiceSoapBindingImpl implements
 	public is.idega.idegaweb.marathon.webservice.server.Session authenticateUser(
 			java.lang.String loginName, java.lang.String password)
 			throws java.rmi.RemoteException {
-		return null;
+		return getBusiness().authenticateUser(loginName, password);
 	}
 
 	public boolean updateUserPassword(

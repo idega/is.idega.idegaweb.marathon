@@ -254,7 +254,7 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 
 		return new is.idega.idegaweb.marathon.webservice.server.Session("-1");
 	}
-
+	
 	private LoginTableHome getLoginTableHome() {
 		try {
 			return (LoginTableHome) IDOLookup.getHome(LoginTable.class);

@@ -20,6 +20,7 @@ public interface WebServiceBusiness extends IBOService {
 	public Session authenticateUser(String userName, String password)
 			throws RemoteException;
 
+	
 	/**
 	 * @see is.idega.idegaweb.marathon.webservice.business.WebServiceBusinessBean#updateUserPassword
 	 */

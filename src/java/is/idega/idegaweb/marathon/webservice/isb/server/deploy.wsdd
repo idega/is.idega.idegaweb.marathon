@@ -12,10 +12,10 @@
 
   <!-- Services from ISBServiceService WSDL service -->
 
-  <service name="ISBService" provider="java:RPC" style="rpc" use="encoded">
+  <service name="ISBService" provider="java:RPC" style="document" use="encoded">
       <parameter name="wsdlTargetNamespace" value="http://illuminati.is"/>
       <parameter name="wsdlServiceElement" value="ISBServiceService"/>
-      <parameter name="schemaUnqualified" value="http://illuminati.is"/>
+      <parameter name="schemaQualified" value="http://illuminati.is"/>
       <parameter name="wsdlServicePort" value="ISBService"/>
       <parameter name="className" value="is.idega.idegaweb.marathon.webservice.isb.server.ISBServiceSoapBindingSkeleton"/>
       <parameter name="wsdlPortType" value="ISBService"/>
