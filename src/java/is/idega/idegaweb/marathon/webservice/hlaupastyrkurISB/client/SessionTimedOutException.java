@@ -1,47 +1,20 @@
 /**
- * Session.java
+ * SessionTimedOutException.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
 
-package is.idega.idegaweb.marathon.webservice.isb.server;
+package is.idega.idegaweb.marathon.webservice.hlaupastyrkurISB.client;
 
-public class Session  implements java.io.Serializable {
-    private java.lang.String sessionID;
-
-    public Session() {
-    }
-
-    public Session(
-           java.lang.String sessionID) {
-           this.sessionID = sessionID;
-    }
-
-
-    /**
-     * Gets the sessionID value for this Session.
-     * 
-     * @return sessionID
-     */
-    public java.lang.String getSessionID() {
-        return sessionID;
-    }
-
-
-    /**
-     * Sets the sessionID value for this Session.
-     * 
-     * @param sessionID
-     */
-    public void setSessionID(java.lang.String sessionID) {
-        this.sessionID = sessionID;
+public class SessionTimedOutException  extends org.apache.axis.AxisFault  implements java.io.Serializable {
+    public SessionTimedOutException() {
     }
 
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
-        if (!(obj instanceof Session)) return false;
-        Session other = (Session) obj;
+        if (!(obj instanceof SessionTimedOutException)) return false;
+        SessionTimedOutException other = (SessionTimedOutException) obj;
         if (obj == null) return false;
         if (this == obj) return true;
         if (__equalsCalc != null) {
@@ -49,10 +22,7 @@ public class Session  implements java.io.Serializable {
         }
         __equalsCalc = obj;
         boolean _equals;
-        _equals = true && 
-            ((this.sessionID==null && other.getSessionID()==null) || 
-             (this.sessionID!=null &&
-              this.sessionID.equals(other.getSessionID())));
+        _equals = true;
         __equalsCalc = null;
         return _equals;
     }
@@ -64,25 +34,16 @@ public class Session  implements java.io.Serializable {
         }
         __hashCodeCalc = true;
         int _hashCode = 1;
-        if (getSessionID() != null) {
-            _hashCode += getSessionID().hashCode();
-        }
         __hashCodeCalc = false;
         return _hashCode;
     }
 
     // Type metadata
     private static org.apache.axis.description.TypeDesc typeDesc =
-        new org.apache.axis.description.TypeDesc(Session.class, true);
+        new org.apache.axis.description.TypeDesc(SessionTimedOutException.class, true);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("http://illuminati.is", "Session"));
-        org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("sessionID");
-        elemField.setXmlName(new javax.xml.namespace.QName("http://illuminati.is", "sessionID"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        elemField.setNillable(true);
-        typeDesc.addFieldDesc(elemField);
+        typeDesc.setXmlType(new javax.xml.namespace.QName("http://illuminati.is", "SessionTimedOutException"));
     }
 
     /**
@@ -116,4 +77,11 @@ public class Session  implements java.io.Serializable {
             _javaType, _xmlType, typeDesc);
     }
 
+
+    /**
+     * Writes the exception data to the faultDetails
+     */
+    public void writeDetails(javax.xml.namespace.QName qname, org.apache.axis.encoding.SerializationContext context) throws java.io.IOException {
+        context.serialize(qname, null, this);
+    }
 }

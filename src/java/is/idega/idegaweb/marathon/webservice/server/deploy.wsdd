@@ -30,6 +30,21 @@
         deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
         encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
       />
+      <arrayMapping
+        xmlns:ns="http://illuminati.is"
+        qname="ns:ArrayOfCharity"
+        type="java:is.idega.idegaweb.marathon.webservice.server.Charity[]"
+        innerType="cmp-ns:Charity" xmlns:cmp-ns="http://illuminati.is"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+      <typeMapping
+        xmlns:ns="http://illuminati.is"
+        qname="ns:Charity"
+        type="java:is.idega.idegaweb.marathon.webservice.server.Charity"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
       <typeMapping
         xmlns:ns="http://illuminati.is"
         qname="ns:SessionTimedOutException"

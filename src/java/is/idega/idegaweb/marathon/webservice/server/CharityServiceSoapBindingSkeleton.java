@@ -115,6 +115,17 @@ public class CharityServiceSoapBindingSkeleton implements is.idega.idegaweb.mara
         _fault.setClassName("is.idega.idegaweb.marathon.webservice.server.SessionTimedOutException");
         _fault.setXmlType(new javax.xml.namespace.QName("http://illuminati.is", "SessionTimedOutException"));
         _oper.addFault(_fault);
+        _params = new org.apache.axis.description.ParameterDesc [] {
+        };
+        _oper = new org.apache.axis.description.OperationDesc("getCharities", _params, new javax.xml.namespace.QName("", "getCharitiesReturn"));
+        _oper.setReturnType(new javax.xml.namespace.QName("http://illuminati.is", "ArrayOfCharity"));
+        _oper.setElementQName(new javax.xml.namespace.QName("http://illuminati.is", "getCharities"));
+        _oper.setSoapAction("");
+        _myOperationsList.add(_oper);
+        if (_myOperations.get("getCharities") == null) {
+            _myOperations.put("getCharities", new java.util.ArrayList());
+        }
+        ((java.util.List)_myOperations.get("getCharities")).add(_oper);
     }
 
     public CharityServiceSoapBindingSkeleton() {
@@ -151,6 +162,12 @@ public class CharityServiceSoapBindingSkeleton implements is.idega.idegaweb.mara
     public boolean updateUserEmail(is.idega.idegaweb.marathon.webservice.server.Session session, java.lang.String personalID, java.lang.String email) throws java.rmi.RemoteException, is.idega.idegaweb.marathon.webservice.server.SessionTimedOutException
     {
         boolean ret = impl.updateUserEmail(session, personalID, email);
+        return ret;
+    }
+
+    public is.idega.idegaweb.marathon.webservice.server.Charity[] getCharities() throws java.rmi.RemoteException
+    {
+        is.idega.idegaweb.marathon.webservice.server.Charity[] ret = impl.getCharities();
         return ret;
     }
 

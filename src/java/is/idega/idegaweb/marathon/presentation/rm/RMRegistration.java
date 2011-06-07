@@ -103,7 +103,7 @@ public class RMRegistration extends RunBlock {
 	private static final String PARAMETER_ACCEPT_CHARITY = "prm_accept_charity";
 	private static final String PARAMETER_NOT_ACCEPT_CHARITY = "prm_not_accept_charity";
 	private static final String PARAMETER_CHARITY_ID = "prm_charity_id";
-	
+
 	private static final String PARAMETER_DISTANCE = "prm_distance";
 	private static final String PARAMETER_SHIRT_SIZE = "prm_shirt_size";
 	private static final String PARAMETER_SHIRT_SIZES_PER_RUN = "shirt_sizes_per_run";
@@ -193,14 +193,20 @@ public class RMRegistration extends RunBlock {
 
 	private void loadCurrentStep(IWContext iwc, int action)
 			throws RemoteException {
+		boolean checkRelayLegs = false;
+		String sFromAction = iwc.getParameter(PARAMETER_FROM_ACTION);
+		if (sFromAction != null) {
+			int iFromAction = Integer.parseInt(sFromAction);
+			if (iFromAction == ACTION_STEP_RELAY) {
+				String sAction = iwc.getParameter(PARAMETER_ACTION);
+				int iAction = Integer.parseInt(sAction);
+				if (iAction == ACTION_NEXT) {
+					checkRelayLegs = true;
+				}
+			}
+		}
 
-		/*
-		 * if (action == ACTION_STEP_PERSONALDETAILS) { if
-		 * (!iwc.isParameterSet(PARAMETER_NO_PERSONAL_ID)) { String personalID =
-		 * iwc.getpara } }
-		 */
-
-		if (action == ACTION_STEP_DISCLAIMER) {
+		if (checkRelayLegs) {
 			Runner runner = getRunner();
 
 			if (runner.getDistance().isRelayDistance()) {
@@ -647,16 +653,15 @@ public class RMRegistration extends RunBlock {
 			genderField.setSelectedElement(getRunner().getGender()
 					.getPrimaryKey().toString());
 		}
-		/*if (this.isIcelandicPersonalID) {
-			genderField.setDisabled(true);
-			if (getRunner().getUser() != null) {
-				genderField.setSelectedElement(getRunner().getUser()
-						.getGenderID());
-			}
-		} else {*/
-			genderField.setAsNotEmpty(localize("rm_reg.gender_not_empty",
-					"Gender can not be empty"));
-		//}
+		/*
+		 * if (this.isIcelandicPersonalID) { genderField.setDisabled(true); if
+		 * (getRunner().getUser() != null) {
+		 * genderField.setSelectedElement(getRunner().getUser() .getGenderID());
+		 * } } else {
+		 */
+		genderField.setAsNotEmpty(localize("rm_reg.gender_not_empty",
+				"Gender can not be empty"));
+		// }
 
 		choiceTable.add(
 				getHeader(localize(IWMarathonConstants.RR_NAME, "Name")), 1,
@@ -667,11 +672,11 @@ public class RMRegistration extends RunBlock {
 		choiceTable.add(
 				getHeader(localize(IWMarathonConstants.RR_GENDER, "Gender")),
 				3, iRow);
-		//if (!this.isIcelandicPersonalID) {
-			choiceTable.add(redStar, 3, iRow++);
-		/*} else {
-			iRow++;
-		}*/
+		// if (!this.isIcelandicPersonalID) {
+		choiceTable.add(redStar, 3, iRow++);
+		/*
+		 * } else { iRow++; }
+		 */
 		choiceTable.add(nameField, 1, iRow);
 		choiceTable.add(genderField, 3, iRow++);
 		choiceTable.setHeight(iRow++, 3);
@@ -812,7 +817,8 @@ public class RMRegistration extends RunBlock {
 					PARAMETER_EMAIL2));
 			emailField2.setAsEmail(localize("rm_reg.email_err_msg",
 					"Not a valid email address"));
-			emailField2.setAsNotEmpty(localize("rm_reg.continue_without_email2",
+			emailField2.setAsNotEmpty(localize(
+					"rm_reg.continue_without_email2",
 					"You can not continue without repeating the e-mail"));
 			choiceTable.add(
 					getHeader(localize(IWMarathonConstants.RR_NATIONALITY,
@@ -826,7 +832,6 @@ public class RMRegistration extends RunBlock {
 			choiceTable.add(nationalityField, 1, iRow);
 			choiceTable.add(emailField2, 3, iRow++);
 			choiceTable.setHeight(iRow++, 3);
-
 
 			TextInput telField = (TextInput) getStyledInterface(new TextInput(
 					PARAMETER_HOME_PHONE));
@@ -856,9 +861,9 @@ public class RMRegistration extends RunBlock {
 				}
 			}
 
-			choiceTable.add(
-					getHeader(localize(IWMarathonConstants.RR_TEL, "Telephone")),
-					1, iRow);
+			choiceTable
+					.add(getHeader(localize(IWMarathonConstants.RR_TEL,
+							"Telephone")), 1, iRow);
 			choiceTable.add(
 					getHeader(localize(IWMarathonConstants.RR_MOBILE,
 							"Mobile Phone")), 3, iRow++);
@@ -878,11 +883,12 @@ public class RMRegistration extends RunBlock {
 					PARAMETER_EMAIL2));
 			emailField2.setAsEmail(localize("rm_reg.email_err_msg",
 					"Not a valid email address"));
-			emailField2.setAsNotEmpty(localize("rm_reg.continue_without_email2",
+			emailField2.setAsNotEmpty(localize(
+					"rm_reg.continue_without_email2",
 					"You can not continue without repeating the e-mail"));
 			choiceTable.add(
-					getHeader(localize(IWMarathonConstants.RR_ADDRESS, "Address")),
-					1, iRow);
+					getHeader(localize(IWMarathonConstants.RR_ADDRESS,
+							"Address")), 1, iRow);
 			choiceTable.add(redStar, 1, iRow);
 			choiceTable.add(
 					getHeader(localize(IWMarathonConstants.RR_EMAIL2,
@@ -916,12 +922,12 @@ public class RMRegistration extends RunBlock {
 			}
 
 			choiceTable.add(
-					getHeader(localize(IWMarathonConstants.RR_CITY, "City")), 1,
-					iRow);
+					getHeader(localize(IWMarathonConstants.RR_CITY, "City")),
+					1, iRow);
 			choiceTable.add(redStar, 1, iRow);
-			choiceTable.add(
-					getHeader(localize(IWMarathonConstants.RR_TEL, "Telephone")),
-					3, iRow++);
+			choiceTable
+					.add(getHeader(localize(IWMarathonConstants.RR_TEL,
+							"Telephone")), 3, iRow++);
 			choiceTable.add(cityField, 1, iRow);
 			choiceTable.add(telField, 3, iRow++);
 			choiceTable.setHeight(iRow++, 3);
@@ -951,8 +957,8 @@ public class RMRegistration extends RunBlock {
 				}
 			}
 
-			choiceTable
-					.add(getHeader(localize(IWMarathonConstants.RR_POSTAL,
+			choiceTable.add(
+					getHeader(localize(IWMarathonConstants.RR_POSTAL,
 							"Postal Code")), 1, iRow);
 			choiceTable.add(redStar, 1, iRow);
 			choiceTable.add(
@@ -963,8 +969,8 @@ public class RMRegistration extends RunBlock {
 			choiceTable.setHeight(iRow++, 3);
 
 			choiceTable.add(
-					getHeader(localize(IWMarathonConstants.RR_COUNTRY, "Country")),
-					1, iRow);
+					getHeader(localize(IWMarathonConstants.RR_COUNTRY,
+							"Country")), 1, iRow);
 			choiceTable.add(redStar, 1, iRow);
 			choiceTable.add(
 					getHeader(localize(IWMarathonConstants.RR_NATIONALITY,
@@ -1506,14 +1512,13 @@ public class RMRegistration extends RunBlock {
 
 		Script script = new Script();
 		add(script);
-		script
-				.addFunction(
-						"toggleCharitySelection",
-						"function toggleCharitySelection(){ var checkbox = findObj('"
-								+ PARAMETER_ACCEPT_CHARITY
-								+ "');  var hiddencheck = findObj('"
-								+ PARAMETER_NOT_ACCEPT_CHARITY
-								+ "'); if(checkbox.checked){ hiddencheck.value='false';}else if(!checkbox.checked){ hiddencheck.value='true';}  }");
+		script.addFunction(
+				"toggleCharitySelection",
+				"function toggleCharitySelection(){ var checkbox = findObj('"
+						+ PARAMETER_ACCEPT_CHARITY
+						+ "');  var hiddencheck = findObj('"
+						+ PARAMETER_NOT_ACCEPT_CHARITY
+						+ "'); if(checkbox.checked){ hiddencheck.value='false';}else if(!checkbox.checked){ hiddencheck.value='true';}  }");
 
 		table.setHeight(row++, 12);
 
@@ -1526,13 +1531,12 @@ public class RMRegistration extends RunBlock {
 				"next", "Next")));
 		next.setValueOnClick(PARAMETER_ACTION, String.valueOf(ACTION_NEXT));
 
-		table
-				.add(
-						new Text(
-								localize(
-										"rm_reg.charity_headertext",
-										"Now every runner can run for a good cause for a charity of his/her choice. It is now possible to search among all the runners that have registered and make a pledge.")),
-						1, row++);
+		table.add(
+				new Text(
+						localize(
+								"rm_reg.charity_headertext",
+								"Now every runner can run for a good cause for a charity of his/her choice. It is now possible to search among all the runners that have registered and make a pledge.")),
+				1, row++);
 
 		Runner runner = getRunner();
 		DropdownMenu charities = (CharitiesForRunDropDownMenu) (getStyledInterface(new CharitiesForRunDropDownMenu(
@@ -1584,8 +1588,10 @@ public class RMRegistration extends RunBlock {
 			table.add(charityEnquiryDiv, 1, row++);
 		}
 
-		table.add(new Text(localize("rm_reg.charity_footer_info",
-									"You can select a charity later on your pages.")), 1, row++);
+		table.add(
+				new Text(localize("rm_reg.charity_footer_info",
+						"You can select a charity later on your pages.")), 1,
+				row++);
 		table.setHeight(row++, 12);
 
 		Layer infoLayer = new Layer(Layer.DIV);
@@ -2626,8 +2632,7 @@ public class RMRegistration extends RunBlock {
 		}
 
 		if (iwc.isParameterSet(PARAMETER_CHARITY_ID)) {
-			String organizationalId = iwc
-					.getParameter(PARAMETER_CHARITY_ID);
+			String organizationalId = iwc.getParameter(PARAMETER_CHARITY_ID);
 			try {
 				CharityHome cHome = (CharityHome) IDOLookup
 						.getHome(Charity.class);
@@ -2642,7 +2647,6 @@ public class RMRegistration extends RunBlock {
 			}
 		}
 
-		
 		if (personalID != null && !"".equals(personalID.trim())) {
 			addRunner(iwc, personalID, runner);
 		} else if (dateOfBirth != null) {
@@ -2858,10 +2862,11 @@ public class RMRegistration extends RunBlock {
 
 		if (this.isIcelandicPersonalID) {
 			if (runner != null && runner.getYear().isCharityEnabled()) {
-				addStep(iwc, ACTION_STEP_CHARITY, localize("rm_reg.charity_step", "Select charity"));
+				addStep(iwc, ACTION_STEP_CHARITY,
+						localize("rm_reg.charity_step", "Select charity"));
 			}
 		}
-		
+
 		addStep(iwc, ACTION_STEP_DISCLAIMER,
 				localize("rm_reg.disclaimer", "Disclaimer"));
 
@@ -2872,7 +2877,7 @@ public class RMRegistration extends RunBlock {
 			addStep(iwc, ACTION_STEP_PAYMENT,
 					localize("rm_reg.receipt", "Registration saved"));
 		}
-		
+
 		addStep(iwc, ACTION_STEP_RECEIPT,
 				localize("rm_reg.receipt", "Registration saved"));
 	}

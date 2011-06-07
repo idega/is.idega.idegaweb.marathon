@@ -71,6 +71,15 @@ public class Runner {
 	private boolean applyForDomesticTravelSupport=false;
 	private boolean applyForInternationalTravelSupport=false;
 	private boolean sponsoredRunner=false;
+	private String paymentGroup = null;
+
+	public String getPaymentGroup() {
+		return paymentGroup;
+	}
+
+	public void setPaymentGroup(String paymentGroup) {
+		this.paymentGroup = paymentGroup;
+	}
 
 	private boolean checkQuestions =  false;
 	

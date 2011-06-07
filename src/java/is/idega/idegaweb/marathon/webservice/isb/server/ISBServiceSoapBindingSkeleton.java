@@ -31,10 +31,9 @@ public class ISBServiceSoapBindingSkeleton implements is.idega.idegaweb.marathon
         org.apache.axis.description.FaultDesc _fault;
         org.apache.axis.description.ParameterDesc [] _params;
         _params = new org.apache.axis.description.ParameterDesc [] {
-            new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "loginName"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"), java.lang.String.class, false, false), 
-            new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "password"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"), java.lang.String.class, false, false), 
+            new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://illuminati.is", "in0"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://illuminati.is", "Login"), is.idega.idegaweb.marathon.webservice.isb.server.Login.class, false, false), 
         };
-        _oper = new org.apache.axis.description.OperationDesc("authenticateUser", _params, new javax.xml.namespace.QName("", "authenticateUserReturn"));
+        _oper = new org.apache.axis.description.OperationDesc("authenticateUser", _params, new javax.xml.namespace.QName("http://illuminati.is", "authenticateUserReturn"));
         _oper.setReturnType(new javax.xml.namespace.QName("http://illuminati.is", "Session"));
         _oper.setElementQName(new javax.xml.namespace.QName("", "authenticateUser"));
         _oper.setSoapAction("");
@@ -44,18 +43,9 @@ public class ISBServiceSoapBindingSkeleton implements is.idega.idegaweb.marathon
         }
         ((java.util.List)_myOperations.get("authenticateUser")).add(_oper);
         _params = new org.apache.axis.description.ParameterDesc [] {
-            new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "session"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://illuminati.is", "Session"), is.idega.idegaweb.marathon.webservice.isb.server.Session.class, false, false), 
-            new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "personalID"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"), java.lang.String.class, false, false), 
-            new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "distance"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"), java.lang.String.class, false, false), 
-            new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "shirtSize"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"), java.lang.String.class, false, false), 
-            new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "email"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"), java.lang.String.class, false, false), 
-            new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "phone"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"), java.lang.String.class, false, false), 
-            new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "mobile"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"), java.lang.String.class, false, false), 
-            new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "leg"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"), java.lang.String.class, false, false), 
-            new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "partners"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://illuminati.is", "ArrayOfRelayPartnerInfo"), is.idega.idegaweb.marathon.webservice.isb.server.RelayPartnerInfo[].class, false, false), 
-            new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "registeredBy"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"), java.lang.String.class, false, false), 
+            new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://illuminati.is", "in1"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://illuminati.is", "RunnerInfo"), is.idega.idegaweb.marathon.webservice.isb.server.RunnerInfo.class, false, false), 
         };
-        _oper = new org.apache.axis.description.OperationDesc("registerRunner", _params, new javax.xml.namespace.QName("", "registerRunnerReturn"));
+        _oper = new org.apache.axis.description.OperationDesc("registerRunner", _params, new javax.xml.namespace.QName("http://illuminati.is", "registerRunnerReturn"));
         _oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
         _oper.setElementQName(new javax.xml.namespace.QName("", "registerRunner"));
         _oper.setSoapAction("");
@@ -79,15 +69,15 @@ public class ISBServiceSoapBindingSkeleton implements is.idega.idegaweb.marathon
     public ISBServiceSoapBindingSkeleton(is.idega.idegaweb.marathon.webservice.isb.server.ISBService_PortType impl) {
         this.impl = impl;
     }
-    public is.idega.idegaweb.marathon.webservice.isb.server.Session authenticateUser(java.lang.String loginName, java.lang.String password) throws java.rmi.RemoteException
+    public is.idega.idegaweb.marathon.webservice.isb.server.Session authenticateUser(is.idega.idegaweb.marathon.webservice.isb.server.Login in0) throws java.rmi.RemoteException
     {
-        is.idega.idegaweb.marathon.webservice.isb.server.Session ret = impl.authenticateUser(loginName, password);
+        is.idega.idegaweb.marathon.webservice.isb.server.Session ret = impl.authenticateUser(in0);
         return ret;
     }
 
-    public boolean registerRunner(is.idega.idegaweb.marathon.webservice.isb.server.Session session, java.lang.String personalID, java.lang.String distance, java.lang.String shirtSize, java.lang.String email, java.lang.String phone, java.lang.String mobile, java.lang.String leg, is.idega.idegaweb.marathon.webservice.isb.server.RelayPartnerInfo[] partners, java.lang.String registeredBy) throws java.rmi.RemoteException, is.idega.idegaweb.marathon.webservice.isb.server.SessionTimedOutException
+    public boolean registerRunner(is.idega.idegaweb.marathon.webservice.isb.server.RunnerInfo in0) throws java.rmi.RemoteException, is.idega.idegaweb.marathon.webservice.isb.server.SessionTimedOutException
     {
-        boolean ret = impl.registerRunner(session, personalID, distance, shirtSize, email, phone, mobile, leg, partners, registeredBy);
+        boolean ret = impl.registerRunner(in0);
         return ret;
     }
 

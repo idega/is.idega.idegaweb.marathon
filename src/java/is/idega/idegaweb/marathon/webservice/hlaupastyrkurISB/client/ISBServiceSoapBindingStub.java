@@ -5,9 +5,9 @@
  * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
 
-package is.idega.idegaweb.marathon.webservice.isb.server;
+package is.idega.idegaweb.marathon.webservice.hlaupastyrkurISB.client;
 
-public class ISBServiceSoapBindingStub extends org.apache.axis.client.Stub implements is.idega.idegaweb.marathon.webservice.isb.server.ISBService_PortType {
+public class ISBServiceSoapBindingStub extends org.apache.axis.client.Stub implements is.idega.idegaweb.marathon.webservice.hlaupastyrkurISB.client.ISBService_PortType {
     private java.util.Vector cachedSerClasses = new java.util.Vector();
     private java.util.Vector cachedSerQNames = new java.util.Vector();
     private java.util.Vector cachedSerFactories = new java.util.Vector();
@@ -25,10 +25,10 @@ public class ISBServiceSoapBindingStub extends org.apache.axis.client.Stub imple
         org.apache.axis.description.ParameterDesc param;
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("authenticateUser");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://illuminati.is", "in0"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://illuminati.is", "Login"), is.idega.idegaweb.marathon.webservice.isb.server.Login.class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://illuminati.is", "in0"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://illuminati.is", "Login"), is.idega.idegaweb.marathon.webservice.hlaupastyrkurISB.client.Login.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://illuminati.is", "Session"));
-        oper.setReturnClass(is.idega.idegaweb.marathon.webservice.isb.server.Session.class);
+        oper.setReturnClass(is.idega.idegaweb.marathon.webservice.hlaupastyrkurISB.client.Session.class);
         oper.setReturnQName(new javax.xml.namespace.QName("http://illuminati.is", "authenticateUserReturn"));
         oper.setStyle(org.apache.axis.constants.Style.DOCUMENT);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
@@ -36,7 +36,7 @@ public class ISBServiceSoapBindingStub extends org.apache.axis.client.Stub imple
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("registerRunner");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://illuminati.is", "in1"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://illuminati.is", "RunnerInfo"), is.idega.idegaweb.marathon.webservice.isb.server.RunnerInfo.class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://illuminati.is", "in1"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://illuminati.is", "RunnerInfo"), is.idega.idegaweb.marathon.webservice.hlaupastyrkurISB.client.RunnerInfo.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
         oper.setReturnClass(boolean.class);
@@ -45,7 +45,7 @@ public class ISBServiceSoapBindingStub extends org.apache.axis.client.Stub imple
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         oper.addFault(new org.apache.axis.description.FaultDesc(
                       new javax.xml.namespace.QName("http://illuminati.is", "fault"),
-                      "is.idega.idegaweb.marathon.webservice.isb.server.SessionTimedOutException",
+                      "is.idega.idegaweb.marathon.webservice.hlaupastyrkurISB.client.SessionTimedOutException",
                       new javax.xml.namespace.QName("http://illuminati.is", "SessionTimedOutException"), 
                       true
                      ));
@@ -84,7 +84,7 @@ public class ISBServiceSoapBindingStub extends org.apache.axis.client.Stub imple
             java.lang.Class simplelistdf = org.apache.axis.encoding.ser.SimpleListDeserializerFactory.class;
             qName = new javax.xml.namespace.QName("http://illuminati.is", "ArrayOfRelayPartnerInfo");
             cachedSerQNames.add(qName);
-            cls = is.idega.idegaweb.marathon.webservice.isb.server.RelayPartnerInfo[].class;
+            cls = is.idega.idegaweb.marathon.webservice.hlaupastyrkurISB.client.RelayPartnerInfo[].class;
             cachedSerClasses.add(cls);
             qName = new javax.xml.namespace.QName("http://illuminati.is", "RelayPartnerInfo");
             qName2 = new javax.xml.namespace.QName("http://illuminati.is", "item");
@@ -93,35 +93,35 @@ public class ISBServiceSoapBindingStub extends org.apache.axis.client.Stub imple
 
             qName = new javax.xml.namespace.QName("http://illuminati.is", "Login");
             cachedSerQNames.add(qName);
-            cls = is.idega.idegaweb.marathon.webservice.isb.server.Login.class;
+            cls = is.idega.idegaweb.marathon.webservice.hlaupastyrkurISB.client.Login.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("http://illuminati.is", "RelayPartnerInfo");
             cachedSerQNames.add(qName);
-            cls = is.idega.idegaweb.marathon.webservice.isb.server.RelayPartnerInfo.class;
+            cls = is.idega.idegaweb.marathon.webservice.hlaupastyrkurISB.client.RelayPartnerInfo.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("http://illuminati.is", "RunnerInfo");
             cachedSerQNames.add(qName);
-            cls = is.idega.idegaweb.marathon.webservice.isb.server.RunnerInfo.class;
+            cls = is.idega.idegaweb.marathon.webservice.hlaupastyrkurISB.client.RunnerInfo.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("http://illuminati.is", "Session");
             cachedSerQNames.add(qName);
-            cls = is.idega.idegaweb.marathon.webservice.isb.server.Session.class;
+            cls = is.idega.idegaweb.marathon.webservice.hlaupastyrkurISB.client.Session.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("http://illuminati.is", "SessionTimedOutException");
             cachedSerQNames.add(qName);
-            cls = is.idega.idegaweb.marathon.webservice.isb.server.SessionTimedOutException.class;
+            cls = is.idega.idegaweb.marathon.webservice.hlaupastyrkurISB.client.SessionTimedOutException.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
@@ -192,7 +192,7 @@ public class ISBServiceSoapBindingStub extends org.apache.axis.client.Stub imple
         }
     }
 
-    public is.idega.idegaweb.marathon.webservice.isb.server.Session authenticateUser(is.idega.idegaweb.marathon.webservice.isb.server.Login in0) throws java.rmi.RemoteException {
+    public is.idega.idegaweb.marathon.webservice.hlaupastyrkurISB.client.Session authenticateUser(is.idega.idegaweb.marathon.webservice.hlaupastyrkurISB.client.Login in0) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -216,9 +216,9 @@ public class ISBServiceSoapBindingStub extends org.apache.axis.client.Stub imple
         else {
             extractAttachments(_call);
             try {
-                return (is.idega.idegaweb.marathon.webservice.isb.server.Session) _resp;
+                return (is.idega.idegaweb.marathon.webservice.hlaupastyrkurISB.client.Session) _resp;
             } catch (java.lang.Exception _exception) {
-                return (is.idega.idegaweb.marathon.webservice.isb.server.Session) org.apache.axis.utils.JavaUtils.convert(_resp, is.idega.idegaweb.marathon.webservice.isb.server.Session.class);
+                return (is.idega.idegaweb.marathon.webservice.hlaupastyrkurISB.client.Session) org.apache.axis.utils.JavaUtils.convert(_resp, is.idega.idegaweb.marathon.webservice.hlaupastyrkurISB.client.Session.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -226,7 +226,7 @@ public class ISBServiceSoapBindingStub extends org.apache.axis.client.Stub imple
 }
     }
 
-    public boolean registerRunner(is.idega.idegaweb.marathon.webservice.isb.server.RunnerInfo in0) throws java.rmi.RemoteException, is.idega.idegaweb.marathon.webservice.isb.server.SessionTimedOutException {
+    public boolean registerRunner(is.idega.idegaweb.marathon.webservice.hlaupastyrkurISB.client.RunnerInfo in1) throws java.rmi.RemoteException, is.idega.idegaweb.marathon.webservice.hlaupastyrkurISB.client.SessionTimedOutException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -242,7 +242,7 @@ public class ISBServiceSoapBindingStub extends org.apache.axis.client.Stub imple
 
         setRequestHeaders(_call);
         setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {in0});
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {in1});
 
         if (_resp instanceof java.rmi.RemoteException) {
             throw (java.rmi.RemoteException)_resp;
@@ -260,8 +260,8 @@ public class ISBServiceSoapBindingStub extends org.apache.axis.client.Stub imple
         if (axisFaultException.detail instanceof java.rmi.RemoteException) {
               throw (java.rmi.RemoteException) axisFaultException.detail;
          }
-        if (axisFaultException.detail instanceof is.idega.idegaweb.marathon.webservice.isb.server.SessionTimedOutException) {
-              throw (is.idega.idegaweb.marathon.webservice.isb.server.SessionTimedOutException) axisFaultException.detail;
+        if (axisFaultException.detail instanceof is.idega.idegaweb.marathon.webservice.hlaupastyrkurISB.client.SessionTimedOutException) {
+              throw (is.idega.idegaweb.marathon.webservice.hlaupastyrkurISB.client.SessionTimedOutException) axisFaultException.detail;
          }
    }
   throw axisFaultException;

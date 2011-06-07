@@ -725,6 +725,10 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 										.getDistance()));
 					}
 
+					if (runner.getPaymentGroup() != null) {
+						participant.setPaymentGroup(runner.getPaymentGroup());
+					}
+					
 					participant.setQuestion1Hour(runner.getQuestion1Hour());
 					participant.setQuestion1Minute(runner.getQuestion1Minute());
 					participant.setQuestion1Year(runner.getQuestion1Year());
@@ -1583,7 +1587,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			Group distance) {
 		String runName = group.getName();
 		String nameOfGroup = "";
-		if (runName.equals(RUN_RVK_MARATHON)
+		if (runName.equals(RUN_RVK_MARATHON) || runName.equals("Test hlaup")
 		/* || runName.equals(RUN_ROLLER_SKATE) */) {
 			if (distance.getName().equals(IWMarathonConstants.DISTANCE_1_5)) {
 				if (genderID == 2) {
@@ -2391,64 +2395,6 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		return business;
 	}
 
-	/*
-	 * private int getMaxParticipantNumber(String distanceType, String run) { if
-	 * (distanceType.equals(IWMarathonConstants.DISTANCE_55) ||
-	 * distanceType.equals(IWMarathonConstants.DISTANCE_55_WITH_BUS)) { return
-	 * IWMarathonConstants.MAX_NUMBER_DISTANCE_55; } else if
-	 * (distanceType.equals(IWMarathonConstants.DISTANCE_42)) { return
-	 * IWMarathonConstants.MAX_NUMBER_DISTANCE_42; } else if
-	 * (distanceType.equals(IWMarathonConstants.DISTANCE_21)) { return
-	 * IWMarathonConstants.MAX_NUMBER_DISTANCE_21; } else if
-	 * (distanceType.equals(IWMarathonConstants.DISTANCE_CHARITY_42)) { return
-	 * IWMarathonConstants.MAX_NUMBER_DISTANCE_CHARITY_42; } else if
-	 * (distanceType.equals(IWMarathonConstants.DISTANCE_10)) { if
-	 * (run.equals(RUN_MIDNIGHT_RUN)) { return
-	 * IWMarathonConstants.MAX_NUMBER_DISTANCE_MIDNIGHT_10; } else { return
-	 * IWMarathonConstants.MAX_NUMBER_DISTANCE_10; } } else if
-	 * (distanceType.equals(IWMarathonConstants.DISTANCE_5)) { return
-	 * IWMarathonConstants.MAX_NUMBER_DISTANCE_MIDNIGHT_5; } else if
-	 * (distanceType.equals(IWMarathonConstants.DISTANCE_3)) { if
-	 * (run.equals(RUN_MIDNIGHT_RUN)) { return
-	 * IWMarathonConstants.MAX_NUMBER_DISTANCE_MIDNIGHT_3; } else { return
-	 * IWMarathonConstants.MAX_NUMBER_DISTANCE_3; } } else if
-	 * (distanceType.equals(IWMarathonConstants.DISTANCE_1_5)) { return
-	 * IWMarathonConstants.MAX_NUMBER_DISTANCE_1_5; } else if
-	 * (distanceType.equals(IWMarathonConstants.DISTANCE_1)) { return
-	 * IWMarathonConstants.MAX_NUMBER_DISTANCE_1; } else if
-	 * (distanceType.equals(IWMarathonConstants.DISTANCE_0_5)) { return
-	 * IWMarathonConstants.MAX_NUMBER_DISTANCE_0_5; } return 0; }
-	 */
-
-	/*
-	 * private int getMinParticipantNumber(String distanceType, String run) { if
-	 * (distanceType.equals(IWMarathonConstants.DISTANCE_55) ||
-	 * distanceType.equals(IWMarathonConstants.DISTANCE_55_WITH_BUS)) { return
-	 * IWMarathonConstants.MIN_NUMBER_DISTANCE_55; } else if
-	 * (distanceType.equals(IWMarathonConstants.DISTANCE_42)) { return
-	 * IWMarathonConstants.MIN_NUMBER_DISTANCE_42; } else if
-	 * (distanceType.equals(IWMarathonConstants.DISTANCE_21)) { return
-	 * IWMarathonConstants.MIN_NUMBER_DISTANCE_21; } else if
-	 * (distanceType.equals(IWMarathonConstants.DISTANCE_CHARITY_42)) { return
-	 * IWMarathonConstants.MIN_NUMBER_DISTANCE_CHARITY_42; } else if
-	 * (distanceType.equals(IWMarathonConstants.DISTANCE_10)) { if
-	 * (run.equals(RUN_MIDNIGHT_RUN)) { return
-	 * IWMarathonConstants.MIN_NUMBER_DISTANCE_MIDNIGHT_10; } else { return
-	 * IWMarathonConstants.MIN_NUMBER_DISTANCE_10; } } else if
-	 * (distanceType.equals(IWMarathonConstants.DISTANCE_5)) { return
-	 * IWMarathonConstants.MIN_NUMBER_DISTANCE_MIDNIGHT_5; } else if
-	 * (distanceType.equals(IWMarathonConstants.DISTANCE_3)) { if
-	 * (run.equals(RUN_MIDNIGHT_RUN)) { return
-	 * IWMarathonConstants.MIN_NUMBER_DISTANCE_MIDNIGHT_3; } else { return
-	 * IWMarathonConstants.MIN_NUMBER_DISTANCE_3; } } else if
-	 * (distanceType.equals(IWMarathonConstants.DISTANCE_1_5)) { return
-	 * IWMarathonConstants.MIN_NUMBER_DISTANCE_1_5; } else if
-	 * (distanceType.equals(IWMarathonConstants.DISTANCE_1)) { return
-	 * IWMarathonConstants.MIN_NUMBER_DISTANCE_1; } else if
-	 * (distanceType.equals(IWMarathonConstants.DISTANCE_0_5)) { return
-	 * IWMarathonConstants.MIN_NUMBER_DISTANCE_0_5; } return 0; }
-	 */
-
 	public Country getCountryByNationality(Object nationality) {
 		Country country = null;
 		try {
@@ -2522,7 +2468,6 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		List disallowed = new ArrayList();
 
 		for (Iterator iterator = distances.iterator(); iterator.hasNext();) {
-
 			Distance distance = (Distance) iterator.next();
 
 			if ((distance.getMinimumAgeForDistance() > 0 && age < distance

@@ -8,6 +8,6 @@
 package is.idega.idegaweb.marathon.webservice.isb.server;
 
 public interface ISBService_PortType extends java.rmi.Remote {
-    public is.idega.idegaweb.marathon.webservice.isb.server.Session authenticateUser(java.lang.String loginName, java.lang.String password) throws java.rmi.RemoteException;
-    public boolean registerRunner(is.idega.idegaweb.marathon.webservice.isb.server.Session session, java.lang.String personalID, java.lang.String distance, java.lang.String shirtSize, java.lang.String email, java.lang.String phone, java.lang.String mobile, java.lang.String leg, is.idega.idegaweb.marathon.webservice.isb.server.RelayPartnerInfo[] partners, java.lang.String registeredBy) throws java.rmi.RemoteException, is.idega.idegaweb.marathon.webservice.isb.server.SessionTimedOutException;
+    public is.idega.idegaweb.marathon.webservice.isb.server.Session authenticateUser(is.idega.idegaweb.marathon.webservice.isb.server.Login in0) throws java.rmi.RemoteException;
+    public boolean registerRunner(is.idega.idegaweb.marathon.webservice.isb.server.RunnerInfo in0) throws java.rmi.RemoteException, is.idega.idegaweb.marathon.webservice.isb.server.SessionTimedOutException;
 }

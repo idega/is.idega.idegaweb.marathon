@@ -12,7 +12,7 @@
 
   <!-- Services from ISBServiceService WSDL service -->
 
-  <service name="ISBService" provider="java:RPC" style="document" use="encoded">
+  <service name="ISBService" provider="java:RPC" style="document" use="literal">
       <parameter name="wsdlTargetNamespace" value="http://illuminati.is"/>
       <parameter name="wsdlServiceElement" value="ISBServiceService"/>
       <parameter name="schemaQualified" value="http://illuminati.is"/>
@@ -22,12 +22,20 @@
       <parameter name="typeMappingVersion" value="1.2"/>
       <parameter name="allowedMethods" value="*"/>
 
+      <typeMapping
+        xmlns:ns="http://illuminati.is"
+        qname="ns:RunnerInfo"
+        type="java:is.idega.idegaweb.marathon.webservice.isb.server.RunnerInfo"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
       <arrayMapping
         xmlns:ns="http://illuminati.is"
         qname="ns:ArrayOfRelayPartnerInfo"
         type="java:is.idega.idegaweb.marathon.webservice.isb.server.RelayPartnerInfo[]"
         innerType="cmp-ns:RelayPartnerInfo" xmlns:cmp-ns="http://illuminati.is"
-        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+        encodingStyle=""
       />
       <typeMapping
         xmlns:ns="http://illuminati.is"
@@ -35,7 +43,7 @@
         type="java:is.idega.idegaweb.marathon.webservice.isb.server.SessionTimedOutException"
         serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
         deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+        encodingStyle=""
       />
       <typeMapping
         xmlns:ns="http://illuminati.is"
@@ -43,7 +51,15 @@
         type="java:is.idega.idegaweb.marathon.webservice.isb.server.RelayPartnerInfo"
         serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
         deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://illuminati.is"
+        qname="ns:Login"
+        type="java:is.idega.idegaweb.marathon.webservice.isb.server.Login"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
       />
       <typeMapping
         xmlns:ns="http://illuminati.is"
@@ -51,7 +67,7 @@
         type="java:is.idega.idegaweb.marathon.webservice.isb.server.Session"
         serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
         deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+        encodingStyle=""
       />
   </service>
 </deployment>

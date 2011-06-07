@@ -1,13 +1,30 @@
 package is.idega.idegaweb.marathon.webservice.business;
 
 
-import is.idega.idegaweb.marathon.webservice.server.Session;
-import java.rmi.RemoteException;
-import is.idega.idegaweb.marathon.webservice.server.SessionTimedOutException;
+import is.idega.idegaweb.marathon.webservice.isb.server.RelayPartnerInfo;
 import is.idega.idegaweb.marathon.webservice.server.CharityInformation;
+import is.idega.idegaweb.marathon.webservice.server.Session;
+import is.idega.idegaweb.marathon.webservice.server.SessionTimedOutException;
+
+import java.rmi.RemoteException;
+
 import com.idega.business.IBOService;
 
 public interface WebServiceBusiness extends IBOService {
+	/**
+	 * @see is.idega.idegaweb.marathon.webservice.business.WebServiceBusinessBean#registerRunner
+	 */
+	public boolean registerRunner(is.idega.idegaweb.marathon.webservice.isb.server.Session session, String personalID,
+			String distance, String shirtSize, String email, String phone,
+			String mobile, String leg, RelayPartnerInfo[] partners,
+			String registeredBy) throws SessionTimedOutException,
+			RemoteException;
+
+	/**
+	 * @see is.idega.idegaweb.marathon.webservice.business.WebServiceBusinessBean#getCharities
+	 */
+	public is.idega.idegaweb.marathon.webservice.server.Charity[] getCharities() throws RemoteException;
+
 	/**
 	 * @see is.idega.idegaweb.marathon.webservice.business.WebServiceBusinessBean#getCharityInformation
 	 */
@@ -20,7 +37,6 @@ public interface WebServiceBusiness extends IBOService {
 	public Session authenticateUser(String userName, String password)
 			throws RemoteException;
 
-	
 	/**
 	 * @see is.idega.idegaweb.marathon.webservice.business.WebServiceBusinessBean#updateUserPassword
 	 */

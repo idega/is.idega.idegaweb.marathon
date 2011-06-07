@@ -16,7 +16,7 @@ public class CharityServiceSoapBindingStub extends org.apache.axis.client.Stub i
     static org.apache.axis.description.OperationDesc [] _operations;
 
     static {
-        _operations = new org.apache.axis.description.OperationDesc[5];
+        _operations = new org.apache.axis.description.OperationDesc[6];
         _initOperationDesc1();
     }
 
@@ -110,6 +110,15 @@ public class CharityServiceSoapBindingStub extends org.apache.axis.client.Stub i
                      ));
         _operations[4] = oper;
 
+        oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("getCharities");
+        oper.setReturnType(new javax.xml.namespace.QName("http://illuminati.is", "ArrayOfCharity"));
+        oper.setReturnClass(is.idega.idegaweb.marathon.webservice.server.Charity[].class);
+        oper.setReturnQName(new javax.xml.namespace.QName("", "getCharitiesReturn"));
+        oper.setStyle(org.apache.axis.constants.Style.RPC);
+        oper.setUse(org.apache.axis.constants.Use.ENCODED);
+        _operations[5] = oper;
+
     }
 
     public CharityServiceSoapBindingStub() throws org.apache.axis.AxisFault {
@@ -141,6 +150,22 @@ public class CharityServiceSoapBindingStub extends org.apache.axis.client.Stub i
             java.lang.Class simpledf = org.apache.axis.encoding.ser.SimpleDeserializerFactory.class;
             java.lang.Class simplelistsf = org.apache.axis.encoding.ser.SimpleListSerializerFactory.class;
             java.lang.Class simplelistdf = org.apache.axis.encoding.ser.SimpleListDeserializerFactory.class;
+            qName = new javax.xml.namespace.QName("http://illuminati.is", "ArrayOfCharity");
+            cachedSerQNames.add(qName);
+            cls = is.idega.idegaweb.marathon.webservice.server.Charity[].class;
+            cachedSerClasses.add(cls);
+            qName = new javax.xml.namespace.QName("http://illuminati.is", "Charity");
+            qName2 = null;
+            cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
+            cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
+
+            qName = new javax.xml.namespace.QName("http://illuminati.is", "Charity");
+            cachedSerQNames.add(qName);
+            cls = is.idega.idegaweb.marathon.webservice.server.Charity.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
             qName = new javax.xml.namespace.QName("http://illuminati.is", "CharityInformation");
             cachedSerQNames.add(qName);
             cls = is.idega.idegaweb.marathon.webservice.server.CharityInformation.class;
@@ -404,6 +429,37 @@ public class CharityServiceSoapBindingStub extends org.apache.axis.client.Stub i
               throw (is.idega.idegaweb.marathon.webservice.server.SessionTimedOutException) axisFaultException.detail;
          }
    }
+  throw axisFaultException;
+}
+    }
+
+    public is.idega.idegaweb.marathon.webservice.server.Charity[] getCharities() throws java.rmi.RemoteException {
+        if (super.cachedEndpoint == null) {
+            throw new org.apache.axis.NoEndPointException();
+        }
+        org.apache.axis.client.Call _call = createCall();
+        _call.setOperation(_operations[5]);
+        _call.setUseSOAPAction(true);
+        _call.setSOAPActionURI("");
+        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
+        _call.setOperationName(new javax.xml.namespace.QName("http://illuminati.is", "getCharities"));
+
+        setRequestHeaders(_call);
+        setAttachments(_call);
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {});
+
+        if (_resp instanceof java.rmi.RemoteException) {
+            throw (java.rmi.RemoteException)_resp;
+        }
+        else {
+            extractAttachments(_call);
+            try {
+                return (is.idega.idegaweb.marathon.webservice.server.Charity[]) _resp;
+            } catch (java.lang.Exception _exception) {
+                return (is.idega.idegaweb.marathon.webservice.server.Charity[]) org.apache.axis.utils.JavaUtils.convert(_resp, is.idega.idegaweb.marathon.webservice.server.Charity[].class);
+            }
+        }
+  } catch (org.apache.axis.AxisFault axisFaultException) {
   throw axisFaultException;
 }
     }
