@@ -382,7 +382,7 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 					Charity c = (Charity) it.next();
 					ret[counter].setId(c.getOrganizationalID());
 					ret[counter].setName(c.getName());
-					ret[counter++].setDescription("");
+					ret[counter++].setDescription(c.getDescription());
 				}
 				
 				return ret;

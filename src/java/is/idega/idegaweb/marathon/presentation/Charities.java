@@ -21,6 +21,7 @@ import com.idega.presentation.text.Text;
 import com.idega.presentation.ui.Form;
 import com.idega.presentation.ui.Label;
 import com.idega.presentation.ui.SubmitButton;
+import com.idega.presentation.ui.TextArea;
 import com.idega.presentation.ui.TextInput;
 
 public class Charities extends RunBlock {
@@ -29,6 +30,7 @@ public class Charities extends RunBlock {
 
 	private static final String PARAMETER_NAME = "name";
 	private static final String PARAMETER_ORGANIZATIONAL_ID = "org_id";
+	private static final String PARAMETER_DESCRIPTION = "description";
 
 	private static final int ACTION_VIEW = 1;
 	private static final int ACTION_EDIT = 2;
@@ -89,6 +91,7 @@ public class Charities extends RunBlock {
 			charity.setName(iwc.getParameter(PARAMETER_NAME));
 			charity.setOrganizationalID(iwc
 					.getParameter(PARAMETER_ORGANIZATIONAL_ID));
+			charity.setDescription(iwc.getParameter(PARAMETER_DESCRIPTION));
 			charity.store();
 		}
 	}
@@ -112,6 +115,9 @@ public class Charities extends RunBlock {
 		cell = row.createHeaderCell();
 		cell.setCellHorizontalAlignment(Table2.HORIZONTAL_ALIGNMENT_LEFT);
 		cell.add(new Text(localize("organization_id", "Organization id")));
+		cell = row.createHeaderCell();
+		cell.setCellHorizontalAlignment(Table2.HORIZONTAL_ALIGNMENT_LEFT);
+		cell.add(new Text(localize("description", "Description")));
 		
 		group = table.createBodyRowGroup();
 
@@ -127,6 +133,7 @@ public class Charities extends RunBlock {
 				row = group.createRow();
 				row.createCell().add(new Text(charity.getName()));
 				row.createCell().add(new Text(charity.getOrganizationalID()));
+				row.createCell().add(new Text(charity.getDescription()));
 				row.createCell().add(edit);
 			}
 		}
@@ -165,6 +172,17 @@ public class Charities extends RunBlock {
 		form.add(layer);
 		form.add(new Break());
 
+		layer = new Layer(Layer.DIV);
+		layer.setStyleClass(STYLENAME_FORM_ELEMENT);
+		TextArea descInput = new TextArea(PARAMETER_DESCRIPTION, 100, 10);
+		descInput.setMaximumCharacters(1000);
+		Label descLabel = new Label(localize("charity_tab.description",
+				"Description"), descInput);
+		layer.add(descLabel);
+		layer.add(descInput);
+		form.add(layer);
+		form.add(new Break());
+
 		SubmitButton save = (SubmitButton) getButton(new SubmitButton(localize(
 				"save", "Save"), PARAMETER_ACTION, String.valueOf(ACTION_SAVE)));
 		SubmitButton cancel = (SubmitButton) getButton(new SubmitButton(
@@ -182,6 +200,7 @@ public class Charities extends RunBlock {
 								new Integer(charityID));
 				nameInput.setValue(selectedCharity.getName());
 				orgIDInput.setValue(selectedCharity.getOrganizationalID());
+				descInput.setValue(selectedCharity.getDescription());
 			} catch (FinderException e) {
 			}
 		}

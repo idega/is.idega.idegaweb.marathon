@@ -1,8 +1,8 @@
 package is.idega.idegaweb.marathon.data;
 
 
-import com.idega.user.data.Group;
 import com.idega.data.IDOEntity;
+import com.idega.user.data.Group;
 
 public interface Charity extends IDOEntity {
 	/**
@@ -16,6 +16,11 @@ public interface Charity extends IDOEntity {
 	public String getOrganizationalID();
 
 	/**
+	 * @see is.idega.idegaweb.marathon.data.CharityBMPBean#getDescription
+	 */
+	public String getDescription();
+
+	/**
 	 * @see is.idega.idegaweb.marathon.data.CharityBMPBean#setName
 	 */
 	public void setName(String name);
@@ -24,6 +29,11 @@ public interface Charity extends IDOEntity {
 	 * @see is.idega.idegaweb.marathon.data.CharityBMPBean#setOrganizationalID
 	 */
 	public void setOrganizationalID(String organizationalId);
+
+	/**
+	 * @see is.idega.idegaweb.marathon.data.CharityBMPBean#setDescription
+	 */
+	public void setDescription(String description);
 
 	/**
 	 * @see is.idega.idegaweb.marathon.data.CharityBMPBean#removeFromGroup

@@ -23,8 +23,9 @@ public class CharityBMPBean extends GenericEntity implements Charity {
 	 */
 	private static final long serialVersionUID = 6827105404436456030L;
 	protected static final String ENTITY_NAME = "run_charity_organization";
-	protected static final String COLUMN_NAME_NAME = "name";
-	protected static final String COLUMN_NAME_ORGANIZATIONAL_ID = "organizational_id";
+	protected static final String COLUMN_NAME = "name";
+	protected static final String COLUMN_ORGANIZATIONAL_ID = "organizational_id";
+	private static final String COLUMN_DESCRIPTION = "description";
 	
 	public String getEntityName() {
 		return ENTITY_NAME;
@@ -32,28 +33,40 @@ public class CharityBMPBean extends GenericEntity implements Charity {
 
 	public void initializeAttributes() {
 		addAttribute(getIDColumnName());
-		addAttribute(COLUMN_NAME_NAME, "Name", true, true, String.class);
-		addAttribute(COLUMN_NAME_ORGANIZATIONAL_ID, "Organizational ID", true, true, String.class);
+		addAttribute(COLUMN_NAME, "Name", String.class);
+		addAttribute(COLUMN_ORGANIZATIONAL_ID, "Organizational ID", String.class);
+		addAttribute(COLUMN_DESCRIPTION, "Description", String.class, 1000);
 
 		this.addManyToManyRelationShip(Group.class);
 	}
 
+	//getters
 	public String getName() {
-		return (String) getColumnValue(COLUMN_NAME_NAME);
+		return getStringColumnValue(COLUMN_NAME);
 	}
 
 	public String getOrganizationalID() {
-		return (String) getColumnValue(COLUMN_NAME_ORGANIZATIONAL_ID);
+		return getStringColumnValue(COLUMN_ORGANIZATIONAL_ID);
 	}
 
+	public String getDescription() {
+		return getStringColumnValue(COLUMN_DESCRIPTION);
+	}
+	
+	//setters
 	public void setName(String name) {
-		setColumn(COLUMN_NAME_NAME, name);
+		setColumn(COLUMN_NAME, name);
 	}
 
 	public void setOrganizationalID(String organizationalId) {
-		setColumn(COLUMN_NAME_ORGANIZATIONAL_ID, organizationalId);
+		setColumn(COLUMN_ORGANIZATIONAL_ID, organizationalId);
 	}
 	
+	public void setDescription(String description) {
+		setColumn(COLUMN_DESCRIPTION, description);
+	}
+	
+	//ejb
 	public void removeFromGroup(Group group) {
 		try {
 			super.idoRemoveFrom(group);
@@ -72,13 +85,13 @@ public class CharityBMPBean extends GenericEntity implements Charity {
 	
 	public Collection ejbFindAllCharities() throws FinderException {
 		SelectQuery query = idoSelectPKQuery();
-		query.addOrder(new Table(this), COLUMN_NAME_NAME, true);
+		query.addOrder(new Table(this), COLUMN_NAME, true);
 		return idoFindPKsByQuery(query);
 	}
 	
 	public Object ejbFindCharityByOrganizationalId(String organizationalId) throws FinderException {
 		Table table = new Table(this);
-		Column orgId = new Column(table, COLUMN_NAME_ORGANIZATIONAL_ID);
+		Column orgId = new Column(table, COLUMN_ORGANIZATIONAL_ID);
 		
 		SelectQuery query = new SelectQuery(table);
 		query.addColumn(new WildCardColumn(table));
@@ -97,7 +110,7 @@ public class CharityBMPBean extends GenericEntity implements Charity {
 		query.addManyToManyJoin(table, runYearTable);
 		query.addColumn(charityIDColumn);
 		query.addCriteria(new MatchCriteria(runYearIDColumn, MatchCriteria.EQUALS, runYearID));
-		query.addOrder(table, COLUMN_NAME_NAME, true);
+		query.addOrder(table, COLUMN_NAME, true);
 
 		return this.idoFindPKsByQuery(query);
 	}

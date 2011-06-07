@@ -1,11 +1,11 @@
 package is.idega.idegaweb.marathon.data;
 
 
-import com.idega.data.IDORelationshipException;
-import java.util.Collection;
 import javax.ejb.CreateException;
+import com.idega.data.IDORelationshipException;
 import com.idega.data.IDOHome;
 import javax.ejb.FinderException;
+import java.util.Collection;
 
 public interface CharityHome extends IDOHome {
 	public Charity create() throws CreateException;

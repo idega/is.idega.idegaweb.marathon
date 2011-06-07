@@ -1,12 +1,12 @@
 package is.idega.idegaweb.marathon.data;
 
 
-import com.idega.data.IDORelationshipException;
-import java.util.Collection;
-import javax.ejb.CreateException;
-import javax.ejb.FinderException;
-import com.idega.data.IDOEntity;
 import com.idega.data.IDOFactory;
+import javax.ejb.CreateException;
+import com.idega.data.IDORelationshipException;
+import com.idega.data.IDOEntity;
+import javax.ejb.FinderException;
+import java.util.Collection;
 
 public class CharityHomeImpl extends IDOFactory implements CharityHome {
 	public Class getEntityInterfaceClass() {
