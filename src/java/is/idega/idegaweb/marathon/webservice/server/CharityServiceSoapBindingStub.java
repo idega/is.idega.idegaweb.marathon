@@ -16,7 +16,7 @@ public class CharityServiceSoapBindingStub extends org.apache.axis.client.Stub i
     static org.apache.axis.description.OperationDesc [] _operations;
 
     static {
-        _operations = new org.apache.axis.description.OperationDesc[6];
+        _operations = new org.apache.axis.description.OperationDesc[7];
         _initOperationDesc1();
     }
 
@@ -118,6 +118,17 @@ public class CharityServiceSoapBindingStub extends org.apache.axis.client.Stub i
         oper.setStyle(org.apache.axis.constants.Style.RPC);
         oper.setUse(org.apache.axis.constants.Use.ENCODED);
         _operations[5] = oper;
+
+        oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("getCharity");
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "charityPersonalID"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        oper.setReturnType(new javax.xml.namespace.QName("http://illuminati.is", "Charity"));
+        oper.setReturnClass(is.idega.idegaweb.marathon.webservice.server.Charity.class);
+        oper.setReturnQName(new javax.xml.namespace.QName("", "getCharityReturn"));
+        oper.setStyle(org.apache.axis.constants.Style.RPC);
+        oper.setUse(org.apache.axis.constants.Use.ENCODED);
+        _operations[6] = oper;
 
     }
 
@@ -457,6 +468,37 @@ public class CharityServiceSoapBindingStub extends org.apache.axis.client.Stub i
                 return (is.idega.idegaweb.marathon.webservice.server.Charity[]) _resp;
             } catch (java.lang.Exception _exception) {
                 return (is.idega.idegaweb.marathon.webservice.server.Charity[]) org.apache.axis.utils.JavaUtils.convert(_resp, is.idega.idegaweb.marathon.webservice.server.Charity[].class);
+            }
+        }
+  } catch (org.apache.axis.AxisFault axisFaultException) {
+  throw axisFaultException;
+}
+    }
+
+    public is.idega.idegaweb.marathon.webservice.server.Charity getCharity(java.lang.String charityPersonalID) throws java.rmi.RemoteException {
+        if (super.cachedEndpoint == null) {
+            throw new org.apache.axis.NoEndPointException();
+        }
+        org.apache.axis.client.Call _call = createCall();
+        _call.setOperation(_operations[6]);
+        _call.setUseSOAPAction(true);
+        _call.setSOAPActionURI("");
+        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
+        _call.setOperationName(new javax.xml.namespace.QName("http://illuminati.is", "getCharity"));
+
+        setRequestHeaders(_call);
+        setAttachments(_call);
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {charityPersonalID});
+
+        if (_resp instanceof java.rmi.RemoteException) {
+            throw (java.rmi.RemoteException)_resp;
+        }
+        else {
+            extractAttachments(_call);
+            try {
+                return (is.idega.idegaweb.marathon.webservice.server.Charity) _resp;
+            } catch (java.lang.Exception _exception) {
+                return (is.idega.idegaweb.marathon.webservice.server.Charity) org.apache.axis.utils.JavaUtils.convert(_resp, is.idega.idegaweb.marathon.webservice.server.Charity.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {

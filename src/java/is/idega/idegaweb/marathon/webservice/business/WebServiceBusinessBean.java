@@ -393,6 +393,23 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 		
 		return null;
 	}
+
+	public is.idega.idegaweb.marathon.webservice.server.Charity getCharity(String charityPersonalID) {
+		try {
+			Charity charity = getRunBusiness().getCharityBusiness().getCharityByOrganisationalID(charityPersonalID);
+			is.idega.idegaweb.marathon.webservice.server.Charity ret = new is.idega.idegaweb.marathon.webservice.server.Charity();
+			ret.setDescription(charity.getDescription());
+			ret.setId(charity.getOrganizationalID());
+			ret.setName(charity.getName());
+			
+			return ret;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+
 	
 	public CharityInformation getCharityInformation(String personalID)
 			throws java.rmi.RemoteException {

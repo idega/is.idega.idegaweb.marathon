@@ -38,6 +38,10 @@ public class CharityServiceSoapBindingImpl implements is.idega.idegaweb.marathon
         return getBusiness().getCharities();
     }
 
+    public is.idega.idegaweb.marathon.webservice.server.Charity getCharity(java.lang.String charityPersonalID) throws java.rmi.RemoteException {
+        return getBusiness().getCharity(charityPersonalID);
+    }
+
     private WebServiceBusiness getBusiness() throws IBOLookupException {
 		return (WebServiceBusiness) IBOLookup.getServiceInstance(
 				IWMainApplication.getDefaultIWApplicationContext(),

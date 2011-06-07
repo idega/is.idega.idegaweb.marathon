@@ -26,6 +26,11 @@ public interface WebServiceBusiness extends IBOService {
 	public is.idega.idegaweb.marathon.webservice.server.Charity[] getCharities() throws RemoteException;
 
 	/**
+	 * @see is.idega.idegaweb.marathon.webservice.business.WebServiceBusinessBean#getCharity
+	 */
+	public is.idega.idegaweb.marathon.webservice.server.Charity getCharity(String charityPersonalID) throws RemoteException;
+
+	/**
 	 * @see is.idega.idegaweb.marathon.webservice.business.WebServiceBusinessBean#getCharityInformation
 	 */
 	public CharityInformation getCharityInformation(String personalID)

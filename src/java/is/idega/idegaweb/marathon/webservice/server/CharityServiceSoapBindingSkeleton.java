@@ -126,6 +126,18 @@ public class CharityServiceSoapBindingSkeleton implements is.idega.idegaweb.mara
             _myOperations.put("getCharities", new java.util.ArrayList());
         }
         ((java.util.List)_myOperations.get("getCharities")).add(_oper);
+        _params = new org.apache.axis.description.ParameterDesc [] {
+            new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "charityPersonalID"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"), java.lang.String.class, false, false), 
+        };
+        _oper = new org.apache.axis.description.OperationDesc("getCharity", _params, new javax.xml.namespace.QName("", "getCharityReturn"));
+        _oper.setReturnType(new javax.xml.namespace.QName("http://illuminati.is", "Charity"));
+        _oper.setElementQName(new javax.xml.namespace.QName("http://illuminati.is", "getCharity"));
+        _oper.setSoapAction("");
+        _myOperationsList.add(_oper);
+        if (_myOperations.get("getCharity") == null) {
+            _myOperations.put("getCharity", new java.util.ArrayList());
+        }
+        ((java.util.List)_myOperations.get("getCharity")).add(_oper);
     }
 
     public CharityServiceSoapBindingSkeleton() {
@@ -168,6 +180,12 @@ public class CharityServiceSoapBindingSkeleton implements is.idega.idegaweb.mara
     public is.idega.idegaweb.marathon.webservice.server.Charity[] getCharities() throws java.rmi.RemoteException
     {
         is.idega.idegaweb.marathon.webservice.server.Charity[] ret = impl.getCharities();
+        return ret;
+    }
+
+    public is.idega.idegaweb.marathon.webservice.server.Charity getCharity(java.lang.String charityPersonalID) throws java.rmi.RemoteException
+    {
+        is.idega.idegaweb.marathon.webservice.server.Charity ret = impl.getCharity(charityPersonalID);
         return ret;
     }
 
