@@ -18,6 +18,8 @@ import is.idega.idegaweb.marathon.webservice.hlaupastyrkur.client.ContestantRequ
 import is.idega.idegaweb.marathon.webservice.hlaupastyrkur.client.ContestantServiceLocator;
 import is.idega.idegaweb.marathon.webservice.hlaupastyrkur.client.IContestantService;
 import is.idega.idegaweb.marathon.webservice.hlaupastyrkur.client.Login;
+import is.idega.idegaweb.marathon.webservice.hlaupastyrkur.client.TeamMember;
+import is.idega.idegaweb.marathon.webservice.hlaupastyrkur.client.TeamRequest;
 
 import java.net.URL;
 import java.rmi.RemoteException;
@@ -675,6 +677,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				}
 
 				try {
+					HlaupastyrkurHolder holder = null;
 					ParticipantHome runHome = (ParticipantHome) getIDOHome(Participant.class);
 					Participant participant = runHome.create();
 					participant.setUser(user);
@@ -687,6 +690,13 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 						if (charity != null) {
 							participant.setCharityId(charity
 									.getOrganizationalID());
+						}
+						
+						if (sendCharityRegistration && charity != null) {
+							holder = new HlaupastyrkurHolder();
+							holder.setRunner(runner);
+							holder.setLogin(userNameString);
+							holder.setPassword(passwordString);
 						}
 					}
 					if (runner.getCategory() != null) {
@@ -740,6 +750,12 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 									.getPartner1ShirtSize());
 							participant.setRelayPartner1Leg(runner
 									.getPartner1Leg());
+							
+							if (holder != null) {
+								TeamMember member = new TeamMember(runner
+										.getPartner1SSN(), Boolean.TRUE);
+								holder.addToTeam(member);
+							}
 
 							if (runner.getPartner2SSN() != null
 									& !"".equals(runner.getPartner2SSN())) {
@@ -754,6 +770,11 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 								participant.setRelayPartner2Leg(runner
 										.getPartner2Leg());
 
+								if (holder != null) {
+									TeamMember member = new TeamMember(runner
+											.getPartner2SSN(), Boolean.TRUE);
+									holder.addToTeam(member);
+								}
 								if (runner.getPartner3SSN() != null
 										& !"".equals(runner.getPartner3SSN())) {
 									participant.setRelayPartner3SSN(runner
@@ -767,24 +788,21 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 													.getPartner3ShirtSize());
 									participant.setRelayPartner3Leg(runner
 											.getPartner3Leg());
+									
+									if (holder != null) {
+										TeamMember member = new TeamMember(runner
+												.getPartner3SSN(), Boolean.TRUE);
+										holder.addToTeam(member);
+									}
 								}
 							}
 						}
 					}
 
-					participant.store();
-
-					if (runner.isParticipateInCharity()) {
-						Charity charity = runner.getCharity();
-
-						if (sendCharityRegistration && charity != null) {
-							HlaupastyrkurHolder holder = new HlaupastyrkurHolder();
-							holder.setRunner(runner);
-							holder.setLogin(userNameString);
-							holder.setPassword(passwordString);
-							hlaupastyrkur.add(holder);
-						}
+					if (holder != null) {
+						hlaupastyrkur.add(holder);
 					}
+					participant.store();
 
 					participants.add(participant);
 
@@ -913,15 +931,20 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					String passwordString = holder.getPassword();
 					Charity charity = runner.getCharity();
 					try {
-
-						ContestantRequest request = new ContestantRequest(
-								runner.getDistance().getName(), new Login(
-										passwd, userID),
-								charity.getOrganizationalID(),
-								runner.getName(), userNameString,
-								passwordString, runner.getPersonalID(),
-								Boolean.TRUE);
-						port.registerContestant(request);
+						if (holder.isTeam()) {
+							TeamRequest request2 = new TeamRequest(runner.getDistance().getName(), new Login(
+									passwd, userID), charity.getOrganizationalID(), runner.getName(), passwordString, userNameString, holder.getMembers(), runner.getName());
+							port.registerTeam(request2 );							
+						} else {
+							ContestantRequest request = new ContestantRequest(
+									runner.getDistance().getName(), new Login(
+											passwd, userID),
+									charity.getOrganizationalID(),
+									runner.getName(), passwordString, userNameString,
+									runner.getPersonalID(),
+									Boolean.TRUE);
+							port.registerContestant(request);							
+						}
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
