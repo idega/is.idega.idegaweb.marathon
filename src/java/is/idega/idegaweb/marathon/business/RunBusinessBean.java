@@ -683,26 +683,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 						if (charity != null) {
 							participant.setCharityId(charity
 									.getOrganizationalID());
-						}
-						
-						if (sendCharityRegistration && charity != null) {
-							try {
-								String passwd = getIWApplicationContext()
-									.getIWMainApplication().getSettings().getProperty("hlaupastyrkur_passwd", "");
-								String userID = getIWApplicationContext()
-									.getIWMainApplication().getSettings().getProperty("hlaupastyrkur_userid", "");
-								ContestantServiceLocator locator = new ContestantServiceLocator();
-								IContestantService port = locator
-										.getBasicHttpBinding_IContestantService(new URL(
-												"http://www.hlaupastyrkur.is/services/contestantservice.svc"));
-								
-								ContestantRequest request = new ContestantRequest(runner.getDistance().getName(), new Login(passwd, userID), charity.getOrganizationalID(), runner.getName(), userNameString, passwordString, runner.getPersonalID(), Boolean.TRUE);
-								port.registerContestant(request);
-							} catch(Exception e) {
-								e.printStackTrace();
-							}
-
-						}
+						}						
 					}
 					if (runner.getCategory() != null) {
 						participant.setCategoryId(((Integer) runner
@@ -788,6 +769,29 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					}
 
 					participant.store();
+					
+					if (runner.isParticipateInCharity()) {
+						Charity charity = runner.getCharity();
+						
+						if (sendCharityRegistration && charity != null) {
+							try {
+								String passwd = getIWApplicationContext()
+									.getIWMainApplication().getSettings().getProperty("hlaupastyrkur_passwd", "");
+								String userID = getIWApplicationContext()
+									.getIWMainApplication().getSettings().getProperty("hlaupastyrkur_userid", "");
+								ContestantServiceLocator locator = new ContestantServiceLocator();
+								IContestantService port = locator
+										.getBasicHttpBinding_IContestantService(new URL(
+												"http://www.hlaupastyrkur.is/services/contestantservice.svc"));
+								
+								ContestantRequest request = new ContestantRequest(runner.getDistance().getName(), new Login(passwd, userID), charity.getOrganizationalID(), runner.getName(), userNameString, passwordString, runner.getPersonalID(), Boolean.TRUE);
+								port.registerContestant(request);
+							} catch(Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}
+					
 					participants.add(participant);
 
 					getUserBiz().updateUserHomePhone(user,

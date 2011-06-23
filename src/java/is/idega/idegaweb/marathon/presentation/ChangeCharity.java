@@ -4,7 +4,13 @@ import is.idega.idegaweb.marathon.business.ConverterUtility;
 import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.data.Year;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
+import is.idega.idegaweb.marathon.webservice.hlaupastyrkur.client.ContestantRequest;
+import is.idega.idegaweb.marathon.webservice.hlaupastyrkur.client.ContestantServiceLocator;
+import is.idega.idegaweb.marathon.webservice.hlaupastyrkur.client.IContestantService;
+import is.idega.idegaweb.marathon.webservice.hlaupastyrkur.client.Login;
+import is.idega.idegaweb.marathon.webservice.hlaupastyrkur.client.UpdateContestantRequest;
 
+import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -253,6 +259,25 @@ public class ChangeCharity extends RunBlock {
 				Participant participant = getRunBusiness(iwc).getRunObjByUserIDandYearID(iwc.getCurrentUserId(), Integer.parseInt(runYear));
 				participant.setCharityId(charity);
 				participant.store();
+				
+				if (participant.getCharityId() != null && !"".equals(participant.getCharityId())) {
+					try {
+						String passwd = getIWApplicationContext()
+							.getIWMainApplication().getSettings().getProperty("hlaupastyrkur_passwd", "");
+						String userID = getIWApplicationContext()
+							.getIWMainApplication().getSettings().getProperty("hlaupastyrkur_userid", "");
+						ContestantServiceLocator locator = new ContestantServiceLocator();
+						IContestantService port = locator
+								.getBasicHttpBinding_IContestantService(new URL(
+										"http://www.hlaupastyrkur.is/services/contestantservice.svc"));
+						
+						UpdateContestantRequest request = new UpdateContestantRequest(participant.getRunDistanceGroup().getName(), new Login(passwd, userID), participant.getCharityId(), null, null, participant.getUser().getPersonalID(), Boolean.TRUE);
+						port.updateContestant(request);
+					} catch(Exception e) {
+						e.printStackTrace();
+					}
+				}
+				
 				getUserBusiness(iwc).callAllUserGroupPluginAfterUserCreateOrUpdateMethod(this.user);
 			}
 			catch (Exception e) {
