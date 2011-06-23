@@ -22,6 +22,8 @@ public class CharityInformation  implements java.io.Serializable {
 
     private java.lang.String email;
 
+    private boolean employee;
+
     private java.lang.String gender;
 
     private java.lang.String mobile;
@@ -47,6 +49,7 @@ public class CharityInformation  implements java.io.Serializable {
            java.lang.String country,
            java.lang.String distance,
            java.lang.String email,
+           boolean employee,
            java.lang.String gender,
            java.lang.String mobile,
            java.lang.String name,
@@ -61,6 +64,7 @@ public class CharityInformation  implements java.io.Serializable {
            this.country = country;
            this.distance = distance;
            this.email = email;
+           this.employee = employee;
            this.gender = gender;
            this.mobile = mobile;
            this.name = name;
@@ -208,6 +212,26 @@ public class CharityInformation  implements java.io.Serializable {
      */
     public void setEmail(java.lang.String email) {
         this.email = email;
+    }
+
+
+    /**
+     * Gets the employee value for this CharityInformation.
+     * 
+     * @return employee
+     */
+    public boolean isEmployee() {
+        return employee;
+    }
+
+
+    /**
+     * Sets the employee value for this CharityInformation.
+     * 
+     * @param employee
+     */
+    public void setEmployee(boolean employee) {
+        this.employee = employee;
     }
 
 
@@ -383,6 +407,7 @@ public class CharityInformation  implements java.io.Serializable {
             ((this.email==null && other.getEmail()==null) || 
              (this.email!=null &&
               this.email.equals(other.getEmail()))) &&
+            this.employee == other.isEmployee() &&
             ((this.gender==null && other.getGender()==null) || 
              (this.gender!=null &&
               this.gender.equals(other.getGender()))) &&
@@ -436,6 +461,7 @@ public class CharityInformation  implements java.io.Serializable {
         if (getEmail() != null) {
             _hashCode += getEmail().hashCode();
         }
+        _hashCode += (isEmployee() ? Boolean.TRUE : Boolean.FALSE).hashCode();
         if (getGender() != null) {
             _hashCode += getGender().hashCode();
         }
@@ -508,6 +534,12 @@ public class CharityInformation  implements java.io.Serializable {
         elemField.setXmlName(new javax.xml.namespace.QName("", "email"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://schemas.xmlsoap.org/soap/encoding/", "string"));
         elemField.setNillable(true);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("employee");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "employee"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
+        elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("gender");

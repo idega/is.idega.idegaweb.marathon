@@ -175,6 +175,7 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 		runner.setRelayLeg(leg);
 		runner.setShirtSize(getShirtSizeForUser(user, shirtSize, shirtSizeGender));
 		runner.setPaymentGroup("ISB_2011");
+		runner.setSponsoredRunner(true);
 		Country icelandicNationality = null;
 		try {
 			icelandicNationality = getAddressBusiness().getCountryHome()
@@ -510,6 +511,12 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 				info.setEmail(email.getEmailAddress());
 			}
 
+			if (runner.isSponsoredRunner()) {
+				info.setEmployee(true);
+			} else {
+				info.setEmployee(false);
+			}
+			
 			return info;
 
 		} catch (FinderException e) {

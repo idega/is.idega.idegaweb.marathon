@@ -42,8 +42,6 @@ import com.idega.block.creditcard.business.CreditCardAuthorizationException;
 import com.idega.block.creditcard.business.CreditCardBusiness;
 import com.idega.block.creditcard.business.CreditCardClient;
 import com.idega.block.creditcard.data.CreditCardMerchant;
-import com.idega.block.creditcard.data.KortathjonustanMerchant;
-import com.idega.block.creditcard.data.KortathjonustanMerchantHome;
 import com.idega.block.creditcard.data.TPosMerchant;
 import com.idega.block.creditcard.data.TPosMerchantHome;
 import com.idega.business.IBOLookup;
@@ -472,9 +470,11 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 							.getResourceBundle(locale);
 					Object[] args = {
 							user.getName(),
-							iwrb.getLocalizedString(participant.getRunTypeGroup().getName(),
-									participant.getRunTypeGroup().getName())
-									+ " " + participant.getRunYearGroup().getName(),
+							iwrb.getLocalizedString(participant
+									.getRunTypeGroup().getName(), participant
+									.getRunTypeGroup().getName())
+									+ " "
+									+ participant.getRunYearGroup().getName(),
 							iwrb.getLocalizedString(
 									"shirt_size." + participant.getShirtSize(),
 									participant.getShirtSize()) };
@@ -520,11 +520,10 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		}
 	}
 
-	public void markParticipantAsPaid(Collection participans,
-			String email, String hiddenCardNumber, double amount,
-			IWTimestamp date, Locale locale,
-			boolean disableSendPaymentConfirmation, String runPrefix)
-			throws IDOCreateException {
+	public void markParticipantAsPaid(Collection participans, String email,
+			String hiddenCardNumber, double amount, IWTimestamp date,
+			Locale locale, boolean disableSendPaymentConfirmation,
+			String runPrefix) throws IDOCreateException {
 		Collection participants = new ArrayList();
 
 		UserTransaction trans = getSessionContext().getUserTransaction();
@@ -553,9 +552,11 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 							.getResourceBundle(locale);
 					Object[] args = {
 							user.getName(),
-							iwrb.getLocalizedString(participant.getRunTypeGroup().getName(),
-									participant.getRunTypeGroup().getName())
-									+ " " + participant.getRunYearGroup().getName(),
+							iwrb.getLocalizedString(participant
+									.getRunTypeGroup().getName(), participant
+									.getRunTypeGroup().getName())
+									+ " "
+									+ participant.getRunYearGroup().getName(),
 							iwrb.getLocalizedString(
 									"shirt_size." + participant.getShirtSize(),
 									participant.getShirtSize()) };
@@ -600,12 +601,15 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			throw new IDOCreateException(ex);
 		}
 	}
-	
+
 	public Collection saveParticipants(Collection runners, String email,
 			String hiddenCardNumber, double amount, IWTimestamp date,
 			Locale locale, boolean disableSendPaymentConfirmation,
-			String runPrefix, boolean sendCharityRegistration) throws IDOCreateException {
+			String runPrefix, boolean sendCharityRegistration)
+			throws IDOCreateException {
 		Collection participants = new ArrayList();
+
+		List hlaupastyrkur = new ArrayList();
 
 		UserTransaction trans = getSessionContext().getUserTransaction();
 		try {
@@ -683,7 +687,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 						if (charity != null) {
 							participant.setCharityId(charity
 									.getOrganizationalID());
-						}						
+						}
 					}
 					if (runner.getCategory() != null) {
 						participant.setCategoryId(((Integer) runner
@@ -706,7 +710,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					if (runner.getPaymentGroup() != null) {
 						participant.setPaymentGroup(runner.getPaymentGroup());
 					}
-					
+
 					participant.setQuestion1Hour(runner.getQuestion1Hour());
 					participant.setQuestion1Minute(runner.getQuestion1Minute());
 					participant.setQuestion1Year(runner.getQuestion1Year());
@@ -769,29 +773,19 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					}
 
 					participant.store();
-					
+
 					if (runner.isParticipateInCharity()) {
 						Charity charity = runner.getCharity();
-						
+
 						if (sendCharityRegistration && charity != null) {
-							try {
-								String passwd = getIWApplicationContext()
-									.getIWMainApplication().getSettings().getProperty("hlaupastyrkur_passwd", "");
-								String userID = getIWApplicationContext()
-									.getIWMainApplication().getSettings().getProperty("hlaupastyrkur_userid", "");
-								ContestantServiceLocator locator = new ContestantServiceLocator();
-								IContestantService port = locator
-										.getBasicHttpBinding_IContestantService(new URL(
-												"http://www.hlaupastyrkur.is/services/contestantservice.svc"));
-								
-								ContestantRequest request = new ContestantRequest(runner.getDistance().getName(), new Login(passwd, userID), charity.getOrganizationalID(), runner.getName(), userNameString, passwordString, runner.getPersonalID(), Boolean.TRUE);
-								port.registerContestant(request);
-							} catch(Exception e) {
-								e.printStackTrace();
-							}
+							HlaupastyrkurHolder holder = new HlaupastyrkurHolder();
+							holder.setRunner(runner);
+							holder.setLogin(userNameString);
+							holder.setPassword(passwordString);
+							hlaupastyrkur.add(holder);
 						}
 					}
-					
+
 					participants.add(participant);
 
 					getUserBiz().updateUserHomePhone(user,
@@ -899,6 +893,40 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				sendMessage(email, subject, body);
 			}
 			trans.commit();
+
+			if (!hlaupastyrkur.isEmpty()) {
+				String passwd = getIWApplicationContext()
+						.getIWMainApplication().getSettings()
+						.getProperty("hlaupastyrkur_passwd", "");
+				String userID = getIWApplicationContext()
+						.getIWMainApplication().getSettings()
+						.getProperty("hlaupastyrkur_userid", "");
+				ContestantServiceLocator locator = new ContestantServiceLocator();
+				IContestantService port = locator
+						.getBasicHttpBinding_IContestantService(new URL(
+								"http://www.hlaupastyrkur.is/services/contestantservice.svc"));
+				Iterator it = hlaupastyrkur.iterator();
+				while (it.hasNext()) {
+					HlaupastyrkurHolder holder = (HlaupastyrkurHolder) it.next();
+					Runner runner = holder.getRunner();
+					String userNameString = holder.getLogin();
+					String passwordString = holder.getPassword();
+					Charity charity = runner.getCharity();
+					try {
+
+						ContestantRequest request = new ContestantRequest(
+								runner.getDistance().getName(), new Login(
+										passwd, userID),
+								charity.getOrganizationalID(),
+								runner.getName(), userNameString,
+								passwordString, runner.getPersonalID(),
+								Boolean.TRUE);
+						port.registerContestant(request);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
 		} catch (Exception ex) {
 			try {
 				trans.rollback();
@@ -1248,16 +1276,22 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		return new ArrayList();
 	}
 
-	private CreditCardMerchant getCreditCardMerchant(String currency) throws FinderException {
-		String merchantPK = getIWApplicationContext().getIWMainApplication()
+	private CreditCardMerchant getCreditCardMerchant(String currency)
+			throws FinderException {
+		String merchantPK = getIWApplicationContext()
+				.getIWMainApplication()
 				.getBundle(IWMarathonConstants.IW_BUNDLE_IDENTIFIER)
-				.getProperty(IWMarathonConstants.PROPERTY_MERCHANT_PK + "_" + currency);
+				.getProperty(
+						IWMarathonConstants.PROPERTY_MERCHANT_PK + "_"
+								+ currency);
 		if (merchantPK != null) {
 			try {
-				//return ((KortathjonustanMerchantHome) IDOLookup
-				//		.getHome(KortathjonustanMerchant.class))
-				//		.findByPrimaryKey(new Integer(merchantPK));
-				return ((TPosMerchantHome) IDOLookup.getHome(TPosMerchant.class)).findByPrimaryKey(new Integer(merchantPK));
+				// return ((KortathjonustanMerchantHome) IDOLookup
+				// .getHome(KortathjonustanMerchant.class))
+				// .findByPrimaryKey(new Integer(merchantPK));
+				return ((TPosMerchantHome) IDOLookup
+						.getHome(TPosMerchant.class))
+						.findByPrimaryKey(new Integer(merchantPK));
 			} catch (IDOLookupException ile) {
 				throw new IBORuntimeException(ile);
 			}
@@ -2480,13 +2514,13 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 
 		return disallowed;
 	}
-	
-	public Collection getConfirmedParticipants() {		
+
+	public Collection getConfirmedParticipants() {
 		try {
 			return getParticipantHome().findAllPaidConfirmation();
 		} catch (FinderException e) {
 		}
-		
+
 		return null;
 	}
 }
