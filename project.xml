@@ -406,6 +406,33 @@
         <idegaweb.bundle.include>true</idegaweb.bundle.include>
       </properties>
     </dependency>
+    <dependency>
+		<groupId>org.apache.pdfbox</groupId>
+		<artifactId>pdfbox</artifactId>
+		<version>1.5.0</version>      <type>jar</type>
+     	<url>http://pdfbox.apache.org/</url>
+      	<properties>
+        <idegaweb.bundle.include>true</idegaweb.bundle.include>
+      </properties>
+    </dependency>
+    <dependency>
+		<groupId>org.apache.pdfbox</groupId>
+		<artifactId>fontbox</artifactId>
+		<version>1.5.0</version>      <type>jar</type>
+     	<url>http://pdfbox.apache.org/</url>
+      	<properties>
+        <idegaweb.bundle.include>true</idegaweb.bundle.include>
+      </properties>
+    </dependency>
+    <dependency>
+		<groupId>ujac</groupId>
+		<artifactId>ujac</artifactId>
+		<version>0.9.25</version>      <type>jar</type>
+     	<url>http://pdfbox.apache.org/</url>
+      	<properties>
+        <idegaweb.bundle.include>true</idegaweb.bundle.include>
+      </properties>
+    </dependency>
   </dependencies>
   <build>
     <sourceDirectory>src/java</sourceDirectory>

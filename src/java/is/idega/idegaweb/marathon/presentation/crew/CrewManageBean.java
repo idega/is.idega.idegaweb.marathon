@@ -249,7 +249,7 @@ public class CrewManageBean {
 			Participant participant = null;
 			
 			try {
-				participant = runBusiness.getParticipantByRunAndYear(ownerUser, runGroup, yearGroup);
+				participant = runBusiness.getParticipantByRunAndYear(ownerUser, runGroup, yearGroup, false);
 				
 			} catch (FinderException e) {
 				// TODO: this happens, when nothing found
@@ -320,7 +320,7 @@ public class CrewManageBean {
 			Participant participant = null;
 			
 			try {
-				participant = runBusiness.getParticipantByRunAndYear(ownerUser, runGroup, yearGroup);
+				participant = runBusiness.getParticipantByRunAndYear(ownerUser, runGroup, yearGroup, false);
 				
 			} catch (FinderException e) {
 				//this happens, when nothing found

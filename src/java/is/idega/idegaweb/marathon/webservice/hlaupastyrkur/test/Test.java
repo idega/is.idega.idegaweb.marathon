@@ -18,7 +18,7 @@ public class Test {
 					.getBasicHttpBinding_IContestantService(new URL(
 							"http://www.hlaupastyrkur.is/services/contestantservice.svc"));
 			
-			ContestantRequest request = new ContestantRequest("21_km", new Login(passwd, userID), "6906881589", "Palli Test", "pallitest", "pallitest", "0610703899", Boolean.FALSE);
+			ContestantRequest request = new ContestantRequest("21_km", new Login(passwd, userID), "6906881589", "Palli Test", "pallitest", "pallitest", "0610703899", Boolean.TRUE);
 			port.registerContestant(request);
 		} catch (Exception e) {
 			e.printStackTrace();

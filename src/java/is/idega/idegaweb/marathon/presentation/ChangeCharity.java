@@ -136,7 +136,7 @@ public class ChangeCharity extends RunBlock {
 						IWTimestamp lastChangeDate = new IWTimestamp(year.getRunDate());
 						lastChangeDate.addDays(3);
 						if (now.isEarlierThan(lastChangeDate)) {
-							Participant participant = getRunBusiness(iwc).getParticipantByRunAndYear(iwc.getCurrentUser(), (Group) yearGroup.getParentNode(), yearGroup);
+							Participant participant = getRunBusiness(iwc).getParticipantByRunAndYear(iwc.getCurrentUser(), (Group) yearGroup.getParentNode(), yearGroup, false);
 							int count = getPledgeBusiness(iwc).getPledgeHome().getNumberOfPledgesByParticipants(participant);
 							if (count < 1) {
 								runsYearThatCanBeChanged.add(yearGroup);

@@ -1043,7 +1043,7 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		return super.idoFindPKsByQuery(query);
 	}
 
-	public Integer ejbFindByUserAndRun(User user, Group run, Group year) throws FinderException{
+	public Integer ejbFindByUserAndRun(User user, Group run, Group year, boolean alsoDeleted) throws FinderException{
 		IDOQuery query = idoQuery();
 		query.appendSelect();
 		query.append(getIDColumnName());
@@ -1052,12 +1052,14 @@ public class ParticipantBMPBean extends GenericEntity implements Participant {
 		query.appendWhereEquals(getColumnNameUserID(),user);
 		query.appendAndEquals(getColumnNameRunTypeGroupID(),run);
 		query.appendAndEquals(getColumnNameRunYearGroupID(),year);
-		query.appendAnd();
-		query.appendLeftParenthesis();
-		query.append(COLUMN_DELETED);
-		query.appendIsNull();
-		query.appendOrEquals(COLUMN_DELETED, false);
-		query.appendRightParenthesis();
+		if (!alsoDeleted) {
+			query.appendAnd();
+			query.appendLeftParenthesis();
+			query.append(COLUMN_DELETED);
+			query.appendIsNull();
+			query.appendOrEquals(COLUMN_DELETED, false);
+			query.appendRightParenthesis();
+		}
 
 		return (Integer) super.idoFindOnePKByQuery(query);
 	}

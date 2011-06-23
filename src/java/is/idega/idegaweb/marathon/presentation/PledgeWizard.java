@@ -227,7 +227,7 @@ public class PledgeWizard extends RunBlock {
 						User user = (User)userIt.next();
 						Participant runRegistration = null;
 						try {
-							runRegistration = getRunBusiness(iwc).getParticipantByRunAndYear(user, run, runYear);
+							runRegistration = getRunBusiness(iwc).getParticipantByRunAndYear(user, run, runYear, false);
 							if (getPledgeHolder(iwc).getCharityFilter().equals("-1") || (runRegistration.getCharityId() != null && runRegistration.getCharityId().equals(getPledgeHolder(iwc).getCharityFilter()))) {
 								if (runRegistration.getCharityId() != null && !runRegistration.getCharityId().equals("-1")) {
 									runRegistrations.add(runRegistration);
@@ -392,7 +392,7 @@ public class PledgeWizard extends RunBlock {
 		int creditRow = 1;
 		
 		creditCardTable.add(getHeader(localize("run_reg.credit_card_information", "Credit card information")), 1, creditRow);
-		Collection images = getRunBusiness(iwc).getCreditCardImages();
+		Collection images = getRunBusiness(iwc).getCreditCardImages(this.isIcelandic ? "ISK" : "EUR");
 		if (images != null) {
 			Iterator iterator = images.iterator();
 			while (iterator.hasNext()) {
@@ -635,7 +635,7 @@ public class PledgeWizard extends RunBlock {
 			}
 			Collection pledges = getPledgeBusiness(iwc).saveParticipants(pledgeHolders);
 			if (doPayment) {
-				getRunBusiness(iwc).finishPayment(properties);
+				getRunBusiness(iwc).finishPayment(properties, this.isIcelandic ? "ISK" : "EUR");
 			}			
 			showReceipt(iwc, pledges, amount, hiddenCardNumber, paymentStamp, doPayment);
 		}

@@ -15,7 +15,7 @@ public interface WebServiceBusiness extends IBOService {
 	 * @see is.idega.idegaweb.marathon.webservice.business.WebServiceBusinessBean#registerRunner
 	 */
 	public boolean registerRunner(is.idega.idegaweb.marathon.webservice.isb.server.Session session, String personalID,
-			String distance, String shirtSize, String email, String phone,
+			String distance, String shirtSize, String shirtSizeGender, String email, String phone,
 			String mobile, String leg, RelayPartnerInfo[] partners,
 			String registeredBy) throws SessionTimedOutException,
 			RemoteException;

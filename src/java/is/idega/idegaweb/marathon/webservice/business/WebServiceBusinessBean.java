@@ -70,7 +70,7 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 
 	public boolean registerRunner(
 			is.idega.idegaweb.marathon.webservice.isb.server.Session session,
-			String personalID, String distance, String shirtSize, String email,
+			String personalID, String distance, String shirtSize, String shirtSizeGender, String email,
 			String phone, String mobile, String leg,
 			RelayPartnerInfo[] partners, String registeredBy)
 			throws is.idega.idegaweb.marathon.webservice.isb.server.SessionTimedOutException {
@@ -100,17 +100,29 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 			return false;
 		}
 
-		try {
+		/*try {
 			if (getRunBusiness().isRegisteredInRun(year.getName(), run, user)) {
 				return false;
 			}
 		} catch (Exception e) {
-		}
+		}*/
 
 		if (distance == null || shirtSize == null) {
 			return false;
 		}
 
+		if (shirtSizeGender == null || "".equals(shirtSizeGender.trim())) {
+			if (user.getGender().isFemaleGender()) {
+				shirtSizeGender = "female";
+			} else {
+				shirtSizeGender = "male";				
+			}
+		} else {
+			if (!"male".equals(shirtSizeGender) && !"female".equals(shirtSizeGender)) {
+				return false;
+			}
+		}
+		
 		if (!DISTANCE1.equals(distance) && !DISTANCE2.equals(distance)
 				&& !DISTANCE3.equals(distance) && !DISTANCE4.equals(distance)
 				&& !DISTANCE5.equals(distance)) {
@@ -124,7 +136,7 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 				return false;
 			}
 		} else {
-			if (user.getGender().isFemaleGender()) {
+			if ("female".equals(shirtSizeGender)) {
 				if (!SIZE1.equals(shirtSize) && !SIZE2.equals(shirtSize)
 						&& !SIZE3.equals(shirtSize) && !SIZE4.equals(shirtSize)
 						&& !SIZE5.equals(shirtSize)) {
@@ -161,7 +173,7 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 		runner.setGender(user.getGender());
 		runner.setName(user.getName());
 		runner.setRelayLeg(leg);
-		runner.setShirtSize(getShirtSizeForUser(user, shirtSize));
+		runner.setShirtSize(getShirtSizeForUser(user, shirtSize, shirtSizeGender));
 		runner.setPaymentGroup("ISB_2011");
 		Country icelandicNationality = null;
 		try {
@@ -221,7 +233,7 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 					if (relayPartnerInfo.getShirtSize() == null || "".equals(relayPartnerInfo.getShirtSize())) {
 						return false;
 					}
-
+					
 					User relUser = null;
 					try {
 						relUser = getUserBusiness().getUser(relayPartnerInfo.getPersonalID());
@@ -233,6 +245,19 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 						return false;
 					}
 					
+					
+					if (relayPartnerInfo.getShirtSizeGender() == null || "".equals(relayPartnerInfo.getShirtSizeGender().trim())) {
+						if (user.getGender().isFemaleGender()) {
+							relayPartnerInfo.setShirtSizeGender("female");
+						} else {
+							relayPartnerInfo.setShirtSizeGender("male");
+						}
+					} else {
+						if (!"male".equals(relayPartnerInfo.getShirtSizeGender()) && !"female".equals(relayPartnerInfo.getShirtSizeGender())) {
+							return false;
+						}
+					}
+
 
 					if (relayPartnerInfo.getLeg().indexOf("1") > -1) {
 						if (leg1) {
@@ -271,21 +296,21 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 						runner.setPartner1Email(relayPartnerInfo.getEmail());
 						runner.setPartner1Leg(relayPartnerInfo.getLeg());
 						runner.setPartner1Name(relUser.getName());
-						runner.setPartner1ShirtSize(getShirtSizeForUser(relUser, relayPartnerInfo.getShirtSize()));
+						runner.setPartner1ShirtSize(getShirtSizeForUser(relUser, relayPartnerInfo.getShirtSize(), relayPartnerInfo.getShirtSizeGender()));
 						runner.setPartner1SSN(relUser.getPersonalID());
 						break;
 					case 2 :
 						runner.setPartner2Email(relayPartnerInfo.getEmail());
 						runner.setPartner2Leg(relayPartnerInfo.getLeg());
 						runner.setPartner2Name(relUser.getName());
-						runner.setPartner2ShirtSize(getShirtSizeForUser(relUser, relayPartnerInfo.getShirtSize()));
+						runner.setPartner2ShirtSize(getShirtSizeForUser(relUser, relayPartnerInfo.getShirtSize(), relayPartnerInfo.getShirtSizeGender()));
 						runner.setPartner2SSN(relUser.getPersonalID());
 						break;
 					case 3 :
 						runner.setPartner3Email(relayPartnerInfo.getEmail());
 						runner.setPartner3Leg(relayPartnerInfo.getLeg());
 						runner.setPartner3Name(relUser.getName());
-						runner.setPartner3ShirtSize(getShirtSizeForUser(relUser, relayPartnerInfo.getShirtSize()));
+						runner.setPartner3ShirtSize(getShirtSizeForUser(relUser, relayPartnerInfo.getShirtSize(), relayPartnerInfo.getShirtSizeGender()));
 						runner.setPartner3SSN(relUser.getPersonalID());
 						break;
 					}
@@ -301,7 +326,7 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 		runners.add(runner);
 		
 		try {
-			getRunBusiness().saveParticipants(runners, email, null, 0.0f, IWTimestamp.RightNow(), LocaleUtil.getIcelandicLocale(), true, "rm_reg.");
+			getRunBusiness().saveParticipants(runners, email, null, 0.0f, IWTimestamp.RightNow(), LocaleUtil.getIcelandicLocale(), true, "rm_reg.", true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -344,7 +369,7 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 		return null;
 	}
 	
-	private String getShirtSizeForUser(User user, String shirtSize) {
+	private String getShirtSizeForUser(User user, String shirtSize, String shirtSizeGender) {
 		StringBuffer ret = new StringBuffer();
 		if (SIZE1.equals(shirtSize)) {
 			ret.append("xsmall");
@@ -361,11 +386,7 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 		}
 			
 		ret.append("_");
-		if (user.getGender().isFemaleGender()) {
-			ret.append("female");
-		} else {
-			ret.append("male");
-		}
+		ret.append(shirtSizeGender);
 		
 		return ret.toString();
 	}
@@ -425,7 +446,7 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 			user = getUserBusiness().getUser(personalID);
 
 			runner = getRunBusiness().getParticipantByRunAndYear(user, run,
-					year);
+					year, false);
 
 			Charity charity = null;
 			if (runner.getCharityId() != null
@@ -878,7 +899,7 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 			Group year = getRunBusiness().getRunGroupByGroupId(
 					new Integer(426626)); // TODO
 			Participant participant = getRunBusiness()
-					.getParticipantByRunAndYear(user, run, year);
+					.getParticipantByRunAndYear(user, run, year, false);
 			participant.setCharityId(charityPersonalID);
 			participant.store();
 		} catch (FinderException e) {

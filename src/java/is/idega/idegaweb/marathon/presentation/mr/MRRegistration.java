@@ -1093,7 +1093,7 @@ public class MRRegistration extends RunBlock {
 		creditCardTable.add(
 				getHeader(localize("mr_reg.credit_card_information",
 						"Credit card information")), 1, creditRow);
-		Collection images = getRunBusiness(iwc).getCreditCardImages();
+		Collection images = getRunBusiness(iwc).getCreditCardImages(this.isIcelandicPersonalID ? "ISK" : "EUR");
 		if (images != null) {
 			Iterator iterator = images.iterator();
 			while (iterator.hasNext()) {
@@ -1328,10 +1328,10 @@ public class MRRegistration extends RunBlock {
 			Collection participants = getRunBusiness(iwc).saveParticipants(
 					runners, email, hiddenCardNumber, amount, paymentStamp,
 					iwc.getCurrentLocale(), isDisablePaymentAndOverviewSteps(),
-					"mr_reg.");
+					"mr_reg.", false);
 
 			if (doPayment) {
-				getRunBusiness(iwc).finishPayment(properties);
+				getRunBusiness(iwc).finishPayment(properties, this.isIcelandicPersonalID ? "ISK" : "EUR");
 			}
 
 			iwc.removeSessionAttribute(SESSION_ATTRIBUTE_RUNNER_MAP);

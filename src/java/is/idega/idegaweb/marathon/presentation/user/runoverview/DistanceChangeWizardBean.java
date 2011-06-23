@@ -345,7 +345,7 @@ public class DistanceChangeWizardBean {
 			setParticipantId(participant.getPrimaryKey().toString());
 						
 			if (!skipPaymentStep) {
-				getRunBusiness().finishPayment(properties);
+				getRunBusiness().finishPayment(properties, getDistanceChangePrice().getCurrencyLabel());
 			}
 		} catch (CreditCardAuthorizationException e) {
 

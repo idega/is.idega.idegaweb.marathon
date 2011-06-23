@@ -103,7 +103,8 @@ public interface RunBusiness extends IBOService {
 	public Collection saveParticipants(Collection runners, String email,
 			String hiddenCardNumber, double amount, IWTimestamp date,
 			Locale locale, boolean disableSendPaymentConfirmation,
-			String runPrefix) throws IDOCreateException, RemoteException;
+			String runPrefix, boolean sendCharityRegistration)
+			throws IDOCreateException, RemoteException;
 
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getNextAvailableParticipantNumber
@@ -132,7 +133,7 @@ public interface RunBusiness extends IBOService {
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#finishPayment
 	 */
-	public void finishPayment(String properties)
+	public void finishPayment(String properties, String currency)
 			throws CreditCardAuthorizationException, RemoteException;
 
 	/**
@@ -176,7 +177,8 @@ public interface RunBusiness extends IBOService {
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getCreditCardImages
 	 */
-	public Collection getCreditCardImages() throws RemoteException;
+	public Collection getCreditCardImages(String currency)
+			throws RemoteException;
 
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#savePayment
@@ -239,7 +241,8 @@ public interface RunBusiness extends IBOService {
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getParticipantByRunAndYear
 	 */
 	public Participant getParticipantByRunAndYear(User user, Group run,
-			Group year) throws FinderException, RemoteException;
+			Group year, boolean showDeleted) throws FinderException,
+			RemoteException;
 
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getParticipantPartnerByRunAndYear

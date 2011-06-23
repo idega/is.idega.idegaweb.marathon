@@ -93,7 +93,7 @@ public class RunPluginBusinessBean extends IBOServiceBean implements RunPluginBu
 
 		try {
 			if (run != null) {
-				Participant runEntry = getRunBiz(iwc).getParticipantByRunAndYear(user, run, year);
+				Participant runEntry = getRunBiz(iwc).getParticipantByRunAndYear(user, run, year, true);
 				runEntry.setRunGroupGroup(parentGroup);
 				Distance oldDistance = runEntry.getRunDistanceGroup();
 				runEntry.setRunDistanceGroup(distance);
@@ -158,7 +158,7 @@ public class RunPluginBusinessBean extends IBOServiceBean implements RunPluginBu
 
 		try {
 			if (run != null) {
-				Participant runEntry = getRunBiz(iwc).getParticipantByRunAndYear(user, run, year);
+				Participant runEntry = getRunBiz(iwc).getParticipantByRunAndYear(user, run, year, false);
 				runEntry.setIsDeleted(true);
 				runEntry.store();
 			}

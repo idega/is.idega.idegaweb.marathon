@@ -441,7 +441,7 @@ public class MarathonGroupUsersImportBean extends IBOServiceBean implements
 				boolean movedParticipant = false;
 				try {
 					participant = this.runBusiness.getParticipantByRunAndYear(
-							user, runGroup, yearGroup);
+							user, runGroup, yearGroup, false);
 				} catch (FinderException fe) {
 					try {
 						participant = this.runBusiness.importParticipant(user,

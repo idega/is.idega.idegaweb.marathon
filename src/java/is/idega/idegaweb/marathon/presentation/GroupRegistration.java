@@ -520,7 +520,7 @@ public class GroupRegistration extends RunBlock {
 								.getParticipantByRunAndYear(
 										iwc.getCurrentUser(),
 										(Group) yearGroup.getParentNode(),
-										yearGroup);
+										yearGroup, false);
 
 						if (participant.getRunDistanceGroup().isAllowsGroups()) {
 							participantEntries.add(participant);

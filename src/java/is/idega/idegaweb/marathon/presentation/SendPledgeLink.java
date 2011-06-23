@@ -137,7 +137,7 @@ public class SendPledgeLink extends RunBlock {
 						IWTimestamp lastChangeDate = new IWTimestamp(year.getRunDate());
 						lastChangeDate.addDays(3);
 						if (now.isEarlierThan(lastChangeDate)) {
-							Participant participant = getRunBusiness(iwc).getParticipantByRunAndYear(iwc.getCurrentUser(), (Group) yearGroup.getParentNode(), yearGroup);
+							Participant participant = getRunBusiness(iwc).getParticipantByRunAndYear(iwc.getCurrentUser(), (Group) yearGroup.getParentNode(), yearGroup, false);
 							if (participant.getCharityId() != null && !"".equals(participant.getCharityId())) {
 								runsYearThatCanBeSent.add(yearGroup);
 							}

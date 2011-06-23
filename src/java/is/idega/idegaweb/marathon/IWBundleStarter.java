@@ -10,21 +10,7 @@
 package is.idega.idegaweb.marathon;
 
 import is.idega.idegaweb.marathon.presentation.StepsBlock;
-import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
-import java.io.IOException;
-import java.rmi.RemoteException;
-
-import javax.ejb.CreateException;
-import javax.ejb.FinderException;
-
-import com.idega.block.creditcard.data.TPosMerchant;
-import com.idega.block.creditcard.data.TPosMerchantHome;
-import com.idega.business.IBOLookup;
-import com.idega.core.business.ICApplicationBindingBusiness;
-import com.idega.data.IDOLookup;
-import com.idega.data.IDOLookupException;
-import com.idega.idegaweb.IWApplicationContext;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWBundleStartable;
 import com.idega.idegaweb.IWMainApplication;
@@ -47,7 +33,7 @@ public class IWBundleStarter implements IWBundleStartable {
 	public void start(IWBundle starterBundle) {
 		updateData();
 		addStandardViews(starterBundle.getApplication());
-		IWApplicationContext iwac = IWMainApplication.getDefaultIWApplicationContext();
+		/*IWApplicationContext iwac = IWMainApplication.getDefaultIWApplicationContext();
 		String merchantPK = null;
 		ICApplicationBindingBusiness abb = null;
 		try {
@@ -86,7 +72,7 @@ public class IWBundleStarter implements IWBundleStartable {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 
 	}
 

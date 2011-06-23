@@ -28,6 +28,8 @@ public class RunnerInfo  implements java.io.Serializable {
 
     private java.lang.String shirtSize;
 
+    private java.lang.String shirtSizeGender;
+
     public RunnerInfo() {
     }
 
@@ -41,7 +43,8 @@ public class RunnerInfo  implements java.io.Serializable {
            java.lang.String phone,
            java.lang.String registeredBy,
            is.idega.idegaweb.marathon.webservice.isb.server.Session session,
-           java.lang.String shirtSize) {
+           java.lang.String shirtSize,
+           java.lang.String shirtSizeGender) {
            this.distance = distance;
            this.email = email;
            this.leg = leg;
@@ -52,6 +55,7 @@ public class RunnerInfo  implements java.io.Serializable {
            this.registeredBy = registeredBy;
            this.session = session;
            this.shirtSize = shirtSize;
+           this.shirtSizeGender = shirtSizeGender;
     }
 
 
@@ -254,6 +258,26 @@ public class RunnerInfo  implements java.io.Serializable {
         this.shirtSize = shirtSize;
     }
 
+
+    /**
+     * Gets the shirtSizeGender value for this RunnerInfo.
+     * 
+     * @return shirtSizeGender
+     */
+    public java.lang.String getShirtSizeGender() {
+        return shirtSizeGender;
+    }
+
+
+    /**
+     * Sets the shirtSizeGender value for this RunnerInfo.
+     * 
+     * @param shirtSizeGender
+     */
+    public void setShirtSizeGender(java.lang.String shirtSizeGender) {
+        this.shirtSizeGender = shirtSizeGender;
+    }
+
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
         if (!(obj instanceof RunnerInfo)) return false;
@@ -295,7 +319,10 @@ public class RunnerInfo  implements java.io.Serializable {
               this.session.equals(other.getSession()))) &&
             ((this.shirtSize==null && other.getShirtSize()==null) || 
              (this.shirtSize!=null &&
-              this.shirtSize.equals(other.getShirtSize())));
+              this.shirtSize.equals(other.getShirtSize()))) &&
+            ((this.shirtSizeGender==null && other.getShirtSizeGender()==null) || 
+             (this.shirtSizeGender!=null &&
+              this.shirtSizeGender.equals(other.getShirtSizeGender())));
         __equalsCalc = null;
         return _equals;
     }
@@ -344,6 +371,9 @@ public class RunnerInfo  implements java.io.Serializable {
         }
         if (getShirtSize() != null) {
             _hashCode += getShirtSize().hashCode();
+        }
+        if (getShirtSizeGender() != null) {
+            _hashCode += getShirtSizeGender().hashCode();
         }
         __hashCodeCalc = false;
         return _hashCode;
@@ -413,6 +443,12 @@ public class RunnerInfo  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("shirtSize");
         elemField.setXmlName(new javax.xml.namespace.QName("http://illuminati.is", "shirtSize"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setNillable(true);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("shirtSizeGender");
+        elemField.setXmlName(new javax.xml.namespace.QName("http://illuminati.is", "shirtSizeGender"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setNillable(true);
         typeDesc.addFieldDesc(elemField);

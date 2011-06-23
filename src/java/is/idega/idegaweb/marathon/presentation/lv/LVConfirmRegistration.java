@@ -571,7 +571,7 @@ public class LVConfirmRegistration extends RunBlock {
 		creditCardTable.add(
 				getHeader(localize("lv_conf.credit_card_information",
 						"Credit card information")), 1, creditRow);
-		Collection images = getRunBusiness(iwc).getCreditCardImages();
+		Collection images = getRunBusiness(iwc).getCreditCardImages(this.isIcelandicPersonalID ? "ISK" : "EUR");
 		if (images != null) {
 			Iterator iterator = images.iterator();
 			while (iterator.hasNext()) {
@@ -828,7 +828,7 @@ public class LVConfirmRegistration extends RunBlock {
 					isDisablePaymentAndOverviewSteps(), "lv_conf.");
 
 			if (doPayment) {
-				getRunBusiness(iwc).finishPayment(properties);
+				getRunBusiness(iwc).finishPayment(properties, this.isIcelandicPersonalID ? "ISK" : "EUR");
 			}
 
 			iwc.removeSessionAttribute(SESSION_ATTRIBUTE_PARTICIPANTS);

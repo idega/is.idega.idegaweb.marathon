@@ -207,7 +207,7 @@ public class MarathonFileImportHandlerBean extends IBOServiceBean  implements Ma
 				
 				if (participant == null) {
 					try {
-						participant = this.business.getParticipantByRunAndYear(user, runGroup, yearGroup);
+						participant = this.business.getParticipantByRunAndYear(user, runGroup, yearGroup, false);
 					}
 					catch (FinderException fe) {
 						participant = this.business.importParticipant(user, runGroup, yearGroup, distanceGroup);

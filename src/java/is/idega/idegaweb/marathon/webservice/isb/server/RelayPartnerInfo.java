@@ -16,6 +16,8 @@ public class RelayPartnerInfo  implements java.io.Serializable {
 
     private java.lang.String shirtSize;
 
+    private java.lang.String shirtSizeGender;
+
     public RelayPartnerInfo() {
     }
 
@@ -23,11 +25,13 @@ public class RelayPartnerInfo  implements java.io.Serializable {
            java.lang.String email,
            java.lang.String leg,
            java.lang.String personalID,
-           java.lang.String shirtSize) {
+           java.lang.String shirtSize,
+           java.lang.String shirtSizeGender) {
            this.email = email;
            this.leg = leg;
            this.personalID = personalID;
            this.shirtSize = shirtSize;
+           this.shirtSizeGender = shirtSizeGender;
     }
 
 
@@ -110,6 +114,26 @@ public class RelayPartnerInfo  implements java.io.Serializable {
         this.shirtSize = shirtSize;
     }
 
+
+    /**
+     * Gets the shirtSizeGender value for this RelayPartnerInfo.
+     * 
+     * @return shirtSizeGender
+     */
+    public java.lang.String getShirtSizeGender() {
+        return shirtSizeGender;
+    }
+
+
+    /**
+     * Sets the shirtSizeGender value for this RelayPartnerInfo.
+     * 
+     * @param shirtSizeGender
+     */
+    public void setShirtSizeGender(java.lang.String shirtSizeGender) {
+        this.shirtSizeGender = shirtSizeGender;
+    }
+
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
         if (!(obj instanceof RelayPartnerInfo)) return false;
@@ -133,7 +157,10 @@ public class RelayPartnerInfo  implements java.io.Serializable {
               this.personalID.equals(other.getPersonalID()))) &&
             ((this.shirtSize==null && other.getShirtSize()==null) || 
              (this.shirtSize!=null &&
-              this.shirtSize.equals(other.getShirtSize())));
+              this.shirtSize.equals(other.getShirtSize()))) &&
+            ((this.shirtSizeGender==null && other.getShirtSizeGender()==null) || 
+             (this.shirtSizeGender!=null &&
+              this.shirtSizeGender.equals(other.getShirtSizeGender())));
         __equalsCalc = null;
         return _equals;
     }
@@ -156,6 +183,9 @@ public class RelayPartnerInfo  implements java.io.Serializable {
         }
         if (getShirtSize() != null) {
             _hashCode += getShirtSize().hashCode();
+        }
+        if (getShirtSizeGender() != null) {
+            _hashCode += getShirtSizeGender().hashCode();
         }
         __hashCodeCalc = false;
         return _hashCode;
@@ -188,6 +218,12 @@ public class RelayPartnerInfo  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("shirtSize");
         elemField.setXmlName(new javax.xml.namespace.QName("http://illuminati.is", "shirtSize"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setNillable(true);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("shirtSizeGender");
+        elemField.setXmlName(new javax.xml.namespace.QName("http://illuminati.is", "shirtSizeGender"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setNillable(true);
         typeDesc.addFieldDesc(elemField);
