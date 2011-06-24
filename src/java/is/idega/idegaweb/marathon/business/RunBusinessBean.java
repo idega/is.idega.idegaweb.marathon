@@ -931,16 +931,22 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					String passwordString = holder.getPassword();
 					Charity charity = runner.getCharity();
 					try {
+						String name = null;
+						if (runner.getName() != null) {
+							name = runner.getName();
+						} else if (runner.getUser() != null) {
+							name = runner.getUser().getName();
+						}
 						if (holder.isTeam()) {
 							TeamRequest request2 = new TeamRequest(runner.getDistance().getName(), new Login(
-									passwd, userID), charity.getOrganizationalID(), runner.getName(), passwordString, userNameString, holder.getMembers(), runner.getName());
+									passwd, userID), charity.getOrganizationalID(), name, passwordString, userNameString, holder.getMembers(), name);
 							port.registerTeam(request2 );							
 						} else {
 							ContestantRequest request = new ContestantRequest(
 									runner.getDistance().getName(), new Login(
 											passwd, userID),
 									charity.getOrganizationalID(),
-									runner.getName(), passwordString, userNameString,
+									name, passwordString, userNameString,
 									runner.getPersonalID(),
 									Boolean.TRUE);
 							port.registerContestant(request);							
