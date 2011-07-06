@@ -15,18 +15,22 @@ import is.idega.idegaweb.marathon.presentation.DistanceMenuShirtSizeMenuInputCol
 import is.idega.idegaweb.marathon.presentation.Registration;
 import is.idega.idegaweb.marathon.presentation.RegistrationReceivedPrintable;
 import is.idega.idegaweb.marathon.presentation.RunBlock;
+import is.idega.idegaweb.marathon.presentation.RunInputCollectionHandler;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
 import java.rmi.RemoteException;
 import java.sql.Date;
 import java.text.MessageFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.ejb.FinderException;
 import javax.faces.component.UIComponent;
@@ -62,6 +66,7 @@ import com.idega.user.data.Gender;
 import com.idega.user.data.Group;
 import com.idega.user.data.User;
 import com.idega.util.Age;
+import com.idega.util.CoreConstants;
 import com.idega.util.IWTimestamp;
 import com.idega.util.ListUtil;
 import com.idega.util.LocaleUtil;
@@ -85,6 +90,7 @@ public class RMRegistration extends RunBlock {
 	private static final String PROPERTY_CHILD_DISCOUNT_ISK = "child_discount_ISK";
 	private static final String PROPERTY_CHILD_DISCOUNT_EUR = "child_discount_EUR";
 
+	private static final String PARAMETER_RUN = "prm_run";
 	private static final String PARAMETER_PERSONAL_ID = "prm_personal_id";
 	private static final String PARAMETER_DATE_OF_BIRTH = "prm_date_of_birth";
 	private static final String PARAMETER_NO_PERSONAL_ID = "prm_no_personal_id";
@@ -153,6 +159,7 @@ public class RMRegistration extends RunBlock {
 	private static final double MILLISECONDS_IN_YEAR = 31557600000d;
 
 	private static final String REYKJAVIK_MARATHON_GROUP_ID = "4";
+	private static final String LAZY_TOWN_GROUP_ID = "383348";
 
 	private boolean isIcelandicPersonalID = false;
 	private Runner setRunner;
@@ -1149,6 +1156,57 @@ public class RMRegistration extends RunBlock {
 		add(form);
 	}
 
+	private void addLazyTownToDistanceDropdown(IWContext iwc, DistanceDropDownMenu distanceDropdown) throws RemoteException {
+		Runner tmp = new Runner();
+		tmp.setRunId(RMRegistration.LAZY_TOWN_GROUP_ID);
+		Year year = tmp.getYear();
+		
+		try {
+		String runnerYearString = year.getYearString();
+		Collection distancesGroups = getRunBusiness(iwc).getDistancesMap(tmp.getRun(), runnerYearString);
+		if (distancesGroups != null) {
+			
+			List disallowedDistances;
+			
+			if(getRunner() == null) {
+				Logger.getLogger(this.getClassName()).log(Level.WARNING, "No runner resolved, therefore no filtering for distances drop down list");
+				disallowedDistances = new ArrayList();
+				
+			} else {
+				
+				List distances = new ArrayList(distancesGroups.size());
+				ConverterUtility converterUtility = ConverterUtility.getInstance();
+				
+				for (Iterator distancesIterator = distancesGroups.iterator(); distancesIterator.hasNext();)
+					distances.add(converterUtility.convertGroupToDistance((Group) distancesIterator.next()));
+
+				disallowedDistances = getRunner().getDisallowedDistancesPKs(distances);
+			}
+			
+			for (Iterator iterator = distancesGroups.iterator(); iterator.hasNext();) {
+				
+				Group distanceGroup = (Group) iterator.next();
+				
+				if(disallowedDistances.contains(distanceGroup.getPrimaryKey().toString())) {
+				
+					distanceDropdown.addMenuElement("-1", 
+						new StringBuilder(iwrb.getLocalizedString(distanceGroup.getName(), distanceGroup.getName()))
+							.append(CoreConstants.EMPTY)
+							.append(iwrb.getLocalizedString("runDistance.choiceNotAvailableBecauseOfAge", "(Not available for your age)"))
+							.toString()
+					);
+				
+				} else {
+					
+					distanceDropdown.addMenuElement("-" + distanceGroup.getPrimaryKey().toString(), localize(distanceGroup.getName(), distanceGroup.getName()));
+				}
+			}
+		}}
+		catch (FinderException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private void stepRunDetails(IWContext iwc) throws RemoteException {
 		Form form = new Form();
 		form.maintainParameter(PARAMETER_PERSONAL_ID);
@@ -1190,26 +1248,56 @@ public class RMRegistration extends RunBlock {
 		int iRow = 1;
 		Runner runner = getRunner();
 
-		choiceTable.add(
-				getHeader(localize(IWMarathonConstants.RR_PRIMARY_DD, "Run")),
-				1, iRow);
-		choiceTable.add(
-				getHeader(localize(runner.getRun().getName(), runner.getRun()
-						.getName())
-						+ " " + runner.getYear().getName()), 3, iRow++);
+		ActiveRunDropDownMenu runDropdown = getRunDropdown(iwc, runner);
+		if (runDropdown.getChildCount() == 1) {
+			getParentPage().setAlertOnLoad(
+					localize("run_reg.no_runs_available",
+							"There are no runs you can register for."));
+			if (this.isIcelandicPersonalID) {
+				removeRunner(iwc, getRunner().getPersonalID());
+				stepPersonalLookup(iwc);
+				return;
+			} else {
+				stepPersonalDetails(iwc);
+				return;
+			}
+		}
+		runDropdown.clearChildren();
 
+		choiceTable.add(getHeader(localize(IWMarathonConstants.RR_PRIMARY_DD,
+				"Run")), 1, iRow);
+			choiceTable.add(redStar, 1, iRow);
+			choiceTable.add(runDropdown, 3, iRow++);
 		choiceTable.setHeight(iRow++, 5);
 
 		DistanceDropDownMenu distanceDropdown = (DistanceDropDownMenu) getStyledInterface(new DistanceDropDownMenu(
 				PARAMETER_DISTANCE, runner));
 		distanceDropdown.setAsNotEmpty(localize("rm_reg.must_select_distance",
 				"You have to select a distance"));
-
+		
 		choiceTable.add(
 				getHeader(localize(IWMarathonConstants.RR_SECONDARY_DD,
 						"Distance")), 1, iRow);
 		choiceTable.add(redStar, 1, iRow);
 		choiceTable.add(distanceDropdown, 3, iRow++);
+
+		RemoteScriptHandler rsh = new RemoteScriptHandler(runDropdown,
+				distanceDropdown);
+		try {
+			rsh.setRemoteScriptCollectionClass(RunInputCollectionHandler.class);
+			rsh.addParameter(RunInputCollectionHandler.RUNNER_PERSONAL_ID,
+					getRunner().getPersonalID());
+
+			if (getRunner().getUser() != null) {
+				rsh.addParameter(RunInputCollectionHandler.PARAMETER_USER_ID,
+						getRunner().getUser().getPrimaryKey().toString());
+			}
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		add(rsh);
 
 		choiceTable.setHeight(iRow++, 5);
 
@@ -1240,7 +1328,7 @@ public class RMRegistration extends RunBlock {
 											shirtSizeKey));
 				}
 			}
-			if (getRunner().getDistance() != null) {
+			if (getRunner().getShirtSize() != null) {
 				tShirtField.setSelectedElement(getRunner().getShirtSize());
 			}
 		}
@@ -2074,10 +2162,15 @@ public class RMRegistration extends RunBlock {
 
 			boolean sendCharityRegistration = true;
 			
+			String authId = null;
+			if (properties != null) {
+				authId = getRunBusiness(iwc).getAuthorizationNumberFromProperties(properties, this.isIcelandicPersonalID ? "ISK" : "EUR");
+			}
+			
 			Collection participants = getRunBusiness(iwc).saveParticipants(
 					runners, email, hiddenCardNumber, amount, paymentStamp,
 					iwc.getCurrentLocale(), isDisablePaymentAndOverviewSteps(),
-					"rm_reg.", sendCharityRegistration);
+					"rm_reg.", sendCharityRegistration, authId);
 
 			if (doPayment) {
 				getRunBusiness(iwc).finishPayment(properties, this.isIcelandicPersonalID ? "ISK" : "EUR");
@@ -2357,7 +2450,7 @@ public class RMRegistration extends RunBlock {
 	}
 
 	protected ActiveRunDropDownMenu getRunDropdown(IWContext iwc, Runner runner) {
-		ActiveRunDropDownMenu runDropdown = null;
+		/*ActiveRunDropDownMenu runDropdown = null;
 		runDropdown = (ActiveRunDropDownMenu) getStyledInterface(new ActiveRunDropDownMenu(
 				"TMP", runner, null, false));
 
@@ -2375,7 +2468,23 @@ public class RMRegistration extends RunBlock {
 				.toString());
 		runDropdown.setDisabled(true);
 
+		return runDropdown;*/
+		
+		ActiveRunDropDownMenu runDropdown = (ActiveRunDropDownMenu) getStyledInterface(new ActiveRunDropDownMenu(
+					PARAMETER_RUN, runner, null, false));
+
+		runDropdown.setAsNotEmpty(localize("run_reg.must_select_run",
+				"You have to select a run"));
+		try {
+			// main is run to check if any runs exists. Otherwise
+			// isConstrainedToOneRun() will not work
+			runDropdown.main(iwc);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		return runDropdown;
+
 	}
 
 	private void cancel(IWContext iwc) {
@@ -2398,19 +2507,9 @@ public class RMRegistration extends RunBlock {
 		if (!iwc.isParameterSet(PARAMETER_PERSONAL_ID)
 				&& !iwc.isParameterSet(PARAMETER_DATE_OF_BIRTH)) {
 			Runner runner = new Runner();
-			runner.setRunId(RMRegistration.REYKJAVIK_MARATHON_GROUP_ID);
+			/*runner.setRunId(RMRegistration.REYKJAVIK_MARATHON_GROUP_ID);
 			Year year = runner.getYear();
-			String runnerYearString = year.getYearString();
-
-			/*
-			 * try { Collection distancesGroups = getRunBusiness(iwc)
-			 * .getDistancesMap(runner.getRun(), runnerYearString); if
-			 * (distancesGroups != null) { Iterator it =
-			 * distancesGroups.iterator(); if (it.hasNext()) {
-			 * runner.setDistance(ConverterUtility.getInstance()
-			 * .convertGroupToDistance((Group) it.next())); } } } catch
-			 * (RemoteException e) { e.printStackTrace(); }
-			 */
+			String runnerYearString = year.getYearString();*/
 
 			return runner;
 		}
@@ -2458,14 +2557,15 @@ public class RMRegistration extends RunBlock {
 			runner.setUser(user);
 		}
 
-		if (runner.getRun() == null) {
-			runner.setRunId(RMRegistration.REYKJAVIK_MARATHON_GROUP_ID);
+		if (iwc.isParameterSet(PARAMETER_RUN)) {
+			String runId = iwc.getParameter(PARAMETER_RUN);
+			runner.setRunId(runId);
 		}
 
 		if (iwc.isParameterSet(PARAMETER_DISTANCE)) {
+			Integer dist = new Integer(iwc.getParameter(PARAMETER_DISTANCE));
 			runner.setDistance(ConverterUtility.getInstance()
-					.convertGroupToDistance(
-							new Integer(iwc.getParameter(PARAMETER_DISTANCE))));
+					.convertGroupToDistance(dist));
 		}
 
 		if (iwc.isParameterSet(PARAMETER_NAME)) {
@@ -2730,7 +2830,7 @@ public class RMRegistration extends RunBlock {
 			return ACTION_STEP_PERSONLOOKUP;
 		}
 
-		if (runner != null && runner.getUser() != null) {
+		if (runner != null && runner.getRun() != null && runner.getYear() != null && runner.getUser() != null) {
 			if (this.getRunBusiness(iwc).isRegisteredInRun(
 					runner.getYear().getYearString(), runner.getRun(),
 					runner.getUser())) {
@@ -2863,7 +2963,7 @@ public class RMRegistration extends RunBlock {
 		}
 
 		if (this.isIcelandicPersonalID) {
-			if (runner != null && runner.getYear().isCharityEnabled()) {
+			if (runner != null && runner.getYear() != null && runner.getYear().isCharityEnabled()) {
 				addStep(iwc, ACTION_STEP_CHARITY,
 						localize("rm_reg.charity_step", "Select charity"));
 			}

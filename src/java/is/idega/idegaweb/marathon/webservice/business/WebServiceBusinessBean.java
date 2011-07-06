@@ -88,8 +88,8 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 		List distances = null;
 
 		try {
-			run = getRunBusiness().getRunGroupByGroupId(new Integer(429727));//4));
-			year = getRunBusiness().getRunGroupByGroupId(new Integer(429728)); //426626)); // TODO fix
+			run = getRunBusiness().getRunGroupByGroupId(new Integer(4));//429727));
+			year = getRunBusiness().getRunGroupByGroupId(new Integer(426626)); //429728)); // TODO fix
 			user = getUserBusiness().getUser(personalID);
 			distances = getRunBusiness().getDistancesMap(run, "2011");
 		} catch (Exception e) {
@@ -100,12 +100,12 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 			return false;
 		}
 
-		/*try {
+		try {
 			if (getRunBusiness().isRegisteredInRun(year.getName(), run, user)) {
 				return false;
 			}
 		} catch (Exception e) {
-		}*/
+		}
 
 		if (distance == null || shirtSize == null) {
 			return false;
@@ -327,7 +327,7 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 		runners.add(runner);
 		
 		try {
-			getRunBusiness().saveParticipants(runners, email, null, 0.0f, IWTimestamp.RightNow(), LocaleUtil.getIcelandicLocale(), true, "rm_reg.", true);
+			getRunBusiness().saveParticipants(runners, email, null, 0.0f, IWTimestamp.RightNow(), LocaleUtil.getIcelandicLocale(), true, "rm_reg.", true, null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

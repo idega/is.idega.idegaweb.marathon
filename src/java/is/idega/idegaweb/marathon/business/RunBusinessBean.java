@@ -607,8 +607,8 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 	public Collection saveParticipants(Collection runners, String email,
 			String hiddenCardNumber, double amount, IWTimestamp date,
 			Locale locale, boolean disableSendPaymentConfirmation,
-			String runPrefix, boolean sendCharityRegistration)
-			throws IDOCreateException {
+			String runPrefix, boolean sendCharityRegistration,
+			String authorizationNumber) throws IDOCreateException {
 		Collection participants = new ArrayList();
 
 		List hlaupastyrkur = new ArrayList();
@@ -620,6 +620,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			Group run = null;
 			Group distance = null;
 			Run selectedRun = null;
+			Year selectedYear = null;
 			while (iter.hasNext()) {
 				Runner runner = (Runner) iter.next();
 				User user = runner.getUser();
@@ -672,8 +673,19 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				try {
 					selectedRun = ConverterUtility.getInstance()
 							.convertGroupToRun(run);
+					selectedYear = ConverterUtility.getInstance()
+							.convertGroupToYear(yearGroup);
 				} catch (FinderException e) {
 					// Run not found
+				}
+
+				if (sendCharityRegistration) {
+					if (!selectedYear.isCharityEnabled()) {
+						sendCharityRegistration = false;
+						if (runPrefix.equals("rm_reg.")) {
+							runPrefix = "lt_reg.";
+						}
+					}
 				}
 
 				try {
@@ -691,7 +703,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 							participant.setCharityId(charity
 									.getOrganizationalID());
 						}
-						
+
 						if (sendCharityRegistration && charity != null) {
 							holder = new HlaupastyrkurHolder();
 							holder.setRunner(runner);
@@ -750,10 +762,10 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 									.getPartner1ShirtSize());
 							participant.setRelayPartner1Leg(runner
 									.getPartner1Leg());
-							
+
 							if (holder != null) {
-								TeamMember member = new TeamMember(runner
-										.getPartner1SSN(), Boolean.TRUE);
+								TeamMember member = new TeamMember(
+										runner.getPartner1SSN(), Boolean.TRUE);
 								holder.addToTeam(member);
 							}
 
@@ -771,8 +783,9 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 										.getPartner2Leg());
 
 								if (holder != null) {
-									TeamMember member = new TeamMember(runner
-											.getPartner2SSN(), Boolean.TRUE);
+									TeamMember member = new TeamMember(
+											runner.getPartner2SSN(),
+											Boolean.TRUE);
 									holder.addToTeam(member);
 								}
 								if (runner.getPartner3SSN() != null
@@ -788,10 +801,11 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 													.getPartner3ShirtSize());
 									participant.setRelayPartner3Leg(runner
 											.getPartner3Leg());
-									
+
 									if (holder != null) {
-										TeamMember member = new TeamMember(runner
-												.getPartner3SSN(), Boolean.TRUE);
+										TeamMember member = new TeamMember(
+												runner.getPartner3SSN(),
+												Boolean.TRUE);
 										holder.addToTeam(member);
 									}
 								}
@@ -925,7 +939,8 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 								"http://www.hlaupastyrkur.is/services/contestantservice.svc"));
 				Iterator it = hlaupastyrkur.iterator();
 				while (it.hasNext()) {
-					HlaupastyrkurHolder holder = (HlaupastyrkurHolder) it.next();
+					HlaupastyrkurHolder holder = (HlaupastyrkurHolder) it
+							.next();
 					Runner runner = holder.getRunner();
 					String userNameString = holder.getLogin();
 					String passwordString = holder.getPassword();
@@ -938,18 +953,20 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 							name = runner.getUser().getName();
 						}
 						if (holder.isTeam()) {
-							TeamRequest request2 = new TeamRequest(runner.getDistance().getName(), new Login(
-									passwd, userID), charity.getOrganizationalID(), name, passwordString, userNameString, holder.getMembers(), name);
-							port.registerTeam(request2 );							
+							TeamRequest request2 = new TeamRequest(runner
+									.getDistance().getName(), new Login(passwd,
+									userID), charity.getOrganizationalID(),
+									name, passwordString, userNameString,
+									holder.getMembers(), name);
+							port.registerTeam(request2);
 						} else {
 							ContestantRequest request = new ContestantRequest(
 									runner.getDistance().getName(), new Login(
 											passwd, userID),
-									charity.getOrganizationalID(),
-									name, passwordString, userNameString,
-									runner.getPersonalID(),
-									Boolean.TRUE);
-							port.registerContestant(request);							
+									charity.getOrganizationalID(), name,
+									passwordString, userNameString,
+									runner.getPersonalID(), Boolean.TRUE);
+							port.registerContestant(request);
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -1148,6 +1165,18 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 			throw new CreditCardAuthorizationException(
 					"Online payment failed. Unknown error.");
 		}
+	}
+
+	public String getAuthorizationNumberFromProperties(
+			String creditCardProperties, String currency) {
+		try {
+			CreditCardClient client = getCreditCardBusiness()
+					.getCreditCardClient(getCreditCardMerchant(currency));
+			return client.getAuthorizationNumber(creditCardProperties);
+		} catch (Exception e) {
+		}
+
+		return null;
 	}
 
 	/**
@@ -1701,58 +1730,29 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 		}
 		if (runName.equals(RUN_LAZY_TOWN_RUN)) {
 			if (distance.getName().equals(IWMarathonConstants.DISTANCE_1)) {
-				if (genderID == 2) {
-					nameOfGroup = IWMarathonConstants.FEMALE_9;
-				} else {
-					nameOfGroup = IWMarathonConstants.MALE_9;
+				if (age >= 0 && age <= 1) {
+					nameOfGroup = IWMarathonConstants.AGE_1;
+				} else if (age > 1 && age <= 2) {
+					nameOfGroup = IWMarathonConstants.AGE_2;
+				} else if (age > 2 && age <= 3) {
+					nameOfGroup = IWMarathonConstants.AGE_3;
+				} else if (age > 3 && age <= 4) {
+					nameOfGroup = IWMarathonConstants.AGE_4;
+				} else if (age > 4 && age <= 5) {
+					nameOfGroup = IWMarathonConstants.AGE_5;
+				} else if (age > 5 && age <= 6) {
+					nameOfGroup = IWMarathonConstants.AGE_6;
+				} else if (age > 6 && age <= 7) {
+					nameOfGroup = IWMarathonConstants.AGE_7;
+				} else if (age > 7 && age <= 8) {
+					nameOfGroup = IWMarathonConstants.AGE_8;
+				} else if (age > 8 && age <= 9) {
+					nameOfGroup = IWMarathonConstants.AGE_9;
+				} else if (age > 9 && age <= 10) {
+					nameOfGroup = IWMarathonConstants.AGE_10;
 				}
 			}
-			/*
-			 * } else if (runName.equals(RUN_LAZY_TOWN_MINIMARATON_OSLO)) { if
-			 * (distance.getName().equals(IWMarathonConstants.DISTANCE_0_5)) {
-			 * if (genderID == 2) { nameOfGroup = IWMarathonConstants.FEMALE_9;
-			 * } else { nameOfGroup = IWMarathonConstants.MALE_9; } } } else if
-			 * (runName.equals(RUN_OSLO_MARATHON)) { if (age >= 18 && age <= 22)
-			 * { if (genderID == 2) { nameOfGroup =
-			 * IWMarathonConstants.FEMALE_18_22; } else { nameOfGroup =
-			 * IWMarathonConstants.MALE_18_22; } } else if (age > 22 && age <=
-			 * 34) { if (genderID == 2) { nameOfGroup =
-			 * IWMarathonConstants.FEMALE_23_34; } else { nameOfGroup =
-			 * IWMarathonConstants.MALE_23_34; } } else if (age > 34 && age <=
-			 * 39) { if (genderID == 2) { nameOfGroup =
-			 * IWMarathonConstants.FEMALE_35_39; } else { nameOfGroup =
-			 * IWMarathonConstants.MALE_35_39; } } else if (age > 39 && age <=
-			 * 44) { if (genderID == 2) { nameOfGroup =
-			 * IWMarathonConstants.FEMALE_40_44; } else { nameOfGroup =
-			 * IWMarathonConstants.MALE_40_44; } } else if (age > 44 && age <=
-			 * 49) { if (genderID == 2) { nameOfGroup =
-			 * IWMarathonConstants.FEMALE_45_49; } else { nameOfGroup =
-			 * IWMarathonConstants.MALE_45_49; } } else if (age > 49 && age <=
-			 * 54) { if (genderID == 2) { nameOfGroup =
-			 * IWMarathonConstants.FEMALE_50_54; } else { nameOfGroup =
-			 * IWMarathonConstants.MALE_50_54; } } else if (age > 54 && age <=
-			 * 59) { if (genderID == 2) { nameOfGroup =
-			 * IWMarathonConstants.FEMALE_55_59; } else { nameOfGroup =
-			 * IWMarathonConstants.MALE_55_59; } } else if (age > 59 && age <=
-			 * 64) { if (genderID == 2) { nameOfGroup =
-			 * IWMarathonConstants.FEMALE_60_64; } else { nameOfGroup =
-			 * IWMarathonConstants.MALE_60_64; } } else if (age > 64 && age <=
-			 * 69) { if (genderID == 2) { nameOfGroup =
-			 * IWMarathonConstants.FEMALE_65_69; } else { nameOfGroup =
-			 * IWMarathonConstants.MALE_65_69; } } else if (age > 69 && age <=
-			 * 74) { if (genderID == 2) { nameOfGroup =
-			 * IWMarathonConstants.FEMALE_70_74; } else { nameOfGroup =
-			 * IWMarathonConstants.MALE_70_74; } } else if (age > 74 && age <=
-			 * 79) { if (genderID == 2) { nameOfGroup =
-			 * IWMarathonConstants.FEMALE_75_79; } else { nameOfGroup =
-			 * IWMarathonConstants.MALE_75_79; } } else if (age > 79 && age <=
-			 * 84) { if (genderID == 2) { nameOfGroup =
-			 * IWMarathonConstants.FEMALE_80_84; } else { nameOfGroup =
-			 * IWMarathonConstants.MALE_80_84; } } else if (age > 84 && age <=
-			 * 99) { if (genderID == 2) { nameOfGroup =
-			 * IWMarathonConstants.FEMALE_85_99; } else { nameOfGroup =
-			 * IWMarathonConstants.MALE_85_99; } }
-			 */} else if (runName.equals(RUN_MIDNIGHT_RUN)) {
+		} else if (runName.equals(RUN_MIDNIGHT_RUN)) {
 			if (age <= 18) {
 				if (genderID == 2) {
 					nameOfGroup = IWMarathonConstants.FEMALE_18;
@@ -1939,28 +1939,14 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 				IWMarathonConstants.MALE_15_17, IWMarathonConstants.MALE_18_39,
 				IWMarathonConstants.MALE_40_49, IWMarathonConstants.MALE_50_59,
 				IWMarathonConstants.MALE_60 };
-		/*
-		 * String[] grForOsloMarathon = { IWMarathonConstants.FEMALE_18_22,
-		 * IWMarathonConstants.FEMALE_23_34, IWMarathonConstants.FEMALE_35_39,
-		 * IWMarathonConstants.FEMALE_40_44, IWMarathonConstants.FEMALE_45_49,
-		 * IWMarathonConstants.FEMALE_50_54, IWMarathonConstants.FEMALE_55_59,
-		 * IWMarathonConstants.FEMALE_60_64, IWMarathonConstants.FEMALE_65_69,
-		 * IWMarathonConstants.FEMALE_70_74, IWMarathonConstants.FEMALE_75_79,
-		 * IWMarathonConstants.FEMALE_80_84, IWMarathonConstants.FEMALE_85_99,
-		 * IWMarathonConstants.MALE_18_22, IWMarathonConstants.MALE_23_34,
-		 * IWMarathonConstants.MALE_35_39, IWMarathonConstants.MALE_40_44,
-		 * IWMarathonConstants.MALE_45_49, IWMarathonConstants.MALE_50_54,
-		 * IWMarathonConstants.MALE_55_59, IWMarathonConstants.MALE_60_64,
-		 * IWMarathonConstants.MALE_65_69, IWMarathonConstants.MALE_70_74,
-		 * IWMarathonConstants.MALE_75_79, IWMarathonConstants.MALE_80_84,
-		 * IWMarathonConstants.MALE_85_99 };
-		 */
-		String[] grForLazyTown = { IWMarathonConstants.FEMALE_9,
-				IWMarathonConstants.MALE_9 };
-		/*
-		 * String[] grForLazyTownOslo = { IWMarathonConstants.FEMALE_9,
-		 * IWMarathonConstants.MALE_9 };
-		 */
+
+		String[] grForLazyTown = { IWMarathonConstants.AGE_1,
+				IWMarathonConstants.AGE_2, IWMarathonConstants.AGE_3,
+				IWMarathonConstants.AGE_4, IWMarathonConstants.AGE_5,
+				IWMarathonConstants.AGE_6, IWMarathonConstants.AGE_6,
+				IWMarathonConstants.AGE_8, IWMarathonConstants.AGE_9,
+				IWMarathonConstants.AGE_10 };
+
 		String[] grForLaugavegur = { IWMarathonConstants.FEMALE_18_29,
 				IWMarathonConstants.FEMALE_30_39,
 				IWMarathonConstants.FEMALE_40_49,
@@ -1981,23 +1967,12 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					grForMarathon, priceISK, priceEUR, useChips,
 					childrenPriceISK, childrenPriceEUR, familyDiscount,
 					allowsGroups, numberOfSplits, offersTransport);
-		} /*
-		 * else if (runName.equals(RUN_OSLO_MARATHON)) { generateSubGroups(iwc,
-		 * group, getDistancesForRun(run), grForOsloMarathon, priceISK,
-		 * priceEUR, useChips, childrenPriceISK, childrenPriceEUR,
-		 * familyDiscount, allowsGroups, numberOfSplits, offersTransport); }
-		 */else if (runName.equals(RUN_LAZY_TOWN_RUN)) {
+		} else if (runName.equals(RUN_LAZY_TOWN_RUN)) {
 			generateSubGroups(iwc, group, getDistancesForRun(run),
 					grForLazyTown, priceISK, priceEUR, useChips,
 					childrenPriceISK, childrenPriceEUR, familyDiscount,
 					allowsGroups, numberOfSplits, offersTransport);
-		} /*
-		 * else if (runName.equals(RUN_LAZY_TOWN_MINIMARATON_OSLO)) {
-		 * generateSubGroups(iwc, group, getDistancesForRun(run),
-		 * grForLazyTownOslo, priceISK, priceEUR, useChips, childrenPriceISK,
-		 * childrenPriceEUR, familyDiscount, allowsGroups, numberOfSplits,
-		 * offersTransport); }
-		 */else if (runName.equals(RUN_MIDNIGHT_RUN)) {
+		} else if (runName.equals(RUN_MIDNIGHT_RUN)) {
 			generateSubGroups(iwc, group, getDistancesForRun(run),
 					grForMidnight, priceISK, priceEUR, useChips,
 					childrenPriceISK, childrenPriceEUR, familyDiscount,
@@ -2008,12 +1983,7 @@ public class RunBusinessBean extends IBOServiceBean implements RunBusiness {
 					grForLaugavegur, priceISK, priceEUR, useChips,
 					childrenPriceISK, childrenPriceEUR, familyDiscount,
 					allowsGroups, numberOfSplits, offersTransport);
-		} /*
-		 * else if (runName.equals(RUN_ROLLER_SKATE)) { generateSubGroups(iwc,
-		 * group, getDistancesForRun(run), grForMarathon, priceISK, priceEUR,
-		 * useChips, childrenPriceISK, childrenPriceEUR, familyDiscount,
-		 * allowsGroups, numberOfSplits, offersTransport); }
-		 */
+		}
 	}
 
 	/**

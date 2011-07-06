@@ -1325,10 +1325,15 @@ public class MRRegistration extends RunBlock {
 						referenceNumber);
 			}
 
+			String authId = null;
+			if (properties != null) {
+				authId = getRunBusiness(iwc).getAuthorizationNumberFromProperties(properties, this.isIcelandicPersonalID ? "ISK" : "EUR");
+			}
+			
 			Collection participants = getRunBusiness(iwc).saveParticipants(
 					runners, email, hiddenCardNumber, amount, paymentStamp,
 					iwc.getCurrentLocale(), isDisablePaymentAndOverviewSteps(),
-					"mr_reg.", false);
+					"mr_reg.", false, authId);
 
 			if (doPayment) {
 				getRunBusiness(iwc).finishPayment(properties, this.isIcelandicPersonalID ? "ISK" : "EUR");

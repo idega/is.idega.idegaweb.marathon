@@ -103,8 +103,9 @@ public interface RunBusiness extends IBOService {
 	public Collection saveParticipants(Collection runners, String email,
 			String hiddenCardNumber, double amount, IWTimestamp date,
 			Locale locale, boolean disableSendPaymentConfirmation,
-			String runPrefix, boolean sendCharityRegistration)
-			throws IDOCreateException, RemoteException;
+			String runPrefix, boolean sendCharityRegistration,
+			String authorizationNumber) throws IDOCreateException,
+			RemoteException;
 
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getNextAvailableParticipantNumber
@@ -143,6 +144,13 @@ public interface RunBusiness extends IBOService {
 			String monthExpires, String yearExpires, String ccVerifyNumber,
 			double amount, String currency, String referenceNumber)
 			throws CreditCardAuthorizationException, RemoteException;
+
+	/**
+	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#getAuthorizationNumberFromProperties
+	 */
+	public String getAuthorizationNumberFromProperties(
+			String creditCardProperties, String currency)
+			throws RemoteException;
 
 	/**
 	 * @see is.idega.idegaweb.marathon.business.RunBusinessBean#authorizePayment

@@ -55,8 +55,7 @@ public class DistanceDropDownMenu extends DropdownMenu {
 		}
 	}
 
-	public void main(IWContext iwc) throws Exception {
-		
+	public void main(IWContext iwc) throws Exception {		
 		super.main(iwc);
 		
 		IWResourceBundle iwrb = this.getResourceBundle(iwc);
@@ -71,7 +70,6 @@ public class DistanceDropDownMenu extends DropdownMenu {
 		if (this.run != null) {
 			
 			Year year = this.runner.getYear();
-			//Year year = ConverterUtility.getInstance().convertGroupToYear(Integer.valueOf(distance.getParentNode().getId()));
 			String runnerYearString = year.getYearString();
 			Collection distancesGroups = getRunBusiness(iwc).getDistancesMap(run, runnerYearString);
 			

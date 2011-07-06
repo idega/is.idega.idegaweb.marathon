@@ -2372,7 +2372,7 @@ public class Registration extends RunBlock {
 			}
 			Collection participants = getRunBusiness(iwc).saveParticipants(
 					runners, email, hiddenCardNumber, amount, paymentStamp,
-					iwc.getCurrentLocale(), isDisablePaymentAndOverviewSteps(), "", false);
+					iwc.getCurrentLocale(), isDisablePaymentAndOverviewSteps(), "", false, null);
 			if (doPayment) {
 				getRunBusiness(iwc).finishPayment(properties, this.isIcelandic ? "ISK" : "EUR");
 			}

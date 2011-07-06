@@ -109,7 +109,16 @@ public class IWMarathonConstants {
 	public static final String DISTANCE_1_5 = "1.5_km";
 	public static final String DISTANCE_CHARITY_42 = "42_km_charity";
 
-	public static final String FEMALE_9 = "female_9";
+	public static final String AGE_1 = "age_1";
+	public static final String AGE_2 = "age_2";
+	public static final String AGE_3 = "age_3";
+	public static final String AGE_4 = "age_4";
+	public static final String AGE_5 = "age_5";
+	public static final String AGE_6 = "age_6";
+	public static final String AGE_7 = "age_7";
+	public static final String AGE_8 = "age_8";
+	public static final String AGE_9 = "age_9";
+	public static final String AGE_10 = "age_10";
 	public static final String FEMALE_11 = "female_11";
 	public static final String FEMALE_14 = "female_14";
 	public static final String FEMALE_15_17 = "female_15_17";
@@ -122,7 +131,6 @@ public class IWMarathonConstants {
 	public static final String FEMALE_50 = "female_50";
 	public static final String FEMALE_50_59 = "female_50_59";
 	public static final String FEMALE_60 = "female_60";
-	public static final String MALE_9 = "male_9";
 	public static final String MALE_11 = "male_11";
 	public static final String MALE_14 = "male_14";
 	public static final String MALE_15_17 = "male_15_17";
