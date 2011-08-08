@@ -21,7 +21,7 @@ public class ISBServiceSoapBindingImpl implements is.idega.idegaweb.marathon.web
     }
 
     public boolean registerRunner(is.idega.idegaweb.marathon.webservice.isb.server.RunnerInfo in0) throws java.rmi.RemoteException, is.idega.idegaweb.marathon.webservice.isb.server.SessionTimedOutException {
-    	return getBusiness().registerRunner(in0.getSession(), in0.getPersonalID(), in0.getDistance(), in0.getShirtSize(), in0.getShirtSizeGender(), in0.getEmail(), in0.getPhone(), in0.getMobile(), in0.getLeg(), in0.getPartners(), in0.getRegisteredBy());
+    	return getBusiness().registerRunner(in0.getSession(), in0.getPersonalID(), in0.getDistance(), in0.getShirtSize(), in0.getShirtSizeGender(), in0.getEmail(), in0.getPhone(), in0.getMobile(), in0.getLeg(), in0.getPartners(), in0.getRegisteredBy(), in0.getCharityPersonalID());
     }
 
     private WebServiceBusiness getBusiness() throws IBOLookupException {

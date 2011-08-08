@@ -5,6 +5,7 @@ import is.idega.idegaweb.marathon.business.ConverterUtility;
 import is.idega.idegaweb.marathon.business.RunBusiness;
 import is.idega.idegaweb.marathon.business.Runner;
 import is.idega.idegaweb.marathon.data.Charity;
+import is.idega.idegaweb.marathon.data.CharityHome;
 import is.idega.idegaweb.marathon.data.Distance;
 import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.webservice.data.WebServiceLoginSession;
@@ -72,7 +73,7 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 			is.idega.idegaweb.marathon.webservice.isb.server.Session session,
 			String personalID, String distance, String shirtSize, String shirtSizeGender, String email,
 			String phone, String mobile, String leg,
-			RelayPartnerInfo[] partners, String registeredBy)
+			RelayPartnerInfo[] partners, String registeredBy, String charityPersonalID)
 			throws is.idega.idegaweb.marathon.webservice.isb.server.SessionTimedOutException {
 		is.idega.idegaweb.marathon.webservice.server.Session s = new is.idega.idegaweb.marathon.webservice.server.Session(
 				session.getSessionID());
@@ -176,6 +177,7 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 		runner.setShirtSize(getShirtSizeForUser(user, shirtSize, shirtSizeGender));
 		runner.setPaymentGroup("ISB_2011");
 		runner.setSponsoredRunner(true);
+		
 		Country icelandicNationality = null;
 		try {
 			icelandicNationality = getAddressBusiness().getCountryHome()
@@ -184,6 +186,19 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 		} catch (Exception e) {
 		}
 
+		try {
+			CharityHome cHome = (CharityHome) IDOLookup
+					.getHome(Charity.class);
+			if (charityPersonalID != null
+					&& !"".equals(charityPersonalID)) {
+				Charity charity = cHome
+						.findCharityByOrganizationalId(charityPersonalID);
+				runner.setCharity(charity);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		if (DISTANCE5.equals(distance)) {
 			boolean leg1 = false;
 			boolean leg2 = false;

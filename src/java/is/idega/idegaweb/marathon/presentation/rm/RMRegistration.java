@@ -158,8 +158,8 @@ public class RMRegistration extends RunBlock {
 
 	private static final double MILLISECONDS_IN_YEAR = 31557600000d;
 
-	private static final String REYKJAVIK_MARATHON_GROUP_ID = "4";
-	private static final String LAZY_TOWN_GROUP_ID = "383348";
+	public static final String REYKJAVIK_MARATHON_GROUP_ID = "4";
+	public static final String LAZY_TOWN_GROUP_ID = "383348";
 
 	private boolean isIcelandicPersonalID = false;
 	private Runner setRunner;
@@ -578,6 +578,22 @@ public class RMRegistration extends RunBlock {
 			advert.add(
 					localize("rm_reg.iceland_total",
 							"Reykjavik Marathon is proud of...."), 2, 2);
+			
+			/*Table advert2 = new Table();
+			advert2.setCellpadding(0);
+			advert2.setCellspacing(0);
+			advert2.setWidth(Table.HUNDRED_PERCENT);
+			form.add(advert2);
+
+			advert2.setHeight(1, 18);
+
+			Link image2 = new Link(this.iwrb.getImage("marathontour.png"));
+			image2.setURL("http://www.marathontour.com");
+			image2.setTarget("_new");
+			advert2.add(image, 1, 2);
+			advert2.add(
+					localize("rm_reg.marathontour",
+							"Reykjavik Marathon is proud of...."), 2, 2);*/
 		}
 
 		add(form);
@@ -2278,9 +2294,14 @@ public class RMRegistration extends RunBlock {
 			runnerTable.add(
 					getText(localize(distance.getName(), distance.getName())),
 					col++, runRow);
-			runnerTable
-					.add(getText(String.valueOf(participant
-							.getParticipantNumber())), col++, runRow);
+			if (run.getPrimaryKey().toString().equals(RMRegistration.REYKJAVIK_MARATHON_GROUP_ID)) {
+				runnerTable
+				.add(getText(String.valueOf(participant
+						.getParticipantNumber())), col++, runRow);
+			} else {
+				runnerTable
+				.add(getText(""), col++, runRow);				
+			}
 			runnerTable.add(
 					getText(localize(
 							"shirt_size." + participant.getShirtSize(),

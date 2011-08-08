@@ -9,6 +9,7 @@ package is.idega.idegaweb.marathon.presentation;
 import is.idega.idegaweb.marathon.business.ConverterUtility;
 import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.data.Run;
+import is.idega.idegaweb.marathon.presentation.rm.RMRegistration;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
 import java.text.NumberFormat;
@@ -135,7 +136,12 @@ public class RegistrationReceivedPrintable extends Window {
 			runnerTable.add(getText(participant.getUser().getName()), 1, runRow);
 			runnerTable.add(getText(iwrb.getLocalizedString(run.getName(), run.getName())), 2, runRow);
 			runnerTable.add(getText(iwrb.getLocalizedString(distance.getName(), distance.getName())), 3, runRow);
-			runnerTable.add(getText(String.valueOf(participant.getParticipantNumber())), 4, runRow);
+			if (run.getPrimaryKey().toString().equals(RMRegistration.LAZY_TOWN_GROUP_ID)) {
+				runnerTable.add(getText(""), 4, runRow);
+			} else {
+				runnerTable.add(getText(String.valueOf(participant.getParticipantNumber())), 4, runRow);
+			}
+
 			if (showTShirt) {
 				runnerTable.add(getText(iwrb.getLocalizedString("shirt_size." + participant.getShirtSize(), participant.getShirtSize())), 5, runRow++);
 			}

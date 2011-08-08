@@ -8,6 +8,8 @@
 package is.idega.idegaweb.marathon.webservice.isb.server;
 
 public class RunnerInfo  implements java.io.Serializable {
+    private java.lang.String charityPersonalID;
+
     private java.lang.String distance;
 
     private java.lang.String email;
@@ -34,6 +36,7 @@ public class RunnerInfo  implements java.io.Serializable {
     }
 
     public RunnerInfo(
+           java.lang.String charityPersonalID,
            java.lang.String distance,
            java.lang.String email,
            java.lang.String leg,
@@ -45,6 +48,7 @@ public class RunnerInfo  implements java.io.Serializable {
            is.idega.idegaweb.marathon.webservice.isb.server.Session session,
            java.lang.String shirtSize,
            java.lang.String shirtSizeGender) {
+           this.charityPersonalID = charityPersonalID;
            this.distance = distance;
            this.email = email;
            this.leg = leg;
@@ -56,6 +60,26 @@ public class RunnerInfo  implements java.io.Serializable {
            this.session = session;
            this.shirtSize = shirtSize;
            this.shirtSizeGender = shirtSizeGender;
+    }
+
+
+    /**
+     * Gets the charityPersonalID value for this RunnerInfo.
+     * 
+     * @return charityPersonalID
+     */
+    public java.lang.String getCharityPersonalID() {
+        return charityPersonalID;
+    }
+
+
+    /**
+     * Sets the charityPersonalID value for this RunnerInfo.
+     * 
+     * @param charityPersonalID
+     */
+    public void setCharityPersonalID(java.lang.String charityPersonalID) {
+        this.charityPersonalID = charityPersonalID;
     }
 
 
@@ -290,6 +314,9 @@ public class RunnerInfo  implements java.io.Serializable {
         __equalsCalc = obj;
         boolean _equals;
         _equals = true && 
+            ((this.charityPersonalID==null && other.getCharityPersonalID()==null) || 
+             (this.charityPersonalID!=null &&
+              this.charityPersonalID.equals(other.getCharityPersonalID()))) &&
             ((this.distance==null && other.getDistance()==null) || 
              (this.distance!=null &&
               this.distance.equals(other.getDistance()))) &&
@@ -334,6 +361,9 @@ public class RunnerInfo  implements java.io.Serializable {
         }
         __hashCodeCalc = true;
         int _hashCode = 1;
+        if (getCharityPersonalID() != null) {
+            _hashCode += getCharityPersonalID().hashCode();
+        }
         if (getDistance() != null) {
             _hashCode += getDistance().hashCode();
         }
@@ -386,6 +416,12 @@ public class RunnerInfo  implements java.io.Serializable {
     static {
         typeDesc.setXmlType(new javax.xml.namespace.QName("http://illuminati.is", "RunnerInfo"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("charityPersonalID");
+        elemField.setXmlName(new javax.xml.namespace.QName("http://illuminati.is", "charityPersonalID"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setNillable(true);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("distance");
         elemField.setXmlName(new javax.xml.namespace.QName("http://illuminati.is", "distance"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
