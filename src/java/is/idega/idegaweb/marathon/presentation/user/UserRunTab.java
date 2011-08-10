@@ -41,7 +41,7 @@ public class UserRunTab extends UserTab{
 		IWContext iwc = IWContext.getInstance();
 		IWResourceBundle iwrb = getResourceBundle(iwc);
 
-		setName(iwrb.getLocalizedString("run_tab.name", "Users run info"));
+		setName(iwrb.getLocalizedString("run_tab.name", "Users run info"));		
 	}
 
 	

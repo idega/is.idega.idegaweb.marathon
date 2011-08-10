@@ -9,6 +9,7 @@ import is.idega.idegaweb.marathon.data.Participant;
 import is.idega.idegaweb.marathon.presentation.CreateYearWindowPlugin;
 import is.idega.idegaweb.marathon.presentation.RunDistanceTab;
 import is.idega.idegaweb.marathon.presentation.RunYearTab;
+import is.idega.idegaweb.marathon.presentation.user.UserRelayTab;
 import is.idega.idegaweb.marathon.presentation.user.UserRunTab;
 import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
@@ -196,6 +197,7 @@ public class RunPluginBusinessBean extends IBOServiceBean implements RunPluginBu
 	public List getUserPropertiesTabs(User user) throws RemoteException {
 		List list = new ArrayList();
 		list.add(new UserRunTab());
+		list.add(new UserRelayTab());
 		return list;
 	}
 

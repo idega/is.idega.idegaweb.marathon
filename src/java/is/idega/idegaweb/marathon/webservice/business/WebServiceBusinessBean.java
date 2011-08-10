@@ -308,21 +308,21 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 					}
 
 					switch (i) {
-					case 1 : 
+					case 0 : 
 						runner.setPartner1Email(relayPartnerInfo.getEmail());
 						runner.setPartner1Leg(relayPartnerInfo.getLeg());
 						runner.setPartner1Name(relUser.getName());
 						runner.setPartner1ShirtSize(getShirtSizeForUser(relUser, relayPartnerInfo.getShirtSize(), relayPartnerInfo.getShirtSizeGender()));
 						runner.setPartner1SSN(relUser.getPersonalID());
 						break;
-					case 2 :
+					case 1 :
 						runner.setPartner2Email(relayPartnerInfo.getEmail());
 						runner.setPartner2Leg(relayPartnerInfo.getLeg());
 						runner.setPartner2Name(relUser.getName());
 						runner.setPartner2ShirtSize(getShirtSizeForUser(relUser, relayPartnerInfo.getShirtSize(), relayPartnerInfo.getShirtSizeGender()));
 						runner.setPartner2SSN(relUser.getPersonalID());
 						break;
-					case 3 :
+					case 2 :
 						runner.setPartner3Email(relayPartnerInfo.getEmail());
 						runner.setPartner3Leg(relayPartnerInfo.getLeg());
 						runner.setPartner3Name(relUser.getName());

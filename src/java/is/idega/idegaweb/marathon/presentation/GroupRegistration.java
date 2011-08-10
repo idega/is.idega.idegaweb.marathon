@@ -513,18 +513,20 @@ public class GroupRegistration extends RunBlock {
 
 					// getRunIdsArray()
 
-					IWTimestamp lastChangeDate = new IWTimestamp(year
-							.getRunDate());
-					if (now.isEarlierThan(lastChangeDate)) {
-						Participant participant = getRunBusiness(iwc)
-								.getParticipantByRunAndYear(
-										iwc.getCurrentUser(),
-										(Group) yearGroup.getParentNode(),
-										yearGroup, false);
+					if (year.getRunDate() != null) {
+						IWTimestamp lastChangeDate = new IWTimestamp(year
+								.getRunDate());
+						if (now.isEarlierThan(lastChangeDate)) {
+							Participant participant = getRunBusiness(iwc)
+									.getParticipantByRunAndYear(
+											iwc.getCurrentUser(),
+											(Group) yearGroup.getParentNode(),
+											yearGroup, false);
 
-						if (participant.getRunDistanceGroup().isAllowsGroups()) {
-							participantEntries.add(participant);
-						}
+							if (participant.getRunDistanceGroup().isAllowsGroups()) {
+								participantEntries.add(participant);
+							}
+						}						
 					}
 				} catch (FinderException e) {
 				} catch (RemoteException e) {
