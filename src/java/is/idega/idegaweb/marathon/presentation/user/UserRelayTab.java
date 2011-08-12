@@ -276,7 +276,8 @@ public class UserRelayTab extends UserTab {
 		IWResourceBundle iwrb = getResourceBundle(iwc);
 
 		if (!isGroupRelayDistanceGroup()) {
-			add(new Text(iwrb.getLocalizedString("not_a_relay_distance", "Not a relay distance")));
+			add(new Text(iwrb.getLocalizedString("not_a_relay_distance",
+					"Not a relay distance")));
 		} else {
 			this.t = new Table(2, 2);
 			this.t.setCellpadding(5);
@@ -327,11 +328,143 @@ public class UserRelayTab extends UserTab {
 	}
 
 	public boolean collect(IWContext iwc) {
-		return false;
+		if (iwc != null) {
+			String relayLegField = iwc.getParameter(this.relayLegFieldName);
+
+			String rel1SSNField = iwc.getParameter(this.rel1SSNFieldName);
+			String rel1NameField = iwc.getParameter(this.rel1NameFieldName);
+			String rel1EmailField = iwc.getParameter(this.rel1EmailFieldName);
+			String rel1ShirtSizeField = iwc
+					.getParameter(this.rel1ShirtSizeFieldName);
+			String rel1LegField = iwc.getParameter(this.rel1LegFieldName);
+
+			String rel2SSNField = iwc.getParameter(this.rel2SSNFieldName);
+			String rel2NameField = iwc.getParameter(this.rel2NameFieldName);
+			String rel2EmailField = iwc.getParameter(this.rel2EmailFieldName);
+			String rel2ShirtSizeField = iwc
+					.getParameter(this.rel2ShirtSizeFieldName);
+			String rel2LegField = iwc.getParameter(this.rel2LegFieldName);
+
+			String rel3SSNField = iwc.getParameter(this.rel3SSNFieldName);
+			String rel3NameField = iwc.getParameter(this.rel3NameFieldName);
+			String rel3EmailField = iwc.getParameter(this.rel3EmailFieldName);
+			String rel3ShirtSizeField = iwc
+					.getParameter(this.rel3ShirtSizeFieldName);
+			String rel3LegField = iwc.getParameter(this.rel3LegFieldName);
+
+			this.fieldValues.put(this.relayLegFieldName,
+					relayLegField == null ? "" : relayLegField);
+
+			this.fieldValues.put(this.rel1SSNFieldName,
+					rel1SSNField == null ? "" : rel1SSNField);
+			this.fieldValues.put(this.rel1NameFieldName,
+					rel1NameField == null ? "" : rel1NameField);
+			this.fieldValues.put(this.rel1EmailFieldName,
+					rel1EmailField == null ? "" : rel1EmailField);
+			this.fieldValues.put(this.rel1ShirtSizeFieldName,
+					rel1ShirtSizeField == null ? "" : rel1ShirtSizeField);
+			this.fieldValues.put(this.rel1LegFieldName,
+					rel1LegField == null ? "" : rel1LegField);
+
+			this.fieldValues.put(this.rel2SSNFieldName,
+					rel2SSNField == null ? "" : rel2SSNField);
+			this.fieldValues.put(this.rel2NameFieldName,
+					rel2NameField == null ? "" : rel2NameField);
+			this.fieldValues.put(this.rel2EmailFieldName,
+					rel2EmailField == null ? "" : rel2EmailField);
+			this.fieldValues.put(this.rel2ShirtSizeFieldName,
+					rel2ShirtSizeField == null ? "" : rel2ShirtSizeField);
+			this.fieldValues.put(this.rel2LegFieldName,
+					rel2LegField == null ? "" : rel2LegField);
+			
+			this.fieldValues.put(this.rel3SSNFieldName,
+					rel3SSNField == null ? "" : rel3SSNField);
+			this.fieldValues.put(this.rel3NameFieldName,
+					rel3NameField == null ? "" : rel3NameField);
+			this.fieldValues.put(this.rel3EmailFieldName,
+					rel3EmailField == null ? "" : rel3EmailField);
+			this.fieldValues.put(this.rel3ShirtSizeFieldName,
+					rel3ShirtSizeField == null ? "" : rel3ShirtSizeField);
+			this.fieldValues.put(this.rel3LegFieldName,
+					rel3LegField == null ? "" : rel3LegField);
+			
+			updateFieldsDisplayStatus();
+		}
+
+		return true;
 	}
 
 	public boolean store(IWContext iwc) {
-		return false;
+		Participant participant = getParticipantEntry();
+		if (participant == null) {
+			return false;
+		}
+		
+		String relayLegField = (String) this.fieldValues.get(this.relayLegFieldName);
+
+		String rel1SSNField = (String) this.fieldValues.get(this.rel1SSNFieldName);
+		String rel1NameField = (String) this.fieldValues.get(this.rel1NameFieldName);
+		String rel1EmailField = (String) this.fieldValues.get(this.rel1EmailFieldName);
+		String rel1ShirtSizeField = (String) this.fieldValues.get(this.rel1ShirtSizeFieldName);
+		String rel1LegField = (String) this.fieldValues.get(this.rel1LegFieldName);
+
+		String rel2SSNField = (String) this.fieldValues.get(this.rel2SSNFieldName);
+		String rel2NameField = (String) this.fieldValues.get(this.rel2NameFieldName);
+		String rel2EmailField = (String) this.fieldValues.get(this.rel2EmailFieldName);
+		String rel2ShirtSizeField = (String) this.fieldValues.get(this.rel2ShirtSizeFieldName);
+		String rel2LegField = (String) this.fieldValues.get(this.rel2LegFieldName);
+
+		String rel3SSNField = (String) this.fieldValues.get(this.rel3SSNFieldName);
+		String rel3NameField = (String) this.fieldValues.get(this.rel3NameFieldName);
+		String rel3EmailField = (String) this.fieldValues.get(this.rel3EmailFieldName);
+		String rel3ShirtSizeField = (String) this.fieldValues.get(this.rel3ShirtSizeFieldName);
+		String rel3LegField = (String) this.fieldValues.get(this.rel3LegFieldName);
+
+		participant.setRelayLeg(relayLegField);
+		
+		if ("".equals(rel1SSNField)) {
+			participant.setRelayPartner1SSN(null);
+			participant.setRelayPartner1Name(null);
+			participant.setRelayPartner1Email(null);
+			participant.setRelayPartner1ShirtSize(null);
+			participant.setRelayPartner1Leg(null);
+		} else {
+			participant.setRelayPartner1SSN(rel1SSNField);
+			participant.setRelayPartner1Name(rel1NameField);
+			participant.setRelayPartner1Email(rel1EmailField);
+			participant.setRelayPartner1ShirtSize(rel1ShirtSizeField);
+			participant.setRelayPartner1Leg(rel1LegField);
+		}
+
+		if ("".equals(rel2SSNField)) {
+			participant.setRelayPartner2SSN(null);
+			participant.setRelayPartner2Name(null);
+			participant.setRelayPartner2Email(null);
+			participant.setRelayPartner2ShirtSize(null);
+			participant.setRelayPartner2Leg(null);			
+		} else {
+			participant.setRelayPartner2SSN(rel2SSNField);
+			participant.setRelayPartner2Name(rel2NameField);
+			participant.setRelayPartner2Email(rel2EmailField);
+			participant.setRelayPartner2ShirtSize(rel2ShirtSizeField);
+			participant.setRelayPartner2Leg(rel2LegField);
+		}
+
+		if ("".equals(rel3SSNField)) {
+			participant.setRelayPartner3SSN(null);
+			participant.setRelayPartner3Name(null);
+			participant.setRelayPartner3Email(null);
+			participant.setRelayPartner3ShirtSize(null);
+			participant.setRelayPartner3Leg(null);
+		} else {
+			participant.setRelayPartner3SSN(rel3SSNField);
+			participant.setRelayPartner3Name(rel3NameField);
+			participant.setRelayPartner3Email(rel3EmailField);
+			participant.setRelayPartner3ShirtSize(rel3ShirtSizeField);
+			participant.setRelayPartner3Leg(rel3LegField);
+		}
+		
+		return true;
 	}
 
 	public void initFieldContents() {
@@ -439,7 +572,7 @@ public class UserRelayTab extends UserTab {
 				lineUpFields();
 			}
 		}
-		
+
 		updateFieldsDisplayStatus();
 
 	}
