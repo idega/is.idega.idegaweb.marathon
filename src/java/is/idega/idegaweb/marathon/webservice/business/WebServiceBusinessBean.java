@@ -157,6 +157,7 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 		}
 
 		Runner runner = new Runner();
+		runner.setPersonalID(personalID);
 		runner.setUser(user);
 		runner.setEmail(email);
 		runner.setEmail2(email);
