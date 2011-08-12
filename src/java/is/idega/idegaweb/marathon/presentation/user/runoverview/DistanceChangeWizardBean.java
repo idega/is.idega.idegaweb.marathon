@@ -296,7 +296,7 @@ public class DistanceChangeWizardBean {
 		try {
 			FacesContext context = FacesContext.getCurrentInstance();
 			IWContext iwc = IWContext.getIWContext(context);
-			String referenceNumber = getParticipant().getUser().getPersonalID()
+			String referenceNumber = getParticipant().getUser().getPersonalID() == null ? null : getParticipant().getUser().getPersonalID()
 					.replaceAll("-", CoreConstants.EMPTY);
 
 			if (referenceNumber == null || "".equals(referenceNumber.trim())) {

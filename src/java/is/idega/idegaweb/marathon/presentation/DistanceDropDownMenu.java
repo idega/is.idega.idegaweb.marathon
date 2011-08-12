@@ -69,9 +69,9 @@ public class DistanceDropDownMenu extends DropdownMenu {
 		
 		if (this.run != null) {
 			
-			Year year = this.runner.getYear();
-			String runnerYearString = year.getYearString();
-			Collection distancesGroups = getRunBusiness(iwc).getDistancesMap(run, runnerYearString);
+			Year year = this.runner != null ? this.runner.getYear() : null;;
+			String runnerYearString = year != null ? year.getYearString() : null;
+			Collection distancesGroups = runnerYearString != null ? getRunBusiness(iwc).getDistancesMap(run, runnerYearString) : null;
 			
 			if (distancesGroups != null) {
 				

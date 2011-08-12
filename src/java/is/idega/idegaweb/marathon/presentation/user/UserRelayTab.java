@@ -464,6 +464,8 @@ public class UserRelayTab extends UserTab {
 			participant.setRelayPartner3Leg(rel3LegField);
 		}
 		
+		participant.store();
+		
 		return true;
 	}
 
