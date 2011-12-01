@@ -202,18 +202,17 @@ public class UserRelayTab extends UserTab {
 	}
 
 	private Participant getParticipantEntry() {
-		Group group = getGroup();
-		Group distance = (Group) group.getParentNode();
-		Group year = (Group) distance.getParentNode();
-		Group run = (Group) year.getParentNode();
-
 		try {
+			Group group = getGroup();
+			Group distance = (Group) group.getParentNode();
+			Group year = (Group) distance.getParentNode();
+			Group run = (Group) year.getParentNode();
+
 			IWContext iwc = IWContext.getInstance();
 
 			return getRunBusiness(iwc).getParticipantByRunAndYear(getUser(),
 					run, year, false);
-		} catch (RemoteException e) {
-		} catch (FinderException e) {
+		} catch (Exception e) {
 		}
 
 		return null;
@@ -376,7 +375,7 @@ public class UserRelayTab extends UserTab {
 					rel2ShirtSizeField == null ? "" : rel2ShirtSizeField);
 			this.fieldValues.put(this.rel2LegFieldName,
 					rel2LegField == null ? "" : rel2LegField);
-			
+
 			this.fieldValues.put(this.rel3SSNFieldName,
 					rel3SSNField == null ? "" : rel3SSNField);
 			this.fieldValues.put(this.rel3NameFieldName,
@@ -387,7 +386,7 @@ public class UserRelayTab extends UserTab {
 					rel3ShirtSizeField == null ? "" : rel3ShirtSizeField);
 			this.fieldValues.put(this.rel3LegFieldName,
 					rel3LegField == null ? "" : rel3LegField);
-			
+
 			updateFieldsDisplayStatus();
 		}
 
@@ -397,31 +396,47 @@ public class UserRelayTab extends UserTab {
 	public boolean store(IWContext iwc) {
 		Participant participant = getParticipantEntry();
 		if (participant == null) {
-			return false;
+			return true;
 		}
-		
-		String relayLegField = (String) this.fieldValues.get(this.relayLegFieldName);
 
-		String rel1SSNField = (String) this.fieldValues.get(this.rel1SSNFieldName);
-		String rel1NameField = (String) this.fieldValues.get(this.rel1NameFieldName);
-		String rel1EmailField = (String) this.fieldValues.get(this.rel1EmailFieldName);
-		String rel1ShirtSizeField = (String) this.fieldValues.get(this.rel1ShirtSizeFieldName);
-		String rel1LegField = (String) this.fieldValues.get(this.rel1LegFieldName);
+		String relayLegField = (String) this.fieldValues
+				.get(this.relayLegFieldName);
 
-		String rel2SSNField = (String) this.fieldValues.get(this.rel2SSNFieldName);
-		String rel2NameField = (String) this.fieldValues.get(this.rel2NameFieldName);
-		String rel2EmailField = (String) this.fieldValues.get(this.rel2EmailFieldName);
-		String rel2ShirtSizeField = (String) this.fieldValues.get(this.rel2ShirtSizeFieldName);
-		String rel2LegField = (String) this.fieldValues.get(this.rel2LegFieldName);
+		String rel1SSNField = (String) this.fieldValues
+				.get(this.rel1SSNFieldName);
+		String rel1NameField = (String) this.fieldValues
+				.get(this.rel1NameFieldName);
+		String rel1EmailField = (String) this.fieldValues
+				.get(this.rel1EmailFieldName);
+		String rel1ShirtSizeField = (String) this.fieldValues
+				.get(this.rel1ShirtSizeFieldName);
+		String rel1LegField = (String) this.fieldValues
+				.get(this.rel1LegFieldName);
 
-		String rel3SSNField = (String) this.fieldValues.get(this.rel3SSNFieldName);
-		String rel3NameField = (String) this.fieldValues.get(this.rel3NameFieldName);
-		String rel3EmailField = (String) this.fieldValues.get(this.rel3EmailFieldName);
-		String rel3ShirtSizeField = (String) this.fieldValues.get(this.rel3ShirtSizeFieldName);
-		String rel3LegField = (String) this.fieldValues.get(this.rel3LegFieldName);
+		String rel2SSNField = (String) this.fieldValues
+				.get(this.rel2SSNFieldName);
+		String rel2NameField = (String) this.fieldValues
+				.get(this.rel2NameFieldName);
+		String rel2EmailField = (String) this.fieldValues
+				.get(this.rel2EmailFieldName);
+		String rel2ShirtSizeField = (String) this.fieldValues
+				.get(this.rel2ShirtSizeFieldName);
+		String rel2LegField = (String) this.fieldValues
+				.get(this.rel2LegFieldName);
+
+		String rel3SSNField = (String) this.fieldValues
+				.get(this.rel3SSNFieldName);
+		String rel3NameField = (String) this.fieldValues
+				.get(this.rel3NameFieldName);
+		String rel3EmailField = (String) this.fieldValues
+				.get(this.rel3EmailFieldName);
+		String rel3ShirtSizeField = (String) this.fieldValues
+				.get(this.rel3ShirtSizeFieldName);
+		String rel3LegField = (String) this.fieldValues
+				.get(this.rel3LegFieldName);
 
 		participant.setRelayLeg(relayLegField);
-		
+
 		if ("".equals(rel1SSNField)) {
 			participant.setRelayPartner1SSN(null);
 			participant.setRelayPartner1Name(null);
@@ -441,7 +456,7 @@ public class UserRelayTab extends UserTab {
 			participant.setRelayPartner2Name(null);
 			participant.setRelayPartner2Email(null);
 			participant.setRelayPartner2ShirtSize(null);
-			participant.setRelayPartner2Leg(null);			
+			participant.setRelayPartner2Leg(null);
 		} else {
 			participant.setRelayPartner2SSN(rel2SSNField);
 			participant.setRelayPartner2Name(rel2NameField);
@@ -463,9 +478,9 @@ public class UserRelayTab extends UserTab {
 			participant.setRelayPartner3ShirtSize(rel3ShirtSizeField);
 			participant.setRelayPartner3Leg(rel3LegField);
 		}
-		
+
 		participant.store();
-		
+
 		return true;
 	}
 

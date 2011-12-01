@@ -5,10 +5,12 @@ import is.idega.idegaweb.marathon.util.IWMarathonConstants;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
+import com.idega.core.cache.IWCacheManager2;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.PresentationObject;
@@ -77,6 +79,7 @@ public class DistanceMenuShirtSizeMenuInputCollectionHandler extends Presentatio
 			    rsr.addLayer(RemoteScriptHandler.getLayerName(sourceName, "name"), names);
 		
 			    return rsr;
+			    
 			}
 			catch (Exception e) {
 				e.printStackTrace();

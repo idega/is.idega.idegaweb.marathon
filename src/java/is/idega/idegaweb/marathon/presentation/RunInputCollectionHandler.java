@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
+import com.idega.core.cache.IWCacheManager2;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.presentation.IWContext;
 import com.idega.presentation.PresentationObject;
@@ -50,6 +51,7 @@ public class RunInputCollectionHandler extends PresentationObject implements Rem
 	public static final String PARAMETER_USER_ID = "rich_uid";
 	public static final String RUNNER_PERSONAL_ID = "rich_runner_pid";
 	
+	
 	public String getBundleIdentifier() {
 		return IWMarathonConstants.IW_BUNDLE_IDENTIFIER;
 	}
@@ -63,6 +65,8 @@ public class RunInputCollectionHandler extends PresentationObject implements Rem
 	}
 	
 	private RemoteScriptingResults handleDistanceUpdate(IWContext iwc, String sourceName, String runIdString) {
+		
+		
 		IWResourceBundle iwrb = getResourceBundle(iwc);
 		
 		if (runIdString != null) {
@@ -160,7 +164,7 @@ public class RunInputCollectionHandler extends PresentationObject implements Rem
 			    
 			    RemoteScriptingResults rsr = new RemoteScriptingResults(RemoteScriptHandler.getLayerName(sourceName, "id"), ids);
 			    rsr.addLayer(RemoteScriptHandler.getLayerName(sourceName, "name"), names);
-		
+					    
 			    return rsr;
 			} catch (Exception e) {
 				e.printStackTrace();

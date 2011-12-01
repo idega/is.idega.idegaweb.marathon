@@ -75,6 +75,9 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 			String phone, String mobile, String leg,
 			RelayPartnerInfo[] partners, String registeredBy, String charityPersonalID)
 			throws is.idega.idegaweb.marathon.webservice.isb.server.SessionTimedOutException {
+		
+		return false;
+/*		
 		is.idega.idegaweb.marathon.webservice.server.Session s = new is.idega.idegaweb.marathon.webservice.server.Session(
 				session.getSessionID());
 		WebServiceLoginSession loginSession = validateAndUpdateLoginSession(s);
@@ -349,7 +352,7 @@ public class WebServiceBusinessBean extends IBOServiceBean implements
 			return false;
 		}
 		
-		return true;
+		return true;*/
 	}
 
 	private Distance getDistance(List distances, String distance) {
