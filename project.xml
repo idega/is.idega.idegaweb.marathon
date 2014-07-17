@@ -295,7 +295,7 @@
     <dependency>
       <groupId>bundles</groupId>
       <artifactId>com.idega.block.trade</artifactId>
-      <version>3.1.3</version>
+      <version>3.1.22</version>
       <type>jar</type>
       <url>http://www.idega.com/</url>
       <properties>
@@ -325,7 +325,7 @@
     <dependency>
       <groupId>bundles</groupId>
       <artifactId>is.idega.block.family</artifactId>
-      <version>1.0.1</version>
+      <version>1.0.5</version>
       <type>jar</type>
       <url>http://www.idega.com/</url>
       <properties>
@@ -396,20 +396,20 @@
         <idegaweb.bundle.include>true</idegaweb.bundle.include>
       </properties>
     </dependency>
-    <dependency>
-      <groupId>ant</groupId>
-      <artifactId>jakarta-oro</artifactId>
-      <version>2.0.8</version>
-      <type>jar</type>
-      <url>http://jakarta.apache.org/oro/index.html</url>
-      <properties>
-        <idegaweb.bundle.include>true</idegaweb.bundle.include>
-      </properties>
-    </dependency>
+      <dependency>
+          <groupId>oro</groupId>
+          <artifactId>jakarta-oro</artifactId>
+          <version>2.0.8</version>
+          <type>jar</type>
+          <properties>
+              <idegaweb.bundle.include>true</idegaweb.bundle.include>
+          </properties>
+          <url>http://jakarta.apache.org/oro/</url>
+      </dependency>
     <dependency>
 		<groupId>org.apache.pdfbox</groupId>
 		<artifactId>pdfbox</artifactId>
-		<version>1.5.0</version>      <type>jar</type>
+		<version>1.8.1</version>      <type>jar</type>
      	<url>http://pdfbox.apache.org/</url>
       	<properties>
         <idegaweb.bundle.include>true</idegaweb.bundle.include>
@@ -418,7 +418,7 @@
     <dependency>
 		<groupId>org.apache.pdfbox</groupId>
 		<artifactId>fontbox</artifactId>
-		<version>1.5.0</version>      <type>jar</type>
+		<version>1.8.1</version>      <type>jar</type>
      	<url>http://pdfbox.apache.org/</url>
       	<properties>
         <idegaweb.bundle.include>true</idegaweb.bundle.include>

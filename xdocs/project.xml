@@ -396,16 +396,16 @@
         <idegaweb.bundle.include>true</idegaweb.bundle.include>
       </properties>
     </dependency>
-    <dependency>
-      <groupId>ant</groupId>
-      <artifactId>jakarta-oro</artifactId>
-      <version>2.0.8</version>
-      <type>jar</type>
-      <url>http://jakarta.apache.org/oro/index.html</url>
-      <properties>
-        <idegaweb.bundle.include>true</idegaweb.bundle.include>
-      </properties>
-    </dependency>
+      <dependency>
+          <groupId>oro</groupId>
+          <artifactId>jakarta-oro</artifactId>
+          <version>2.0.8</version>
+          <type>jar</type>
+          <properties>
+              <idegaweb.bundle.include>true</idegaweb.bundle.include>
+          </properties>
+          <url>http://jakarta.apache.org/oro/</url>
+      </dependency>
   </dependencies>
   <build>
     <sourceDirectory>src/java</sourceDirectory>
